@@ -9,5 +9,4 @@ public class MentalMasochisticClubApplication {
     public static void main(String[] args) {
         SpringApplication.run(MentalMasochisticClubApplication.class, args);
     }
-
 }
