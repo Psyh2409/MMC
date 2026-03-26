@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Angebote</title>
+</head>
+<body>
+<h1>Liste der Angeboten</h1>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Kontakt</th>
+        <th>Information</th>
+        <th>Datum</th>
+    </tr>
+
+    <tr th:each="req : ${requests}">
+        <td th:text="${req.id}"></td>
+        <td th:text="${req.name}"></td>
+        <td th:text="${req.contact}"></td>
+        <td th:text="${req.message}"></td>
+        <td th:text="${req.createdAt}"></td>
+    </tr>
+</table>
+</body>
+</html>
