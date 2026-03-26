@@ -22,7 +22,8 @@
         <td th:text="${req.contact}"></td>
         <td th:text="${req.message}"></td>
         <td th:text="${req.createdAt}"></td>
-        <td><a th:href="@{/requests/delete/{id}(id=${req.id})}">Löschen</a></td>
+        <td><a th:href="@{/requests/delete/{id}(id=${req.id})}"
+               onclick="return confirm('Möchten Sie diesen Eintrag wirklich löschen?')">Löschen</a></td>
     </tr>
 </table>
 </body>
