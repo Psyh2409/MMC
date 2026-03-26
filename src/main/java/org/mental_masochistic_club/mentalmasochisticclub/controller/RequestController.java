@@ -41,4 +41,10 @@ public class RequestController {
         model.addAttribute("requests", requests);
         return "requests";
     }
+
+    @GetMapping("/requests/delete/{id}")
+    public String deleteRequest(@PathVariable Long id) {
+        requestRepository.deleteById(id);
+        return "redirect:/requests";
+    }
 }
