@@ -1,4 +1,4 @@
-package org.mental_masochistic_club.mentalmasochisticclub;
+package org.mental_masochistic_club.mmc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

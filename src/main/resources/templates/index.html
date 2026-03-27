@@ -1,14 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 <head>
-    <title>Meine Website</title>
+    <title>Psychotherapie</title>
     <meta charset="UTF-8">
 </head>
 <body>
+    <h1>Willkommen auf der Website fur Pszchotherapie</h1>
+    <h1 th:text="${message}"></h1>
 
-<h1 th:text="${message}"></h1>
+    <p>Dies ist mein erster Schritt zur Erstellung einer Webseite.</p>
 
-<p>Dies ist mein erster Schritt zur Erstellung einer Webseite.</p>
+    <div th:if="${userName != null}">
+        <p>Sie haben sich angemeldet als: <strong th:text="${userName}">Gast</strong></p>
+        <p>Sein Status: <span th:text="${userRole}">Rolle</span></p>
+        <div th:if="${userRole == 'ADMIN'}" style="border: 2px solid red; padding: 15px; margin-top: 20px;">
+            <h2 style="color: red;">ADMINISTRATORBEREICH</h2>
+            <p>Guten Tag, Herr Psychothherapeut! Hier sind seine Arbeitsutensilien.</p>
+            <a href="/almin/users" style="display: inline-block; background: #007bff; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
+                Liste aller Kunden anzeigen
+            </a>
+        </div>
 
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 8px 16px; cursor: pointer;">
+                Abmelden
+            </button>
+        </form>
+    </div>
+
+    <div th:unless="${userName != null}">
+        <h2>Hallo! Bitte melden Sie sich an:</h2>
+        <p>
+            <a href="/login" style="padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">Anmelden</a>
+            oder
+            <a href="/register" style="padding: 10px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px;">Registrieren</a>
+        </p>
+    </div>
 </body>
 </html>
