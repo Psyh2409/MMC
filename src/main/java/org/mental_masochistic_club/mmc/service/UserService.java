@@ -20,6 +20,8 @@ public class UserService {
     public User registerNewUser(User user) {
         if(userRepository.existsByEmail(user.getEmail()))
             throw new RuntimeException("Diese E-Mail-Adresse ist bereits vergeben");
+        if (user.getRole() == null || user.getRole().isEmpty())
+            user.setRole("USER");
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -30,4 +32,19 @@ public class UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    public void promoteToClient(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
+        user.setRole("CLIENT");
+        userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id, String currentAdminEmail) {
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
+        if (userToDelete.getEmail().equals(currentAdminEmail)) {
+            throw new RuntimeException("Sie konnen Ihr eigenes Administratorkonto nicht loschen!");
+        }
+        userRepository.deleteById(id);
+    }
 }

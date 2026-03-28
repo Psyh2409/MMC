@@ -5,18 +5,16 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <h1>Willkommen auf der Website fur Pszchotherapie</h1>
+    <h1>Willkommen auf der Website fur Psychotherapie</h1>
     <h1 th:text="${message}"></h1>
-
-    <p>Dies ist mein erster Schritt zur Erstellung einer Webseite.</p>
 
     <div th:if="${userName != null}">
         <p>Sie haben sich angemeldet als: <strong th:text="${userName}">Gast</strong></p>
         <p>Sein Status: <span th:text="${userRole}">Rolle</span></p>
         <div th:if="${userRole == 'ADMIN'}" style="border: 2px solid red; padding: 15px; margin-top: 20px;">
             <h2 style="color: red;">ADMINISTRATORBEREICH</h2>
-            <p>Guten Tag, Herr Psychothherapeut! Hier sind seine Arbeitsutensilien.</p>
-            <a href="/almin/users" style="display: inline-block; background: #007bff; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
+            <p>Guten Tag, Herr Psychotherapeut! Hier sind seine Arbeitsutensilien.</p>
+            <a href="/admin/users" style="display: inline-block; background: #007bff; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
                 Liste aller Kunden anzeigen
             </a>
         </div>
