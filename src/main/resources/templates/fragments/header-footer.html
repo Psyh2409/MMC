@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header-fragment" style="background-color: #4e342e; color: #ede7f6; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3)">
+    <div style="font-size: 1.5em; font-weight: bold; font-family: 'Georgia', serif;">🌿 Dein Raum der Ruhe</div>
+    <nav style="display: flex; gap: 25px; align-items: center;">
+        <a href="/first-steps" style="color: #d7ccc8; text-decoration: none;">Erste Schritte</a>
+        <a href="/about" style="color: #d7ccc8; text-decoration: none;">Über mich</a>
+        <a href="/articles" style="color: #d7ccc8; text-decoration: none;">Psychoedukation</a>
+
+        <div th:if="${userName != null}" style="display: flex; align-items: center; gap: 15px;">
+            <span style="color: #fff9c4; font-size: 0.9em;">Hallo, <span th:text="${userName}">Name</span></span>
+            <form th:action="@{/logout}" method="post" style="margin: 0;"><button type="submit" style="background: none; border: 1px solid #d7ccc8; color: #d7ccc8; padding: 4px 10px; cursor: pointer; border-radius: 4px;">Austreten</button></form>
+        </div>
+        <div th:unless="${userName != null}">
+            <a href="/login" style="background: #795548; color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none;">Betreten</a>
+        </div>
+    </nav>
+</header>
+
+<footer th:fragment="footer-fragment" style="background-color: #3e2723; color: #d7ccc8; padding: 30px 20px; margin-top: 50px;">
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div>
+            <h3>Kontakt</h3>
+            <p>@ psyh2409@gmail.com</p>
+            <p>📞 +380978223227</p>
+            <p>📲 WhatsApp, Viber</p>
+            <p>🌐 <a href="https://www.facebook.com/share/1BHqutSM8f/" target="_blank" style="color:#d7ccc8;">Facebook</a></p>
+        </div>
+        <div>
+            <h3>Navigation</h3>
+            <p><a href="/" style="color: #d7ccc8;">Startseite</a></p>
+            <p><a href="/session-info" style="color: #d7ccc8;">Das erste Treffen</a></p>
+            <p><a href="/contact" style="color: #d7ccc8;">Schreib mir</a></p>
+        </div>
+        <div>
+            <h3>Über die Arbeit</h3>
+            <p>Einzelpsychotherapie</p>
+            <p>Umgang mit Ängsten, Krisen und Sinnfragen</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

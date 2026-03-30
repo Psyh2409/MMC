@@ -1,70 +1,111 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Anmeldung MMC</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            padding-top: 50px;
-            background-color: #f4f4f4;
-        }
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .error {
-            color: red;
-            font-size: 0.8em;
-        }
-    </style>
+    <title>Registrierung | Psychotherapie</title>
 </head>
 <body>
-<div class="form-container">
-    <h2>Kundenregistrierung</h2>
+<section class="standard-container" style="max-width: 450px; margin-top: 50px;">
+    <h2 style="text-align: center; color: #4e342e;">Kundenregistrierung</h2>
 
-    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <div th:if="${error}" style="color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; font-size: 0.9em;" th:text="${error}"></div>
 
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/register}" th:object="${user}" method="post" style="display: flex; flex-direction: column; gap: 10px;">
 
-        <label>Name:</label>
-        <input type="text" th:field="*{name}" placeholder="Geben Sie ihren Namen ein" required />
-        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        <label style="font-weight: bold; color: #6d4c41;">Name:</label>
+        <input type="text" th:field="*{name}" placeholder="Geben Sie ihren Namen ein" required
+               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" />
+        <div style="color: #d32f2f; font-size: 0.8em; margin-top: -5px;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-        <label>E-Mail:</label>
-        <input type="email" th:field="*{email}" placeholder="beispiel@mail.com" required />
-        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        <label style="font-weight: bold; color: #6d4c41;">E-Mail:</label>
+        <input type="email" th:field="*{email}" placeholder="beispiel@mail.com" required
+               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" />
+        <div style="color: #d32f2f; font-size: 0.8em; margin-top: -5px;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 
-        <label>Passwort (Ab 8 Zeichen):</label>
-        <input type="password" th:field="*{password}" required />
-        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        <label style="font-weight: bold; color: #6d4c41;">Passwort (Ab 8 Zeichen):</label>
+        <input type="password" th:field="*{password}" required
+               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" />
+        <div style="color: #d32f2f; font-size: 0.8em; margin-top: -5px;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
 
-        <button type="submit">Registrieren</button>
+        <button type="submit" style="padding: 12px; background-color: #8d6e63; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px;">
+            Registrieren
+        </button>
     </form>
-    <p><a href="/login">Haben Sie bereits ein Konto? Anmelden</a></p>
-</div>
 
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="/login" style="color: #6d4c41; text-decoration: none;">Haben Sie bereits ein Konto? <strong>Anmelden</strong></a>
+    </p>
+</section>
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Anmeldung MMC</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: sans-serif;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            padding-top: 50px;-->
+<!--            background-color: #f4f4f4;-->
+<!--        }-->
+<!--        .form-container {-->
+<!--            background: white;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 8px;-->
+<!--            box-shadow: 0 0 10px rgba(0,0,0,0.1);-->
+<!--            width: 350px;-->
+<!--        }-->
+<!--        input {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            margin: 10px 0;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 4px;-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
+<!--        button {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            background-color: #28a745;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--        .error {-->
+<!--            color: red;-->
+<!--            font-size: 0.8em;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="form-container">-->
+<!--    <h2>Kundenregistrierung</h2>-->
+
+<!--    <div th:if="${error}" class="error" th:text="${error}"></div>-->
+
+<!--    <form th:action="@{/register}" th:object="${user}" method="post">-->
+
+<!--        <label>Name:</label>-->
+<!--        <input type="text" th:field="*{name}" placeholder="Geben Sie ihren Namen ein" required />-->
+<!--        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
+
+<!--        <label>E-Mail:</label>-->
+<!--        <input type="email" th:field="*{email}" placeholder="beispiel@mail.com" required />-->
+<!--        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
+
+<!--        <label>Passwort (Ab 8 Zeichen):</label>-->
+<!--        <input type="password" th:field="*{password}" required />-->
+<!--        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
+
+<!--        <button type="submit">Registrieren</button>-->
+<!--    </form>-->
+<!--    <p><a href="/login">Haben Sie bereits ein Konto? Anmelden</a></p>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->

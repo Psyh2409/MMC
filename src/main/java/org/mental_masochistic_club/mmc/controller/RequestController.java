@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.mental_masochistic_club.mmc.model.Request;
 import org.mental_masochistic_club.mmc.service.RequestService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -21,15 +22,25 @@ public class RequestController {
         this.requestRepository = requestRepository;
     }
 
+//    @GetMapping("/contact")
+//    public String showForm(Model model) {
+//        model.addAttribute("success", true);
+//        return "contact";
+//    }
     @GetMapping("/contact")
-    public String showForm() {
+    public String showForm(
+            @RequestParam(value = "success", required = false)
+            String success, Model model) {
+        if (success != null)
+            model.addAttribute(success, true);
         return "contact";
     }
 
     @PostMapping("/contact")
-    public String submitForm(@ModelAttribute Request request) {
-//        request.prePersist();
+    public String submitForm(
+            @ModelAttribute Request request, RedirectAttributes redirectAttributes) {
         service.save(request);
+        redirectAttributes.addAttribute("success", true);
         return "redirect:/contact?success";
     }
 

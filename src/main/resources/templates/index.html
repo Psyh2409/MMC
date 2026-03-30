@@ -1,233 +1,282 @@
 <!DOCTYPE html>
-<html lang="de"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.content-area})}">
 <head>
-    <title>Psychotherapie</title>
-    <meta charset="UTF-8">
+    <title>Psychotherapie | Home</title>
 </head>
-
 <body>
 
-<header style="
-        background-color: #4e342e;
-        color: #ede7f6;
-        padding: 15px 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3)">
-
-    <div style="
-            font-size: 1.5em;
-            font-weight: bold;
-            font-family: 'Georgia', serif;">
-        🌿 Dein Raum der Ruhe
-    </div>
-
-    <nav style="
-            display: flex;
-            gap: 25px;
-            align-items: center;">
-
-        <a href="/" style="color: #d7ccc8; text-decoration: none;">Startseite</a>
-        <a href="/services" style="color: #d7ccc8; text-decoration: none;">Dienstleistungen</a>
-        <a href="/anti-stress" style="color: #d7ccc8; text-decoration: none;">Entspannungsbereich</a>
-
-        <!-- Якщо користувач залогінений -->
-        <div th:if="${userName != null}" style="
-                display: flex;
-                align-items: center;
-                gap: 15px;">
-
-            <span style="color: #fff9c4; font-size: 0.9em;">
-                Hallo, <span th:text="${userName}">Name</span>
-            </span>
-
-            <a th:if="${userRole == 'ADMIN'}"
-               href="/admin/users"
-               style="
-                    background: #8d6e63;
-                    color: white;
-                    padding: 5px 12px;
-                    border-radius: 4px;
-                    text-decoration: none;
-                    font-size: 0.8em;">
-                Admin-Panel
-            </a>
-
-            <form th:action="@{/logout}" method="post" style="margin: 0;">
-                <button type="submit" style="
-                        background: none;
-                        border: 1px solid #d7ccc8;
-                        color: #d7ccc8;
-                        padding: 4px 10px;
-                        cursor: pointer;
-                        border-radius: 4px;">
-                    Austreten
-                </button>
-            </form>
-        </div>
-
-        <!-- Якщо НЕ залогінений -->
-        <div th:unless="${userName != null}">
-            <a href="/login" style="
-                    background: #795548;
-                    color: white;
-                    padding: 8px 18px;
-                    border-radius: 20px;
-                    text-decoration: none;">
-                Betreten
+<div class="content-area">
+    <section style="background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f5f5dc; padding: 0 20px;">
+        <h1 class="hero-title-light" style="font-size: 3em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+            Der Weg zu sich selbst führt überall hin...
+        </h1>
+        <p style="font-size: 1.5em; font-style: italic; max-width: 700px; line-height: 1.6; color: #d7ccc8;">
+            Aber genau hier ist er am kürzesten.
+        </p>
+        <div style="margin-top: 40px;">
+            <a th:href="${userName != null ? '#services' : '/register'}" style="background-color: #8d6e63; color: white; padding: 15px 35px; border-radius: 30px; text-decoration: none; font-size: 1.1em; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+                Den eigenen Weg beginnen
             </a>
         </div>
+    </section>
 
-    </nav>
-</header>
+    <section id="services" style="background-color: #f5f5dc; padding: 80px 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
 
-<!-- HERO -->
-<section style="
-    background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)),
-                url('images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #f5f5dc;
-    padding: 0 20px;">
-
-    <h1 style="
-        font-family: 'Georgia', serif;
-        font-size: 3em;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
-        Der Weg zu sich selbst führt überall hin...
-    </h1>
-
-    <p style="
-        font-size: 1.5em;
-        font-style: italic;
-        max-width: 700px;
-        line-height: 1.6;
-        color: #d7ccc8;">
-        Aber genau hier ist er am kürzesten.
-    </p>
-
-    <div style="margin-top: 40px;">
-        <a th:href="${userName != null ? '#services' : '/register'}"
-           style="
-                background-color: #8d6e63;
-                color: white;
-                padding: 15px 35px;
-                border-radius: 30px;
-                text-decoration: none;
-                font-size: 1.1em;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
-            Den eigenen Weg beginnen
-        </a>
-    </div>
-
-</section>
-
-<!-- SERVICES -->
-<section id="services" style="
-        background-color: #f5f5dc;
-        padding: 50px 20px;
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        flex-wrap: wrap;">
-
-    <div style="
-            background: white;
-            width: 300px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-top: 5px solid #8d6e63;">
-        <div style="font-size: 3em; margin-bottom: 15px;">🌿</div>
-        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">
-            Ein eigener Raum
-        </h3>
-        <p style="color: #6d4c41;">
-            Umgang mit Ängsten und Suche nach innerer Stärke.
-        </p>
-    </div>
-
-    <div style="
-            background: white;
-            width: 300px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-top: 5px solid #5d4037;">
-        <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>
-        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">
-            Dialog und Beziehungen
-        </h3>
-        <p style="color: #6d4c41;">
-            Familienberatung und das Setzen gesunder Grenzen.
-        </p>
-    </div>
-
-    <div style="
-            background: white;
-            width: 300px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-top: 5px solid #3e2723;">
-        <div style="font-size: 3em; margin-bottom: 15px;">🌅</div>
-        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">
-            Die Suche nach dem Sinn
-        </h3>
-        <p style="color: #6d4c41;">
-            Der Weg aus der Krise und der Umgang mit depressiven Zuständen.
-        </p>
-    </div>
-
-</section>
-<footer style="
-        background-color: #3e2723;
-        color: #d7ccc8;
-        padding: 30px 20px;
-        margin-top: 50px;">
-    <div style="
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;">
-        <div>
-            <h3>Kontakt</h3>
-            <p>@ psyh2409@gmail.com</p>
-            <p>📞 +380978223227</p>
-            <p>📲 WhatsApp, Viber</p>
-            <p>🌐 <a href="https://www.facebook.com/share/1BHqutSM8f/" target="_blank">Facebook</a> </p>
+        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #8d6e63;">
+            <div style="font-size: 3em; margin-bottom: 15px;">🌿</div>
+            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Ein eigener Raum</h3>
+            <p style="color: #6d4c41;">Umgang mit Ängsten und Suche nach innerer Stärke.</p>
         </div>
-        <div>
-            <h3>Navigation</h3>
-            <p><a href="/" style="color: #d7ccc8;">Startseite</a></p>
-            <p><a href="/session-info" style="color: #d7ccc8;">Das erste Treffen</a></p>
-            <p><a href="/contact" style="color: #d7ccc8;">Schreib mir</a></p>
+
+        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #5d4037;">
+            <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>
+            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Dialog und Beziehungen</h3>
+            <p style="color: #6d4c41;">Familienberatung und das Setzen gesunder Grenzen.</p>
         </div>
-        <div>
-            <h3>Über die Arbeit</h3>
-            <p>Einzelpsychotherapie</p>
-            <p>Umgang mit Ängsten, Krisen und Sinnfragen</p>
+
+        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #3e2723;">
+            <div style="font-size: 3em; margin-bottom: 15px;">🌅</div>
+            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Die Suche nach dem Sinn</h3>
+            <p style="color: #6d4c41;">Der Weg aus der Krise und der Umgang mit depressiven Zuständen.</p>
         </div>
-    </div>
-</footer>
+
+    </section>
+</div>
+
 </body>
 </html>
+
+
+<!--<html lang="de"-->
+<!--      xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+
+<!--<head>-->
+<!--    <title>Psychotherapie</title>-->
+<!--    <meta charset="UTF-8">-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<header style="-->
+<!--        background-color: #4e342e;-->
+<!--        color: #ede7f6;-->
+<!--        padding: 15px 50px;-->
+<!--        display: flex;-->
+<!--        justify-content: space-between;-->
+<!--        align-items: center;-->
+<!--        box-shadow: 0 2px 10px rgba(0,0,0,0.3)">-->
+
+<!--    <div style="-->
+<!--            font-size: 1.5em;-->
+<!--            font-weight: bold;-->
+<!--            font-family: 'Georgia', serif;">-->
+<!--        🌿 Dein Raum der Ruhe-->
+<!--    </div>-->
+
+<!--    <nav style="-->
+<!--            display: flex;-->
+<!--            gap: 25px;-->
+<!--            align-items: center;">-->
+
+<!--        <a href="/first-steps" style="color: #d7ccc8; text-decoration: none;">Erste Schritte</a>-->
+<!--        <a href="/about" style="color: #d7ccc8; text-decoration: none;">Über mich</a>-->
+<!--        <a href="/articles" style="color: #d7ccc8; text-decoration: none;">Psychoedukation</a>-->
+
+<!--        &lt;!&ndash; Якщо користувач залогінений &ndash;&gt;-->
+<!--        <div th:if="${userName != null}" style="-->
+<!--                display: flex;-->
+<!--                align-items: center;-->
+<!--                gap: 15px;">-->
+
+<!--            <span style="color: #fff9c4; font-size: 0.9em;">-->
+<!--                Hallo, <span th:text="${userName}">Name</span>-->
+<!--            </span>-->
+
+<!--            <a th:if="${userRole == 'ADMIN'}"-->
+<!--               href="/admin/users"-->
+<!--               style="-->
+<!--                    background: #8d6e63;-->
+<!--                    color: white;-->
+<!--                    padding: 5px 12px;-->
+<!--                    border-radius: 4px;-->
+<!--                    text-decoration: none;-->
+<!--                    font-size: 0.8em;">-->
+<!--                Admin-Panel-->
+<!--            </a>-->
+
+<!--            <form th:action="@{/logout}" method="post" style="margin: 0;">-->
+<!--                <button type="submit" style="-->
+<!--                        background: none;-->
+<!--                        border: 1px solid #d7ccc8;-->
+<!--                        color: #d7ccc8;-->
+<!--                        padding: 4px 10px;-->
+<!--                        cursor: pointer;-->
+<!--                        border-radius: 4px;">-->
+<!--                    Austreten-->
+<!--                </button>-->
+<!--            </form>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Якщо НЕ залогінений &ndash;&gt;-->
+<!--        <div th:unless="${userName != null}">-->
+<!--            <a href="/login" style="-->
+<!--                    background: #795548;-->
+<!--                    color: white;-->
+<!--                    padding: 8px 18px;-->
+<!--                    border-radius: 20px;-->
+<!--                    text-decoration: none;">-->
+<!--                Betreten-->
+<!--            </a>-->
+<!--        </div>-->
+
+<!--    </nav>-->
+<!--</header>-->
+
+<!--&lt;!&ndash; HERO &ndash;&gt;-->
+<!--<section style="-->
+<!--    background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)),-->
+<!--                url('images/hero-bg.jpg');-->
+<!--    background-size: cover;-->
+<!--    background-position: center;-->
+<!--    height: 60vh;-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    justify-content: center;-->
+<!--    align-items: center;-->
+<!--    text-align: center;-->
+<!--    color: #f5f5dc;-->
+<!--    padding: 0 20px;">-->
+
+<!--    <h1 style="-->
+<!--        font-family: 'Georgia', serif;-->
+<!--        font-size: 3em;-->
+<!--        margin-bottom: 20px;-->
+<!--        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">-->
+<!--        Der Weg zu sich selbst führt überall hin...-->
+<!--    </h1>-->
+
+<!--    <p style="-->
+<!--        font-size: 1.5em;-->
+<!--        font-style: italic;-->
+<!--        max-width: 700px;-->
+<!--        line-height: 1.6;-->
+<!--        color: #d7ccc8;">-->
+<!--        Aber genau hier ist er am kürzesten.-->
+<!--    </p>-->
+
+<!--    <div style="margin-top: 40px;">-->
+<!--        <a th:href="${userName != null ? '#services' : '/register'}"-->
+<!--           style="-->
+<!--                background-color: #8d6e63;-->
+<!--                color: white;-->
+<!--                padding: 15px 35px;-->
+<!--                border-radius: 30px;-->
+<!--                text-decoration: none;-->
+<!--                font-size: 1.1em;-->
+<!--                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">-->
+<!--            Den eigenen Weg beginnen-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--</section>-->
+
+<!--&lt;!&ndash; SERVICES &ndash;&gt;-->
+<!--<section id="services" style="-->
+<!--        background-color: #f5f5dc;-->
+<!--        padding: 50px 20px;-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--        gap: 30px;-->
+<!--        flex-wrap: wrap;">-->
+
+<!--    <div style="-->
+<!--            background: white;-->
+<!--            width: 300px;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);-->
+<!--            text-align: center;-->
+<!--            border-top: 5px solid #8d6e63;">-->
+<!--        <div style="font-size: 3em; margin-bottom: 15px;">🌿</div>-->
+<!--        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">-->
+<!--            Ein eigener Raum-->
+<!--        </h3>-->
+<!--        <p style="color: #6d4c41;">-->
+<!--            Umgang mit Ängsten und Suche nach innerer Stärke.-->
+<!--        </p>-->
+<!--    </div>-->
+
+<!--    <div style="-->
+<!--            background: white;-->
+<!--            width: 300px;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);-->
+<!--            text-align: center;-->
+<!--            border-top: 5px solid #5d4037;">-->
+<!--        <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>-->
+<!--        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">-->
+<!--            Dialog und Beziehungen-->
+<!--        </h3>-->
+<!--        <p style="color: #6d4c41;">-->
+<!--            Familienberatung und das Setzen gesunder Grenzen.-->
+<!--        </p>-->
+<!--    </div>-->
+
+<!--    <div style="-->
+<!--            background: white;-->
+<!--            width: 300px;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);-->
+<!--            text-align: center;-->
+<!--            border-top: 5px solid #3e2723;">-->
+<!--        <div style="font-size: 3em; margin-bottom: 15px;">🌅</div>-->
+<!--        <h3 style="color: #4e342e; font-family: 'Georgia', serif;">-->
+<!--            Die Suche nach dem Sinn-->
+<!--        </h3>-->
+<!--        <p style="color: #6d4c41;">-->
+<!--            Der Weg aus der Krise und der Umgang mit depressiven Zuständen.-->
+<!--        </p>-->
+<!--    </div>-->
+
+<!--</section>-->
+<!--<footer style="-->
+<!--        background-color: #3e2723;-->
+<!--        color: #d7ccc8;-->
+<!--        padding: 30px 20px;-->
+<!--        margin-top: 50px;">-->
+<!--    <div style="-->
+<!--            max-width: 1000px;-->
+<!--            margin: 0 auto;-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            flex-wrap: wrap;-->
+<!--            gap: 20px;">-->
+<!--        <div>-->
+<!--            <h3>Kontakt</h3>-->
+<!--            <p>@ psyh2409@gmail.com</p>-->
+<!--            <p>📞 +380978223227</p>-->
+<!--            <p>📲 WhatsApp, Viber</p>-->
+<!--            <p>🌐 <a href="https://www.facebook.com/share/1BHqutSM8f/" target="_blank">Facebook</a> </p>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <h3>Navigation</h3>-->
+<!--            <p><a href="/" style="color: #d7ccc8;">Startseite</a></p>-->
+<!--            <p><a href="/session-info" style="color: #d7ccc8;">Das erste Treffen</a></p>-->
+<!--            <p><a href="/contact" style="color: #d7ccc8;">Schreib mir</a></p>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <h3>Über die Arbeit</h3>-->
+<!--            <p>Einzelpsychotherapie</p>-->
+<!--            <p>Umgang mit Ängsten, Krisen und Sinnfragen</p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</footer>-->
+<!--</body>-->
+<!--</html>-->
 
 <!--
 

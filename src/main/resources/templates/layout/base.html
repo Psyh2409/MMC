@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Psychotherapie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="~{fragments/header-footer :: header-fragment}"></div>
+
+    <main>
+        <div th:replace="${mainContent}"></div>
+    </main>
+</div>
+
+<div th:replace="~{fragments/header-footer :: footer-fragment}"></div>
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent)">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:replace="${title}">Psychotherapie</title>-->
+<!--    <style>-->
+<!--        html, body { height: 100%; margin: 0; }-->
+<!--        body {-->
+<!--            display: flex; flex-direction: column;-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            background-color: #f5f5dc;-->
+<!--        }-->
+<!--        .wrapper { flex: 1 0 auto; width: 100%; }-->
+<!--        footer { flex-shrink: 0; }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="wrapper">-->
+<!--    <div th:replace="~{fragments/header-footer :: header-fragment}"></div>-->
+<!--    <div th:replace="${mainContent}"></div>-->
+<!--</div>-->
+<!--<div th:replace="~{fragments/header-footer :: footer-fragment}"></div>-->
+<!--</body>-->
+<!--</html>-->

@@ -30,8 +30,10 @@ public class Request {
     @Setter
     private LocalDateTime createdAt;
 
+    private
+
     @PrePersist
-    public void prePersist(){
+    void prePersist(){
         createdAt = LocalDateTime.now();
     }
 
