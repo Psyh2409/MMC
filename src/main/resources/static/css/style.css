@@ -96,3 +96,352 @@ footer a {
     color: #d7ccc8;
     text-decoration: none;
 }
+
+/* 5. HEADER & FOOTER */
+footer h3 {
+    color: #f5f5dc; /* Світлий колір для заголовків у футері */
+    border-bottom: 1px solid #6d4c41; /* Тонка лінія для розділення */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-family: 'Georgia', serif;
+}
+
+/* --- HEADER --- */
+/* --- КЛАСИ ДЛЯ ХЕДЕРА --- */
+.main-header {
+    background-color: #4e342e;
+    color: #ede7f6;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    color: #ede7f6;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #d7ccc8;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 0.95em;
+}
+
+.nav-links a:hover {
+    color: #fff9c4;
+}
+
+/* Спеціальний стиль для виділеної кнопки (Themen) */
+.nav-highlight {
+    color: #fff9c4 !important;
+    font-weight: bold;
+}
+
+/* Блок авторизації */
+.user-auth-zone {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-name-display {
+    color: #fff9c4;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.btn-login-outline {
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #d7ccc8;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    transition: all 0.3s;
+}
+
+.btn-login-outline:hover {
+    background: rgba(215, 204, 200, 0.2);
+}
+
+.btn-register-solid {
+    background: #795548;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-register-solid:hover {
+    background: #8d6e63;
+}
+
+.main-header {
+    background-color: #4e342e;
+    color: #ede7f6;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    color: #ede7f6;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #d7ccc8;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff9c4;
+}
+
+/* --- FOOTER --- */
+.main-footer {
+    background-color: #3e2723;
+    color: #d7ccc8;
+    padding: 40px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* ТЕ САМЕ ВИПРАВЛЕННЯ: Світлі заголовки на темному фоні */
+.main-footer h3 {
+    color: #f5f5dc; /* Бежевий для контрасту */
+    font-family: 'Georgia', serif;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #4e342e;
+    padding-bottom: 8px;
+}
+
+.main-footer a {
+    color: #d7ccc8;
+    text-decoration: none;
+}
+
+.main-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Стилі для випадаючого меню */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f5f5dc; /* Наш бежевий */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    padding: 10px 0;
+}
+
+.dropdown-content a {
+    color: #4e342e !important;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9em;
+}
+
+.dropdown-content a:hover {
+    background-color: #d7ccc8;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* --- Секції та контейнери --- */
+.hero-section {
+    background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #f5f5dc;
+    padding: 0 20px;
+}
+
+.services-grid {
+    background-color: #f5f5dc;
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* --- Картки послуг --- */
+.service-card {
+    background: white;
+    width: 300px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-top: 5px solid #8d6e63; /* Колір можна міняти через модифікатори */
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+/* --- Теги симптомів (твоя нова фішка) --- */
+.symptom-tag {
+    display: inline-block;
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid #d7ccc8;
+    border-radius: 20px;
+    color: #4e342e;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.symptom-tag:hover {
+    background: #8d6e63;
+    color: white;
+    border-color: #8d6e63;
+}
+
+.content-with-sidebar {
+    display: flex;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 40px auto;
+    width: 95%;
+}
+
+.sidebar {
+    flex: 0 0 250px; /* Фіксована ширина зліва */
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    height: fit-content;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.article-body {
+    flex: 1; /* Текст займає весь простір, що залишився */
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.sidebar-nav a {
+    display: block;
+    padding: 10px;
+    color: #6d4c41;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+    background: #f5f5dc;
+    border-left-color: #8d6e63;
+}
+
+/* Робимо меню випадаючим */
+.nav-links div.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none; /* Спочатку ховаємо */
+    position: absolute;
+    background-color: #3e2723; /* Темний фон як у футера */
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 100;
+    border-radius: 8px;
+    top: 100%; /* З'являється під посиланням */
+}
+
+.dropdown-content a {
+    color: #d7ccc8 !important;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #4e342e;
+}
+
+.dropdown-content a:hover {
+    background-color: #4e342e;
+    color: #fff9c4 !important;
+}
+
+/* Магія: показуємо при наведенні */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.btn-outline-small {
+    background: none;
+    border: 1px solid #d7ccc8;
+    color: #d7ccc8;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 0.85em;
+    transition: all 0.3s;
+}
+
+.btn-outline-small:hover {
+    background: #d7ccc8;
+    color: #4e342e;
+}

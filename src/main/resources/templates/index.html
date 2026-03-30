@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.content-area})}">
@@ -5,44 +7,90 @@
     <title>Psychotherapie | Home</title>
 </head>
 <body>
-
 <div class="content-area">
-    <section style="background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f5f5dc; padding: 0 20px;">
-        <h1 class="hero-title-light" style="font-size: 3em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+    <section class="hero-section">
+        <h1 class="hero-title-light" style="font-size: 3em;">
             Der Weg zu sich selbst führt überall hin...
         </h1>
-        <p style="font-size: 1.5em; font-style: italic; max-width: 700px; line-height: 1.6; color: #d7ccc8;">
+        <p style="font-size: 1.5em; font-style: italic; color: #d7ccc8;">
             Aber genau hier ist er am kürzesten.
         </p>
         <div style="margin-top: 40px;">
-            <a th:href="${userName != null ? '#services' : '/register'}" style="background-color: #8d6e63; color: white; padding: 15px 35px; border-radius: 30px; text-decoration: none; font-size: 1.1em; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+            <a th:href="${userName != null ? '#services' : '/register'}" class="btn-primary">
                 Den eigenen Weg beginnen
             </a>
         </div>
     </section>
 
-    <section id="services" style="background-color: #f5f5dc; padding: 80px 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+    <section style="padding: 60px 20px; text-align: center; background: white;">
+        <h2 style="margin-bottom: 30px;">З чим ви зіткнулися?</h2>
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <a href="/issues/anxiety" class="symptom-tag">😰 Тривога</a>
+            <a href="/issues/burnout" class="symptom-tag">😤 Вигорання</a>
+            <a href="/issues/relationships" class="symptom-tag">💔 Стосунки</a>
+            <a href="/issues/depression" class="symptom-tag">😞 Пригніченість</a>
+        </div>
+    </section>
 
-        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #8d6e63;">
-            <div style="font-size: 3em; margin-bottom: 15px;">🌿</div>
-            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Ein eigener Raum</h3>
-            <p style="color: #6d4c41;">Umgang mit Ängsten und Suche nach innerer Stärke.</p>
+    <section id="services" class="services-grid">
+
+        <div class="service-card">
+            <div class="service-icon">🌿</div>
+            <h3>Ein eigener Raum</h3>
+            <p>Umgang mit Ängsten und Suche nach innerer Stärke.</p>
         </div>
 
-        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #5d4037;">
-            <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>
-            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Dialog und Beziehungen</h3>
-            <p style="color: #6d4c41;">Familienberatung und das Setzen gesunder Grenzen.</p>
+        <div class="service-card" style="border-top-color: #5d4037;">
+            <div class="service-icon">🤝</div>
+            <h3>Dialog und Beziehungen</h3>
+            <p>Familienberatung und das Setzen gesunder Grenzen.</p>
         </div>
 
-        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #3e2723;">
-            <div style="font-size: 3em; margin-bottom: 15px;">🌅</div>
-            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Die Suche nach dem Sinn</h3>
-            <p style="color: #6d4c41;">Der Weg aus der Krise und der Umgang mit depressiven Zuständen.</p>
+        <div class="service-card" style="border-top-color: #3e2723;">
+            <div class="service-icon">🌅</div>
+            <h3>Die Suche nach dem Sinn</h3>
+            <p>Der Weg aus der Krise und der Umgang mit depressiven Zuständen.</p>
         </div>
 
     </section>
 </div>
+<!--<div class="content-area">-->
+<!--    <section style="background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f5f5dc; padding: 0 20px;">-->
+<!--        <h1 class="hero-title-light" style="font-size: 3em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">-->
+<!--            Der Weg zu sich selbst führt überall hin...-->
+<!--        </h1>-->
+<!--        <p style="font-size: 1.5em; font-style: italic; max-width: 700px; line-height: 1.6; color: #d7ccc8;">-->
+<!--            Aber genau hier ist er am kürzesten.-->
+<!--        </p>-->
+<!--        <div style="margin-top: 40px;">-->
+<!--            <a th:href="${userName != null ? '#services' : '/register'}" style="background-color: #8d6e63; color: white; padding: 15px 35px; border-radius: 30px; text-decoration: none; font-size: 1.1em; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">-->
+<!--                Den eigenen Weg beginnen-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </section>-->
+
+<!--    <section id="services" style="background-color: #f5f5dc; padding: 80px 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">-->
+
+<!--        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #8d6e63;">-->
+<!--            <div style="font-size: 3em; margin-bottom: 15px;">🌿</div>-->
+<!--            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Ein eigener Raum</h3>-->
+<!--            <p style="color: #6d4c41;">Umgang mit Ängsten und Suche nach innerer Stärke.</p>-->
+<!--        </div>-->
+
+<!--        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #5d4037;">-->
+<!--            <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>-->
+<!--            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Dialog und Beziehungen</h3>-->
+<!--            <p style="color: #6d4c41;">Familienberatung und das Setzen gesunder Grenzen.</p>-->
+<!--        </div>-->
+
+<!--        <div style="background: white; width: 300px; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #3e2723;">-->
+<!--            <div style="font-size: 3em; margin-bottom: 15px;">🌅</div>-->
+<!--            <h3 style="color: #4e342e; font-family: 'Georgia', serif;">Die Suche nach dem Sinn</h3>-->
+<!--            <p style="color: #6d4c41;">Der Weg aus der Krise und der Umgang mit depressiven Zuständen.</p>-->
+<!--        </div>-->
+
+<!--    </section>-->
+<!--</div>-->
 
 </body>
 </html>
