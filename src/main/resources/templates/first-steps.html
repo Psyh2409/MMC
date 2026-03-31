@@ -2,24 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.steps-content})}">
 <head>
-    <title>Erste Schritte | Psychotherapie</title>
+    <title>Перші кроки | Психотерапія</title>
 </head>
 <body>
 <div class="steps-content">
     <section style="background: linear-gradient(rgba(78,52,46,0.8), rgba(78,52,46,0.8)); color: #f5f5dc; padding: 80px 20px; text-align: center;">
-        <h1 class="hero-title-light" style="font-size: 2.8em;">Der Beginn der Arbeit an sich selbst</h1>
-        <p style="font-size: 1.3em; max-width: 700px; margin: auto;">Kein schneller Weg. Sondern ein ehrlicher.</p>
+        <h1 class="hero-title-light" style="font-size: 2.8em; font-family: 'Georgia', serif;">Початок роботи над собою</h1>
+        <p style="font-size: 1.3em; max-width: 700px; margin: auto; font-style: italic;">Це не швидкий шлях. Але чесний.</p>
     </section>
 
-    <section style="max-width: 800px; margin: 50px auto; padding: 0 20px; color:#4e342e; line-height: 1.6;">
-        <p>Psychotherapie ist kein schneller Weg zur Erleichterung. Sie ist ein Prozess.</p>
-        <p style="font-style: italic;">Neun Frauen können ein Kind nicht in einem Monat zur Welt bringen...</p>
-        <p style="font-weight: bold;">Ich arbeite mit Menschen, die bereit sind, Verantwortung für sich selbst zu übernehmen.</p>
+    <section style="max-width: 800px; margin: 50px auto; padding: 0 20px; color:#4e342e; line-height: 1.8; font-family: 'Georgia', serif;">
+        <p>Психотерапія — це не магічна таблетка і не швидкий спосіб отримати полегшення за один сеанс. Це глибокий, поступовий процес трансформації.</p>
+
+        <p style="font-style: italic; border-left: 3px solid #8d6e63; padding-left: 20px; margin: 30px 0;">
+            «Дев'ять жінок не зможуть народити дитину за один місяць...»
+        </p>
+
+        <p>Певні речі потребують часу, визрівання та терпіння. Я працюю з людьми, які готові досліджувати свій внутрішній світ та брати на себе відповідальність за власне життя.</p>
     </section>
 
-    <section style="text-align:center; padding:60px; background:#d7ccc8; margin-top: 40px;">
-        <h2 style="color:#4e342e;">Bereit zu beginnen?</h2>
-        <a href="/contact" style="background:#4e342e; color:white; padding:15px 30px; text-decoration:none; border-radius:25px; display: inline-block; margin-top: 20px;">Kontakt aufnehmen</a>
+    <section style="max-width: 850px; margin: 60px auto; padding: 40px; background: #fafafa; border-radius: 15px; border: 1px solid #efebe9; font-family: 'Georgia', serif;">
+        <h2 style="color: #4e342e; text-align: center; margin-bottom: 40px;">Чого очікувати від першої зустрічі?</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div style="padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+                <h3 style="color: #8d6e63; margin-top: 0;">1. Знайомство</h3>
+                <p style="font-size: 0.95em; color: #5d4037;">Ми створимо безпечний простір. Ви розповідаєте стільки, скільки готові. Тут немає "правильних" відповідей.</p>
+            </div>
+            <div style="padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+                <h3 style="color: #8d6e63; margin-top: 0;">2. Запит</h3>
+                <p style="font-size: 0.95em; color: #5d4037;">Ми спробуємо сформулювати, що саме болить зараз і якого результату ви хочете досягти.</p>
+            </div>
+            <div style="padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+                <h3 style="color: #8d6e63; margin-top: 0;">3. План</h3>
+                <p style="font-size: 0.95em; color: #5d4037;">Ми обговоримо періодичність зустрічей та тривалість нашої спільної роботи.</p>
+            </div>
+            <div style="padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+                <h3 style="color: #8d6e63; margin-top: 0;">4. Конфіденційність</h3>
+                <p style="font-size: 0.95em; color: #5d4037;">Все, що сказано в кабінеті (чи онлайн), залишається між нами. Це непорушне правило.</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="max-width: 800px; margin: 40px auto; text-align: center; padding: 0 20px;">
+        <p style="font-weight: bold; color: #4e342e; font-size: 1.1em;">Моя роль — бути поруч, підтримувати та допомагати знайти ваші власні відповіді у цьому процесі.</p>
+    </section>
+
+    <section style="text-align:center; padding:60px; background:#d7ccc8; margin-top: 40px; border-radius: 15px 15px 0 0;">
+        <h2 style="color:#4e342e; font-family: 'Georgia', serif;">Готові розпочати?</h2>
+        <p style="color:#5d4037;">Зробіть перший крок назустріч собі.</p>
+        <a href="/contact" style="background:#4e342e; color:white; padding:15px 35px; text-decoration:none; border-radius:25px; display: inline-block; margin-top: 20px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(78,52,46,0.3);">Написати мені</a>
     </section>
 </div>
 </body>

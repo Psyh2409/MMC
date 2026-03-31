@@ -1,59 +1,161 @@
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.content-area})}">
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.main-content})}">
 <head>
-    <title>Psychotherapie | Home</title>
+    <title>Шлях до себе — Психологічна допомога та медіація</title>
 </head>
 <body>
-<div class="content-area">
-    <section class="hero-section">
-        <h1 class="hero-title-light" style="font-size: 3em;">
-            Der Weg zu sich selbst führt überall hin...
-        </h1>
-        <p style="font-size: 1.5em; font-style: italic; color: #d7ccc8;">
-            Aber genau hier ist er am kürzesten.
-        </p>
-        <div style="margin-top: 40px;">
-            <a th:href="${userName != null ? '#services' : '/register'}" class="btn-primary">
-                Den eigenen Weg beginnen
-            </a>
-        </div>
-    </section>
+<div class="main-content">
+    <main class="main-content">
+        <section style="padding: 120px 20px; text-align: center; background: linear-gradient(rgba(78,52,46,0.5), rgba(78,52,46,0.5)), url('/images/hero-bg.jpg') center/cover; min-height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
 
-    <section style="padding: 60px 20px; text-align: center; background: white;">
-        <h2 style="margin-bottom: 30px;">З чим ви зіткнулися?</h2>
-        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-            <a href="/issues/anxiety" class="symptom-tag">😰 Тривога</a>
-            <a href="/issues/burnout" class="symptom-tag">😤 Вигорання</a>
-            <a href="/issues/relationships" class="symptom-tag">💔 Стосунки</a>
-            <a href="/issues/depression" class="symptom-tag">😞 Пригніченість</a>
-        </div>
-    </section>
+            <h1 style="font-family: 'Georgia', serif; font-size: 3.5em; margin-bottom: 15px; color: #fdf5e6; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                Будь-який шлях веде до себе
+            </h1>
 
-    <section id="services" class="services-grid">
+            <p style="font-size: 1.8em; font-style: italic; color: #fff9c4; font-family: 'Georgia', serif; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); margin-bottom: 40px;">
+                і тільки цей — найкоротший.
+            </p>
 
-        <div class="service-card">
-            <div class="service-icon">🌿</div>
-            <h3>Ein eigener Raum</h3>
-            <p>Umgang mit Ängsten und Suche nach innerer Stärke.</p>
-        </div>
+            <div th:if="${userName == null}">
+                <a href="/registration" style="background: #8d6e63; color: #fdf5e6; padding: 18px 50px; border-radius: 40px; text-decoration: none; font-weight: bold; font-family: 'Georgia', serif; font-size: 1.2em; box-shadow: 0 6px 20px rgba(0,0,0,0.3); transition: 0.3s; display: inline-block; border: 1px solid rgba(255,245,220,0.2);">
+                    Почати свій шлях
+                </a>
+            </div>
 
-        <div class="service-card" style="border-top-color: #5d4037;">
-            <div class="service-icon">🤝</div>
-            <h3>Dialog und Beziehungen</h3>
-            <p>Familienberatung und das Setzen gesunder Grenzen.</p>
-        </div>
+            <div th:if="${userName != null}">
+                <p style="color: #fff9c4; font-size: 1.1em; font-family: 'Georgia', serif; border-top: 1px solid rgba(255,249,196,0.3); padding-top: 10px;">
+                    Радий твоему поверненню до роботи над собою.
+                </p>
+            </div>
 
-        <div class="service-card" style="border-top-color: #3e2723;">
-            <div class="service-icon">🌅</div>
-            <h3>Die Suche nach dem Sinn</h3>
-            <p>Der Weg aus der Krise und der Umgang mit depressiven Zuständen.</p>
-        </div>
+        </section>
 
-    </section>
+        <section style="padding: 80px 20px; background: #fdfaf5;">
+            <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+
+                <a href="/issues/inner-calm" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #8d6e63;">
+                        <h3 style="color: #4e342e; margin-bottom: 15px;">Тривога та спокій</h3>
+                        <p style="line-height: 1.7; color: #5d4037;">Робота з панічними атаками та хронічним стресом. Пошук внутрішньої тиші у світі, що не зупиняється.</p>
+                    </div>
+                </a>
+
+                <a href="/issues/freedom-choice" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #5d4037;">
+                        <h3 style="color: #4e342e; margin-bottom: 15px;">Залежність та воля</h3>
+                        <p style="line-height: 1.7; color: #5d4037;">Від втечі в ілюзії до усвідомленої присутності. Розрив патологічних циклів та повернення авторства життя.</p>
+                    </div>
+                </a>
+
+                <a href="/issues/new-meanings" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #546e7a;">
+                        <h3 style="color: #4e342e; margin-bottom: 15px;">Криза та сенси</h3>
+                        <p style="line-height: 1.7; color: #5d4037;">Депресія як "енергія зупинки". Робота з втратами, травмами та переоцінкою життєвого досвіду.</p>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+    </main>
 </div>
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.content-area})}">-->
+<!--<head>-->
+<!--    <title>Психотерапія | Головна</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="content-area">-->
+<!--    <section class="hero-section" style="padding: 100px 20px; text-align: center; background: linear-gradient(rgba(78,52,46,0.85), rgba(78,52,46,0.85)); color: #f5f5dc;">-->
+<!--        <h1 class="hero-title-light" style="font-size: 3.5em; font-family: 'Georgia', serif; margin-bottom: 20px;">-->
+<!--            Будь-який шлях веде до себе...-->
+<!--        </h1>-->
+<!--        <p style="font-size: 1.6em; font-style: italic; color: #d7ccc8; max-width: 800px; margin: 0 auto 40px auto;">-->
+<!--            Але саме тут він найкоротший.-->
+<!--        </p>-->
+<!--        <div>-->
+<!--            <a th:href="${userName != null ? '#services' : '/register'}" class="btn-primary"-->
+<!--               style="background: #8d6e63; color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 1.1em; transition: 0.3s;">-->
+<!--                Розпочати власний шлях-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </section>-->
+<!--    <section class="main-info-block" style="padding: 80px 20px; background-color: #fdfaf5;">-->
+<!--        <div style="max-width: 1000px; margin: 0 auto;">-->
+
+<!--            <div style="text-align: center; margin-bottom: 60px;">-->
+<!--                <h2 style="font-family: 'Georgia', serif; color: #4e342e; font-size: 2.5em;">Шлях до внутрішньої рівноваги</h2>-->
+<!--                <p style="font-size: 1.2em; color: #8d6e63; font-style: italic; margin-top: 15px;">-->
+<!--                    "Мій підхід ґрунтується на повазі до вашої особистості та пошуку прихованих ресурсів."-->
+<!--                </p>-->
+<!--            </div>-->
+
+<!--            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">-->
+<!--                <div style="background: white; padding: 35px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">-->
+<!--                    <h3 style="color: #6d4c41; margin-bottom: 20px; border-bottom: 1px solid #d7ccc8; padding-bottom: 10px;">Про психологічну допомогу</h3>-->
+<!--                    <p style="line-height: 1.7; color: #4e342e;">-->
+<!--                        Це не просто розмова. Це безпечний простір, де ми досліджуємо ваші симптоми та прояви не як "поломку", а як сигнал системи про потребу в змінах.-->
+<!--                    </p>-->
+<!--                    <ul style="margin-top: 15px; color: #4e342e; padding-left: 20px;">-->
+<!--                        <li><strong>Симптоми:</strong> Тривога, безсоння, конфлікти.</li>-->
+<!--                        <li><strong>Причини:</strong> Глибинні установки та старі травми.</li>-->
+<!--                        <li><strong>Результат:</strong> Нові сенси та свобода вибору.</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+
+<!--                <div style="background: white; padding: 35px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">-->
+<!--                    <h3 style="color: #6d4c41; margin-bottom: 20px; border-bottom: 1px solid #d7ccc8; padding-bottom: 10px;">Мій метод роботи</h3>-->
+<!--                    <p style="line-height: 1.7; color: #4e342e;">-->
+<!--                        Я працюю в межах гуманістичного підходу. Моя спеціалізація в психіатрії дозволяє мені бачити ширшу картину та допомагати навіть у складних кризових станах.-->
+<!--                    </p>-->
+<!--                    <p style="margin-top: 15px; font-weight: bold; color: #8d6e63;">-->
+<!--                        Для мене ви — не діагноз, а людина зі своєю унікальною історією.-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
+<!--    <section style="padding: 80px 20px; text-align: center; background: #fff;">-->
+<!--        <h2 style="margin-bottom: 40px; color: #4e342e; font-family: 'Georgia', serif;">З чим ви зіткнулися?</h2>-->
+<!--        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">-->
+<!--            <a href="/issues/anxiety" class="symptom-tag" style="padding: 10px 25px; border: 1px solid #d7ccc8; border-radius: 20px; text-decoration: none; color: #5d4037;">😰 Тривога</a>-->
+<!--            <a href="/issues/burnout" class="symptom-tag" style="padding: 10px 25px; border: 1px solid #d7ccc8; border-radius: 20px; text-decoration: none; color: #5d4037;">😤 Вигорання</a>-->
+<!--            <a href="/issues/relationships" class="symptom-tag" style="padding: 10px 25px; border: 1px solid #d7ccc8; border-radius: 20px; text-decoration: none; color: #5d4037;">💔 Стосунки</a>-->
+<!--            <a href="/issues/depression" class="symptom-tag" style="padding: 10px 25px; border: 1px solid #d7ccc8; border-radius: 20px; text-decoration: none; color: #5d4037;">😞 Пригніченість</a>-->
+<!--        </div>-->
+<!--    </section>-->
+
+<!--    <section id="services" class="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 60px 40px; background: #fdfbf7;">-->
+
+<!--        <div class="service-card" style="background: white; padding: 30px; border-radius: 15px; border-top: 5px solid #8d6e63; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">-->
+<!--            <div class="service-icon" style="font-size: 2.5em; margin-bottom: 15px;">🌿</div>-->
+<!--            <h3 style="color: #4e342e; margin-bottom: 15px;">Власний простір</h3>-->
+<!--            <p style="color: #6d4c41; line-height: 1.6;">Робота з тривожністю, страхами та пошук внутрішньої опори у важкі часи.</p>-->
+<!--        </div>-->
+
+<!--        <div class="service-card" style="background: white; padding: 30px; border-radius: 15px; border-top: 5px solid #5d4037; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">-->
+<!--            <div class="service-icon" style="font-size: 2.5em; margin-bottom: 15px;">🤝</div>-->
+<!--            <h3>Діалог та стосунки</h3>-->
+<!--            <p style="color: #6d4c41; line-height: 1.6;">Консультування щодо сімейних питань, вибудовування здорових кордонів та розуміння себе поруч з іншими.</p>-->
+<!--        </div>-->
+
+<!--        <div class="service-card" style="background: white; padding: 30px; border-radius: 15px; border-top: 5px solid #3e2723; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">-->
+<!--            <div class="service-icon" style="font-size: 2.5em; margin-bottom: 15px;">🌅</div>-->
+<!--            <h3>Пошук сенсу</h3>-->
+<!--            <p style="color: #6d4c41; line-height: 1.6;">Вихід із життєвих криз, робота з депресивними станами та відновлення віри у власне майбутнє.</p>-->
+<!--        </div>-->
+
+<!--    </section>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
 <!--<div class="content-area">-->
 <!--    <section style="background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f5f5dc; padding: 0 20px;">-->
 <!--        <h1 class="hero-title-light" style="font-size: 3em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">-->
@@ -91,9 +193,6 @@
 
 <!--    </section>-->
 <!--</div>-->
-
-</body>
-</html>
 
 
 <!--<html lang="de"-->

@@ -2,29 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
 <head>
-    <title>Kontakt | Dein Raum der Ruhe</title>
+    <title>Контакти | Твій простір спокою</title>
 </head>
 <body>
-<!--<section class="standard-container" style="max-width: 600px;">-->
-<!--    <h2 style="text-align:center; color:#4e342e;">Schreib mir</h2>-->
-<section class="standard-container">
-    <h2 style="text-align:center;">Schreib mir</h2>
-    <p style="text-align:center; color:#6d4c41;">Sie können mir hier eine Nachricht hinterlassen.</p>
 
-    <div th:if="${param.success}" style="background:#e8f5e9; color:#2e7d32; padding:12px; border-radius:8px; margin-bottom:20px; text-align:center; font-weight:bold;">
-        ✔ Ihre Nachricht wurde gesendet. Ich melde mich bei Ihnen.
+<section class="standard-container" style="max-width: 600px; margin: 40px auto; padding: 20px;">
+    <h2 style="text-align:center; color:#4e342e; font-family: 'Georgia', serif;">Написати мені</h2>
+    <p style="text-align:center; color:#6d4c41; margin-bottom: 30px;">Ви можете залишити тут своє повідомлення, і я обов'язково вам відповім.</p>
+
+    <div th:if="${param.success}" style="background:#e8f5e9; color:#2e7d32; padding:15px; border-radius:8px; margin-bottom:25px; text-align:center; font-weight:bold; border: 1px solid #c8e6c9;">
+        ✔ Ваше повідомлення надіслано. Я зв'яжуся з вами найближчим часом.
     </div>
 
-    <form th:action="@{/contact}" method="post" style="display:flex; flex-direction:column; gap:15px;">
-        <label>Name</label>
-        <input type="text" name="name" required style="padding:10px; border-radius:5px; border:1px solid #ccc;">
-        <label>Kontakt (Telefon oder Email)</label>
-        <input type="text" name="contact" required style="padding:10px; border-radius:5px; border:1px solid #ccc;">
-        <label>Nachricht</label>
-        <textarea name="message" rows="5" required style="padding:10px; border-radius:5px; border:1px solid #ccc;"></textarea>
-        <button type="submit" style="background-color: #6d4c41; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer;">Senden</button>
+    <form th:action="@{/contact}" method="post" style="display:flex; flex-direction:column; gap:15px; font-family: sans-serif;">
+
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="color: #5d4037; font-weight: bold;">Ваше ім'я</label>
+            <input type="text" name="name" required placeholder="Як до вас звертатися?"
+                   style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="color: #5d4037; font-weight: bold;">Контактні дані (Телефон або Email)</label>
+            <input type="text" name="contact" required placeholder="Куди мені відповісти?"
+                   style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="color: #5d4037; font-weight: bold;">Ваше повідомлення</label>
+            <textarea name="message" rows="6" required placeholder="Опишіть коротко ваш запит..."
+                      style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0; resize: vertical;"></textarea>
+        </div>
+
+        <button type="submit" style="background-color: #6d4c41; color: white; border: none; padding: 15px; border-radius: 25px; cursor: pointer; font-size: 1.1em; font-weight: bold; margin-top: 10px; transition: background 0.3s;">
+            Надіслати повідомлення
+        </button>
     </form>
+
+    <div style="margin-top: 40px; text-align: center; border-top: 1px solid #d7ccc8; padding-top: 20px;">
+        <p style="color: #8d6e63; font-size: 0.9em;">Або напишіть мені безпосередньо у месенджери (WhatsApp, Viber):</p>
+        <p style="font-weight: bold; color: #4e342e;">+38 (097) 822-32-27</p>
+    </div>
 </section>
+
 </body>
 </html>
 

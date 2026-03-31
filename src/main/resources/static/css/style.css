@@ -1,4 +1,6 @@
-/* 1. БАЗОВІ НАЛАШТУВАННЯ */
+/* =========================================
+   1. БАЗОВІ НАЛАШТУВАННЯ ТА ЛЕЙАУТ
+   ========================================= */
 html, body {
     height: 100%;
     margin: 0;
@@ -8,18 +10,16 @@ body {
     display: flex;
     flex-direction: column;
     font-family: Arial, sans-serif;
-    background-color: #f5f5dc; /* Твій бежевий фон */
-    color: #4e342e; /* Основний коричневий текст */
+    background-color: #f5f5dc;
+    color: #4e342e;
 }
 
-/* 2. СТРУКТУРА ЛЕЙАУТУ */
 .wrapper {
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
 }
 
-/* Контейнер для текстових сторінок (About, Contact, Login) */
 .standard-container {
     max-width: 700px;
     width: 90%;
@@ -31,35 +31,20 @@ body {
     box-sizing: border-box;
 }
 
-/* 3. ТИПОГРАФІЯ (Твій фірмовий стиль) */
-h1, h2, h3, .hero-title {
+/* =========================================
+   2. ТИПОГРАФІЯ ТА КНОПКИ (ЗАГАЛЬНІ)
+   ========================================= */
+h1, h2, h3, .hero-title, .logo {
     font-family: 'Georgia', serif;
+    font-weight: normal;
     color: #4e342e;
 }
-/* Заголовок для темного фону (Hero-блок) */
+
 .hero-title-light {
-    color: #f5f5dc; /* Міняємо колір самого тексту на бежевий */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6); /* Додаємо глибоку темну тінь */
+    color: #f5f5dc;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 }
 
-/* 4. ЕЛЕМЕНТИ ФОРМ */
-label {
-    font-weight: bold;
-    color: #6d4c41;
-    margin-bottom: 5px;
-    display: block;
-}
-
-input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-/* Твої кнопки */
 .btn-primary {
     background-color: #6d4c41;
     color: white;
@@ -73,6 +58,8 @@ input, textarea {
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: none;
 }
 
 .btn-primary:hover {
@@ -80,34 +67,36 @@ input, textarea {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* 5. HEADER & FOOTER */
-header {
-    background-color: #4e342e;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+/* Кнопка "Написати мені" */
+.btn-contact {
+    background-color: #2e7d32 !important;
+    color: white !important;
+    padding: 12px 25px !important;
+    border-radius: 30px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+    transition: transform 0.2s, background 0.3s !important;
 }
 
-footer {
-    background-color: #3e2723;
-    color: #d7ccc8;
-    padding: 30px 20px;
+.btn-contact:hover {
+    background-color: #1b5e20 !important;
+    transform: translateY(-2px);
 }
 
-footer a {
-    color: #d7ccc8;
-    text-decoration: none;
+/* Кнопка "Головна" */
+.btn-home {
+    border: 2px solid #455a64 !important;
+    color: #455a64 !important;
+    padding: 10px 25px !important;
+    border-radius: 30px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
 }
 
-/* 5. HEADER & FOOTER */
-footer h3 {
-    color: #f5f5dc; /* Світлий колір для заголовків у футері */
-    border-bottom: 1px solid #6d4c41; /* Тонка лінія для розділення */
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    font-family: 'Georgia', serif;
-}
-
-/* --- HEADER --- */
-/* --- КЛАСИ ДЛЯ ХЕДЕРА --- */
+/* =========================================
+   3. HEADER & FOOTER
+   ========================================= */
 .main-header {
     background-color: #4e342e;
     color: #ede7f6;
@@ -121,90 +110,6 @@ footer h3 {
 .logo {
     font-size: 1.5em;
     font-weight: bold;
-    font-family: 'Georgia', serif;
-    color: #ede7f6;
-    text-decoration: none;
-}
-
-.nav-links {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-}
-
-.nav-links a {
-    color: #d7ccc8;
-    text-decoration: none;
-    transition: color 0.3s;
-    font-size: 0.95em;
-}
-
-.nav-links a:hover {
-    color: #fff9c4;
-}
-
-/* Спеціальний стиль для виділеної кнопки (Themen) */
-.nav-highlight {
-    color: #fff9c4 !important;
-    font-weight: bold;
-}
-
-/* Блок авторизації */
-.user-auth-zone {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-name-display {
-    color: #fff9c4;
-    font-size: 0.9em;
-    font-weight: bold;
-}
-
-.btn-login-outline {
-    color: #fff;
-    text-decoration: none;
-    border: 1px solid #d7ccc8;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    transition: all 0.3s;
-}
-
-.btn-login-outline:hover {
-    background: rgba(215, 204, 200, 0.2);
-}
-
-.btn-register-solid {
-    background: #795548;
-    color: white;
-    padding: 6px 18px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 0.9em;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.btn-register-solid:hover {
-    background: #8d6e63;
-}
-
-.main-header {
-    background-color: #4e342e;
-    color: #ede7f6;
-    padding: 15px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-.logo {
-    font-size: 1.5em;
-    font-weight: bold;
-    font-family: 'Georgia', serif;
     color: #ede7f6;
     text-decoration: none;
 }
@@ -225,7 +130,6 @@ footer h3 {
     color: #fff9c4;
 }
 
-/* --- FOOTER --- */
 .main-footer {
     background-color: #3e2723;
     color: #d7ccc8;
@@ -242,25 +146,65 @@ footer h3 {
     gap: 20px;
 }
 
-/* ТЕ САМЕ ВИПРАВЛЕННЯ: Світлі заголовки на темному фоні */
 .main-footer h3 {
-    color: #f5f5dc; /* Бежевий для контрасту */
+    color: #f5f5dc;
     font-family: 'Georgia', serif;
     margin-bottom: 15px;
     border-bottom: 1px solid #4e342e;
     padding-bottom: 8px;
 }
 
-.main-footer a {
-    color: #d7ccc8;
-    text-decoration: none;
+/* =========================================
+   4. HERO-SECTION ТА КАРТКИ (ГОЛОВНА)
+   ========================================= */
+.hero-section {
+    height: 60vh !important;
+    min-height: 450px !important;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('../images/hero-bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
 }
 
-.main-footer a:hover {
-    text-decoration: underline;
+.services-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 25px !important;
+    padding: 50px 15px !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
 }
 
-/* Стилі для випадаючого меню */
+.service-card {
+    flex: 1 1 300px !important;
+    max-width: 380px !important;
+    background: #ffffff !important;
+    padding: 30px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+    transition: transform 0.3s ease !important;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Приховуємо старий блок проблем */
+.old-problems-section, #what-you-face {
+    display: none !important;
+}
+
+/* =========================================
+   5. DROPDOWN (ВИПАДАЮЧЕ МЕНЮ)
+   ========================================= */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -269,147 +213,12 @@ footer h3 {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f5f5dc; /* Наш бежевий */
-    min-width: 200px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 8px;
-    padding: 10px 0;
-}
-
-.dropdown-content a {
-    color: #4e342e !important;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9em;
-}
-
-.dropdown-content a:hover {
-    background-color: #d7ccc8;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* --- Секції та контейнери --- */
-.hero-section {
-    background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url('/images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #f5f5dc;
-    padding: 0 20px;
-}
-
-.services-grid {
-    background-color: #f5f5dc;
-    padding: 80px 20px;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-/* --- Картки послуг --- */
-.service-card {
-    background: white;
-    width: 300px;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    border-top: 5px solid #8d6e63; /* Колір можна міняти через модифікатори */
-    transition: transform 0.3s ease;
-}
-
-.service-card:hover {
-    transform: translateY(-5px);
-}
-
-.service-icon {
-    font-size: 3em;
-    margin-bottom: 15px;
-}
-
-/* --- Теги симптомів (твоя нова фішка) --- */
-.symptom-tag {
-    display: inline-block;
-    padding: 10px 20px;
-    background: white;
-    border: 1px solid #d7ccc8;
-    border-radius: 20px;
-    color: #4e342e;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-weight: 500;
-}
-
-.symptom-tag:hover {
-    background: #8d6e63;
-    color: white;
-    border-color: #8d6e63;
-}
-
-.content-with-sidebar {
-    display: flex;
-    gap: 30px;
-    max-width: 1100px;
-    margin: 40px auto;
-    width: 95%;
-}
-
-.sidebar {
-    flex: 0 0 250px; /* Фіксована ширина зліва */
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    height: fit-content;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
-
-.article-body {
-    flex: 1; /* Текст займає весь простір, що залишився */
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
-
-.sidebar-nav a {
-    display: block;
-    padding: 10px;
-    color: #6d4c41;
-    text-decoration: none;
-    border-left: 3px solid transparent;
-}
-
-.sidebar-nav a:hover {
-    background: #f5f5dc;
-    border-left-color: #8d6e63;
-}
-
-/* Робимо меню випадаючим */
-.nav-links div.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none; /* Спочатку ховаємо */
-    position: absolute;
-    background-color: #3e2723; /* Темний фон як у футера */
-    min-width: 200px;
+    background-color: #3e2723;
+    min-width: 220px;
     box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     z-index: 100;
     border-radius: 8px;
-    top: 100%; /* З'являється під посиланням */
+    top: 100%;
 }
 
 .dropdown-content a {
@@ -425,23 +234,57 @@ footer h3 {
     color: #fff9c4 !important;
 }
 
-/* Магія: показуємо при наведенні */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-.btn-outline-small {
-    background: none;
-    border: 1px solid #d7ccc8;
-    color: #d7ccc8;
-    padding: 4px 12px;
-    cursor: pointer;
-    border-radius: 20px;
-    font-size: 0.85em;
-    transition: all 0.3s;
+/* =========================================
+   6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
+   ========================================= */
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        padding: 15px 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-title-light {
+        font-size: 1.8em !important;
+        padding: 0 15px;
+    }
+
+    .hero-section {
+        height: 50vh !important;
+    }
+} /* <--- ВСІ МОБІЛЬНІ СТИЛІ ЗАКРИВАЮТЬСЯ ТУТ */
+
+/* Навігаційні посилання в хедері */
+.nav-links a {
+    color: #d7ccc8 !important; /* Бежевий */
+    font-weight: 500;
 }
 
-.btn-outline-small:hover {
-    background: #d7ccc8;
-    color: #4e342e;
+.nav-links a:hover {
+    color: #fff9c4 !important; /* Світло-жовтий */
+}
+
+/* Назва сайту / Лого */
+.logo {
+    color: #f5f5dc !important;
+}
+
+/* Блок з "Hallo, Ім'я" */
+.user-name-display {
+    color: #fff9c4 !important;
+    margin-right: 10px;
 }

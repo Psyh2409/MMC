@@ -1,130 +1,96 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header-fragment" class="main-header">
-    <a href="/" class="logo">🌿 Dein Raum der Ruhe</a>
+<header th:fragment="header-fragment" style="background: #4e342e; padding: 12px 0; box-shadow: 0 2px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;">
+    <style>
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #4e342e;
+            min-width: 240px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a {
+            color: #f5f5dc;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9em;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .dropdown-content a:hover { background-color: #5d4037; color: #fff9c4; }
+    </style>
 
-    <nav class="nav-links">
-        <a href="/first-steps">Erste Schritte</a>
-        <a href="/about">Über mich</a>
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
 
-        <div class="dropdown">
-            <a href="#" class="nav-highlight">Themen ▾</a>
-            <div class="dropdown-content">
-                <a href="/issues/anxiety">😰 Angst & Panik</a>
-                <a href="/issues/burnout">😤 Burnout</a>
-                <a href="/issues/relationships">💔 Beziehungen</a>
-                <a href="/issues/depression">😞 Depression</a>
+        <a href="/" style="color: #fdf5e6; text-decoration: none; font-size: 1.6em; font-family: 'Georgia', serif; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+            🍃 <span style="color: #f5f5dc;">Шлях до себе</span>
+        </a>
+
+        <nav style="display: flex; align-items: center; gap: 20px; font-family: 'Georgia', serif;">
+
+            <div class="dropdown">
+                <span style="color: #f5f5dc; cursor: pointer; padding: 10px; font-size: 0.95em;">Проблематика ▼</span>
+                <div class="dropdown-content">
+                    <a href="/issues/inner-calm">Тривога та спокій</a>
+                    <a href="/issues/freedom-choice">Залежність та воля</a>
+                    <a href="/issues/new-meanings">Криза та сенси</a>
+                    <a href="/issues/closeness-crisis">Криза близькості</a>
+                </div>
             </div>
-        </div>
 
-        <div class="user-auth-zone">
-            <div th:if="${userName != null}" class="user-auth-zone">
-                <span class="user-name-display">
-                    Hallo, <span th:text="${userName}">Name</span>
-                </span>
+            <a href="/about" style="color: #f5f5dc; text-decoration: none; font-size: 0.95em;">Про мене</a>
+            <a href="/first-steps" style="color: #f5f5dc; text-decoration: none; font-size: 0.95em;">Перші кроки</a>
+
+            <div sec:authorize="hasRole('ADMIN')">
+                <a href="/admin/users" style="color: #fff9c4; text-decoration: none; border: 1px solid rgba(255,249,196,0.4); padding: 5px 12px; border-radius: 20px; font-size: 0.85em;">⚙️ Адмінка</a>
+            </div>
+
+            <div th:if="${userName == null}">
+                <a href="/login" style="color: #f5f5dc; text-decoration: none;">Увійти</a>
+            </div>
+
+            <div th:if="${userName != null}" style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: #fff9c4; font-size: 0.9em;">Вітаю, <strong th:text="${userName}" style="color: #fdf5e6;"></strong></span>
                 <form th:action="@{/logout}" method="post" style="margin: 0;">
-                    <button type="submit" class="btn-outline-small">Austreten</button>
+                    <button type="submit" style="background: #8d6e63; color: #fdf5e6; border: none; padding: 7px 18px; border-radius: 25px; cursor: pointer;">Вийти</button>
                 </form>
             </div>
-
-            <div th:unless="${userName != null}" class="user-auth-zone">
-                <a href="/login" class="btn-login-outline">Anmelden</a>
-                <a href="/register" class="btn-register-solid">Registrieren</a>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 </header>
 
-<!--<header th:fragment="header-fragment" class="main-header">-->
-<!--    <a href="/" class="logo">🌿 Dein Raum der Ruhe</a>-->
-<!--    <nav class="nav-links">-->
-<!--        <a href="/">Startseite</a>-->
-<!--        <a href="/first-steps">Erste Schritte</a>-->
+<footer th:fragment="footer-fragment" style="background: #3e2723; color: #d7ccc8; padding: 50px 20px; margin-top: 80px; font-family: 'Georgia', serif; border-top: 3px solid #8d6e63;">
+    <div class="container" style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 40px;">
 
-<!--        <div class="dropdown">-->
-<!--            <a href="#" style="color: #fff9c4; font-weight: bold;">Themen ▾</a>-->
-<!--            <div class="dropdown-content">-->
-<!--                <a href="/issues/anxiety">😰 Angst & Panik</a>-->
-<!--                <a href="/issues/burnout">😤 Burnout</a>-->
-<!--                <a href="/issues/relationships">💔 Beziehungen</a>-->
-<!--                <a href="/issues/depression">😞 Depression</a>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div th:if="${userName != null}" style="display: flex; align-items: center; gap: 15px;">-->
-<!--        <span style="color: #fff9c4; font-size: 0.9em;">-->
-<!--            Hallo, <span th:text="${userName}" style="font-weight: bold;">Name</span>-->
-<!--        </span>-->
-<!--            <form th:action="@{/logout}" method="post" style="margin: 0;">-->
-<!--                <button type="submit" class="btn-outline-small">Austreten</button>-->
-<!--            </form>-->
-<!--        </div>-->
-
-<!--        <div th:unless="${userName != null}" style="display: flex; gap: 15px; align-items: center;">-->
-<!--            <a href="/login" style="color: #fff; text-decoration: none; border: 1px solid #d7ccc8; padding: 5px 15px; border-radius: 20px; font-size: 0.9em;">-->
-<!--                Anmelden-->
-<!--            </a>-->
-<!--            <a href="/register" style="background: #795548; color: white; padding: 6px 18px; border-radius: 20px; text-decoration: none; font-size: 0.9em; font-weight: bold;">-->
-<!--                Registrieren-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </nav>-->
-    <!--    <nav class="nav-links">-->
-<!--        <a href="/first-steps">Erste Schritte</a>-->
-<!--        <a href="/about">Über mich</a>-->
-
-<!--        <div class="dropdown">-->
-<!--            <a href="#" style="color: #fff9c4; font-weight: bold;">Themen ▾</a>-->
-<!--            <div class="dropdown-content">-->
-<!--                <a href="/issues/anxiety">😰 Angst & Panik</a>-->
-<!--                <a href="/issues/burnout">😤 Burnout</a>-->
-<!--                <a href="/issues/relationships">💔 Beziehungen</a>-->
-<!--                <a href="/issues/depression">😞 Depression</a>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <a href="/contact">Kontakt</a>-->
-<!--    </nav>-->
-<!--    <nav class="nav-links">-->
-<!--        <a href="/first-steps">Erste Schritte</a>-->
-<!--        <a href="/about">Über mich</a>-->
-<!--        <div class="dropdown"> <a href="/articles" style="color: #fff9c4;">Psychoedukation ▾</a>-->
-<!--        </div>-->
-
-<!--        <div th:if="${userName != null}" style="display: flex; align-items: center; gap: 15px;">-->
-<!--            <span style="color: #fff9c4; font-size: 0.9em;">-->
-<!--                Hallo, <span th:text="${userName}">Name</span>-->
-<!--            </span>-->
-<!--            <form th:action="@{/logout}" method="post" style="margin: 0;">-->
-<!--                <button type="submit" class="btn-outline-small">Austreten</button>-->
-<!--            </form>-->
-<!--        </div>-->
-
-<!--        <div th:unless="${userName != null}">-->
-<!--            <a href="/login" class="btn-login">Betreten</a>-->
-<!--        </div>-->
-<!--    </nav>-->
-
-<footer th:fragment="footer-fragment" class="main-footer">
-    <div class="footer-container">
         <div>
-            <h3>Kontakt</h3>
-            <p>@ psyh2409@gmail.com</p>
-            <p>📞 +380978223227</p>
-            <p>📲 WhatsApp, Viber</p>
-            <p>🌐 <a href="https://www.facebook.com/share/1BHqutSM8f/" target="_blank">Facebook</a></p>
+            <h3 style="color: #fff9c4; margin-bottom: 18px; font-size: 1.3em;">Контакти</h3>
+            <ul style="list-style: none; padding: 0; line-height: 1.9; color: #bcaaa4; font-size: 0.95em;">
+                <li>📧 <span style="color: #d7ccc8;">psyh2409@gmail.com</span></li>
+                <li>📞 <span style="color: #d7ccc8;">+380978223227</span></li>
+                <li>📲 WhatsApp, Viber</li>
+                <li>🌐 <a href="https://facebook.com/yourpage" target="_blank" style="color: #d7ccc8; text-decoration: none; border-bottom: 1px dashed rgba(215,204,200,0.5);">Ми у Facebook</a></li>
+            </ul>
         </div>
-        <div>
-            <h3>Navigation</h3>
-            <p><a href="/">Startseite</a></p>
-            <p><a href="/session-info">Das erste Treffen</a></p>
-            <p><a href="/contact">Schreib mir</a></p>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+            <a href="/" style="display: block; text-align: center; padding: 12px; background: rgba(255,245,220,0.05); color: #f5f5dc; text-decoration: none; border-radius: 25px; border: 1px solid rgba(245,245,220,0.2);">Головна</a>
+            <a href="/contact" style="display: block; text-align: center; padding: 12px; background: #8d6e63; color: #fdf5e6; text-decoration: none; border-radius: 25px; font-weight: bold;">Написати мені</a>
         </div>
-        <div>
-            <h3>Über die Arbeit</h3>
-            <p>Einzelpsychotherapie</p>
-            <p>Umgang mit Ängsten, Krisen und Sinnfragen</p>
+
+        <div style="text-align: right;">
+            <h4 style="color: #a1887f; margin-bottom: 15px; text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px;">Практика</h4>
+            <ul style="list-style: none; padding: 0; line-height: 1.8; color: #bcaaa4;">
+                <li>Індивідуальна психотерапія</li>
+                <li style="margin-top: 15px;">
+                    <a href="/first-meeting" style="color: #fff9c4; text-decoration: none; border: 1px solid rgba(255,249,196,0.4); padding: 6px 15px; border-radius: 20px; font-size: 0.9em;">🤝 Перша зустріч</a>
+                </li>
+            </ul>
         </div>
     </div>
 </footer>

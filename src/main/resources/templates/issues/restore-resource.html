@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.issue-content})}">
+<head>
+    <title th:text="${topicTitle}">Відновлення ресурсу та подолання вигорання</title>
+</head>
+<body>
+<div class="issue-content">
+    <main class="container" style="margin-top: 40px; max-width: 850px; padding: 20px; margin-left: auto; margin-right: auto;">
+        <article class="article-card" style="background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); font-family: 'Georgia', serif; border-top: 6px solid #bf360c;">
+
+            <h1 style="color: #bf360c; border-bottom: 2px solid #fbe9e7; padding-bottom: 20px; font-size: 2.5em;" th:text="${topicTitle}">
+                Вигорання та відновлення ресурсу
+            </h1>
+
+            <p style="font-size: 1.2em; line-height: 1.9; color: #4e342e; margin-top: 30px;">
+                Професійне та особистісне вигорання — це стан, коли внутрішній вогонь, що давав енергію для звершень, перетворився на попіл. Це відчуття порожнечі, коли навіть улюблена справа починає викликати роздратування або байдужість.
+            </p>
+
+            <div style="background: #fff3e0; border-left: 5px solid #ff9800; padding: 35px; border-radius: 0 15px 15px 0; margin: 40px 0; color: #5d4037;">
+                <h3 style="margin-top: 0; color: #e65100; font-size: 1.4em;">Вигорання як втрата сенсу</h3>
+                <p style="line-height: 1.7;">
+                    Людина може витримати майже будь-яке "Як", якщо вона знає "Навіщо". Вигорання часто стається не від кількості праці, а від втрати відповіді на це запитання. Коли діяльність стає механічною, ресурс починає танути.
+                </p>
+                <p style="line-height: 1.7; margin-bottom: 0; font-weight: bold;">
+                    Ресурс — це ваша здатність бачити цінність у тому, що ви робите.
+                </p>
+            </div>
+
+            <h2 style="color: #d84315; margin-top: 45px; font-size: 1.8em;">Екзистенційне виснаження</h2>
+            <p style="line-height: 1.8; color: #2c1e1a;">
+                Ми живемо в культурі, де зупинка сприймається як поразка. Але психіка має свої ліміти. Якщо ви ігноруєте сигнали тіла, вона вмикає "аварійний режим" — апатію. У терапії ми не просто вчимося відпочивати, ми переглядаємо ваші цінності та шукаємо нові джерела натхнення.
+            </p>
+
+            <div style="font-style: italic; color: #8d6e63; padding: 25px; border-top: 1px solid #d7ccc8; border-bottom: 1px solid #d7ccc8; margin: 40px 0; text-align: center; font-size: 1.25em; line-height: 1.6;">
+                "Відновлення — це не повернення до колишнього темпу, а перехід на новий рівень усвідомленості, де ви керуєте справами, а не вони вами."
+            </div>
+
+            <h2 style="color: #d84315; font-size: 1.8em;">Шлях до відновлення</h2>
+            <p style="line-height: 1.8; margin-bottom: 40px;">
+                Перший крок — це легалізація вашого права на слабкість. Ми працюємо над тим, щоб зняти почуття провини за "непродуктивність" і вибудувати нову систему пріоритетів. Повернення до життя починається з маленьких, але осмислених дій, які повертають вам авторство власного часу.
+            </p>
+
+            <section style="margin-top: 60px; text-align: center; background: #fbe9e7; padding: 45px; border-radius: 20px;">
+                <p style="font-weight: bold; color: #bf360c; font-size: 1.3em; margin-bottom: 25px;">Відчуваєте, що сили закінчуються?</p>
+                <a href="/contact" class="btn-primary" style="padding: 15px 50px; font-size: 1.1em; background: #d84315;">Відновити баланс</a>
+            </section>
+
+            <div style="margin-top: 50px; border-top: 1px solid #f5f5f5; padding-top: 25px; text-align: center;">
+                <p style="font-size: 0.95em; color: #90a4ae;">
+                    Якщо ви відчуваєте, що темрява стає надто густою...
+                    <a href="/issues/exit-nearby" style="color: #bf360c; font-weight: bold; text-decoration: underline;">існує інший погляд</a>.
+                </p>
+            </div>
+        </article>
+    </main>
+</div>
+</body>
+</html>

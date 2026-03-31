@@ -2,29 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
 <head>
-    <title>Anmelden | Psychotherapie System</title>
+    <title>Увійти | Психотерапія</title>
 </head>
 <body>
-<section class="standard-container" style="max-width: 400px; margin-top: 100px;">
-    <h2 style="text-align: center;">Anmelden</h2>
+<section class="standard-container" style="max-width: 400px; margin: 80px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="text-align: center; color: #4e342e; font-family: 'Georgia', serif; margin-bottom: 25px;">Увійти до кабінету</h2>
 
-    <div th:if="${param.error}" style="color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-        Falsche E-Mail-Adresse oder Passwort
-    </div>
-    <div th:if="${param.logout}" style="color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-        Sie sind abgemeldet
+    <div th:if="${param.error}" style="color: #b71c1c; background: #ffebee; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9em; border: 1px solid #ffcdd2;">
+        Невірна електронна адреса або пароль. Спробуйте ще раз.
     </div>
 
-    <form th:action="@{/login}" method="post" style="display: flex; flex-direction: column; gap: 10px;">
-        <label>Email</label>
-        <input type="email" name="username" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <label>Passwort</label>
-        <input type="password" name="password" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <button type="submit" style="padding: 12px; background-color: #6d4c41; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Anmelden</button>
+    <div th:if="${param.logout}" style="color: #2e7d32; background: #e8f5e9; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9em; border: 1px solid #c8e6c9;">
+        Ви успішно вийшли із системи.
+    </div>
+
+    <form th:action="@{/login}" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="color: #5d4037; font-weight: bold;">Електронна пошта</label>
+            <input type="email" name="username" required placeholder="example@mail.com"
+                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="color: #5d4037; font-weight: bold;">Пароль</label>
+            <input type="password" name="password" required placeholder="••••••••"
+                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0;">
+        </div>
+
+        <button type="submit" style="padding: 15px; background-color: #6d4c41; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin-top: 10px; transition: 0.3s;">
+            Увійти
+        </button>
     </form>
 
-    <p style="text-align: center; margin-top: 20px;">
-        <a href="/register" style="color: #6d4c41;">Noch nicht registriert?</a>
+    <p style="text-align: center; margin-top: 25px; color: #8d6e63;">
+        Ще не маєте акаунту? <a href="/register" style="color: #6d4c41; font-weight: bold; text-decoration: underline;">Зареєструватися</a>
     </p>
 </section>
 </body>
