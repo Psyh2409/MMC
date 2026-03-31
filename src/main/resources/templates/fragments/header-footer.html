@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header-fragment" style="background: #4e342e; padding: 12px 0; box-shadow: 0 2px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;">
-    <style>
+<header th:fragment="header-fragment"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        style="background: #4e342e; padding: 12px 0; box-shadow: 0 2px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;">    <style>
         .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             display: none;
@@ -29,7 +31,7 @@
     <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
 
         <a href="/" style="color: #fdf5e6; text-decoration: none; font-size: 1.6em; font-family: 'Georgia', serif; font-weight: bold; display: flex; align-items: center; gap: 10px;">
-            🍃 <span style="color: #f5f5dc;">Шлях до себе</span>
+            🌿 <span style="color: #f5f5dc;">Шлях до себе</span>
         </a>
 
         <nav style="display: flex; align-items: center; gap: 20px; font-family: 'Georgia', serif;">
@@ -37,10 +39,13 @@
             <div class="dropdown">
                 <span style="color: #f5f5dc; cursor: pointer; padding: 10px; font-size: 0.95em;">Проблематика ▼</span>
                 <div class="dropdown-content">
-                    <a href="/issues/inner-calm">Тривога та спокій</a>
-                    <a href="/issues/freedom-choice">Залежність та воля</a>
-                    <a href="/issues/new-meanings">Криза та сенси</a>
-                    <a href="/issues/closeness-crisis">Криза близькості</a>
+                    <a href="/issues/inner-calm">Тривога та панічні стани</a>
+                    <a href="/issues/restore-resource">Відновлення ресурсу</a>
+                    <a href="/issues/closeness-crisis">Кризи близькості</a>
+                    <a href="/issues/new-meanings">Депресивні стани та сенси</a>
+                    <a href="/issues/freedom-choice">Залежні форми поведінки</a>
+                    <a href="/issues/dialogue">Конфлікти та медіація</a>
+                    <a href="/issues/exit-nearby">Ілюзія, що виходу нема</a>
                 </div>
             </div>
 
