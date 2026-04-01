@@ -6,38 +6,32 @@
 </head>
 <body>
 <div class="issue-content">
-    <main class="container" style="margin-top: 40px; max-width: 850px; padding: 20px; margin-left: auto; margin-right: auto;">
-        <article class="article-card" style="background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); font-family: 'Georgia', serif;">
+    <main class="issue-shell">
+        <article class="issue-article">
+            <h1 class="issue-title" th:text="${topicTitle}">Стосунки та кризи близькості</h1>
 
-            <h1 style="color: #4e342e; border-bottom: 2px solid #d7ccc8; padding-bottom: 20px; font-size: 2.5em;" th:text="${topicTitle}">
-                Стосунки та кризи близькості
-            </h1>
-
-            <p style="font-size: 1.2em; line-height: 1.9; color: #4e342e; margin-top: 30px;">
+            <p class="issue-intro">
                 Криза у стосунках — це не кінець кохання. Це момент, коли стара модель взаємодії більше не працює, а нова ще не побудована. Багато хто сприймає цей період як катастрофу, але насправді це шанс вийти на справжню глибину.
             </p>
 
-            <div style="background: #fdf5e6; border-right: 5px solid #8d6e63; padding: 35px; margin: 40px 0; border-radius: 15px 0 0 15px;">
-                <h3 style="margin-top: 0; color: #5d4037; font-size: 1.5em;">Метафора ракети: як ми ростемо разом</h3>
-                <p style="line-height: 1.7; color: #4e342e;">
+            <div class="issue-callout issue-callout-right">
+                <h3>Метафора ракети: як ми ростемо разом</h3>
+                <p>
                     Уявіть стосунки як ракету, що летить до зірок. На старті палива (закоханості) багато, ми летимо легко. Але щоб вийти на орбіту справжньої близькості, ракета має <strong>відкидати ступені</strong>.
                 </p>
-                <p style="line-height: 1.7; color: #4e342e;">
+                <p>
                     Ці "ступені" — наші старі звички, ілюзії про партнера, егоїстичні потреби. Кожна криза — це момент скидання старого корпусу. Це боляче, це хитає всю конструкцію, але без цього ракета ніколи не вийде у відкритий космос глибокої довіри.
                 </p>
             </div>
 
-            <h2 style="color: #6d4c41; margin-top: 45px; font-size: 1.8em;">10 кроків до відновлення близькості</h2>
-            <p style="margin-bottom: 30px;">Коли ви відчуваєте, що між вами виросла стіна, спробуйте пройти цей шлях разом:</p>
+            <h2 class="issue-section-title">10 кроків до відновлення близькості</h2>
+            <p class="issue-text issue-text-spaced">Коли ви відчуваєте, що між вами виросла стіна, спробуйте пройти цей шлях разом:</p>
 
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <div th:each="i : ${#numbers.sequence(1, 10)}"
-                     style="display: flex; align-items: flex-start; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 12px; transition: transform 0.2s;">
+            <div class="issue-steps">
+                <div th:each="i : ${#numbers.sequence(1, 10)}" class="issue-step">
+                    <div class="issue-step-number" th:text="${i}">1</div>
 
-                    <div style="background: #8d6e63; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; flex-shrink: 0; font-weight: bold;"
-                         th:text="${i}">1</div>
-
-                    <div style="color: #4e342e; line-height: 1.6;">
+                    <div class="issue-step-text">
                         <span th:if="${i == 1}"><strong>Легалізація кризи:</strong> Визнайте обопільно — "Зараз нам складно, і це нормально".</span>
                         <span th:if="${i == 2}"><strong>Припинення вогню:</strong> Домовтеся про мораторій на звинувачення під час розмови.</span>
                         <span th:if="${i == 3}"><strong>"Я-повідомлення":</strong> Говоріть про свої почуття ("Мені боляче"), а не про вчинки партнера.</span>
@@ -52,9 +46,9 @@
                 </div>
             </div>
 
-            <section style="margin-top: 60px; text-align: center; background: #efebe9; padding: 45px; border-radius: 20px;">
-                <p style="font-weight: bold; color: #4e342e; font-size: 1.3em; margin-bottom: 25px;">Ваші стосунки варті того, щоб за них боротися.</p>
-                <a href="/contact" class="btn-primary" style="padding: 15px 50px; font-size: 1.1em;">Відновити діалог</a>
+            <section class="issue-cta">
+                <p>Ваші стосунки варті того, щоб за них боротися.</p>
+                <a href="/contact" class="btn-primary">Відновити діалог</a>
             </section>
         </article>
     </main>

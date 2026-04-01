@@ -1,37 +1,33 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Партнерство заради правди про себе</title>
-    <style>
-        body { background-color: #f4f4f9; color: #333; font-family: sans-serif; }
-        .manifesto-container { max-width: 800px; margin: 80px auto; padding: 40px 20px; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        .feature { background: #f9f9f9; padding: 15px; border-left: 4px solid #2c3e50; margin-bottom: 15px; border-radius: 4px; }
-        a.btn { display: inline-block; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="manifesto-page">
 
 <section class="manifesto-container">
-    <h1>Партнерство заради правди про себе</h1>
+    <h1 class="manifesto-title">Партнерство заради правди про себе</h1>
 
-    <p style="font-style: italic; color: #555; margin: 30px 0; font-size: 1.1em; border-left: 3px solid #ccc; padding-left: 15px;">
+    <p class="manifesto-quote">
         Я не продаю готові рішення і не даю гарантій. Результат — це ваша зона відповідальності та наслідок якості вашої роботи.
         Я не прагну бути для вас «зручним» фахівцем, адже розвиток рідко відбувається в комфорті.
     </p>
 
-    <div class="feature"><strong>Безпечний простір:</strong> Місце для творчих експериментів та нових способів бути собою.</div>
-    <div class="feature" style="border-left-color: #e74c3c; background: #fff5f5;"><strong>Зіткнення з реальністю:</strong> Моя реакція часто буде незручною та щирою, без прикрас.</div>
-    <div class="feature"><strong>Професійна присутність:</strong> Я поряд на складних поворотах, щоб ви не заховалися від себе.</div>
-    <div class="feature"><strong>Зворотний зв’язок без цензури:</strong> Чесне відображення ваших процесів у нашому діалозі.</div>
+    <div class="manifesto-feature"><strong>Безпечний простір:</strong> Місце для творчих експериментів та нових способів бути собою.</div>
+    <div class="manifesto-feature manifesto-feature-alert"><strong>Зіткнення з реальністю:</strong> Моя реакція часто буде незручною та щирою, без прикрас.</div>
+    <div class="manifesto-feature"><strong>Професійна присутність:</strong> Я поряд на складних поворотах, щоб ви не заховалися від себе.</div>
+    <div class="manifesto-feature"><strong>Зворотний зв’язок без цензури:</strong> Чесне відображення ваших процесів у нашому діалозі.</div>
 
-    <div style="text-align: center;">
-        <a href="/" class="btn">← На головну сторінку</a>
+    <div class="manifesto-actions">
+        <a href="/" class="manifesto-button">← На головну сторінку</a>
     </div>
 
-    <footer style="margin-top: 50px; background: #f4f4f4; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+    <footer class="manifesto-footer">
         <p><strong>Мій досвід:</strong> Понад 20 років у психології.</p>
         <p><strong>Формат:</strong> Онлайн. Робота оплачувана.</p>
         <p><strong>Зв'язок:</strong> 0978223227</p>

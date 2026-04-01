@@ -6,241 +6,44 @@
 </head>
 <body>
 
-<section class="standard-container" style="max-width: 600px; margin: 40px auto; padding: 20px;">
-    <h2 style="text-align:center; color:#4e342e; font-family: 'Georgia', serif;">Написати мені</h2>
-    <p style="text-align:center; color:#6d4c41; margin-bottom: 30px;">Ви можете залишити тут своє повідомлення, і я обов'язково вам відповім.</p>
+<section class="standard-container standard-container-narrow">
+    <h2 class="contact-intro-title">Написати мені</h2>
+    <p class="contact-intro-text">Ви можете залишити тут своє повідомлення, і я обов'язково вам відповім.</p>
 
-    <div th:if="${param.success}" style="background:#e8f5e9; color:#2e7d32; padding:15px; border-radius:8px; margin-bottom:25px; text-align:center; font-weight:bold; border: 1px solid #c8e6c9;">
+    <div th:if="${param.success}" class="status-message status-message-strong status-success">
         ✔ Ваше повідомлення надіслано. Я зв'яжуся з вами найближчим часом.
     </div>
 
-    <form th:action="@{/contact}" method="post" style="display:flex; flex-direction:column; gap:15px; font-family: sans-serif;">
+    <form th:action="@{/contact}" method="post" class="stack-form stack-form-sans">
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="color: #5d4037; font-weight: bold;">Ваше ім'я</label>
+        <div class="form-field">
+            <label class="form-label">Ваше ім'я</label>
             <input type="text" name="name" required placeholder="Як до вас звертатися?"
-                   style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0;">
+                   class="form-input">
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="color: #5d4037; font-weight: bold;">Контактні дані (Телефон або Email)</label>
+        <div class="form-field">
+            <label class="form-label">Контактні дані (Телефон або Email)</label>
             <input type="text" name="contact" required placeholder="Куди мені відповісти?"
-                   style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0;">
+                   class="form-input">
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="color: #5d4037; font-weight: bold;">Ваше повідомлення</label>
+        <div class="form-field">
+            <label class="form-label">Ваше повідомлення</label>
             <textarea name="message" rows="6" required placeholder="Опишіть коротко ваш запит..."
-                      style="padding:12px; border-radius:8px; border:1px solid #d7ccc8; background: #fffaf0; resize: vertical;"></textarea>
+                      class="form-textarea"></textarea>
         </div>
 
-        <button type="submit" style="background-color: #6d4c41; color: white; border: none; padding: 15px; border-radius: 25px; cursor: pointer; font-size: 1.1em; font-weight: bold; margin-top: 10px; transition: background 0.3s;">
+        <button type="submit" class="submit-button submit-button-brown">
             Надіслати повідомлення
         </button>
     </form>
 
-    <div style="margin-top: 40px; text-align: center; border-top: 1px solid #d7ccc8; padding-top: 20px;">
-        <p style="color: #8d6e63; font-size: 0.9em;">Або напишіть мені безпосередньо у месенджери (WhatsApp, Viber):</p>
-        <p style="font-weight: bold; color: #4e342e;">+38 (097) 822-32-27</p>
+    <div class="contact-direct">
+        <p class="contact-direct-note">Або напишіть мені безпосередньо у месенджери (WhatsApp, Viber):</p>
+        <p class="contact-direct-phone">+38 (097) 822-32-27</p>
     </div>
 </section>
 
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="de" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Kontakt</title>-->
-<!--</head>-->
-
-<!--<body style="margin:0; font-family: Arial, sans-serif; background-color:#f5f5dc;">-->
-
-<!--&lt;!&ndash; HEADER &ndash;&gt;-->
-<!--<header style="-->
-<!--    background-color: #4e342e;-->
-<!--    color: #ede7f6;-->
-<!--    padding: 15px 50px;-->
-<!--    display: flex;-->
-<!--    justify-content: space-between;-->
-<!--    align-items: center;">-->
-
-<!--    <div style="font-size: 1.5em; font-weight: bold;">-->
-<!--        🌿 Dein Raum der Ruhe-->
-<!--    </div>-->
-
-<!--    <nav style="display:flex; gap:20px;">-->
-<!--        <a href="/" style="color:#d7ccc8; text-decoration:none;">Startseite</a>-->
-<!--        <a href="/first-steps" style="color:#d7ccc8; text-decoration:none;">Erste Schritte</a>-->
-<!--        <a href="/contact" style="color:#fff9c4; text-decoration:none;">Kontakt</a>-->
-<!--    </nav>-->
-<!--</header>-->
-
-<!--&lt;!&ndash; MAIN &ndash;&gt;-->
-<!--<section style="-->
-<!--    max-width: 600px;-->
-<!--    margin: 60px auto;-->
-<!--    background: white;-->
-<!--    padding: 40px;-->
-<!--    border-radius: 15px;-->
-<!--    box-shadow: 0 5px 20px rgba(0,0,0,0.1);">-->
-
-<!--    <h2 style="text-align:center; color:#4e342e;">-->
-<!--        Schreib mir-->
-<!--    </h2>-->
-
-<!--    <p style="text-align:center; color:#6d4c41;">-->
-<!--        Sie können mir hier eine Nachricht hinterlassen. Ich melde mich bei Ihnen zurück.-->
-<!--    </p>-->
-
-<!--    &lt;!&ndash; SUCCESS MESSAGE &ndash;&gt;-->
-<!--    <div th:if="${param.success}"-->
-<!--         style="-->
-<!--        background:#e8f5e9;-->
-<!--        color:#2e7d32;-->
-<!--        padding:12px;-->
-<!--        border-radius:8px;-->
-<!--        margin-bottom:20px;-->
-<!--        text-align:center;-->
-<!--        font-weight:bold;-->
-<!--     ">-->
-<!--        ✔ Ihre Nachricht wurde gesendet. Ich melde mich bei Ihnen.-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; FORM &ndash;&gt;-->
-<!--    <form th:action="@{/contact}" method="post" style="-->
-<!--        display:flex;-->
-<!--        flex-direction:column;-->
-<!--        gap:15px;">-->
-
-<!--        <label>Name</label>-->
-<!--        <input type="text" name="name" required style="padding:10px; border-radius:5px; border:1px solid #ccc;">-->
-
-<!--        <label>Kontakt (Telefon oder Email)</label>-->
-<!--        <input type="text" name="contact" required style="padding:10px; border-radius:5px; border:1px solid #ccc;">-->
-
-<!--        <label>Nachricht</label>-->
-<!--        <textarea name="message" rows="5" required style="padding:10px; border-radius:5px; border:1px solid #ccc;"></textarea>-->
-
-<!--        <button type="submit" style="-->
-<!--            background-color: #6d4c41;-->
-<!--            color: white;-->
-<!--            border: none;-->
-<!--            padding: 12px;-->
-<!--            border-radius: 5px;-->
-<!--            cursor: pointer;">-->
-<!--            Senden-->
-<!--        </button>-->
-<!--    </form>-->
-
-<!--</section>-->
-
-<!--&lt;!&ndash; FOOTER &ndash;&gt;-->
-<!--<footer style="-->
-<!--    background-color: #3e2723;-->
-<!--    color: #d7ccc8;-->
-<!--    padding: 30px 20px;-->
-<!--    margin-top: 50px;">-->
-
-<!--    <div style="-->
-<!--        max-width: 1000px;-->
-<!--        margin: 0 auto;-->
-<!--        display: flex;-->
-<!--        justify-content: space-between;-->
-<!--        flex-wrap: wrap;-->
-<!--        gap: 20px;">-->
-
-<!--        <div>-->
-<!--            <h3>Kontakt</h3>-->
-<!--            <p>@ psyh2409@gmail.com</p>-->
-<!--            <p>📞 +380978223227</p>-->
-<!--            <p>📲 WhatsApp, Viber</p>-->
-<!--            <p>🌐 <a href="https://www.facebook.com/share/1BHqutSM8f/" target="_blank">Facebook</a> </p>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--            <h3>Navigation</h3>-->
-<!--            <p><a href="/" style="color:#d7ccc8;">Startseite</a></p>-->
-<!--            <p><a href="/session-info" style="color:#d7ccc8;">Erste Sitzung</a></p>-->
-<!--            <p><a href="/contact" style="color:#d7ccc8;">Kontakt</a></p>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--            <h3>Über die Arbeit</h3>-->
-<!--            <p>Individuelle Psychotherapie</p>-->
-<!--            <p>Arbeit mit Angst, Krisen und Sinnfragen</p>-->
-<!--        </div>-->
-
-<!--    </div>-->
-
-<!--    <div style="-->
-<!--        text-align: center;-->
-<!--        margin-top: 30px;-->
-<!--        font-size: 0.9em;">-->
-<!--        © 2026 Psychotherapie-->
-<!--    </div>-->
-
-<!--</footer>-->
-
-<!--</body>-->
-<!--</html>-->
-
-
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact</title>
-</head>
-<body>
-
-<h2 style="text-align:center;">Schreib mir</h2>
-
-<form action="/contact" method="post" style="
-    max-width: 500px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;">
-
-    <label>Name</label>
-    <input type="text" name="name" required>
-
-    <label>Kontakt (Telefon oder Email)</label>
-    <input type="text" name="contact" required>
-
-    <label>Nachricht</label>
-    <textarea name="message" rows="5" required></textarea>
-
-    <button type="submit" style="
-        background-color: #6d4c41;
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;">
-        Senden
-    </button>
-</form>
-</body>
-</html>-->
-<!--
-<h2>Schreib mir</h2>
-
-<form action="/contact" method="post">
-    <label>Name</label><br>
-    <input type="text" name="name"><br><br>
-
-    <label>Kontakt (Telefonisch numero, oder Email)</label>
-    <input type="text" name="contact"><br><br>
-
-    <label>Information</label><br>
-    <textarea name="message"></textarea><br><br>
-
-    <button type="submit">Post</button>
-</form>
-
-</body>
-</html>
--->

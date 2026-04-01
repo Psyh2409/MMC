@@ -6,39 +6,34 @@
 </head>
 <body>
 <div class="issue-content">
-    <main class="container" style="margin-top: 40px; max-width: 850px; padding: 20px; margin-left: auto; margin-right: auto;">
-        <article class="article-card" style="background: white; padding: 60px; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.07); font-family: 'Georgia', serif; border-top: 8px solid #4e342e;">
+    <main class="issue-shell">
+        <article class="issue-article issue-article-heavy issue-border-top-brown">
+            <h1 class="issue-title issue-title-centered" th:text="${topicTitle}">Ілюзія, що виходу нема</h1>
 
-            <h1 style="color: #4e342e; text-align: center; font-size: 2.8em; margin-bottom: 40px;" th:text="${topicTitle}">
-                Ілюзія, що виходу нема
-            </h1>
-
-            <p style="font-size: 1.25em; line-height: 1.9; color: #2c1e1a;">
+            <p class="issue-intro issue-intro-deep">
                 Колись у київському метрополітені на одних дверях був напис «Виходу немає». Це створювало відчуття глухого кута. Але після низки подій таблички замінили. Тепер там написано: <strong>«Вихід поруч»</strong>.
             </p>
 
-            <div style="background: #fdfaf5; border: 1px dashed #d7ccc8; padding: 35px; margin: 40px 0; font-style: italic; color: #5d4037; line-height: 1.7; border-radius: 10px;">
+            <div class="issue-callout issue-callout-quote">
                 "Це не просто технічне рішення. Це фундаментальна психологічна зміна фокуса. Коли ми в кризі, нам здається, що стіни зімкнулися. Але це лише ілюзія сприйняття, викликана болем. Вихід не зник — він просто знаходиться там, де ви ще не звикли його шукати."
             </div>
 
-            <h2 style="color: #6d4c41; margin-top: 50px; font-size: 1.8em;">Відповідальність перед майбутнім</h2>
-            <p style="line-height: 1.8; color: #2c1e1a; margin-bottom: 25px;">
+            <h2 class="issue-section-title issue-section-title-wide">Відповідальність перед майбутнім</h2>
+            <p class="issue-text issue-text-deep issue-text-spaced">
                 Ми маємо бути гранично чесними: те, як ми розпоряджаємося своїм життям, стає рульовою моделлю для наших дітей та близьких. Коли людина вчиняє фатальний крок, вона не просто припиняє свій біль — вона залишає цей сценарій як спадок. Це стає «інструкцією» для наступних поколінь.
             </p>
 
-            <div style="background: #fff9c4; padding: 30px; border-radius: 15px; margin: 40px 0; border-left: 6px solid #8d6e63; color: #4e342e;">
-                <strong style="font-size: 1.1em;">Важливо розуміти:</strong> Суїцидальна поведінка має властивість передаватися в спадок не через гени, а через приклад. Наша стійкість сьогодні — це єдиний шанс перервати цей ланцюг і дати нащадкам право на життя.
+            <div class="issue-callout issue-callout-note">
+                <strong>Важливо розуміти:</strong> Суїцидальна поведінка має властивість передаватися в спадок не через гени, а через приклад. Наша стійкість сьогодні — це єдиний шанс перервати цей ланцюг і дати нащадкам право на життя.
             </div>
 
-            <p style="line-height: 1.8; color: #2c1e1a;">
+            <p class="issue-text issue-text-deep">
                 Я знаю, як це — входити в кожен новий етап життя наосліп. Саме тому я працюю з цією темою так глибоко. Мій обов'язок — допомогти вам знайти той самий «вихід поруч», щоб ви могли стати опорою для себе і прикладом для свого роду.
             </p>
 
-            <section style="margin-top: 70px; text-align: center; background: #4e342e; padding: 50px; border-radius: 25px; color: #f5f5dc;">
-                <p style="font-weight: bold; font-size: 1.4em; margin-bottom: 30px;">Поговоріть зі мною. Ми знайдемо цей вихід разом.</p>
-                <a href="/contact" class="btn-primary" style="padding: 18px 50px; font-size: 1.1em; background: #8d6e63; border: none; color: white; border-radius: 35px; text-decoration: none; display: inline-block; transition: 0.3s;">
-                    Записатися на консультацію
-                </a>
+            <section class="issue-cta-dark">
+                <p>Поговоріть зі мною. Ми знайдемо цей вихід разом.</p>
+                <a href="/contact" class="btn-primary">Записатися на консультацію</a>
             </section>
         </article>
     </main>

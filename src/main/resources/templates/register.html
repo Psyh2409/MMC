@@ -5,121 +5,50 @@
     <title>Реєстрація | Психотерапія</title>
 </head>
 <body>
-<section class="standard-container" style="max-width: 450px; margin: 60px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <h2 style="text-align: center; color: #4e342e; font-family: 'Georgia', serif; margin-bottom: 25px;">Реєстрація користувача</h2>
+<section class="standard-container standard-container-compact">
+    <h2 class="contact-intro-title">Реєстрація користувача</h2>
 
-    <div th:if="${error}" style="color: #b71c1c; background: #ffebee; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9em; border: 1px solid #ffcdd2;" th:text="${error}">
+    <div th:if="${error}" class="status-message status-error" th:text="${error}">
         Помилка реєстрації
     </div>
 
-    <form th:action="@{/register}" th:object="${user}" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+    <form th:action="@{/register}" th:object="${user}" method="post" class="stack-form">
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="font-weight: bold; color: #6d4c41;">Ваше ім'я:</label>
+        <div class="form-field">
+            <label class="form-label">Ваше ім'я:</label>
             <input type="text" th:field="*{name}" placeholder="Як до вас звертатися?" required
-                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0; box-sizing: border-box;" />
-            <div style="color: #b71c1c; font-size: 0.8em; margin-top: 2px;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                   class="form-input" />
+            <div class="form-error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                 Помилка в імені
             </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="font-weight: bold; color: #6d4c41;">Електронна пошта:</label>
+        <div class="form-field">
+            <label class="form-label">Електронна пошта:</label>
             <input type="email" th:field="*{email}" placeholder="example@mail.com" required
-                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0; box-sizing: border-box;" />
-            <div style="color: #b71c1c; font-size: 0.8em; margin-top: 2px;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                   class="form-input" />
+            <div class="form-error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                 Невірний формат пошти
             </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="font-weight: bold; color: #6d4c41;">Пароль (від 8 символів):</label>
+        <div class="form-field">
+            <label class="form-label">Пароль (від 8 символів):</label>
             <input type="password" th:field="*{password}" required placeholder="••••••••"
-                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0; box-sizing: border-box;" />
-            <div style="color: #b71c1c; font-size: 0.8em; margin-top: 2px;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                   class="form-input" />
+            <div class="form-error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                 Пароль занадто короткий
             </div>
         </div>
 
-        <button type="submit" style="padding: 15px; background-color: #8d6e63; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin-top: 10px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <button type="submit" class="submit-button submit-button-soft">
             Зареєструватися
         </button>
     </form>
 
-    <p style="text-align: center; margin-top: 25px; color: #8d6e63;">
-        Вже маєте акаунт? <a href="/login" style="color: #6d4c41; text-decoration: underline; font-weight: bold;">Увійти</a>
+    <p class="helper-text-centered">
+        Вже маєте акаунт? <a href="/login" class="helper-link">Увійти</a>
     </p>
 </section>
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Anmeldung MMC</title>-->
-<!--    <style>-->
-<!--        body {-->
-<!--            font-family: sans-serif;-->
-<!--            display: flex;-->
-<!--            justify-content: center;-->
-<!--            padding-top: 50px;-->
-<!--            background-color: #f4f4f4;-->
-<!--        }-->
-<!--        .form-container {-->
-<!--            background: white;-->
-<!--            padding: 30px;-->
-<!--            border-radius: 8px;-->
-<!--            box-shadow: 0 0 10px rgba(0,0,0,0.1);-->
-<!--            width: 350px;-->
-<!--        }-->
-<!--        input {-->
-<!--            width: 100%;-->
-<!--            padding: 10px;-->
-<!--            margin: 10px 0;-->
-<!--            border: 1px solid #ccc;-->
-<!--            border-radius: 4px;-->
-<!--            box-sizing: border-box;-->
-<!--        }-->
-<!--        button {-->
-<!--            width: 100%;-->
-<!--            padding: 10px;-->
-<!--            background-color: #28a745;-->
-<!--            color: white;-->
-<!--            border: none;-->
-<!--            border-radius: 4px;-->
-<!--            cursor: pointer;-->
-<!--        }-->
-<!--        .error {-->
-<!--            color: red;-->
-<!--            font-size: 0.8em;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="form-container">-->
-<!--    <h2>Kundenregistrierung</h2>-->
-
-<!--    <div th:if="${error}" class="error" th:text="${error}"></div>-->
-
-<!--    <form th:action="@{/register}" th:object="${user}" method="post">-->
-
-<!--        <label>Name:</label>-->
-<!--        <input type="text" th:field="*{name}" placeholder="Geben Sie ihren Namen ein" required />-->
-<!--        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
-
-<!--        <label>E-Mail:</label>-->
-<!--        <input type="email" th:field="*{email}" placeholder="beispiel@mail.com" required />-->
-<!--        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
-
-<!--        <label>Passwort (Ab 8 Zeichen):</label>-->
-<!--        <input type="password" th:field="*{password}" required />-->
-<!--        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
-
-<!--        <button type="submit">Registrieren</button>-->
-<!--    </form>-->
-<!--    <p><a href="/login">Haben Sie bereits ein Konto? Anmelden</a></p>-->
-<!--</div>-->
-
-<!--</body>-->
-<!--</html>-->

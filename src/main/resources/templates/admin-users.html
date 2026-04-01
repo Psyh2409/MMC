@@ -3,55 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Центр керування — Клієнти</title>
-    <style>
-        body {
-            background-color: #f5f5dc;
-            font-family: 'Segoe UI', serif;
-            color: #4e342e;
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th {
-            background-color: #8d6e63;
-            color: white;
-            padding: 12px;
-        }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #d7ccc8;
-        }
-        .btn-delete {
-            background-color: #b71c1c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div style="display: flex; gap: 20px; margin-bottom: 20px;">
-    <div style="background: #efebe9; padding: 15px; border-radius: 8px; border-left: 5px solid #8d6e63; flex: 1;">
+<body class="admin-page">
+<div class="admin-stats">
+    <div class="admin-stat-card">
         <strong>Читачі (USER): </strong> <span th:text="${countUsers}">0</span>
     </div>
-    <div style="background: #f1f8e9; padding: 15px; border-radius: 8px; border-left: 5px solid #2e7d32; flex: 1;">
+    <div class="admin-stat-card admin-stat-card-client">
         <strong>У терапії (CLIENT): </strong> <span th:text="${countClients}">0</span>
     </div>
-    <div style="background: #fff8e1; padding: 15px; border-radius: 8px; border-left: 5px solid #ffa000; flex: 1;">
+    <div class="admin-stat-card admin-stat-card-visits">
         <strong>Загалом візитів: </strong> <span th:text="${totalVisits}">0</span>
     </div>
 </div>
 
 <h2>Список зареєстрованих користувачів</h2>
 
-<table>
+<table class="data-table data-table-compact">
     <thead>
     <tr>
         <th>ID</th>
@@ -70,23 +39,19 @@
         <td th:text="${u.email}"></td>
         <td>
             <span th:text="${u.role == 'USER' ? 'ЧИТАЧ' : (u.role == 'CLIENT' ? 'КЛІЄНТ' : 'АДМІН')}">USER</span>
-            <form th:if="${u.role == 'USER'}" th:action="@{/admin/promote/{id}(id=${u.id})}" method="post" style="margin-top: 5px;">
-                <button type="submit" style="background-color: #8d6e63; color: white; border: none; font-size: 0.8em; padding: 4px 8px; border-radius: 3px; cursor: pointer;">
-                    Зробити клієнтом
-                </button>
+            <form th:if="${u.role == 'USER'}" th:action="@{/admin/promote/{id}(id=${u.id})}" method="post" class="admin-action-form-inline">
+                <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
             </form>
         </td>
         <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
         <td>
             <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
-                        <textarea name="notes"
-                                  th:text="${u.adminNotes}"
-                                  placeholder="Додайте коментар про клієнта..."
-                                  style="width: 180px; height: 50px; background-color: #fff9f0; border: 1px solid #d7ccc8; border-radius: 4px; padding: 5px; font-size: 0.9em;"></textarea>
+                <textarea name="notes"
+                          th:text="${u.adminNotes}"
+                          placeholder="Додайте коментар про клієнта..."
+                          class="admin-notes"></textarea>
                 <br>
-                <button type="submit" style="background-color: #5d4037; color: white; border: none; font-size: 0.75em; padding: 4px 10px; border-radius: 3px; cursor: pointer; margin-top: 3px;">
-                    Зберегти
-                </button>
+                <button type="submit" class="admin-save-button">Зберегти</button>
             </form>
         </td>
         <td>
@@ -97,20 +62,15 @@
                 </button>
             </form>
 
-            <span th:if="${u.role == 'ADMIN'}" style="color: #8d6e63; font-style: italic; font-weight: bold;">
-                        Це Ви
-                    </span>
+            <span th:if="${u.role == 'ADMIN'}" class="admin-badge-self">Це Ви</span>
 
-            <span th:if="${u.role == 'CLIENT'}"
-                  style="color: #2e7d32; font-weight: bold; border: 2px solid #2e7d32; padding: 3px 8px; border-radius: 3px; display: inline-block;">
-                        У ТЕРАПІЇ
-                    </span>
+            <span th:if="${u.role == 'CLIENT'}" class="admin-badge-client">У ТЕРАПІЇ</span>
         </td>
     </tr>
     </tbody>
 </table>
 
 <br>
-<a href="/" style="color: #5d4037; text-decoration: underline;">Повернутися на головну</a>
+<a href="/" class="back-link">Повернутися на головну</a>
 </body>
 </html>

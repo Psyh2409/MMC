@@ -5,99 +5,38 @@
     <title>Увійти | Психотерапія</title>
 </head>
 <body>
-<section class="standard-container" style="max-width: 400px; margin: 80px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <h2 style="text-align: center; color: #4e342e; font-family: 'Georgia', serif; margin-bottom: 25px;">Увійти до кабінету</h2>
+<section class="standard-container standard-container-compact standard-container-login">
+    <h2 class="contact-intro-title">Увійти до кабінету</h2>
 
-    <div th:if="${param.error}" style="color: #b71c1c; background: #ffebee; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9em; border: 1px solid #ffcdd2;">
+    <div th:if="${param.error}" class="status-message status-error">
         Невірна електронна адреса або пароль. Спробуйте ще раз.
     </div>
 
-    <div th:if="${param.logout}" style="color: #2e7d32; background: #e8f5e9; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9em; border: 1px solid #c8e6c9;">
+    <div th:if="${param.logout}" class="status-message status-success">
         Ви успішно вийшли із системи.
     </div>
 
-    <form th:action="@{/login}" method="post" style="display: flex; flex-direction: column; gap: 15px;">
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="color: #5d4037; font-weight: bold;">Електронна пошта</label>
+    <form th:action="@{/login}" method="post" class="stack-form">
+        <div class="form-field">
+            <label class="form-label">Електронна пошта</label>
             <input type="email" name="username" required placeholder="example@mail.com"
-                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0;">
+                   class="form-input">
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-            <label style="color: #5d4037; font-weight: bold;">Пароль</label>
+        <div class="form-field">
+            <label class="form-label">Пароль</label>
             <input type="password" name="password" required placeholder="••••••••"
-                   style="padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; background: #fffaf0;">
+                   class="form-input">
         </div>
 
-        <button type="submit" style="padding: 15px; background-color: #6d4c41; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin-top: 10px; transition: 0.3s;">
+        <button type="submit" class="submit-button submit-button-brown">
             Увійти
         </button>
     </form>
 
-    <p style="text-align: center; margin-top: 25px; color: #8d6e63;">
-        Ще не маєте акаунту? <a href="/register" style="color: #6d4c41; font-weight: bold; text-decoration: underline;">Зареєструватися</a>
+    <p class="helper-text-centered">
+        Ще не маєте акаунту? <a href="/register" class="helper-link">Зареєструватися</a>
     </p>
 </section>
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Startseite - Psychotherapie</title>-->
-<!--    <style>-->
-<!--        body {-->
-<!--            font-family: sans-serif;-->
-<!--            display: flex;-->
-<!--            justify-content: center;-->
-<!--            padding-top: 50px;-->
-<!--            background-color: #f4f4f4;-->
-<!--        }-->
-<!--        .form-container {-->
-<!--            background: white;-->
-<!--            padding: 30px;-->
-<!--            border-radius: 8px;-->
-<!--            box-shadow: 0 0 10px rgba(0,0,0,0.1);-->
-<!--            width: 300px;-->
-<!--        }-->
-<!--        input {-->
-<!--            width: 100%;-->
-<!--            padding: 10px;-->
-<!--            margin: 10px 0;-->
-<!--            border: 1px solid #ccc;-->
-<!--            border-radius: 4px;-->
-<!--            box-sizing: border-box;-->
-<!--        }-->
-<!--        button {-->
-<!--            width: 100%;-->
-<!--            padding: 10px;-->
-<!--            background-color: #007bff;-->
-<!--            color: white;-->
-<!--            border: none;-->
-<!--            border-radius: 4px;-->
-<!--            cursor: pointer;-->
-<!--        }-->
-<!--        .error {-->
-<!--            color: red;-->
-<!--            margin-bottom: 10px;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="form-container">-->
-<!--    <h2>Anmelden in die System</h2>-->
-<!--    <div th:if="${param.error}" class="error">Falsche E-Mail-Adresse oder falsches Passwort</div>-->
-<!--    <div th:if="${param.logout}" style="color: green;">Sie sind abgemeldet</div>-->
-
-<!--    <form th:action="@{/login}" method="post">-->
-<!--        <label>Email</label>-->
-<!--        <input type="email" name="username" required />-->
-<!--        <label>Passwort</label>-->
-<!--        <input type="password" name="password" required />-->
-<!--        <button type="submit">Anmelden</button>-->
-<!--    </form>-->
-<!--    <p><a href="/register">Noch nicht registriert?</a></p>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->

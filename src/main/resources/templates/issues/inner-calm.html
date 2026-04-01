@@ -6,20 +6,17 @@
 </head>
 <body>
 <div class="issue-content">
-    <main class="container" style="margin-top: 40px; max-width: 850px; padding: 20px; margin-left: auto; margin-right: auto;">
-        <article class="article-card" style="background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); font-family: 'Georgia', serif;">
+    <main class="issue-shell">
+        <article class="issue-article">
+            <h1 class="issue-title" th:text="${topicTitle}">Тривога та панічні стани</h1>
 
-            <h1 style="color: #4e342e; border-bottom: 2px solid #d7ccc8; padding-bottom: 20px; font-size: 2.5em;" th:text="${topicTitle}">
-                Тривога та панічні стани
-            </h1>
-
-            <p style="font-size: 1.2em; line-height: 1.9; color: #4e342e; margin-top: 30px;">
+            <p class="issue-intro">
                 Тривога — це не помилка вашого організму. Це голос вашого найдавнішого захисника. Коли серце починає битися швидше, а долоні стають вологими, ви просто чуєте відлуння тих часів, коли наші предки виживали в небезпечних саванах.
             </p>
 
-            <div style="background: #fdf5e6; border-left: 5px solid #8d6e63; padding: 30px; margin: 40px 0; border-radius: 0 15px 15px 0;">
-                <h3 style="margin-top: 0; color: #5d4037; font-size: 1.4em;">Чому ми боїмося "не того"?</h3>
-                <p style="color: #4e342e; line-height: 1.7;">
+            <div class="issue-callout issue-callout-left">
+                <h3>Чому ми боїмося "не того"?</h3>
+                <p>
                     Ми рідко панікуємо біля розетки чи автомобіля, хоча вони об'єктивно небезпечні. Але ми завмираємо від вигляду павука чи темряви. Чому? Бо за мільйони років еволюції вижили лише ті, хто вмів миттєво реагувати на шорох у траві.
                 </p>
                 <p>
@@ -27,23 +24,23 @@
                 </p>
             </div>
 
-            <h2 style="color: #6d4c41; margin-top: 45px; font-size: 1.8em;">Панічні атаки: хибна сирена</h2>
-            <p style="line-height: 1.8;">
+            <h2 class="issue-section-title">Панічні атаки: хибна сирена</h2>
+            <p class="issue-text">
                 Панічна атака — це наче пожежна сигналізація, що спрацювала без вогню. Система "бий або біжи" вмикається на повну потужність у мирний час. У терапії ми не "душимо" цей механізм, а вчимося його перенастроювати. Розуміння природи свого страху — це перший крок до того, щоб він перестав керувати вашим життям.
             </p>
 
-            <div style="text-align: center; margin: 50px 0; padding: 30px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; font-style: italic; color: #8d6e63; font-size: 1.3em;">
+            <div class="issue-quote issue-quote-large">
                 "Ми не позбуваємось тривоги — ми робимо її своїм союзником, повертаючи собі право на внутрішній спокій."
             </div>
 
-            <h2 style="color: #6d4c41; font-size: 1.8em;">ОКР: Пошук контролю в хаосі</h2>
-            <p style="line-height: 1.8; margin-bottom: 40px;">
+            <h2 class="issue-section-title">ОКР: Пошук контролю в хаосі</h2>
+            <p class="issue-text issue-text-end">
                 Нав'язливі думки та ритуали — це спроба психіки вгамувати тривогу через ілюзію контролю. Коли світ здається занадто непередбачуваним, ми створюємо власні правила безпеки. Моє завдання як терапевта — допомогти вам знайти справжню внутрішню безпеку.
             </p>
 
-            <section style="margin-top: 60px; text-align: center; background: #efebe9; padding: 40px; border-radius: 15px;">
-                <p style="font-weight: bold; color: #4e342e; font-size: 1.2em; margin-bottom: 25px;">Готові домовитися зі своїм страхом?</p>
-                <a href="/contact" class="btn-primary" style="padding: 15px 50px; font-size: 1.1em;">Записатися на зустріч</a>
+            <section class="issue-cta issue-cta-compact">
+                <p>Готові домовитися зі своїм страхом?</p>
+                <a href="/contact" class="btn-primary">Записатися на зустріч</a>
             </section>
         </article>
     </main>

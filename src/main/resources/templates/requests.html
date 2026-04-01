@@ -3,69 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Список заявок | Панель керування</title>
-    <style>
-        body {
-            background-color: #f5f5dc;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            color: #4e342e;
-            padding: 40px;
-        }
-        h1 {
-            color: #795548;
-            font-family: 'Georgia', serif;
-            border-bottom: 2px solid #d7ccc8;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        th {
-            background-color: #8d6e63;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #efebe9;
-            vertical-align: top;
-        }
-        tr:hover {
-            background-color: #fafafa;
-        }
-        .btn-delete {
-            color: #b71c1c;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #ffcdd2;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-        .btn-delete:hover {
-            background-color: #b71c1c;
-            color: white;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 25px;
-            color: #6d4c41;
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body class="requests-page">
 
-<h1>Вхідні заявки на консультацію</h1>
+<h1 class="page-heading">Вхідні заявки на консультацію</h1>
 
-<table>
+<table class="data-table">
     <thead>
     <tr>
         <th>ID</th>
@@ -78,23 +22,21 @@
     </thead>
     <tbody>
     <tr th:each="req : ${requests}">
-        <td th:text="${req.id}" style="color: #8d6e63; font-weight: bold;"></td>
-        <td th:text="${req.name}" style="font-weight: 500;"></td>
+        <td th:text="${req.id}" class="data-table-id">01</td>
+        <td th:text="${req.name}" class="data-table-name">Ім'я</td>
         <td th:text="${req.contact}"></td>
-        <td th:text="${req.message}" style="max-width: 400px; line-height: 1.4;"></td>
+        <td th:text="${req.message}" class="data-table-message"></td>
         <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
         <td>
             <a th:href="@{/requests/delete/{id}(id=${req.id})}"
-               class="btn-delete"
+               class="btn-delete btn-delete-link"
                onclick="return confirm('Ви впевнені, що хочете видалити цю заявку?')">
                 Видалити
             </a>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(requests)}">
-        <td colspan="6" style="text-align: center; padding: 40px; color: #8d6e63;">
-            Наразі нових заявок немає.
-        </td>
+        <td colspan="6" class="empty-state">Наразі нових заявок немає.</td>
     </tr>
     </tbody>
 </table>
