@@ -10,3 +10,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+app:
+  oauth2:
+    google:
+      client-id: ${OAUTH2_GOOGLE_CLIENT_ID:}
+      client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET:}
+    facebook:
+      client-id: ${OAUTH2_FACEBOOK_CLIENT_ID:}
+      client-secret: ${OAUTH2_FACEBOOK_CLIENT_SECRET:}

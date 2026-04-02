@@ -1,15 +1,29 @@
 package org.mental_masochistic_club.mmc.config;
 
+import org.mental_masochistic_club.mmc.service.CustomOAuth2UserService;
+import org.mental_masochistic_club.mmc.service.CustomOidcUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
+    private final Environment environment;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
+                          CustomOidcUserService customOidcUserService,
+                          Environment environment) {
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.customOidcUserService = customOidcUserService;
+        this.environment = environment;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -17,7 +31,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/", "/contact", "/contact/save", "/first-steps", "/register", "/login", "/css/**", "/js/**", "/format", "/error", "/images/**")
+                                .requestMatchers("/", "/contact", "/contact/save", "/first-steps", "/register", "/login", "/oauth2/**", "/login/oauth2/**", "/css/**", "/js/**", "/format", "/error", "/images/**")
                                 .permitAll()
                 .anyRequest().authenticated()
                 )
@@ -30,11 +44,31 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
+
+        if (isGoogleOAuthEnabled()) {
+            http.oauth2Login(oauth2 -> oauth2
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService)
+                            .oidcUserService(customOidcUserService)
+                    )
+            );
+        }
         return http.build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private boolean isGoogleOAuthEnabled() {
+        String clientId = environment.getProperty("app.oauth2.google.client-id");
+        String clientSecret = environment.getProperty("app.oauth2.google.client-secret");
+        String facebookClientId = environment.getProperty("app.oauth2.facebook.client-id");
+        String facebookClientSecret = environment.getProperty("app.oauth2.facebook.client-secret");
+        return (hasText(clientId) && hasText(clientSecret))
+                || (hasText(facebookClientId) && hasText(facebookClientSecret));
     }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
+    }
+
 }

@@ -39,7 +39,7 @@
 
             <div sec:authorize="isAuthenticated()" class="user-menu">
                 <span class="user-menu-greeting">
-                    Вітаю, <strong sec:authentication="principal.firstName" class="user-menu-name"></strong>
+                    Вітаю, <strong th:text="${currentUserDisplayName}" class="user-menu-name"></strong>
                 </span>
                 <form th:action="@{/logout}" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Вийти</button>

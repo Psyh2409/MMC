@@ -1,6 +1,5 @@
 package org.mental_masochistic_club.mmc.model;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,6 +29,8 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+    private String authProvider;
+    private String providerId;
     @Column(columnDefinition = "TEXT")
     private String adminNotes;
 

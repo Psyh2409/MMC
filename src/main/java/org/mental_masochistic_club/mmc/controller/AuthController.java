@@ -8,6 +8,7 @@ import org.mental_masochistic_club.mmc.service.UserService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -20,11 +21,13 @@ public class AuthController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final SiteStatsRepository siteStatsRepository;
+    private final Environment environment;
 
-    public AuthController(UserService userService, UserRepository userRepository, SiteStatsRepository siteStatsRepository) {
+    public AuthController(UserService userService, UserRepository userRepository, SiteStatsRepository siteStatsRepository, Environment environment) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.siteStatsRepository = siteStatsRepository;
+        this.environment = environment;
     }
 
     @GetMapping("/register")
@@ -47,7 +50,9 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(Model model) {
+        model.addAttribute("googleOAuthEnabled", isProviderEnabled("google"));
+        model.addAttribute("facebookOAuthEnabled", isProviderEnabled("facebook"));
         return "login";
     }
 
@@ -103,5 +108,14 @@ public class AuthController {
         } catch (RuntimeException e) {
             return "redirect:/admin/users?error=" + e.getMessage();
         }
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
+    }
+
+    private boolean isProviderEnabled(String provider) {
+        return hasText(environment.getProperty("app.oauth2." + provider + ".client-id"))
+                && hasText(environment.getProperty("app.oauth2." + provider + ".client-secret"));
     }
 }
