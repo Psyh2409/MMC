@@ -25,14 +25,17 @@ public class OAuth2ClientConfig {
             @Value("${app.oauth2.google.client-id:}") String googleClientId,
             @Value("${app.oauth2.google.client-secret:}") String googleClientSecret,
             @Value("${app.oauth2.facebook.client-id:}") String facebookClientId,
-            @Value("${app.oauth2.facebook.client-secret:}") String facebookClientSecret) {
+            @Value("${app.oauth2.facebook.client-secret:}") String facebookClientSecret,
+            @Value("${app.public-base-url:}") String publicBaseUrl) {
         List<ClientRegistration> registrations = new ArrayList<>();
+        String redirectUri = buildRedirectUri(publicBaseUrl);
 
         if (hasText(googleClientId) && hasText(googleClientSecret)) {
             registrations.add(CommonOAuth2Provider.GOOGLE
                     .getBuilder("google")
                     .clientId(googleClientId)
                     .clientSecret(googleClientSecret)
+                    .redirectUri(redirectUri)
                     .scope("openid", "profile", "email")
                     .build());
         }
@@ -42,6 +45,7 @@ public class OAuth2ClientConfig {
                     .getBuilder("facebook")
                     .clientId(facebookClientId)
                     .clientSecret(facebookClientSecret)
+                    .redirectUri(redirectUri)
                     .scope("public_profile", "email")
                     .build());
         }
@@ -59,5 +63,12 @@ public class OAuth2ClientConfig {
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
+    }
+
+    private String buildRedirectUri(String publicBaseUrl) {
+        if (!hasText(publicBaseUrl)) {
+            return "{baseUrl}/login/oauth2/code/{registrationId}";
+        }
+        return publicBaseUrl.replaceAll("/+$", "") + "/login/oauth2/code/{registrationId}";
     }
 }
