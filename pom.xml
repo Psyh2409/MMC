@@ -8,11 +8,11 @@
         <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.mental_masochistic_club</groupId>
-    <artifactId>MentalMasochisticClub</artifactId>
+    <groupId>org.mental_management_center</groupId>
+    <artifactId>MentalManagementCenter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MentalMasochisticClub</name>
-    <description>MentalMasochisticClub</description>
+    <name>MentalManagementCenter</name>
+    <description>MentalManagementCenter</description>
     <url/>
     <licenses>
         <license/>

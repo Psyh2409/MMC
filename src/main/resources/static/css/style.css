@@ -180,7 +180,7 @@ body {
 .form-error-text {
     color: #b71c1c;
     font-size: 0.8em;
-    margin-top: 2px;
+    margin-top: 5px;
 }
 
 .submit-button {
@@ -1574,6 +1574,39 @@ h1, h2, h3 {
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+/* Контейнер для поля пароля */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Стиль самої кнопки "Око" */
+.toggle-password-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+    color: #6c757d; /* Сірий колір, щоб не муляв око */
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password-btn:hover {
+    color: #333; /* Темнішає при наведенні */
+}
+
+/* Коригування інпуту, щоб текст не заходив під кнопку */
+.password-container .form-input {
+    padding-right: 40px;
+    width: 100%;
 }
 
 /* =========================================

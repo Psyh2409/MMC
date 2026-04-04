@@ -16,6 +16,11 @@
     <div class="admin-stat-card admin-stat-card-visits">
         <strong>Загалом візитів: </strong> <span th:text="${totalVisits}">0</span>
     </div>
+    <div class="filter-buttons">
+        <button onclick="filterTable('ALL')">Всі</button>
+        <button onclick="filterTable('CLIENT')">Клієнти</button>
+        <button onclick="filterTable('READER')">Читачі</button>
+    </div>
 </div>
 
 <h2>Список зареєстрованих користувачів</h2>
@@ -33,13 +38,18 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="u : ${allUsers}">
+    <tr th:each="u : ${allUsers}" th:attr="data-role=${#strings.listJoin(u.roles, ',')}">
         <td th:text="${u.id}"></td>
         <td th:text="${u.name}"></td>
         <td th:text="${u.email}"></td>
         <td>
-            <span th:text="${u.role == 'USER' ? 'ЧИТАЧ' : (u.role == 'CLIENT' ? 'КЛІЄНТ' : 'АДМІН')}">USER</span>
-            <form th:if="${u.role == 'USER'}" th:action="@{/admin/promote/{id}(id=${u.id})}" method="post" class="admin-action-form-inline">
+        <td>
+            <span th:text="${u.roles.toString().contains('READER') ? 'ЧИТАЧ' : (u.roles.toString().contains('CLIENT') ? 'КЛІЄНТ' : 'АДМІН')}"></span>
+
+            <form th:if="${u.roles.toString().contains('READER')}"
+                  th:action="@{/admin/promote/{id}(id=${u.id})}"
+                  method="post"
+                  class="admin-action-form-inline">
                 <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
             </form>
         </td>
@@ -55,16 +65,16 @@
             </form>
         </td>
         <td>
-            <form th:if="${u.role != 'ADMIN' and u.role != 'CLIENT'}"
+            <form th:if="${!u.roles.toString().contains('ADMIN') and !u.roles.toString().contains('CLIENT')}"
                   th:action="@{/admin/delete/{id}(id=${u.id})}" method="post">
                 <button type="submit" class="btn-delete" onclick="return confirm('Ви впевнені, що хочете видалити цей запис?')">
                     Видалити
                 </button>
             </form>
 
-            <span th:if="${u.role == 'ADMIN'}" class="admin-badge-self">Це Ви</span>
+            <span th:if="${u.roles.toString().contains('ADMIN')}" class="admin-badge-self">Це Ви</span>
 
-            <span th:if="${u.role == 'CLIENT'}" class="admin-badge-client">У ТЕРАПІЇ</span>
+            <span th:if="${u.roles.toString().contains('CLIENT')}" class="admin-badge-client">У ТЕРАПІЇ</span>
         </td>
     </tr>
     </tbody>
@@ -72,5 +82,6 @@
 
 <br>
 <a href="/" class="back-link">Повернутися на головну</a>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>

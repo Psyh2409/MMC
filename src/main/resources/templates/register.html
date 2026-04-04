@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
     <title>Реєстрація | Психотерапія</title>
 </head>
@@ -34,10 +34,15 @@
 
         <div class="form-field">
             <label class="form-label">Пароль (від 8 символів):</label>
-            <input type="password" th:field="*{password}" required placeholder="••••••••"
-                   class="form-input" />
+            <div class="password-container">
+                <input type="password" th:field="*{password}" required placeholder="••••••••"
+                   class="form-input" id="password"/>
+                <button type="button" id="togglePassword" class="toggle-password-btn" tabindex="-1">
+                    👁️
+                </button>
+            </div>
             <div class="form-error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-                Пароль занадто короткий
+                    Пароль занадто короткий
             </div>
         </div>
 
@@ -50,5 +55,8 @@
         Вже маєте акаунт? <a href="/login" class="helper-link">Увійти</a>
     </p>
 </section>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/password-toggle.js}"></script>
+</th:block>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent, pageScripts)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,8 @@
 </main>
 
 <div th:replace="~{fragments/header-footer :: footer-fragment}"></div>
+
+<th:block th:replace="${pageScripts} ?: ~{}"></th:block>
 
 </body>
 </html>

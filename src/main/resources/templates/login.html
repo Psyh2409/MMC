@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section})}">
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
     <title>Увійти | Психотерапія</title>
 </head>
@@ -29,8 +29,13 @@
 
         <div class="form-field">
             <label class="form-label">Пароль</label>
-            <input type="password" name="password" required placeholder="••••••••"
+            <div class="password-container">
+                <input type="password" name="password" id="password" required placeholder="••••••••"
                    class="form-input">
+                <button type="button" id="togglePassword" class="toggle-password-btn" tabindex="-1">
+                    👁️
+                </button>
+            </div>
         </div>
 
         <button type="submit" class="submit-button submit-button-brown">
@@ -78,5 +83,8 @@
         Ще не маєте акаунту? <a href="/register" class="helper-link">Зареєструватися</a>
     </p>
 </section>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/password-toggle.js}"></script>
+</th:block>
 </body>
 </html>
