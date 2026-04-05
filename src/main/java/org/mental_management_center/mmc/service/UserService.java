@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.service;
 
-import org.mental_management_center.mmc.model.Role;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.model.RoleBit; // Наш новий енам
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,25 +20,36 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerNewUser(User user) {
+    public void registerNewUser(User user, String confirmPassword) {
+        // 1. НАЙВАЖЛИВІШЕ: Перевірка на співпадіння паролів
+        // Порівнюємо "чисті" рядки перед кодуванням
+        if (!user.getPassword().equals(confirmPassword)) {
+            throw new RuntimeException("Паролі не збігаються! Будь ласка, спробуйте ще раз.");
+        }
+
         if(userRepository.existsByEmail(user.getEmail()))
             throw new RuntimeException("This email address is already taken");
-        if (user.getRoles() == null || user.getRoles().isEmpty())
-            user.addRole(Role.READER);
+
+        // Якщо маска порожня (хоча дефолт 2), або ми хочемо явно додати READER
+        if (!user.hasRole(RoleBit.READER)) {
+            user.addRole(RoleBit.READER);
+        }
+
         if (user.getAuthProvider() == null || user.getAuthProvider().isEmpty())
             user.setAuthProvider("LOCAL");
+
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     public User upsertOAuth2User(String email, String name, String provider, String providerId) {
-        return userRepository.findUserByEmail(email)
+        return userRepository.findByEmail(email)
                 .map(existingUser -> {
                     if ((existingUser.getName() == null || existingUser.getName().isBlank())
                             && name != null && !name.isBlank()) {
@@ -56,7 +67,11 @@ public class UserService {
                     User user = new User();
                     user.setEmail(email);
                     user.setName((name == null || name.isBlank()) ? email : name);
-                    user.addRole(Role.READER);
+
+                    // Додаємо базові ролі для нового соц-користувача
+                    user.addRole(RoleBit.GUEST);
+                    user.addRole(RoleBit.READER);
+
                     user.setAuthProvider(provider);
                     user.setProviderId(providerId);
                     user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
@@ -67,7 +82,9 @@ public class UserService {
     public void promoteToClient(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
-        user.addRole(Role.CLIENT);
+
+        // Використовуємо наш новий метод додавання біта
+        user.addRole(RoleBit.CLIENT);
         userRepository.save(user);
     }
 
@@ -78,5 +95,14 @@ public class UserService {
             throw new RuntimeException("Sie konnen Ihr eigenes Administratorkonto nicht loschen!");
         }
         userRepository.deleteById(id);
+    }
+
+    public void toggleUserStatus(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        // Міняємо true на false або навпаки
+        user.setEnabled(!user.isEnabled());
+        userRepository.save(user);
     }
 }

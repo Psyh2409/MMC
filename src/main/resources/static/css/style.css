@@ -1,3 +1,19 @@
+:root {
+    /* Кава з молоком / Беж (Фони, другорядні елементи) */
+    --bg-main: #f5f0e8;
+    --bg-card: #ffffff;
+
+    /* Дерево / Теплий коричневий (Акценти, кнопки) */
+    --primary-color: #8d6e63;
+
+    /* Шоколад / Глибокий коричневий (Текст, заголовки) */
+    --text-main: #3e2723;
+    --header-dark: #2d1b18;
+
+    /* Колір для посилань (м'який кавовий) */
+    --link-color: #6d4c41;
+}
+
 /* =========================================
    1. БАЗОВІ НАЛАШТУВАННЯ ТА ЛЕЙАУТ
    ========================================= */
@@ -1607,6 +1623,70 @@ h1, h2, h3 {
 .password-container .form-input {
     padding-right: 40px;
     width: 100%;
+}
+
+.profile-card {
+    background: var(--bg-card);
+    border-top: 4px solid var(--primary-color); /* тонка лінія кольору дерева зверху */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1); /* тінь у тон шоколаду */
+    margin-bottom: 2rem;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-label {
+    font-weight: 600;
+    color: var(--link-color); /* колір кави для підписів */
+}
+
+.profile-value {
+    color: var(--text-main); /* глибокий шоколадний для самих даних */
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-admin { background: #ffebee; color: #c62828; }
+.badge-therapist { background: #e3f2fd; color: #1565c0; }
+.badge-client { background: #e8f5e9; color: #2e7d32; }
+.badge-reader { background: #f3e5f5; color: #7b1fa2; }
+
+.btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.user-profile-link {
+    text-decoration: none;
+    color: inherit; /* бере колір тексту "Вітаю" */
+    transition: color 0.3s;
+}
+
+.user-profile-link:hover {
+    color: var(--primary-color, #2e7d32); /* твій зелений колір при наведенні */
+    text-decoration: underline;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* відстань між привітанням і кнопкою виходу */
 }
 
 /* =========================================

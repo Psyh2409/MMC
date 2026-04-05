@@ -2,48 +2,71 @@
 <html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Список заявок | Панель керування</title>
+    <title>Бардачок | Вхідні заявки</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="requests-page">
 
-<h1 class="page-heading">Вхідні заявки на консультацію</h1>
+<h1 class="page-heading">Журнал звернень (Бардачок)</h1>
 
 <table class="data-table">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Ім'я клієнта</th>
-        <th>Контактні дані</th>
-        <th>Повідомлення / Запит</th>
-        <th>Дата надходження</th>
+        <th>Статус</th>
+        <th>Відправник</th>
+        <th>Зв'язок</th>
+        <th>Повідомлення</th>
+        <th>Дата</th>
         <th>Дії</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="req : ${requests}">
-        <td th:text="${req.id}" class="data-table-id">01</td>
-        <td th:text="${req.name}" class="data-table-name">Ім'я</td>
-        <td th:text="${req.contact}"></td>
-        <td th:text="${req.message}" class="data-table-message"></td>
-        <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
+    <tr th:each="req : ${requests}"
+        th:classappend="${req.rolesMask == 4} ? 'row-priority-client' : ''">
+
         <td>
-            <a th:href="@{/requests/delete/{id}(id=${req.id})}"
-               class="btn-delete btn-delete-link"
-               onclick="return confirm('Ви впевнені, що хочете видалити цю заявку?')">
-                Видалити
-            </a>
+            <span class="badge"
+                  th:classappend="${req.rolesMask == 4} ? 'badge-client' : 'badge-guest'"
+                  th:text="${req.rolesMask == 4 ? 'КЛІЄНТ' : (req.rolesMask == 1 ? 'ГІСТЬ' : 'ЧИТАЧ')}">
+            </span>
+        </td>
+
+        <td>
+            <span th:if="${req.user != null}" th:text="${req.user.name}" style="font-weight: bold;"></span>
+            <span th:if="${req.user == null}" th:text="${req.name}" style="font-style: italic;"></span>
+        </td>
+
+        <td>
+            <div class="contact-actions">
+                <a th:href="'sms:' + ${req.user != null ? (req.user.phone ?: req.contact) : req.contact}"
+                   class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
+
+                <a th:href="'mailto:' + ${req.user != null ? req.user.email : req.contact}"
+                   class="btn-action-email" title="Надіслати лист">📧 Email</a>
+            </div>
+        </td>
+
+        <td th:text="${req.message}" class="data-table-message"></td>
+
+        <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+
+        <td>
+            <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                <button type="submit" class="btn-delete-small">Видалити</button>
+            </form>
         </td>
     </tr>
+
     <tr th:if="${#lists.isEmpty(requests)}">
-        <td colspan="6" class="empty-state">Наразі нових заявок немає.</td>
+        <td colspan="6" class="empty-state">У бардачку поки порожньо. Спокійний день!</td>
     </tr>
     </tbody>
 </table>
 
-<a href="/admin/users" class="back-link">← До списку користувачів</a>
-<br>
-<a href="/" class="back-link">На головну</a>
+<div class="admin-navigation">
+    <a href="/admin/users" class="back-link">← До списку користувачів</a>
+    <a href="/" class="back-link">На головну</a>
+</div>
 
 </body>
 </html>

@@ -8,25 +8,29 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter @Setter // Використовуємо Lombok на рівні класу для чистоти
 public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
-    @Getter
-    @Setter
+    // Ці поля заповнюються тільки для ГОСТЕЙ (маска 1)
     private String name;
-    @Getter
-    @Setter
     private String contact;
-    @Getter
-    @Setter
+
+    @Column(columnDefinition = "TEXT")
     private String message;
-    @Getter
-    @Setter
+
     private LocalDateTime createdAt;
+
+    // Зв'язок із таблицею Users (може бути NULL для анонімів)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // Роль того, хто надіслав запит на момент відправки
+    private byte rolesMask;
 
     @PrePersist
     private void prePersist(){
@@ -35,5 +39,8 @@ public class Request {
 
     public Request(){}
 
-
+    // Зручний метод для отримання імені (свого або гостя)
+    public String getSenderName() {
+        return (user != null) ? user.getName() : name;
+    }
 }

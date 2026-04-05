@@ -1,42 +1,51 @@
 package org.mental_management_center.mmc.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import java.util.Collection;
+import lombok.NoArgsConstructor; // Додай це
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor // Це вилікує помилки створення об'єкта Hibernate
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Der Name darf nicht leer sein")
+
+    @NotBlank(message = "Ім'я не може бути порожнім")
     private String name;
+
     @Column(unique = true, nullable = false)
-    @Email(message = "Das E-Mail-Format ist nicht korrekt")
-    @NotBlank(message = "Das E-Mail darf nicht leer sein")
+    @Email(message = "Невірний формат Email")
+    @NotBlank(message = "Email не може бути порожнім")
     private String email;
-    @NotBlank(message = "Das Passwort darf nicht leer sein")
-    @Size(min = 8, message = "Das Psswort muss mindestens acht Zeichen lang sein")
+
+    @NotBlank(message = "Пароль не може бути порожнім")
+    @Size(min = 8, message = "Пароль має бути не менше 8 символів")
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    // Стан акаунта (Активний/Заблокований)
+    private boolean enabled = true;
+
+    @Column(name = "roles_mask")
+    private byte rolesMask = 2; // READER за замовчуванням
+
     private String authProvider;
     private String providerId;
+
     @Column(columnDefinition = "TEXT")
     private String adminNotes;
 
@@ -44,37 +53,41 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public User() {
-    }
-
-    public User(String name, String email, String password, Role initialRole) {
+    // Твій конструктор (тепер він не заважає Hibernate завдяки @NoArgsConstructor)
+    public User(String name, String email, String password, RoleBit initialRole) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.roles.add(initialRole);
+        this.rolesMask = (initialRole != null) ? initialRole.getMask() : (byte) 2;
+        this.enabled = true;
     }
 
-    public boolean isAdmin() {
-        return roles != null && roles.contains(Role.ADMIN);
-    }
-    public boolean isColleague() {
-        return roles != null && roles.contains(Role.COLLEAGUE);
-    }
-    public boolean isClient() {
-        return roles != null && roles.contains(Role.CLIENT);
+    // --- ЛОГІКА ПЕРЕВІРКИ РОЛЕЙ ---
+    public boolean isAdmin() { return hasRole(RoleBit.ADMIN); }
+    public boolean isTherapist() { return hasRole(RoleBit.THERAPIST); }
+    public boolean isClient() { return hasRole(RoleBit.CLIENT); }
+    public boolean isReader() { return hasRole(RoleBit.READER); }
+
+    // --- БІТОВІ ОПЕРАЦІЇ ---
+    public void addRole(RoleBit role) {
+        this.rolesMask = (byte) (this.rolesMask | role.getMask());
     }
 
-    public void addRole(Role role) {
-        this.roles.add(role);
+    public boolean hasRole(RoleBit role) {
+        return (this.rolesMask & role.getMask()) != 0;
     }
-    public void removeRole(Role role) {
-        this.roles.remove(role);
+
+    public void removeRole(RoleBit role) {
+        this.rolesMask = (byte) (this.rolesMask & ~role.getMask());
     }
 
     public Collection<SimpleGrantedAuthority> getAuthorities() {
-        return roles.stream().map(
-                role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .toList();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (RoleBit role : RoleBit.values()) {
+            if (hasRole(role)) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+            }
+        }
+        return authorities;
     }
-
 }

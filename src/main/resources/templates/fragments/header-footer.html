@@ -38,9 +38,14 @@
             </div>
 
             <div sec:authorize="isAuthenticated()" class="user-menu">
-                <span class="user-menu-greeting">
-                    Вітаю, <strong th:text="${currentUserDisplayName}" class="user-menu-name"></strong>
-                </span>
+    <span class="user-menu-greeting">
+        Вітаю, <a th:href="@{/profile}" class="user-profile-link">
+            <strong th:text="${currentUserDisplayName}" class="user-menu-name"></strong>
+        </a>
+    </span>
+
+                <a th:href="@{/profile}" class="site-nav-link" title="Мій кабінет">👤</a>
+
                 <form th:action="@{/logout}" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Вийти</button>
                 </form>

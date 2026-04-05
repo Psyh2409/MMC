@@ -8,7 +8,14 @@
 
 <section class="standard-container standard-container-narrow">
     <h2 class="contact-intro-title">Написати мені</h2>
-    <p class="contact-intro-text">Ви можете залишити тут своє повідомлення, і я обов'язково вам відповім.</p>
+
+    <p th:if="${#authorization.expression('isAuthenticated()')}" class="contact-intro-text">
+        Вітаю, <strong th:text="${#authentication.name}">Користувач</strong>! Ви можете надіслати повідомлення прямо звідси.
+    </p>
+
+    <p th:unless="${#authorization.expression('isAuthenticated()')}" class="contact-intro-text">
+        Ви можете залишити повідомлення тут, і я обов'язково вам відповім.
+    </p>
 
     <div th:if="${param.success}" class="status-message status-message-strong status-success">
         ✔ Ваше повідомлення надіслано. Я зв'яжуся з вами найближчим часом.
@@ -16,16 +23,21 @@
 
     <form th:action="@{/contact}" method="post" class="stack-form stack-form-sans">
 
-        <div class="form-field">
-            <label class="form-label">Ваше ім'я</label>
-            <input type="text" name="name" required placeholder="Як до вас звертатися?"
-                   class="form-input">
-        </div>
+        <div th:unless="${#authorization.expression('isAuthenticated()')}">
+            <div class="form-field">
+                <label class="form-label">Ваше ім'я</label>
+                <input type="text" name="name" required placeholder="Як до вас звертатися?"
+                       class="form-input">
+            </div>
 
-        <div class="form-field">
-            <label class="form-label">Контактні дані (Телефон або Email)</label>
-            <input type="text" name="contact" required placeholder="Куди мені відповісти?"
-                   class="form-input">
+            <div class="form-field">
+                <label class="form-label">Контактні дані (Телефон або Email)</label>
+                <input type="text" name="contact" required placeholder="Куди мені відповісти?"
+                       class="form-input">
+                <small style="display:block; margin-top: 5px; color: #888; font-size: 0.85em;">
+                    * Якщо ви не можете увійти, вкажіть Email вашого акаунта для ідентифікації.
+                </small>
+            </div>
         </div>
 
         <div class="form-field">

@@ -45,7 +45,24 @@
                     Пароль занадто короткий
             </div>
         </div>
+        <div class="form-field">
+            <label class="form-label">Повторіть пароль:</label>
+            <div class="password-container">
+                <input type="password"
+                       name="confirmPassword"
+                       id="confirmPassword"
+                       required
+                       placeholder="••••••••"
+                       class="form-input" />
 
+                <button type="button" id="toggleConfirmPassword" class="toggle-password-btn" tabindex="-1">
+                    👁️
+                </button>
+            </div>
+            <div class="form-error-text" th:if="${error != null and error.contains('паролі')}" th:text="${error}">
+                Паролі не збігаються
+            </div>
+        </div>
         <button type="submit" class="submit-button submit-button-soft">
             Зареєструватися
         </button>

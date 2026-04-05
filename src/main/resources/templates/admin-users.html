@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Центр керування — Клієнти</title>
@@ -16,10 +16,21 @@
     <div class="admin-stat-card admin-stat-card-visits">
         <strong>Загалом візитів: </strong> <span th:text="${totalVisits}">0</span>
     </div>
+<!--    <div class="admin-dashboard-header">-->
+<!--        <a th:href="@{/admin/requests}" class="btn-main-dashboard">-->
+<!--            <span th:if="${newRequestsCount > 0}" class="notification-badge" th:text="${newRequestsCount}">!</span>-->
+<!--            📂 Всі запити та повідомлення-->
+<!--        </a>-->
+<!--    </div>-->
     <div class="filter-buttons">
-        <button onclick="filterTable('ALL')">Всі</button>
-        <button onclick="filterTable('CLIENT')">Клієнти</button>
-        <button onclick="filterTable('READER')">Читачі</button>
+        <button onclick="filterTable('ALL')" class="btn-filter">Всі</button>
+        <button onclick="filterTable('ADMIN')" class="btn-filter">Адмін</button>
+        <button onclick="filterTable('THERAPIST')" class="btn-filter">Колеги</button>
+        <button onclick="filterTable('CLIENT')" class="btn-filter">Клієнти</button>
+        <button onclick="filterTable('READER')" class="btn-filter">Читачі</button>
+        <span class="divider">|</span> <a th:href="@{/requests}" class="btn-dashboard-link">
+        <button type="button" class="btn-highlight">📥 Повідомлення (Бардачок)</button>
+    </a>
     </div>
 </div>
 
@@ -38,43 +49,55 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="u : ${allUsers}" th:attr="data-role=${#strings.listJoin(u.roles, ',')}">
+    <tr th:each="u : ${allUsers}" th:attr="data-role=${u.isAdmin() ? 'ADMIN' : (u.isClient() ? 'CLIENT' : 'READER')}">
         <td th:text="${u.id}"></td>
         <td th:text="${u.name}"></td>
         <td th:text="${u.email}"></td>
-        <td>
-        <td>
-            <span th:text="${u.roles.toString().contains('READER') ? 'ЧИТАЧ' : (u.roles.toString().contains('CLIENT') ? 'КЛІЄНТ' : 'АДМІН')}"></span>
 
-            <form th:if="${u.roles.toString().contains('READER')}"
+        <td>
+            <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
+
+            <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
                   th:action="@{/admin/promote/{id}(id=${u.id})}"
                   method="post"
                   class="admin-action-form-inline">
                 <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
             </form>
         </td>
+
         <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
+
         <td>
             <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
-                <textarea name="notes"
-                          th:text="${u.adminNotes}"
-                          placeholder="Додайте коментар про клієнта..."
-                          class="admin-notes"></textarea>
+            <textarea name="notes"
+                      th:text="${u.adminNotes}"
+                      placeholder="Додайте коментар..."
+                      class="admin-notes"></textarea>
                 <br>
                 <button type="submit" class="admin-save-button">Зберегти</button>
             </form>
         </td>
+
         <td>
-            <form th:if="${!u.roles.toString().contains('ADMIN') and !u.roles.toString().contains('CLIENT')}"
-                  th:action="@{/admin/delete/{id}(id=${u.id})}" method="post">
-                <button type="submit" class="btn-delete" onclick="return confirm('Ви впевнені, що хочете видалити цей запис?')">
-                    Видалити
+            <form th:if="${!u.isAdmin()}" th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post" style="display:inline;">
+                <button type="submit"
+                        th:class="${u.enabled} ? 'btn-ban-small' : 'btn-unban-small'"
+                        th:text="${u.enabled} ? 'Забанити' : 'Розбанити'">
                 </button>
             </form>
 
-            <span th:if="${u.roles.toString().contains('ADMIN')}" class="admin-badge-self">Це Ви</span>
+            <form th:if="${!u.isAdmin()}"
+                  th:action="@{/admin/delete/{id}(id=${u.id})}"
+                  method="post"
+                  style="display:inline;"
+                  onsubmit="return confirm('Ви впевнені? Це видалить користувача назавжди!')">
+                <button type="submit" class="btn-delete-small">Видалити</button>
+            </form>
 
-            <span th:if="${u.roles.toString().contains('CLIENT')}" class="admin-badge-client">У ТЕРАПІЇ</span>
+            <span th:if="${u.isAdmin()}" class="admin-badge-self">Це Ви</span>
+            <div th:if="${u.isClient()}" class="admin-badge-client" style="margin-top: 5px;">У ТЕРАПІЇ</div>
+
+            <div th:if="${!u.enabled}" style="color: red; font-weight: bold; font-size: 0.8em;">ЗАБЛОКОВАНИЙ</div>
         </td>
     </tr>
     </tbody>

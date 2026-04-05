@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
+<head>
+    <title>Мій Профіль | Психотерапія</title>
+</head>
+<body>
+<section class="standard-container standard-container-compact">
+    <h2 class="contact-intro-title">Особистий кабінет</h2>
+
+    <div class="profile-card">
+        <div class="profile-row">
+            <span class="profile-label">Ім'я:</span>
+            <span class="profile-value" th:text="${user.name}">Ім'я</span>
+        </div>
+        <div class="profile-row">
+            <span class="profile-label">Ваш статус:</span>
+            <div class="role-badges">
+                <span th:if="${user.admin}"
+                    class="badge badge-admin">Адміністратор</span>
+
+                <span th:if="${user.therapist}"
+                      class="badge badge-therapist">Терапевт</span>
+
+                <span th:if="${user.client}"
+                      class="badge badge-client">Клієнт</span>
+
+                <span th:if="${user.reader}"
+                      class="badge badge-reader">Читач</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a href="/" class="btn-dashboard-link">Повернутися</a>
+        <a href="#" class="btn-highlight btn-disabled">Змінити пароль (скоро)</a>
+    </div>
+</section>
+
+<th:block th:fragment="page-scripts">
+</th:block>
+</body>
+</html>
