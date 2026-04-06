@@ -8,17 +8,13 @@ import java.util.Collection;
 
 public class MyUserDetails implements UserDetails {
 
-    private final String email;
-    private final String password;
-    private final String firstName; // Ось воно! Наше ім'я
+    private final User user;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public MyUserDetails(
             User user,
             Collection<? extends GrantedAuthority> authorities) {
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.firstName = user.getName();
+        this.user = user;
         this.authorities = authorities;
     }
 
@@ -29,16 +25,16 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return user.getEmail();
     }
 
     public String getFirstName() {
-        return firstName;
+        return user.getName();
     }
 
     @Override
@@ -58,6 +54,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }

@@ -38,7 +38,7 @@ public class User {
     private String password;
 
     // Стан акаунта (Активний/Заблокований)
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @Column(name = "roles_mask")
     private byte rolesMask = 2; // READER за замовчуванням

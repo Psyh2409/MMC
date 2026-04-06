@@ -2,7 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.SiteStats;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.RoleBit; // Імпортуємо наш новий Enum
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
@@ -62,6 +62,20 @@ public class AuthController {
             // Тут вилетить помилка, якщо Email вже зайнятий
             model.addAttribute("error", e.getMessage());
             return "register";
+        }
+    }
+
+    @GetMapping("/registrationConfirm")
+    public String confirmRegistration(@RequestParam("token") String token, org.springframework.ui.Model model) {
+
+        boolean isConfirmed = userService.confirmUser(token);
+
+        if (isConfirmed) {
+            model.addAttribute("message", "Ваш акаунт успішно активовано! Тепер ви можете увійти.");
+            return "redirect:/login?activated=true"; // Повертаємо на сторінку логіна з повідомленням
+        } else {
+            model.addAttribute("error", "Посилання недійсне або термін його дії вичерпано.");
+            return "register"; // Повертаємо на реєстрацію, якщо щось не так
         }
     }
 

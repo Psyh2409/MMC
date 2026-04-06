@@ -34,8 +34,16 @@ public class CustomOidcUserService extends OidcUserService {
         String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
         String providerId = oidcUser.getSubject();
 
+        // 1. Отримуємо або створюємо юзера
         User user = userService.upsertOAuth2User(email, name, provider, providerId);
 
+        // 2. ПЕРЕВІРКА: Якщо юзер вже був у базі, але він не активований (enabled = false)
+        // Ми не пускаємо його далі, навіть якщо Google каже, що він - це він.
+        if (!user.isEnabled()) {
+            throw new OAuth2AuthenticationException("Будь ласка, активуйте ваш акаунт через посилання у листі.");
+        }
+
+        // 3. Якщо активований (або новий юзер, якому upsert поставив true за замовчуванням) — пускаємо
         return new DefaultOidcUser(
                 user.getAuthorities(),
                 oidcUser.getIdToken(),
