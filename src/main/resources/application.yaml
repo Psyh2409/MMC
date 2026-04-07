@@ -28,6 +28,9 @@ spring:
           writetimeout: 5000
 server:
   forward-headers-strategy: framework
+  error:
+    whitelabel:
+      enabled: false
 
 app:
 

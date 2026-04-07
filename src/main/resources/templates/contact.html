@@ -7,18 +7,16 @@
 <body>
 
 <section class="standard-container standard-container-narrow">
-    <h2 class="contact-intro-title">Написати мені</h2>
+    <h2 class="contact-intro-title">Контакти</h2>
 
-    <p th:if="${#authorization.expression('isAuthenticated()')}" class="contact-intro-text">
-        Вітаю, <strong th:text="${#authentication.name}">Користувач</strong>! Ви можете надіслати повідомлення прямо звідси.
-    </p>
-
-    <p th:unless="${#authorization.expression('isAuthenticated()')}" class="contact-intro-text">
-        Ви можете залишити повідомлення тут, і я обов'язково вам відповім.
+    <p class="contact-intro-text">
+        Вітаю, <strong th:text="${currentUserDisplayName != null ? currentUserDisplayName : 'Гість'}">Гість</strong>!
+        <span th:if="${#authorization.expression('isAuthenticated()')}">Ви можете надіслати повідомлення прямо звідси.</span>
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">Ви можете залишити повідомлення тут, і ми обов'язково Вам відповімо.</span>
     </p>
 
     <div th:if="${param.success}" class="status-message status-message-strong status-success">
-        ✔ Ваше повідомлення надіслано. Я зв'яжуся з вами найближчим часом.
+        ✔ Ваше повідомлення надіслано. Ми зв'яжемося з Вами найближчим часом.
     </div>
 
     <form th:action="@{/contact}" method="post" class="stack-form stack-form-sans">
@@ -36,14 +34,14 @@
                 <input type="text" name="contact" required placeholder="Куди мені відповісти?"
                        class="form-input">
                 <small style="display:block; margin-top: 5px; color: #888; font-size: 0.85em;">
-                    * Якщо ви не можете увійти, вкажіть Email вашого акаунта для ідентифікації.
+                    * Якщо Ви не можете увійти, вкажіть Email Вашого акаунта для ідентифікації.
                 </small>
             </div>
         </div>
 
         <div class="form-field">
             <label class="form-label">Ваше повідомлення</label>
-            <textarea name="message" rows="6" required placeholder="Опишіть коротко ваш запит..."
+            <textarea name="message" rows="6" required placeholder="Опишіть коротко Ваше питання чи пропозицію..."
                       class="form-textarea"></textarea>
         </div>
 
@@ -53,8 +51,9 @@
     </form>
 
     <div class="contact-direct">
-        <p class="contact-direct-note">Або напишіть мені безпосередньо у месенджери (WhatsApp, Viber):</p>
-        <p class="contact-direct-phone">+38 (097) 822-32-27</p>
+        <p class="contact-direct-note">Для термінового зв'язку з адміністрацією ресурсу:</p>
+        <p class="contact-direct-email">📧 mental.m.center@gmail.com</p>
+        <p class="contact-direct-info">Ви також можете скористатися формою вище.</p>
     </div>
 </section>
 

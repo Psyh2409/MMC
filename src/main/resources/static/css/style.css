@@ -22,21 +22,21 @@ html, body {
     margin: 0;
 }
 
-body {
+.page-shell {
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
     font-family: Arial, sans-serif;
-    background-color: #f5f5dc;
-    color: #4e342e;
-}
-
-.page-shell {
-    min-height: 100vh;
     background-color: #fdfbf7;
+    color: #4e342e;
 }
 
 .page-main {
     flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 0 0 32px;
 }
 
 .standard-container {
@@ -68,7 +68,7 @@ body {
 }
 
 .standard-container-wide {
-    max-width: 800px;
+    max-width: 1200px;
     line-height: 1.8;
     font-family: 'Georgia', serif;
 }
@@ -466,103 +466,80 @@ body {
     cursor: pointer;
 }
 
+/* Оновлений базовий клас футера */
 .site-footer {
-    margin-top: 80px;
-    padding: 50px 20px;
-    background: #3e2723;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+
+    /* Відносні розміри для динаміки */
+    height: 6vh;
+    max-height: 55px;
+    min-height: 45px;
+
+    background: #3e2723; /* Твій фірмовий колір */
     color: #d7ccc8;
     font-family: 'Georgia', serif;
-    border-top: 3px solid #8d6e63;
-}
+    border-top: 2px solid #8d6e63;
 
-.site-footer-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1.2fr;
-    gap: 40px;
-}
-
-.footer-heading {
-    color: #fff9c4;
-    margin-bottom: 18px;
-    font-size: 1.3em;
-}
-
-.footer-list {
-    list-style: none;
-    padding: 0;
-    line-height: 1.9;
-    color: #bcaaa4;
-    font-size: 0.95em;
-}
-
-.footer-list-compact {
-    line-height: 1.8;
-    font-size: 1em;
-}
-
-.footer-text {
-    color: #d7ccc8;
-}
-
-.footer-social-link {
-    color: #d7ccc8;
-    text-decoration: none;
-    border-bottom: 1px dashed rgba(215,204,200,0.5);
-}
-
-.footer-actions {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-shrink: 0;
 }
 
-.footer-action-link {
-    display: block;
-    padding: 12px;
-    border-radius: 25px;
-    text-align: center;
+/* Контейнер для розподілу елементів */
+.site-footer-inner {
+    width: 100%;
+    max-width: 1200px; /* Обмежуємо ширину для великих моніторів */
+    margin: 0 auto;
+    padding: 0 5vw; /* Відступи з боків у відсотках */
+
+    display: flex;
+    justify-content: space-between; /* Розштовхує: ліво-центр-право */
+    align-items: center;
+}
+
+/* Стиль логотипу у футері (копіюємо стиль хедера) */
+.site-brand-footer {
     text-decoration: none;
-}
-
-.footer-action-home {
-    background: rgba(255,245,220,0.05);
-    color: #f5f5dc;
-    border: 1px solid rgba(245,245,220,0.2);
-}
-
-.footer-action-contact {
-    background: #8d6e63;
-    color: #fdf5e6;
+    color: #fff9c4; /* Твій світлий акцент */
     font-weight: bold;
+    font-size: 0.95rem;
+    transition: opacity 0.3s;
 }
 
-.footer-meta {
-    text-align: right;
+.site-brand-footer:hover {
+    opacity: 0.8;
 }
 
-.footer-meta-title {
-    color: #a1887f;
-    margin-bottom: 15px;
-    text-transform: uppercase;
+/* Кнопка "Написати" (Діагональна симетрія до кнопок входу/виходу) */
+.footer-link-action {
+    color: #f5f5dc;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 15px;
+    background: rgba(141, 110, 99, 0.4); /* Напівпрозорий тон */
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.footer-link-action:hover {
+    background: #8d6e63;
+}
+
+/* Центральний текст */
+.footer-copy {
     font-size: 0.8em;
+    opacity: 0.6;
     letter-spacing: 1px;
 }
 
-.footer-pill-link {
-    display: inline-block;
-    color: #fff9c4;
-    text-decoration: none;
-    border: 1px solid rgba(255,249,196,0.4);
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
-}
-
-.footer-meta-link-item {
-    margin-top: 15px;
+/* Адаптація основного контенту, щоб він не ховався під футер */
+main {
+    padding-bottom: 8vh;
 }
 
 .main-content-shell {
@@ -1273,7 +1250,9 @@ body {
 }
 
 .admin-page,
-.requests-page {
+.requests-page,
+.admin-shell,
+.requests-shell {
     padding: 40px;
     background-color: #f5f5dc;
     color: #4e342e;
@@ -1284,10 +1263,34 @@ body {
     padding: 20px;
 }
 
+.admin-shell,
+.requests-shell {
+    border-radius: 28px;
+    box-shadow: 0 16px 45px rgba(78, 52, 46, 0.08);
+}
+
+.dashboard-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.dashboard-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
 .admin-stats {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .admin-stat-card {
@@ -1315,6 +1318,16 @@ body {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 16px;
+}
+
+.table-scroll .data-table {
+    min-width: 980px;
 }
 
 .data-table-compact {
@@ -1439,17 +1452,32 @@ body {
     color: white;
 }
 
-.back-link {
-    display: inline-block;
-    margin-top: 25px;
-    color: #6d4c41;
-    text-decoration: underline;
-}
-
 .empty-state {
     padding: 40px;
     text-align: center;
     color: #8d6e63;
+}
+
+.error-shell {
+    display: flex;
+    justify-content: center;
+}
+
+.error-card {
+    max-width: 640px;
+    padding: 36px 32px;
+    border-radius: 24px;
+    background: #fffdf8;
+    box-shadow: 0 18px 45px rgba(78, 52, 46, 0.12);
+    text-align: center;
+}
+
+.error-code {
+    margin: 0 0 10px;
+    color: #8d6e63;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
 }
 
 .manifesto-page {
@@ -1696,7 +1724,7 @@ h1, h2, h3 {
     .site-header-inner,
     .site-nav,
     .user-menu {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .site-header-inner,
@@ -1738,8 +1766,23 @@ h1, h2, h3 {
     .issue-cta,
     .issue-cta-dark,
     .admin-page,
-    .requests-page {
+    .requests-page,
+    .admin-shell,
+    .requests-shell {
         padding: 30px 20px;
+    }
+
+    .dashboard-hero {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-cta {
+        width: 100%;
+    }
+
+    .table-scroll .data-table {
+        min-width: 760px;
     }
 
     .hero-title-light {

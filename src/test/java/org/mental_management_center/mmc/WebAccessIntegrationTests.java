@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc;
 
+import jakarta.servlet.RequestDispatcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -73,6 +74,15 @@ class WebAccessIntegrationTests {
         mockMvc.perform(get("/forgot-password"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("forgot-password"));
+    }
+
+    @Test
+    @WithMockUser(roles = "READER")
+    void missingPageUsesCustomErrorView() throws Exception {
+        mockMvc.perform(get("/error")
+                        .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 404))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("error"));
     }
 
     @Test

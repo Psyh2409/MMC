@@ -1,114 +1,124 @@
 <!DOCTYPE html>
-<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
     <meta charset="UTF-8">
     <title>Центр керування — Клієнти</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="admin-page">
-<div class="admin-stats">
-    <div class="admin-stat-card">
-        <strong>Читачі (USER): </strong> <span th:text="${countUsers}">0</span>
+<body>
+<section class="standard-container standard-container-wide admin-shell">
+    <div class="dashboard-hero">
+        <div>
+            <h2 class="contact-intro-title">Центр керування користувачами</h2>
+            <p class="contact-intro-text">Керуйте ролями, доступами та внутрішніми нотатками в єдиному робочому просторі.</p>
+        </div>
+        <a th:href="@{/requests}" class="btn-highlight dashboard-cta">Відкрити бардачок</a>
     </div>
-    <div class="admin-stat-card admin-stat-card-client">
-        <strong>У терапії (CLIENT): </strong> <span th:text="${countClients}">0</span>
+
+    <div th:if="${param.success}" class="status-message status-success">
+        Дію виконано успішно.
     </div>
-    <div class="admin-stat-card admin-stat-card-visits">
-        <strong>Загалом візитів: </strong> <span th:text="${totalVisits}">0</span>
+    <div th:if="${param.error}" class="status-message status-error" th:text="${param.error}">
+        Не вдалося виконати дію.
     </div>
-<!--    <div class="admin-dashboard-header">-->
-<!--        <a th:href="@{/admin/requests}" class="btn-main-dashboard">-->
-<!--            <span th:if="${newRequestsCount > 0}" class="notification-badge" th:text="${newRequestsCount}">!</span>-->
-<!--            📂 Всі запити та повідомлення-->
-<!--        </a>-->
-<!--    </div>-->
+
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <strong>Читачі</strong>
+            <div th:text="${countUsers}">0</div>
+        </div>
+        <div class="admin-stat-card admin-stat-card-client">
+            <strong>У терапії</strong>
+            <div th:text="${countClients}">0</div>
+        </div>
+        <div class="admin-stat-card admin-stat-card-visits">
+            <strong>Загалом візитів</strong>
+            <div th:text="${totalVisits}">0</div>
+        </div>
+    </div>
+
     <div class="filter-buttons">
-        <button onclick="filterTable('ALL')" class="btn-filter">Всі</button>
-        <button onclick="filterTable('ADMIN')" class="btn-filter">Адмін</button>
-        <button onclick="filterTable('THERAPIST')" class="btn-filter">Колеги</button>
-        <button onclick="filterTable('CLIENT')" class="btn-filter">Клієнти</button>
-        <button onclick="filterTable('READER')" class="btn-filter">Читачі</button>
-        <span class="divider">|</span> <a th:href="@{/requests}" class="btn-dashboard-link">
-        <button type="button" class="btn-highlight">📥 Повідомлення (Бардачок)</button>
-    </a>
+        <button onclick="filterTable('ALL')" class="btn-filter" type="button">Всі</button>
+        <button onclick="filterTable('ADMIN')" class="btn-filter" type="button">Адмін</button>
+        <button onclick="filterTable('THERAPIST')" class="btn-filter" type="button">Колеги</button>
+        <button onclick="filterTable('CLIENT')" class="btn-filter" type="button">Клієнти</button>
+        <button onclick="filterTable('READER')" class="btn-filter" type="button">Читачі</button>
     </div>
-</div>
 
-<h2>Список зареєстрованих користувачів</h2>
+    <div class="table-scroll">
+    <table class="data-table data-table-compact">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ім'я</th>
+            <th>E-mail</th>
+            <th>Роль</th>
+            <th>Дата реєстрації</th>
+            <th>Нотатки терапевта (конфіденційно)</th>
+            <th>Дії</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${allUsers}" th:attr="data-role=${u.primaryRoleName}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.name}"></td>
+            <td th:text="${u.email}"></td>
 
-<table class="data-table data-table-compact">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Ім'я</th>
-        <th>E-mail</th>
-        <th>Роль</th>
-        <th>Дата реєстрації</th>
-        <th>Нотатки терапевта (конфіденційно)</th>
-        <th>Дії</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="u : ${allUsers}" th:attr="data-role=${u.primaryRoleName}">
-        <td th:text="${u.id}"></td>
-        <td th:text="${u.name}"></td>
-        <td th:text="${u.email}"></td>
+            <td>
+                <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
 
-        <td>
-            <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
+                <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
+                      th:action="@{/admin/promote/{id}(id=${u.id})}"
+                      method="post"
+                      class="admin-action-form-inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
+                </form>
+            </td>
 
-            <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
-                  th:action="@{/admin/promote/{id}(id=${u.id})}"
-                  method="post"
-                  class="admin-action-form-inline">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
-            </form>
-        </td>
+            <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
 
-        <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
+            <td>
+                <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <textarea name="notes"
+                              th:text="${u.adminNotes}"
+                              placeholder="Додайте коментар..."
+                              class="admin-notes"></textarea>
+                    <br>
+                    <button type="submit" class="admin-save-button">Зберегти</button>
+                </form>
+            </td>
 
-        <td>
-            <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <textarea name="notes"
-                      th:text="${u.adminNotes}"
-                      placeholder="Додайте коментар..."
-                      class="admin-notes"></textarea>
-                <br>
-                <button type="submit" class="admin-save-button">Зберегти</button>
-            </form>
-        </td>
+            <td>
+                <form th:if="${!u.isAdmin()}" th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit"
+                            th:class="${u.enabled} ? 'btn-ban-small' : 'btn-unban-small'"
+                            th:text="${u.enabled} ? 'Забанити' : 'Розбанити'">
+                    </button>
+                </form>
 
-        <td>
-            <form th:if="${!u.isAdmin()}" th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <button type="submit"
-                        th:class="${u.enabled} ? 'btn-ban-small' : 'btn-unban-small'"
-                        th:text="${u.enabled} ? 'Забанити' : 'Розбанити'">
-                </button>
-            </form>
+                <form th:if="${!u.isAdmin()}"
+                      th:action="@{/admin/delete/{id}(id=${u.id})}"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="return confirm('Ви впевнені? Це видалить користувача назавжди!')">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn-delete-small">Видалити</button>
+                </form>
 
-            <form th:if="${!u.isAdmin()}"
-                  th:action="@{/admin/delete/{id}(id=${u.id})}"
-                  method="post"
-                  style="display:inline;"
-                  onsubmit="return confirm('Ви впевнені? Це видалить користувача назавжди!')">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <button type="submit" class="btn-delete-small">Видалити</button>
-            </form>
-
-            <span th:if="${u.isAdmin()}" class="admin-badge-self">Це Ви</span>
-            <div th:if="${u.isClient()}" class="admin-badge-client" style="margin-top: 5px;">У ТЕРАПІЇ</div>
-
-            <div th:if="${!u.enabled}" style="color: red; font-weight: bold; font-size: 0.8em;">ЗАБЛОКОВАНИЙ</div>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<br>
-<a href="/" class="back-link">Повернутися на головну</a>
-<script th:src="@{/js/admin.js}"></script>
+                <span th:if="${u.isAdmin()}" class="admin-badge-self">Це Ви</span>
+                <div th:if="${u.isClient()}" class="admin-badge-client" style="margin-top: 5px;">У ТЕРАПІЇ</div>
+                <div th:if="${!u.enabled}" style="color: red; font-weight: bold; font-size: 0.8em;">ЗАБЛОКОВАНИЙ</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/admin.js}"></script>
+</th:block>
 </body>
 </html>

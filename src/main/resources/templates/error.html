@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${errorTitle} + ' | Психотерапія'">Помилка | Психотерапія</title>
+</head>
+<body>
+<section class="standard-container standard-container-compact error-shell">
+    <div class="error-card">
+        <p class="error-code" th:text="${statusCode}">500</p>
+        <h1 class="contact-intro-title" th:text="${errorTitle}">Щось пішло не так</h1>
+        <p class="contact-intro-text" th:text="${errorMessage}">
+            Виникла непередбачувана помилка. Спробуйте повернутися на головну сторінку.
+        </p>
+        <div class="profile-actions">
+            <a href="/" class="btn-dashboard-link">На головну</a>
+            <a href="/contact" class="btn-highlight">Написати мені</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
