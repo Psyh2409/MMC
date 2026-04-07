@@ -12,7 +12,8 @@
         Помилка реєстрації
     </div>
 
-    <form th:action="@{/register}" th:object="${user}" method="post" class="stack-form">
+    <form th:action="@{/register}" th:object="${registrationForm}" method="post" class="stack-form">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
         <div class="form-field">
             <label class="form-label">Ваше ім'я:</label>
@@ -49,7 +50,7 @@
             <label class="form-label">Повторіть пароль:</label>
             <div class="password-container">
                 <input type="password"
-                       name="confirmPassword"
+                       th:field="*{confirmPassword}"
                        id="confirmPassword"
                        required
                        placeholder="••••••••"

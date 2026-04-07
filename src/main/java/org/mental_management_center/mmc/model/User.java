@@ -49,6 +49,10 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String adminNotes;
 
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetTokenExpiry;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -67,6 +71,26 @@ public class User {
     public boolean isTherapist() { return hasRole(RoleBit.THERAPIST); }
     public boolean isClient() { return hasRole(RoleBit.CLIENT); }
     public boolean isReader() { return hasRole(RoleBit.READER); }
+    public boolean isGuest() { return hasRole(RoleBit.GUEST); }
+
+    public String getPrimaryRoleName() {
+        if (isAdmin()) {
+            return "ADMIN";
+        }
+        if (isTherapist()) {
+            return "THERAPIST";
+        }
+        if (isClient()) {
+            return "CLIENT";
+        }
+        if (isReader()) {
+            return "READER";
+        }
+        if (isGuest()) {
+            return "GUEST";
+        }
+        return "UNKNOWN";
+    }
 
     // --- БІТОВІ ОПЕРАЦІЇ ---
     public void addRole(RoleBit role) {

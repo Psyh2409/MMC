@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title>Статті | Психотерапія</title>
+</head>
+<body>
+<section class="standard-container standard-container-compact">
+    <h2 class="contact-intro-title">Статті та матеріали</h2>
+    <p class="contact-intro-text">
+        Тут поступово з'являтимуться матеріали про психотерапію, медіацію, стосунки,
+        тривожні стани та відновлення внутрішнього ресурсу.
+    </p>
+    <p class="contact-intro-text">
+        Поки що основні теми доступні у розділі проблематики. Якщо хочете обговорити
+        ваш запит індивідуально, скористайтесь формою зворотного зв'язку.
+    </p>
+    <div class="profile-actions">
+        <a href="/issues/inner-calm" class="btn-dashboard-link">Перейти до тематик</a>
+        <a href="/contact" class="btn-highlight">Написати мені</a>
+    </div>
+</section>
+</body>
+</html>

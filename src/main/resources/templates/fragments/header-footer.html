@@ -47,6 +47,7 @@
                 <a th:href="@{/profile}" class="site-nav-link" title="Мій кабінет">👤</a>
 
                 <form th:action="@{/logout}" method="post" class="logout-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <button type="submit" class="logout-button">Вийти</button>
                 </form>
             </div>

@@ -43,7 +43,7 @@ public class CustomOidcUserService extends OidcUserService {
             throw new OAuth2AuthenticationException("Будь ласка, активуйте ваш акаунт через посилання у листі.");
         }
 
-        // 3. Якщо активований (або новий юзер, якому upsert поставив true за замовчуванням) — пускаємо
+        // 3. Якщо активований — пускаємо
         return new DefaultOidcUser(
                 user.getAuthorities(),
                 oidcUser.getIdToken(),

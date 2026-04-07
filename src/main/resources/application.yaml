@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/psychotherapy
-    username: postgres
-    password: admin  # ПЕРЕВІР СВІЙ ПАРОЛЬ ТУТ
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/psychotherapy}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+    open-in-view: false
     show-sql: true
     properties:
       hibernate:

@@ -1,6 +1,5 @@
 package org.mental_management_center.mmc.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,5 +41,50 @@ public class Request {
     // Зручний метод для отримання імені (свого або гостя)
     public String getSenderName() {
         return (user != null) ? user.getName() : name;
+    }
+
+    public String getEmailContact() {
+        if (user != null && user.getEmail() != null && !user.getEmail().isBlank()) {
+            return user.getEmail();
+        }
+        if (contact != null && contact.contains("@")) {
+            return contact;
+        }
+        return null;
+    }
+
+    public String getSmsContact() {
+        if (contact != null && !contact.isBlank() && !contact.contains("@")) {
+            return contact;
+        }
+        return null;
+    }
+
+    public boolean hasRole(RoleBit role) {
+        return (rolesMask & role.getMask()) != 0;
+    }
+
+    public boolean isClientRequest() {
+        return hasRole(RoleBit.CLIENT);
+    }
+
+    public boolean isGuestRequest() {
+        return hasRole(RoleBit.GUEST) && !isClientRequest() && !hasRole(RoleBit.READER);
+    }
+
+    public String getRoleLabel() {
+        if (hasRole(RoleBit.ADMIN)) {
+            return "АДМІН";
+        }
+        if (hasRole(RoleBit.THERAPIST)) {
+            return "ТЕРАПЕВТ";
+        }
+        if (hasRole(RoleBit.CLIENT)) {
+            return "КЛІЄНТ";
+        }
+        if (hasRole(RoleBit.READER)) {
+            return "ЧИТАЧ";
+        }
+        return "ГІСТЬ";
     }
 }

@@ -32,6 +32,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String providerId = oauth2User.getName();
 
         User user = userService.upsertOAuth2User(email, name, provider, providerId);
+        if (!user.isEnabled()) {
+            throw new OAuth2AuthenticationException("Будь ласка, активуйте ваш акаунт через посилання у листі.");
+        }
 
         return new OAuth2Principal(
                 user.getAuthorities(),

@@ -86,6 +86,9 @@ public class UserService {
                     if (providerId != null && !providerId.isBlank()) {
                         existingUser.setProviderId(providerId);
                     }
+                    if (!existingUser.isEnabled()) {
+                        issueVerificationToken(existingUser);
+                    }
                     return userRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
@@ -99,8 +102,11 @@ public class UserService {
 
                     user.setAuthProvider(provider);
                     user.setProviderId(providerId);
+                    user.setEnabled(false);
                     user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-                    return userRepository.save(user);
+                    User savedUser = userRepository.save(user);
+                    issueVerificationToken(savedUser);
+                    return savedUser;
                 });
     }
 
@@ -154,5 +160,79 @@ public class UserService {
         // Міняємо true на false або навпаки
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword, String confirmNewPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Поточний пароль вказано невірно");
+        }
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new RuntimeException("Нові паролі не збігаються");
+        }
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new RuntimeException("Новий пароль має відрізнятися від поточного");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateProfileName(String email, String name) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setName(name == null ? "" : name.trim());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void initiatePasswordReset(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            user.setPasswordResetToken(UUID.randomUUID().toString());
+            user.setPasswordResetTokenExpiry(java.time.LocalDateTime.now().plusHours(2));
+            userRepository.save(user);
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getPasswordResetToken());
+        });
+    }
+
+    public boolean isPasswordResetTokenValid(String token) {
+        return userRepository.findByPasswordResetToken(token)
+                .filter(user -> user.getPasswordResetTokenExpiry() != null
+                        && user.getPasswordResetTokenExpiry().isAfter(java.time.LocalDateTime.now()))
+                .isPresent();
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword, String confirmNewPassword) {
+        User user = userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Посилання для відновлення недійсне"));
+
+        if (user.getPasswordResetTokenExpiry() == null
+                || user.getPasswordResetTokenExpiry().isBefore(java.time.LocalDateTime.now())) {
+            throw new RuntimeException("Термін дії посилання для відновлення минув");
+        }
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new RuntimeException("Нові паролі не збігаються");
+        }
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new RuntimeException("Новий пароль має відрізнятися від поточного");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiry(null);
+        userRepository.save(user);
+    }
+
+    private void issueVerificationToken(User user) {
+        tokenRepository.findByUser(user).ifPresent(tokenRepository::delete);
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken(token, user);
+        tokenRepository.save(verificationToken);
+        emailService.sendVerificationEmail(user.getEmail(), token);
     }
 }

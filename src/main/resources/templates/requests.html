@@ -22,26 +22,28 @@
     </thead>
     <tbody>
     <tr th:each="req : ${requests}"
-        th:classappend="${req.rolesMask == 4} ? 'row-priority-client' : ''">
+        th:classappend="${req.clientRequest} ? 'row-priority-client' : ''">
 
         <td>
             <span class="badge"
-                  th:classappend="${req.rolesMask == 4} ? 'badge-client' : 'badge-guest'"
-                  th:text="${req.rolesMask == 4 ? 'КЛІЄНТ' : (req.rolesMask == 1 ? 'ГІСТЬ' : 'ЧИТАЧ')}">
+                  th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
+                  th:text="${req.roleLabel}">
             </span>
         </td>
 
         <td>
-            <span th:if="${req.user != null}" th:text="${req.user.name}" style="font-weight: bold;"></span>
-            <span th:if="${req.user == null}" th:text="${req.name}" style="font-style: italic;"></span>
+            <span th:text="${req.senderName}"
+                  th:style="${req.user != null} ? 'font-weight: bold;' : 'font-style: italic;'"></span>
         </td>
 
         <td>
             <div class="contact-actions">
-                <a th:href="'sms:' + ${req.user != null ? (req.user.phone ?: req.contact) : req.contact}"
+                <a th:if="${req.smsContact != null}"
+                   th:href="'sms:' + ${req.smsContact}"
                    class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
 
-                <a th:href="'mailto:' + ${req.user != null ? req.user.email : req.contact}"
+                <a th:if="${req.emailContact != null}"
+                   th:href="'mailto:' + ${req.emailContact}"
                    class="btn-action-email" title="Надіслати лист">📧 Email</a>
             </div>
         </td>
@@ -52,6 +54,7 @@
 
         <td>
             <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <button type="submit" class="btn-delete-small">Видалити</button>
             </form>
         </td>

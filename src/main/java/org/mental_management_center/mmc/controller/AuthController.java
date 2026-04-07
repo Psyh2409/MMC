@@ -6,6 +6,9 @@ import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
+import org.mental_management_center.mmc.web.form.ForgotPasswordForm;
+import org.mental_management_center.mmc.web.form.RegistrationForm;
+import org.mental_management_center.mmc.web.form.ResetPasswordForm;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,33 +36,32 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("registrationForm", new RegistrationForm());
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") User user,
+    public String registerUser(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                BindingResult result,
-                               @RequestParam("confirmPassword") String confirmPassword, // Ловимо другий пароль
                                Model model) {
 
-        // 1. Валідація полів (email, довжина пароля тощо)
         if (result.hasErrors()) {
             return "register";
         }
 
-        // 2. ПЕРЕВІРКА: чи не помилився юзер (наш запобіжник)
-        if (!user.getPassword().equals(confirmPassword)) {
+        if (!registrationForm.getPassword().equals(registrationForm.getConfirmPassword())) {
             model.addAttribute("error", "Паролі не збігаються! Спробуйте ще раз.");
             return "register";
         }
 
         try {
-            // 3. Реєстрація через сервіс (confirmPassword йде для фінальної перевірки там)
-            userService.registerNewUser(user, confirmPassword);
+            User user = new User();
+            user.setName(registrationForm.getName());
+            user.setEmail(registrationForm.getEmail());
+            user.setPassword(registrationForm.getPassword());
+            userService.registerNewUser(user, registrationForm.getConfirmPassword());
             return "redirect:/login?success";
         } catch (RuntimeException e) {
-            // Тут вилетить помилка, якщо Email вже зайнятий
             model.addAttribute("error", e.getMessage());
             return "register";
         }
@@ -90,6 +92,57 @@ public class AuthController {
         model.addAttribute("googleOAuthEnabled", isProviderEnabled("google"));
         model.addAttribute("facebookOAuthEnabled", isProviderEnabled("facebook"));
         return "login";
+    }
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm(Model model) {
+        model.addAttribute("forgotPasswordForm", new ForgotPasswordForm());
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String handleForgotPassword(@Valid @ModelAttribute("forgotPasswordForm") ForgotPasswordForm forgotPasswordForm,
+                                       BindingResult result,
+                                       Model model) {
+        if (result.hasErrors()) {
+            return "forgot-password";
+        }
+        userService.initiatePasswordReset(forgotPasswordForm.getEmail());
+        model.addAttribute("message", "Якщо акаунт з таким email існує, ми надіслали інструкції для відновлення пароля.");
+        model.addAttribute("forgotPasswordForm", new ForgotPasswordForm());
+        return "forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        if (!userService.isPasswordResetTokenValid(token)) {
+            model.addAttribute("error", "Посилання для відновлення недійсне або вже прострочене.");
+            return "forgot-password";
+        }
+        ResetPasswordForm resetPasswordForm = new ResetPasswordForm();
+        resetPasswordForm.setToken(token);
+        model.addAttribute("resetPasswordForm", resetPasswordForm);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String handleResetPassword(@Valid @ModelAttribute("resetPasswordForm") ResetPasswordForm resetPasswordForm,
+                                      BindingResult result,
+                                      Model model) {
+        if (result.hasErrors()) {
+            return "reset-password";
+        }
+        try {
+            userService.resetPassword(
+                    resetPasswordForm.getToken(),
+                    resetPasswordForm.getNewPassword(),
+                    resetPasswordForm.getConfirmNewPassword()
+            );
+            return "redirect:/login?passwordReset";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "reset-password";
+        }
     }
 
     @GetMapping("/")

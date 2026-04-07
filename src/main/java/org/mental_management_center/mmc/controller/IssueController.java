@@ -20,6 +20,11 @@ public class IssueController {
 
     @GetMapping("/{topic}")
     public String getIssuePage(@PathVariable String topic, Model model) {
+        if (!allowedTopics.contains(topic)) {
+            model.addAttribute("topicTitle", "Психологічна допомога");
+            return "issues/default";
+        }
+
         String ukrainianTitle;
         switch (topic) {
             case "inner-calm":

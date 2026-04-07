@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Метод для перевірки, чи активний юзер (для Spring Security)
     Optional<User> findByEmailAndEnabledTrue(String email);
 
+    Optional<User> findByPasswordResetToken(String passwordResetToken);
+
     @Query(value = "SELECT COUNT(*) FROM users WHERE (roles_mask & :mask) != 0", nativeQuery = true)
     long countByRole(@Param("mask") byte mask);
 
