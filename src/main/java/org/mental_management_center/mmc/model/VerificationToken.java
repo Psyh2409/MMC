@@ -1,23 +1,26 @@
 package org.mental_management_center.mmc.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "verification_tokens")
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Setter
     private String token;
 
-    @Setter
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
@@ -33,12 +36,4 @@ public class VerificationToken {
         this.user = user;
         this.expiryDate = LocalDateTime.now().plusHours(24); // Токен живе добу
     }
-
-    // Геттери та сеттери (або анотація @Data, якщо використовуєш Lombok)
-    public Long getId() { return id; }
-    public String getToken() { return token; }
-
-    public User getUser() { return user; }
-
-    public LocalDateTime getExpiryDate() { return expiryDate; }
 }

@@ -17,17 +17,26 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
-import java.security.Principal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
+import java.util.UUID;
+import org.slf4j.LoggerFactory;
+
+@SuppressWarnings("null")
 @Controller
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final UserService userService;
     private final UserRepository userRepository;
     private final SiteStatsRepository siteStatsRepository;
     private final Environment environment;
 
-    public AuthController(UserService userService, UserRepository userRepository, SiteStatsRepository siteStatsRepository, Environment environment) {
+    public AuthController(UserService userService, UserRepository userRepository,
+            SiteStatsRepository siteStatsRepository, Environment environment) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.siteStatsRepository = siteStatsRepository;
@@ -42,26 +51,35 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
-                               BindingResult result,
-                               Model model) {
+            BindingResult result,
+            Model model) {
 
+        // 1. Перевірка на помилки валідації (пусті поля, некоректний email тощо)
         if (result.hasErrors()) {
             return "register";
         }
 
+        // 2. Перевірка збігу паролів
         if (!registrationForm.getPassword().equals(registrationForm.getConfirmPassword())) {
             model.addAttribute("error", "Паролі не збігаються! Спробуйте ще раз.");
             return "register";
         }
 
         try {
+            // 3. Створення нового користувача
             User user = new User();
             user.setName(registrationForm.getName());
             user.setEmail(registrationForm.getEmail());
             user.setPassword(registrationForm.getPassword());
+
+            // 4. Реєстрація в сервісі (тут створюється токен та відправляється лист)
             userService.registerNewUser(user, registrationForm.getConfirmPassword());
-            return "redirect:/login?success";
+
+            // 5. Перенаправлення на сторінку логіна зі спеціальним параметром
+            return "redirect:/login?needsActivation";
+
         } catch (RuntimeException e) {
+            // Якщо email вже зайнятий або сталася інша помилка в сервісі
             model.addAttribute("error", e.getMessage());
             return "register";
         }
@@ -82,7 +100,7 @@ public class AuthController {
     }
 
     @PostMapping("/admin/toggle-status/{id}")
-    public String toggleUserStatus(@PathVariable Long id) {
+    public String toggleUserStatus(@PathVariable UUID id) {
         userService.toggleUserStatus(id);
         return "redirect:/admin/users";
     }
@@ -101,16 +119,40 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public String handleForgotPassword(@Valid @ModelAttribute("forgotPasswordForm") ForgotPasswordForm forgotPasswordForm,
-                                       BindingResult result,
-                                       Model model) {
+    public String handleForgotPassword(
+            @Valid @ModelAttribute("forgotPasswordForm") ForgotPasswordForm forgotPasswordForm,
+            BindingResult result,
+            Model model) {
         if (result.hasErrors()) {
             return "forgot-password";
         }
-        userService.initiatePasswordReset(forgotPasswordForm.getEmail());
-        model.addAttribute("message", "Якщо акаунт з таким email існує, ми надіслали інструкції для відновлення пароля.");
+
+        try {
+            userService.initiatePasswordReset(forgotPasswordForm.getEmail());
+            model.addAttribute("message",
+                    "Якщо акаунт з таким email існує, ми надіслали інструкції для відновлення пароля.");
+        } catch (RuntimeException e) {
+            logger.error("Error processing forgot password request for email {}: {}", forgotPasswordForm.getEmail(),
+                    e.getMessage(), e);
+            model.addAttribute("error",
+                    "Сталася помилка при обробці запиту. Спробуйте пізніше або зверніться до адміністратора.");
+        }
+
         model.addAttribute("forgotPasswordForm", new ForgotPasswordForm());
         return "forgot-password";
+    }
+
+    // Тимчасовий тестовий endpoint для перевірки відновлення пароля без CSRF
+    @GetMapping("/test/forgot-password/{email}")
+    @ResponseBody
+    public String testForgotPassword(@PathVariable String email) {
+        try {
+            userService.initiatePasswordReset(email);
+            return "SUCCESS: Password reset initiated for " + email;
+        } catch (Exception e) {
+            logger.error("Test forgot password failed for {}: {}", email, e.getMessage(), e);
+            return "ERROR: " + e.getMessage();
+        }
     }
 
     @GetMapping("/reset-password")
@@ -127,8 +169,8 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     public String handleResetPassword(@Valid @ModelAttribute("resetPasswordForm") ResetPasswordForm resetPasswordForm,
-                                      BindingResult result,
-                                      Model model) {
+            BindingResult result,
+            Model model) {
         if (result.hasErrors()) {
             return "reset-password";
         }
@@ -136,8 +178,7 @@ public class AuthController {
             userService.resetPassword(
                     resetPasswordForm.getToken(),
                     resetPasswordForm.getNewPassword(),
-                    resetPasswordForm.getConfirmNewPassword()
-            );
+                    resetPasswordForm.getConfirmNewPassword());
             return "redirect:/login?passwordReset";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
@@ -149,7 +190,10 @@ public class AuthController {
     public String home(Model model, Principal principal) {
 
         if (principal == null) {
-            SiteStats siteStats = siteStatsRepository.findById(1L).orElse(new SiteStats());
+            UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
+            SiteStats siteStats = siteStatsRepository.findById(statsId).orElseGet(() -> {
+                return new SiteStats(); // Створюємо новий об'єкт, якщо в базі порожньо
+            });
             siteStats.setGuestVisits(siteStats.getGuestVisits() + 1);
             model.addAttribute("guestCount", siteStats.getGuestVisits());
             siteStatsRepository.save(siteStats);
@@ -175,26 +219,27 @@ public class AuthController {
 
     @GetMapping("/admin/users")
     public String showAdminUsers(Model model) {
-        model.addAttribute("allUsers", userRepository.findAll(Sort.by("id")));
+        model.addAttribute("allUsers", userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
 
         // Використовуємо наш новий метод з репозиторію
-        model.addAttribute("countUsers", userRepository.countByRoleBit(RoleBit.READER));
-        model.addAttribute("countClients", userRepository.countByRoleBit(RoleBit.CLIENT));
+        model.addAttribute("countUsers", userRepository.countByRoleMask(RoleBit.READER.getMask()));
+        model.addAttribute("countClients", userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
 
-        SiteStats siteStats = siteStatsRepository.findById(1L).orElse(new SiteStats());
+        UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        SiteStats siteStats = siteStatsRepository.findById(statsId).orElse(new SiteStats());
         model.addAttribute("totalVisits", siteStats.getGuestVisits());
 
         return "admin-users";
     }
 
     @PostMapping("/admin/promote/{id}")
-    public String promoteToClient(@PathVariable Long id) {
+    public String promoteToClient(@PathVariable UUID id) {
         userService.promoteToClient(id);
         return "redirect:/admin/users";
     }
 
     @PostMapping("/admin/update-notes/{id}")
-    public String updateNotes(@PathVariable Long id, @RequestParam("notes") String notes) {
+    public String updateNotes(@PathVariable UUID id, @RequestParam("notes") String notes) {
         User user = userRepository.findById(id).orElseThrow();
         user.setAdminNotes(notes);
         userRepository.save(user);
@@ -202,7 +247,7 @@ public class AuthController {
     }
 
     @PostMapping("/admin/delete/{id}")
-    public String deleteUser(@PathVariable Long id, Principal principal) {
+    public String deleteUser(@PathVariable UUID id, Principal principal) {
         try {
             userService.deleteUserById(id, principal.getName());
             return "redirect:/admin/users?success";

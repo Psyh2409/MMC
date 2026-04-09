@@ -7,12 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor; // Додай це
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.List;
 
 @Entity
@@ -22,8 +24,8 @@ import java.util.List;
 @NoArgsConstructor // Це вилікує помилки створення об'єкта Hibernate
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator // Генерує UUID на стороні застосунку
+    private UUID id;
 
     @NotBlank(message = "Ім'я не може бути порожнім")
     private String name;
@@ -41,7 +43,7 @@ public class User {
     private boolean enabled = false;
 
     @Column(name = "roles_mask")
-    private byte rolesMask = 2; // READER за замовчуванням
+    private int rolesMask = 2; // READER за замовчуванням
 
     private String authProvider;
     private String providerId;
@@ -62,7 +64,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.rolesMask = (initialRole != null) ? initialRole.getMask() : (byte) 2;
+        this.rolesMask = (initialRole != null) ? initialRole.getMask() : 2;
         this.enabled = true;
     }
 
@@ -94,7 +96,7 @@ public class User {
 
     // --- БІТОВІ ОПЕРАЦІЇ ---
     public void addRole(RoleBit role) {
-        this.rolesMask = (byte) (this.rolesMask | role.getMask());
+        this.rolesMask |= role.getMask();
     }
 
     public boolean hasRole(RoleBit role) {
@@ -102,7 +104,7 @@ public class User {
     }
 
     public void removeRole(RoleBit role) {
-        this.rolesMask = (byte) (this.rolesMask & ~role.getMask());
+        this.rolesMask &= ~role.getMask();
     }
 
     public Collection<SimpleGrantedAuthority> getAuthorities() {

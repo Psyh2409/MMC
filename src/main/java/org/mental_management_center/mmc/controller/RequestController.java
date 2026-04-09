@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 public class RequestController {
@@ -36,7 +37,7 @@ public class RequestController {
     }
 
     @PostMapping("/requests/delete/{id}")
-    public String deleteRequest(@PathVariable Long id) {
+    public String deleteRequest(@PathVariable UUID id) {
         requestService.deleteById(id);
         return "redirect:/requests";
     }

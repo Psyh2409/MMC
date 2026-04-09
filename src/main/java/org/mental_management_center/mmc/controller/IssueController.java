@@ -6,53 +6,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
 
-    // Список дозволених тем, щоб уникнути помилок при спробі відкрити неіснуючий файл
-    private final List<String> allowedTopics = Arrays.asList(
-            "inner-calm", "restore-resource", "dialogue", "closeness-crisis", "new-meanings", "freedom-choice", "exit-nearby"
-    );
+    private static final Map<String, String> TOPICS = Map.of(
+            "inner-calm", "Тривога та панічні стани",
+            "restore-resource", "Вигорання та відновлення ресурсу",
+            "dialogue", "Конфлікти та медіація",
+            "closeness-crisis", "Стосунки та кризи близькості",
+            "new-meanings", "Депресивні стани та пошук сенсів",
+            "freedom-choice", "Залежні форми поведінки",
+            "exit-nearby", "Ілюзія, що виходу нема");
 
     @GetMapping("/{topic}")
     public String getIssuePage(@PathVariable String topic, Model model) {
-        if (!allowedTopics.contains(topic)) {
+        // 1. Шукаємо заголовок у мапі за ключем з URL
+        String ukrainianTitle = TOPICS.get(topic);
+
+        // 2. Якщо такого ключа немає (користувач помилився в URL)
+        if (ukrainianTitle == null) {
             model.addAttribute("topicTitle", "Психологічна допомога");
             return "issues/default";
         }
 
-        String ukrainianTitle;
-        switch (topic) {
-            case "inner-calm":
-                ukrainianTitle = "Тривога та панічні стани";
-                break;
-            case "restore-resource":
-                ukrainianTitle = "Вигорання та відновлення ресурсу";
-                break;
-            case "dialogue":
-                ukrainianTitle = "Конфлікти та медіація";
-                break;
-            case "closeness-crisis":
-                ukrainianTitle = "Стосунки та кризи близькості";
-                break;
-            case "new-meanings":
-                ukrainianTitle = "Депресивні стани та пошук сенсів";
-                break;
-            case "freedom-choice":
-                ukrainianTitle = "Залежні форми поведінки";
-                break;
-            case "exit-nearby":
-                ukrainianTitle = "Ілюзія, що виходу нема";
-                break;
-            default:
-                ukrainianTitle = "Психологічна допомога";
-                break;
-        }
+        // 3. Якщо ключ є — передаємо заголовок у модель
         model.addAttribute("topicTitle", ukrainianTitle);
+
+        // 4. Повертаємо назву шаблону, яка збігається з ключем (наприклад,
+        // issues/inner-calm.html)
         return "issues/" + topic;
     }
 }

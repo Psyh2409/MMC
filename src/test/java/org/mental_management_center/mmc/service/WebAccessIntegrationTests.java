@@ -1,4 +1,4 @@
-package org.mental_management_center.mmc;
+package org.mental_management_center.mmc.service;
 
 import jakarta.servlet.RequestDispatcher;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings("null")
 class WebAccessIntegrationTests {
 
     @Autowired
@@ -47,7 +48,7 @@ class WebAccessIntegrationTests {
     @Test
     void contactFormAcceptsAnonymousSubmissionWithCsrf() throws Exception {
                 mockMvc.perform(post("/contact")
-                        .with(csrf())
+                    .with(csrf())
                         .param("name", "Test User")
                         .param("contact", "test@example.com")
                         .param("message", "Need help"))

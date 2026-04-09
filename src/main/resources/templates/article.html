@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.article-view}, ~{})}">
+<head>
+    <title th:text="${article.title} + ' | Психотерапія'">Назва статті</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide article-view">
+    <header class="article-header">
+        <div class="article-meta">
+            <span class="article-date" th:text="${#temporals.format(article.createdAt, 'dd MMMM yyyy')}">01 січня 2024</span>
+            <span class="article-category" th:if="${article.category}" th:text="${article.category}">Категорія</span>
+        </div>
+        <h1 class="page-title-accent" th:text="${article.title}">Заголовок статті</h1>
+    </header>
+
+    <hr class="article-divider">
+
+    <article class="article-content">
+        <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
+    </article>
+
+    <footer class="article-footer">
+        <div class="share-block">
+            <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
+        </div>
+        <div class="profile-actions">
+            <a href="/articles" class="btn-dashboard-link">← До всіх статей</a>
+            <a href="/contact" class="btn-highlight">Обговорити запит</a>
+        </div>
+    </footer>
+</section>

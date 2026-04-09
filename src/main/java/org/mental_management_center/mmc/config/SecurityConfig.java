@@ -48,6 +48,8 @@ public class SecurityConfig {
                                         "/js/**",
                                         "/format",
                                         "/error",
+                                        "/test/**",
+                                        "/test-email",
                                         "/images/**",
                                         "/issues/**")
                                 .permitAll()

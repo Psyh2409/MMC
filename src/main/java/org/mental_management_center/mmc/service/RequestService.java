@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+@SuppressWarnings("null")
 @Service
 public class RequestService {
      private final RequestRepository repository;
@@ -45,13 +47,15 @@ public class RequestService {
          repository.save(request);
      }
 
+     @SuppressWarnings("null")
+
      @Transactional(readOnly = true)
      public List<Request> findAllNewestFirst() {
          return repository.findAllByOrderByCreatedAtDesc();
      }
 
      @Transactional
-     public void deleteById(Long id) {
+     public void deleteById(UUID id) {
          repository.deleteById(id);
      }
 }

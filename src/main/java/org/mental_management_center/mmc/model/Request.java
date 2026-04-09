@@ -3,16 +3,18 @@ package org.mental_management_center.mmc.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter // Використовуємо Lombok на рівні класу для чистоти
 public class Request {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator // Генерує UUID на стороні застосунку
+    private UUID id;
 
     // Ці поля заповнюються тільки для ГОСТЕЙ (маска 1)
     private String name;
@@ -29,7 +31,7 @@ public class Request {
     private User user;
 
     // Роль того, хто надіслав запит на момент відправки
-    private byte rolesMask;
+    private int rolesMask;
 
     @PrePersist
     private void prePersist(){

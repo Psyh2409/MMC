@@ -5,6 +5,8 @@ import org.mental_management_center.mmc.model.RoleBit; // Наш новий ен
 import org.mental_management_center.mmc.model.VerificationToken;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.repository.VerificationTokenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 import java.util.Optional;
 
+@SuppressWarnings("null")
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -61,7 +66,7 @@ public class UserService {
             userRepository.save(user);
 
             // 5. ГЕНЕРУЄМО ТОКЕН (Ініціація)
-            String token = java.util.UUID.randomUUID().toString();
+            String token = UUID.randomUUID().toString();
             VerificationToken verificationToken = new VerificationToken(token, user);
             tokenRepository.save(verificationToken);
 
@@ -135,7 +140,7 @@ public class UserService {
         return true;
     }
 
-    public void promoteToClient(Long id) {
+    public void promoteToClient(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
 
@@ -144,7 +149,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUserById(Long id, String currentAdminEmail) {
+    @SuppressWarnings("null")
+
+    public void deleteUserById(UUID id, String currentAdminEmail) {
         User userToDelete = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
         if (userToDelete.getEmail().equals(currentAdminEmail)) {
@@ -153,7 +160,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void toggleUserStatus(Long id) {
+    public void toggleUserStatus(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
@@ -191,12 +198,24 @@ public class UserService {
 
     @Transactional
     public void initiatePasswordReset(String email) {
-        userRepository.findByEmail(email).ifPresent(user -> {
-            user.setPasswordResetToken(UUID.randomUUID().toString());
-            user.setPasswordResetTokenExpiry(java.time.LocalDateTime.now().plusHours(2));
-            userRepository.save(user);
-            emailService.sendPasswordResetEmail(user.getEmail(), user.getPasswordResetToken());
-        });
+        try {
+            userRepository.findByEmail(email).ifPresent(user -> {
+                try {
+                    user.setPasswordResetToken(UUID.randomUUID().toString());
+                    user.setPasswordResetTokenExpiry(java.time.LocalDateTime.now().plusHours(2));
+                    userRepository.save(user);
+                    logger.info("Generated password reset token for user: {}", email);
+                    emailService.sendPasswordResetEmail(user.getEmail(), user.getPasswordResetToken());
+                    logger.info("Password reset email sent successfully to: {}", email);
+                } catch (Exception e) {
+                    logger.error("Failed to process password reset for user {}: {}", email, e.getMessage(), e);
+                    throw new RuntimeException("Не вдалося обробити запит на відновлення пароля: " + e.getMessage(), e);
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Error in initiatePasswordReset for email {}: {}", email, e.getMessage(), e);
+            throw new RuntimeException("Не вдалося ініціювати відновлення пароля: " + e.getMessage(), e);
+        }
     }
 
     public boolean isPasswordResetTokenValid(String token) {
