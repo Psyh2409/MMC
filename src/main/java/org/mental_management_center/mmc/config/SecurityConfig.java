@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/requests/**").hasRole("ADMIN")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/issues/**").authenticated()
                                 .requestMatchers(
                                         "/",
                                         "/about",
@@ -50,8 +51,7 @@ public class SecurityConfig {
                                         "/error",
                                         "/test/**",
                                         "/test-email",
-                                        "/images/**",
-                                        "/issues/**")
+                                        "/images/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )

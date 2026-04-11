@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.security.Principal;
 import java.util.UUID;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("null")
 @Controller

@@ -4,32 +4,42 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+
+import org.mental_management_center.mmc.service.ArticleService;
 
 @Entity
 @Table(name = "articles")
-@Getter 
+@Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Article {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
-    private UUID id = UUID.randomUUID();
+    @Setter(AccessLevel.NONE) // ID генерується автоматично, тому сеттер не потрібен
+    private UUID id;
 
-    @Column(name = "author_id", nullable = false)
-    private UUID authorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false, updatable = false)
+    @Setter(AccessLevel.NONE) // Автор встановлюється при створенні статті і не змінюється
+    private User author;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "article_tags", joinColumns = @JoinColumn(name = "article_id"))
+    @Column(name = "tag")
+    @Builder.Default
+    private Set<String> tags = new HashSet<>();
 
-    @Column(name = "slug", unique = true, nullable = false)
-    private String slug; // Ті самі "чисті" URL (напр. inner-calm)
-
-    @Column(name = "tags")
-    private String tags; // Для відкритого пошуку (напр. "тривога, ресурс")
+    @Column(nullable = false)
+    private String category; // Наприклад: "inner-calm", "restore-resource"
 
     // --- БАЙТОВІ МАСИВИ (ТЕ, ЩО БАЧИТЬ БАЗА) ---
-    
+
     @Column(name = "title_bytes", nullable = false)
     private byte[] titleBytes;
 
@@ -53,6 +63,13 @@ public class Article {
     @Transient
     private String content;
 
+    public Article(User author) {
+        this.id = UUID.randomUUID();
+        this.author = author;
+    }
+
+
+
     // --- АВТОМАТИКА ---
 
     @PrePersist
@@ -72,8 +89,7 @@ public class Article {
             this.description = new String(descriptionBytes, StandardCharsets.UTF_8);
         }
         if (contentBytes != null) {
-            // У майбутньому тут додамо декомпресію
-            this.content = new String(contentBytes, StandardCharsets.UTF_8);
+            this.content = ArticleService.decompress(contentBytes);
         }
     }
 }

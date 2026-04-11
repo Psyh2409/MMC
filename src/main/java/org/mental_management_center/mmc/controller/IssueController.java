@@ -7,36 +7,47 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
+import java.util.List;
+import org.mental_management_center.mmc.repository.ArticleRepository;
+import org.mental_management_center.mmc.model.Article;
 
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
 
+    private final ArticleRepository articleRepository;
+
+    public IssueController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
     private static final Map<String, String> TOPICS = Map.of(
             "inner-calm", "Тривога та панічні стани",
-            "restore-resource", "Вигорання та відновлення ресурсу",
-            "dialogue", "Конфлікти та медіація",
-            "closeness-crisis", "Стосунки та кризи близькості",
-            "new-meanings", "Депресивні стани та пошук сенсів",
+            "restore-resource", "Відновлення ресурсу",
+            "closeness-crisis", "Кризи близькості",
+            "new-meanings", "Депресивні стани та сенси",
             "freedom-choice", "Залежні форми поведінки",
+            "dialogue", "Конфлікти та медіація",
             "exit-nearby", "Ілюзія, що виходу нема");
 
     @GetMapping("/{topic}")
     public String getIssuePage(@PathVariable String topic, Model model) {
-        // 1. Шукаємо заголовок у мапі за ключем з URL
         String ukrainianTitle = TOPICS.get(topic);
+        if (ukrainianTitle == null) return "redirect:/";
 
-        // 2. Якщо такого ключа немає (користувач помилився в URL)
-        if (ukrainianTitle == null) {
-            model.addAttribute("topicTitle", "Психологічна допомога");
-            return "issues/default";
+        // Витягуємо список статей з бази для цієї теми
+        List<Article> articles = articleRepository.findByCategory(topic);
+        
+        System.out.println("Articles for topic '" + topic + "': " + articles.size());
+        System.out.println("Articles for topic '" + topic + "': " + articles.size());
+        System.out.println("Articles for topic '" + topic + "': " + articles.size());
+        System.out.println("Articles for topic '" + topic + "': " + articles.size());
+        for (Article article : articles) {
+            System.out.println(" - " + article.getTitle() + " (ID: " + article.getId() + ")");
         }
-
-        // 3. Якщо ключ є — передаємо заголовок у модель
         model.addAttribute("topicTitle", ukrainianTitle);
+        model.addAttribute("articles", articles);
 
-        // 4. Повертаємо назву шаблону, яка збігається з ключем (наприклад,
-        // issues/inner-calm.html)
-        return "issues/" + topic;
+        return "issues/topic-page"; 
     }
 }

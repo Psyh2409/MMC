@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.articles-list}, ~{})}">
 <head>
-    <title>Статті | Психотерапія</title>
+    <title>Блог | Психотерапія та самопізнання</title>
 </head>
 <body>
-<section class="standard-container standard-container-compact">
-    <h2 class="contact-intro-title">Статті та матеріали</h2>
-    <p class="contact-intro-text">
-        Тут поступово з'являтимуться матеріали про психотерапію, медіацію, стосунки,
-        тривожні стани та відновлення внутрішнього ресурсу.
-    </p>
-    <p class="contact-intro-text">
-        Поки що основні теми доступні у розділі проблематики. Якщо хочете обговорити
-        ваш запит індивідуально, скористайтесь формою зворотного зв'язку.
-    </p>
-    <div class="profile-actions">
-        <a href="/issues/inner-calm" class="btn-dashboard-link">Перейти до тематик</a>
-        <a href="/contact" class="btn-highlight">Написати мені</a>
+<section class="standard-container standard-container-wide articles-list">
+    <header class="section-header">
+        <h1 class="page-title-accent">Матеріали та роздуми</h1>
+        <p class="section-subtitle">Шлях до себе через усвідомлення та знання</p>
+    </header>
+
+    <div class="articles-grid">
+        <div class="article-card" th:each="article : ${articles}">
+            <div class="article-card-meta">
+                <span th:text="${#temporals.format(article.createdAt, 'dd.MM.yyyy')}">01.01.2024</span>
+                <span class="category-badge" th:if="${article.category}" th:text="${article.category}">Категорія</span>
+            </div>
+            <h2 class="article-card-title">
+                <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок картки</a>
+            </h2>
+            <p class="article-excerpt" th:text="${article.summary}">Короткий анонс статті для зацікавлення...</p>
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="read-more">Читати далі →</a>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(articles)}" class="empty-state">
+        <p>Наразі статтей немає, але вони скоро з'являться.</p>
     </div>
 </section>
 </body>

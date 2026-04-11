@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${topicTitle}">Назва розділу</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header th:replace="~{fragments/header-footer :: header-fragment}"></header>
+
+    <main class="content-container">
+        <h1 class="topic-header" th:text="${topicTitle}">Заголовок розділу</h1>
+        
+        <div th:if="${articles.isEmpty()}" class="no-content-message">
+            <p>У цьому розділі поки немає опублікованих статей.</p>
+        </div>
+
+        <div class="articles-list">
+            <article th:each="article : ${articles}" class="article-preview-card">
+                <h2 class="article-preview-title" th:text="${article.title}">Заголовок статті</h2>
+                
+                <div class="article-tags">
+                    <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}" class="tag-badge"></span>
+                </div>
+
+                <p class="article-preview-desc" th:text="${article.description}">Короткий опис...</p>
+                
+                <a class="read-more-link" th:href="@{/articles/{id}(id=${article.id})}">Читати далі →</a>
+            </article>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/header-footer :: footer-fragment}"></footer>
+</body>
+</html>

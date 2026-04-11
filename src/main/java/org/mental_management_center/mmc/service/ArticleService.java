@@ -9,6 +9,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -18,6 +20,15 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
+    public List<Article> findAll() {
+        return articleRepository.findAll();
+    }
+
+    public Article findById(UUID id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Статтю не знайдено"));
+    }
+
     public void saveArticle(Article article, String title, String desc, String text) {
         try {
             article.setTitleBytes(title.getBytes(StandardCharsets.UTF_8));
@@ -26,7 +37,7 @@ public class ArticleService {
             articleRepository.save(article);
         } catch (IOException e) {
             // Якщо стискання не вдалося — логуємо і кидаємо помилку далі
-            throw new RuntimeException("Помилка при збереженні статті: " + article.getSlug(), e);
+            throw new RuntimeException("Помилка при збереженні статті: " + article.getId(), e);
         }
     }
 
