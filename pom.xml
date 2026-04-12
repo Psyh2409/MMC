@@ -104,6 +104,13 @@
             <version>3.3.0</version>
         </dependency>
 
+        <!-- Додано для підтримки .env файлів -->
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

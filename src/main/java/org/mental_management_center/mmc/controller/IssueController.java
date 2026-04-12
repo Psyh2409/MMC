@@ -35,19 +35,12 @@ public class IssueController {
         String ukrainianTitle = TOPICS.get(topic);
         if (ukrainianTitle == null) return "redirect:/";
 
-        // Витягуємо список статей з бази для цієї теми
+        // ТУТ ВАЖЛИВО: Шукаємо за технічним ключем (topic), який лежить у базі
         List<Article> articles = articleRepository.findByCategory(topic);
-        
-        System.out.println("Articles for topic '" + topic + "': " + articles.size());
-        System.out.println("Articles for topic '" + topic + "': " + articles.size());
-        System.out.println("Articles for topic '" + topic + "': " + articles.size());
-        System.out.println("Articles for topic '" + topic + "': " + articles.size());
-        for (Article article : articles) {
-            System.out.println(" - " + article.getTitle() + " (ID: " + article.getId() + ")");
-        }
-        model.addAttribute("topicTitle", ukrainianTitle);
-        model.addAttribute("articles", articles);
 
-        return "issues/topic-page"; 
+        model.addAttribute("topicTitle", ukrainianTitle); // Для заголовка сторінки
+        model.addAttribute("articles", articles);         // Список знайдених статей
+
+        return "issues/topic-page";
     }
 }

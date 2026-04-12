@@ -21,6 +21,17 @@ public class ContentController {
     private final ArticleRepository articleRepository; // Якщо потрібно напряму звертатися до репозиторію (наприклад,
                                                        // для пошуку за slug)
 
+    @GetMapping("/articles")
+    public String articles(Model model) {
+        List<Article> articles = articleService.findAll();
+
+        // ДОДАЙ ЦЕЙ РЯДОК:
+        System.out.println("DEBUG: Знайдено статей у базі: " + articles.size());
+
+        model.addAttribute("articles", articles);
+        return "articles";
+    }
+
     // @GetMapping("/articles/{slug}")
     // public String getArticleBySlug(@PathVariable String slug, Model model) {
     //     Article article = articleRepository.findBySlug(slug)
@@ -30,13 +41,13 @@ public class ContentController {
     //     return "article";
     // }
 
-    @GetMapping("/articles")
-    public String articles(Model model) {
-        // Тут ми маємо отримати список статей з бази
-        List<Article> articles = articleService.findAll();
-        model.addAttribute("articles", articles);
-        return "articles";
-    }
+//    @GetMapping("/articles")
+//    public String articles(Model model) {
+//        // Тут ми маємо отримати список статей з бази
+//        List<Article> articles = articleService.findAll();
+//        model.addAttribute("articles", articles);
+//        return "articles";
+//    }
 
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable UUID id, Model model) {

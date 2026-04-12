@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-// import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -24,62 +22,78 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        // Створюємо автора
-        User admin = userRepository.findById(UUID.fromString("a46beb09-a977-4c61-8e79-28ad47cb7bda"))
-            .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+        // 1. Використовуємо реальний email адміністратора
+        String adminEmail = "mental.m.center@gmail.com";
+        User admin = userRepository.findByEmail(adminEmail).orElse(null);
 
-        // 1. Тривога
-        createArticleIfAbsent(admin, "inner-calm", "Тривога та панічні стани", 
+        if (admin == null) {
+            System.out.println("⚠️ АДМІНІСТРАТОРА НЕ ЗНАЙДЕНО. Перевір email у базі!");
+            return;
+        }
+
+        // 2. Створення статтей (всі 8 тем)
+        
+        saveNewArticle(admin, "inner-calm", "Тривога та панічні стани", 
             "Тривога — це не помилка вашого організму. Це голос вашого найдавнішого захисника.",
-            "<p>Тривога — це не помилка вашого організму... [тут повний текст з inner-calm.html]</p>");
+            "<p>Тривога — це не помилка вашого організму. Це голос захисника. Робота з тривогою починається з розуміння її механізмів.</p>",
+            Set.of("Терапія", "Тривога"));
 
-        // 2. Відновлення ресурсу
-        createArticleIfAbsent(admin, "restore-resource", "Відновлення ресурсу та подолання вигорання", 
-            "Професійне та особистісне вигорання — це коли внутрішній вогонь перетворився на попіл.",
-            "<p>Людина може витримати майже будь-яке 'Як', якщо вона знає 'Навіщо'...</p>");
+        saveNewArticle(admin, "restore-resource", "Відновлення ресурсу та подолання вигорання", 
+            "Професійне та особистісне вигорання — коли вогонь перетворився на попіл.",
+            "<p>Людина може витримати майже будь-яке 'Як', якщо вона знає 'Навіщо'. Відновлення — це не тільки сон, а й перегляд кордонів.</p>",
+            Set.of("Вигорання", "Сенси"));
 
-        // 3. Кризи близькості
-        createArticleIfAbsent(admin, "closeness-crisis", "Стосунки та кризи близькості", 
-            "Криза у стосунках — це не кінець кохання. Метафора ракети: як ми ростемо разом.",
-            "<p>Уявіть стосунки як ракету, що летить до зірок... Кожна криза — це момент скидання старого корпусу.</p>");
+        saveNewArticle(admin, "closeness-crisis", "Стосунки та кризи близькості", 
+            "Криза у стосунках — це не кінець кохання. Метафора ракети.",
+            "<p>Уявіть стосунки як ракету... Кожна криза — це момент скидання корпусу. Це боляче, але необхідно для виходу на нову орбіту.</p>",
+            Set.of("Сім'я", "Кризи"));
 
-        // 4. Депресивні стани
-        createArticleIfAbsent(admin, "new-meanings", "Депресивні стани та пошук нових сенсів", 
-            "Депресія — це стан, коли людина витрачає енергію на те, щоб зупинити власне життя.",
-            "<p>Депресія — це не відсутність сил. Це витрата ресурсу на 'енергію зупинки'...</p>");
+        saveNewArticle(admin, "new-meanings", "Депресивні стани та пошук нових сенсів", 
+            "Депресія — це витрата ресурсу на енергію зупинки.",
+            "<p>Сенси не знаходяться, вони створюються дією. Навіть найменшим кроком. Депресія — це не відсутність сил, а їх витрата на утримання болю.</p>",
+            Set.of("Депресія", "Сенс"));
 
-        // 5. Залежна поведінка
-        createArticleIfAbsent(admin, "freedom-choice", "Залежність: Даність, а не вирок", 
-            "Залежність — це специфічний спосіб організації особистості та втеча від реальності.",
-            "<p>За будь-якою залежністю стоїть бажання 'вимкнути' реальність. Ми працюємо над автономією.</p>");
+        saveNewArticle(admin, "freedom-choice", "Залежність: Даність, а не вирок", 
+            "Залежність — втеча від нестерпної реальності.",
+            "<p>За будь-якою залежністю стоїть бажання 'вимкнути' реальність. Ми працюємо не над заборонами, а над автономією.</p>",
+            Set.of("Автономія", "Вибір"));
 
-        // 6. Конфлікти та медіація
-        createArticleIfAbsent(admin, "dialogue", "Конфлікти та медіація", 
+        saveNewArticle(admin, "dialogue", "Конфлікти та медіація", 
             "Конфлікт — це не завжди війна. Це зіткнення двох різних реальностей.",
-            "<p>Моє завдання — створити безпечний простір, де кожен може висловити свій біль.</p>");
+            "<p>Конфлікт — це зіткнення двох різних реальностей. У медіації я створюю безпечний простір, де кожен може висловити свій біль і потреби.</p>",
+            Set.of("Медіація", "Діалог"));
 
-        // 7. Вихід поруч
-        createArticleIfAbsent(admin, "exit-nearby", "Ілюзія, що виходу нема — Вихід поруч", 
-            "Фундаментальна психологічна зміна фокуса. Ваша стійкість сьогодні — це спадок вашим дітям.",
-            "<p>Колись у метро був напис «Виходу немає». Тепер там написано: «Вихід поруч».</p>");
-            
-        // 8. Дефолтна заглушка (якщо десь посилання зламається)
-        createArticleIfAbsent(admin, "default", "Психологічна допомога", 
-            "Оберіть тему, яка вас турбує, щоб отримати більше інформації.",
-            "<p>Конфлікт — це не обов'язково кінець стосунків, це часто точка їхнього зросту...</p>");
+        saveNewArticle(admin, "exit-nearby", "Ілюзія, що виходу нема — Вихід поруч", 
+            "Фундаментальна психологічна зміна фокуса. Ваша стійкість сьогодні — спадок дітям.",
+            "<p>Колись у метро був напис «Виходу немає». Тепер там написано: «Вихід поруч». Вихід не зник — він просто там, де ви ще не звикли його шукати.</p>",
+            Set.of("Стійкість", "Криза"));
+
+        saveNewArticle(admin, "default", "Психологічна допомога", 
+            "Оберіть тему, яка вас турбує, щоб отримати більше інформації та підтримку.",
+            "<p>Конфлікт — це часто точка зросту. У медіації ми розглядаємо конфлікт як зіткнення потреб, де кожна сторона має право бути почутою.</p>",
+            Set.of("Терапія", "Підтримка"));
     }
 
-    private void createArticleIfAbsent(User admin, String id, String title, String description, String content) {
-        UUID uuid = UUID.nameUUIDFromBytes(id.getBytes());
-        if (uuid != null && !articleRepository.existsById(uuid)) {
-            Article article = new Article(admin.getId());
-            article.setTitle(title);
-            article.setDescription(description);
-            article.setContent(content); // ТУТ МАЄ БУТИ ВЕСЬ ТЕКСТ З HTML
-            article.setCategory("Психологія");
-            article.setPublishedAt(LocalDateTime.now());
-            article.setTags(Set.of("Терапія", "Сенси"));
-            articleRepository.save(article);
+    private void saveNewArticle(User author, String category, String title, 
+                                String description, String content, Set<String> tags) {
+        
+        // Перевіряємо за заголовком, щоб не створювати дублікати
+        if (articleRepository.existsByTitle(title)) {
+            return;
         }
+
+        Article article = Article.builder()
+                .author(author)
+                .category(category)
+                .title(title)
+                .description(description)
+                .tags(tags)
+                .publishedAt(LocalDateTime.now())
+                .build();
+
+        // Сеттер автоматично зробить компресію контенту
+        article.setContent(content);
+
+        articleRepository.save(article);
     }
 }

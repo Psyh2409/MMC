@@ -33,12 +33,11 @@ server:
       enabled: false
 
 app:
-
-  public-base-url: ${APP_PUBLIC_BASE_URL:}
+  public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
   oauth2:
     google:
-      client-id: ${OAUTH2_GOOGLE_CLIENT_ID:}
-      client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET:}
+      client-id: ${OAUTH2_GOOGLE_CLIENT_ID:dummy}
+      client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET:dummy}
     facebook:
-      client-id: ${OAUTH2_FACEBOOK_CLIENT_ID:}
-      client-secret: ${OAUTH2_FACEBOOK_CLIENT_SECRET:}
+      client-id: ${OAUTH2_FACEBOOK_CLIENT_ID:dummy}
+      client-secret: ${OAUTH2_FACEBOOK_CLIENT_SECRET:dummy}

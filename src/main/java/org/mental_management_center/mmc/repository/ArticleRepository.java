@@ -8,6 +8,8 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
     
     List<Article> findByCategory(String category);
+
+    boolean existsByTitle(String title);
     
     // Для "Бардачка": всі статті одного автора, свіжі зверху
     List<Article> findByAuthorIdOrderByPublishedAtDesc(UUID authorId);
