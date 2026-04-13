@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.admin-list}, ~{})}">
+<head>
+    <title>Управління статтями | Адмінка</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide admin-list">
+    <header class="section-header">
+        <h1 class="page-title-accent">Всі публікації</h1>
+        <div class="admin-actions" style="margin-top: 20px;">
+            <a th:href="@{/admin/articles/create}" class="read-more">+ Додати нову статтю</a>
+        </div>
+    </header>
+
+    <table class="article-card" style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+        <thead>
+        <tr style="text-align: left; border-bottom: 2px solid #eee;">
+            <th style="padding: 10px;">Заголовок</th>
+            <th style="padding: 10px;">Категорія</th>
+            <th style="padding: 10px;">Дії</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="article : ${articles}" style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px;" th:text="${article.title}">Назва</td>
+            <td style="padding: 10px;">
+                <span class="category-badge" th:text="${article.displayCategory}">Категорія</span>
+            </td>
+            <td style="padding: 10px;">
+                <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
+                      onsubmit="return confirm('Видалити безповоротно?');">
+                    <button type="submit" class="read-more" style="background: #e74c3c; border: none;">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

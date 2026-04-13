@@ -2,10 +2,16 @@ package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Article;
+import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ArticleRepository;
+import org.mental_management_center.mmc.web.form.ArticleForm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +35,40 @@ public class ArticleService {
         article.setTitle(title);
         article.setDescription(desc);
         article.setContent(text);
+        articleRepository.save(article);
+    }
+
+    @Transactional
+    public void deleteArticle(UUID id) {
+        // Перевіряємо, чи існує, щоб не "впасти" з помилкою
+        if (articleRepository.existsById(id)) {
+            articleRepository.deleteById(id);
+        }
+    }
+
+    @Transactional
+    public void saveFromForm(ArticleForm form, User author) {
+        // Використовуємо ваш @Builder з класу Article
+        Article article = Article.builder()
+                .title(form.getTitle())
+                .description(form.getDescription())
+                .category(form.getCategory())
+                .publishedAt(LocalDateTime.now())
+                .author(author) // Сюди прийде той User, якого ми передамо з контролера
+                .build();
+
+        // Викликаємо ваш метод setContent, який автоматично стисне текст у GZIP
+        article.setContent(form.getContent());
+
+        // Обробка тегів
+        if (form.getTags() != null && !form.getTags().isBlank()) {
+            java.util.Set<java.lang.String> tagSet = java.util.Arrays.stream(form.getTags().split(","))
+                    .map(String::trim)
+                    .filter(t -> !t.isEmpty())
+                    .collect(java.util.stream.Collectors.toSet());
+            article.setTags(tagSet);
+        }
+
         articleRepository.save(article);
     }
 }

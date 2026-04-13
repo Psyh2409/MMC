@@ -24,10 +24,6 @@ public class ContentController {
     @GetMapping("/articles")
     public String articles(Model model) {
         List<Article> articles = articleService.findAll();
-
-        // ДОДАЙ ЦЕЙ РЯДОК:
-        System.out.println("DEBUG: Знайдено статей у базі: " + articles.size());
-
         model.addAttribute("articles", articles);
         return "articles";
     }

@@ -1,6 +1,7 @@
 package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.ArticleRepository;
 import org.mental_management_center.mmc.service.MyUserDetails;
 import org.mental_management_center.mmc.service.OAuth2Principal;
 import org.mental_management_center.mmc.service.UserService;
@@ -9,14 +10,43 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalModelAttributes {
 
     private final UserService userService;
+    private final ArticleRepository articleRepository;
 
-    public GlobalModelAttributes(UserService userService) {
+    // Словник перекладу категорій для меню
+    private static final Map<String, String> TOPIC_TRANSLATIONS = Map.of(
+            "inner-calm", "Тривога та панічні стани",
+            "restore-resource", "Відновлення ресурсу",
+            "closeness-crisis", "Кризи близькості",
+            "new-meanings", "Депресивні стани та сенси",
+            "freedom-choice", "Залежні форми поведінки",
+            "dialogue", "Конфлікти та медіація",
+            "exit-nearby", "Ілюзія, що виходу нема"
+    );
+
+    public GlobalModelAttributes(UserService userService, ArticleRepository articleRepository) {
         this.userService = userService;
+        this.articleRepository = articleRepository;
+    }
+
+    @ModelAttribute("allCategoriesMap")
+    public Map<String, String> allCategoriesMap() {
+        List<String> categoriesFromDb = articleRepository.findAllCategories();
+        Map<String, String> result = new HashMap<>();
+        
+        for (String cat : categoriesFromDb) {
+            // Якщо є переклад - беремо його, якщо немає - лишаємо як є
+            String translated = TOPIC_TRANSLATIONS.getOrDefault(cat, cat);
+            result.put(cat, translated);
+        }
+        return result;
     }
 
     @ModelAttribute("currentUserDisplayName")

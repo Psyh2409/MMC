@@ -29,31 +29,31 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers("/requests/**").hasRole("ADMIN")
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/issues/**").authenticated()
-                                .requestMatchers(
-                                        "/",
-                                        "/about",
-                                        "/articles",
-                                        "/contact",
-                                        "/first-steps",
-                                        "/forgot-password",
-                                        "/register",
-                                        "/registrationConfirm",
-                                        "/login",
-                                        "/oauth2/**",
-                                        "/reset-password",
-                                        "/login/oauth2/**",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/format",
-                                        "/error",
-                                        "/test/**",
-                                        "/test-email",
-                                        "/images/**")
-                                .permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/requests/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/issues/**").authenticated()
+                        .requestMatchers(
+                                "/",
+                                "/about",
+                                "/articles/**", // Дозволяємо перегляд статтей всім
+                                "/contact",
+                                "/first-steps",
+                                "/forgot-password",
+                                "/register",
+                                "/registrationConfirm",
+                                "/login",
+                                "/oauth2/**",
+                                "/reset-password",
+                                "/login/oauth2/**",
+                                "/css/**",
+                                "/js/**",
+                                "/format",
+                                "/error",
+                                "/test/**",
+                                "/test-email",
+                                "/images/**")
+                        .permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -67,7 +67,7 @@ public class SecurityConfig {
 
         if (isGoogleOAuthEnabled()) {
             http.oauth2Login(oauth2 -> oauth2
-                    .loginPage("/login")
+                    .loginPage("/login") // Використовувати ВАШУ сторінку логіну
                     .defaultSuccessUrl("/", true)
                     .userInfoEndpoint(userInfo -> userInfo
                             .userService(customOAuth2UserService)

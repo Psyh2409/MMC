@@ -21,7 +21,7 @@ public class IssueController {
         this.articleRepository = articleRepository;
     }
 
-    private static final Map<String, String> TOPICS = Map.of(
+    private static final Map<String, String> TRANSLATIONS = Map.of(
             "inner-calm", "Тривога та панічні стани",
             "restore-resource", "Відновлення ресурсу",
             "closeness-crisis", "Кризи близькості",
@@ -32,15 +32,17 @@ public class IssueController {
 
     @GetMapping("/{topic}")
     public String getIssuePage(@PathVariable String topic, Model model) {
-        String ukrainianTitle = TOPICS.get(topic);
-        if (ukrainianTitle == null) return "redirect:/";
+        // 1. Отримуємо українську назву або просто назву категорії з великої літери
+        String ukrainianTitle = TRANSLATIONS.getOrDefault(topic, 
+            topic.substring(0, 1).toUpperCase() + topic.substring(1).replace("-", " "));
 
-        // ТУТ ВАЖЛИВО: Шукаємо за технічним ключем (topic), який лежить у базі
+        // 2. Шукаємо всі статті цієї категорії
         List<Article> articles = articleRepository.findByCategory(topic);
 
-        model.addAttribute("topicTitle", ukrainianTitle); // Для заголовка сторінки
-        model.addAttribute("articles", articles);         // Список знайдених статей
+        model.addAttribute("topicTitle", ukrainianTitle);
+        model.addAttribute("articles", articles);
 
+        // Повертаємо шаблон згідно інструкції
         return "issues/topic-page";
     }
 }

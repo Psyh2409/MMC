@@ -12,7 +12,10 @@
             <h2 class="contact-intro-title">Центр керування користувачами</h2>
             <p class="contact-intro-text">Керуйте ролями, доступами та внутрішніми нотатками в єдиному робочому просторі.</p>
         </div>
-        <a th:href="@{/requests}" class="btn-highlight dashboard-cta">Відкрити бардачок</a>
+        <div class="dashboard-actions" style="display: flex; gap: 10px;">
+            <a th:href="@{/admin/articles}" class="btn-primary dashboard-cta">📝 Керувати статтями</a>
+            <a th:href="@{/requests}" class="btn-highlight dashboard-cta">Відкрити бардачок</a>
+        </div>
     </div>
 
     <div th:if="${param.success}" class="status-message status-success">

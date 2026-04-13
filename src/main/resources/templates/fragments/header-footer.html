@@ -16,13 +16,16 @@
             <div class="dropdown">
                 <span class="site-nav-label">Проблематика ▼</span>
                 <div class="dropdown-content">
-                    <a href="/issues/inner-calm">Тривога та панічні стани</a>
-                    <a href="/issues/restore-resource">Відновлення ресурсу</a>
-                    <a href="/issues/closeness-crisis">Кризи близькості</a>
-                    <a href="/issues/new-meanings">Депресивні стани та сенси</a>
-                    <a href="/issues/freedom-choice">Залежні форми поведінки</a>
-                    <a href="/issues/dialogue">Конфлікти та медіація</a>
-                    <a href="/issues/exit-nearby">Ілюзія, що виходу нема</a>
+                    <!-- Динамічне завантаження категорій з мапи (Ключ - URL, Значення - Текст) -->
+                    <a th:each="entry : ${allCategoriesMap}"
+                       th:href="@{/issues/{topic}(topic=${entry.key})}"
+                       th:text="${entry.value}">Українська назва</a>
+
+                    <!-- Фолбек (якщо в базі поки порожньо) -->
+                    <th:block th:if="${#maps.isEmpty(allCategoriesMap)}">
+                        <a href="/issues/inner-calm">Тривога та панічні стани</a>
+                        <a href="/issues/restore-resource">Відновлення ресурсу</a>
+                    </th:block>
                 </div>
             </div>
 
@@ -38,11 +41,11 @@
             </div>
 
             <div sec:authorize="isAuthenticated()" class="user-menu">
-    <span class="user-menu-greeting">
-        Вітаю, <a th:href="@{/profile}" class="user-profile-link">
-            <strong th:text="${currentUserDisplayName}" class="user-menu-name"></strong>
-        </a>
-    </span>
+                <span class="user-menu-greeting">
+                    Вітаю, <a th:href="@{/profile}" class="user-profile-link">
+                        <strong th:text="${currentUserDisplayName}" class="user-menu-name"></strong>
+                    </a>
+                </span>
 
                 <a th:href="@{/profile}" class="site-nav-link" title="Мій кабінет">👤</a>
 

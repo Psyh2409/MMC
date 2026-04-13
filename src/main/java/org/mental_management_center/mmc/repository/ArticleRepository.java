@@ -2,21 +2,27 @@ package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
-    
+
     List<Article> findByCategory(String category);
 
     boolean existsByTitle(String title);
-    
-    // Для "Бардачка": всі статті одного автора, свіжі зверху
+
+    Optional<Article> findByTitle(String title);
+
     List<Article> findByAuthorIdOrderByPublishedAtDesc(UUID authorId);
-    
-    // Для пошуку: знаходимо статті за тегом (ігноруючи регістр)
-    List<Article> findByTagsContainingIgnoreCase(String tag);
-    
-    // Для головної сторінки: просто список усіх нових статей
+
+    List<Article> findByTags(String tag);
+
     List<Article> findAllByOrderByPublishedAtDesc();
+
+    // Отримуємо всі унікальні категорії для рубрикатора в хедері
+    @Query("SELECT DISTINCT a.category FROM Article a")
+    List<String> findAllCategories();
 }

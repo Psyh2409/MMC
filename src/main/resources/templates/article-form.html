@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.article-form-section}, ~{::script})}">
+<head>
+    <title>Конструктор статті | MMC</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide article-form-section">
+    <header class="section-header">
+        <h1 class="page-title-accent">Створення матеріалу</h1>
+        <p class="section-subtitle">Заповніть поля для публікації в базу знань</p>
+    </header>
+
+    <div class="article-card">
+        <form th:action="@{/admin/articles/create}" th:object="${articleForm}" method="post">
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="form-group">
+                <label for="title">Назва статті:</label>
+                <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Заголовок...">
+                <p class="error-text" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Короткий опис (анонс):</label>
+                <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Тематичний розділ:</label>
+                <select id="categorySelector" class="form-control" onchange="syncCategory(this)">
+                    <option value="">-- Оберіть існуючий --</option>
+                    <option value="inner-calm">Тривога та панічні стани</option>
+                    <option value="restore-resource">Відновлення ресурсу</option>
+                    <option value="closeness-crisis">Кризи близькості</option>
+                    <option value="new-meanings">Депресивні стани та сенси</option>
+                    <option value="freedom-choice">Залежні форми поведінки</option>
+                    <option value="dialogue">Конфлікти та медіація</option>
+                    <option value="exit-nearby">Ілюзія, що виходу нема</option>
+                    <option value="NEW">+ Додати нову категорію (slug)</option>
+                </select>
+
+                <input type="text" id="finalCategory" th:field="*{category}"
+                       class="form-control" style="margin-top: 10px; border: 1px dashed orange;"
+                       placeholder="Значення категорії...">
+                <p class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="tags">Теги (через кому):</label>
+                <input type="text" id="tags" th:field="*{tags}" class="form-control" placeholder="стрес, ресурс, дихання">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Основний текст статті:</label>
+                <textarea id="content" th:field="*{content}" class="form-control" rows="15"></textarea>
+                <p class="error-text" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="read-more-button">Опублікувати</button>
+                <a th:href="@{/admin/articles}" class="site-nav-link">Скасувати</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function syncCategory(select) {
+        const input = document.getElementById('finalCategory');
+        if (select.value === 'NEW') {
+            input.style.display = 'block';
+            input.value = '';
+        } else {
+            input.value = select.value;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        syncCategory(document.getElementById('categorySelector'));
+    });
+</script>
+
+</body>
+</html>

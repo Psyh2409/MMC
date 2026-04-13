@@ -1707,14 +1707,207 @@ h1, h2, h3 {
 }
 
 .user-profile-link:hover {
-    color: var(--primary-color, #2e7d32); /* твій зелений колір при наведенні */
+    color: var(--primary-color);
     text-decoration: underline;
 }
 
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* відстань між привітанням і кнопкою виходу */
+/* Стилі для адмінки статей */
+.admin-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 40px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.admin-actions {
+    margin-bottom: 30px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+.admin-table th, .admin-table td {
+    border-bottom: 1px solid #efebe9;
+    padding: 16px;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-family: 'Georgia', serif;
+}
+
+.uuid-text {
+    font-size: 0.8em;
+    color: var(--primary-color);
+    font-family: monospace;
+    opacity: 0.7;
+}
+
+.btn-link-danger {
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    color: #b71c1c;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-link-danger:hover {
+    background: #b71c1c;
+    color: white;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    color: var(--primary-color);
+    font-style: italic;
+}
+
+.footer-nav {
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid #efebe9;
+    padding-top: 20px;
+}
+
+.footer-nav a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.admin-form {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Важливо для однакової ширини */
+}
+
+.form-control-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.error-text {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Контейнери та блоки */
+.topic-header {
+    margin-bottom: 30px;
+}
+
+.category-badge {
+    font-size: 0.85em;
+    color: #666;
+    font-family: monospace;
+    display: block;
+    margin-top: 5px;
+}
+
+.article-card {
+    background-color: #fff;
+    padding: 25px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.article-description {
+    font-style: italic;
+    color: #555;
+    margin: 15px 0;
+}
+
+.tags-list {
+    margin: 10px 0;
+}
+
+.tag-item {
+    margin-right: 12px;
+    color: #007bff;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.new-category-input {
+    margin-top: 10px;
+    display: none; /* Керується через JS */
+}
+
+.category-input-hidden {
+    display: none;
+}
+
+.error-text {
+    color: #d9534f;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.read-more-button {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* =========================================

@@ -3,10 +3,13 @@ package org.mental_management_center.mmc.service;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.UserRepository;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -17,13 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("No User with with email: "+ email +" not found."));
+                .orElseThrow(() -> new UsernameNotFoundException("Користувача не знайдено з email: " + email));
 
-        return new MyUserDetails(user, user.getAuthorities());
-
+        // Створюємо MyUserDetails, передаючи туди об'єкт юзера
+        return new MyUserDetails(user);
     }
 }

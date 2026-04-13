@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.articles-list}, ~{})}">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${topicTitle}">Назва розділу</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${topicTitle} + ' | Психотерапія та самопізнання'">Назва розділу</title>
 </head>
 <body>
-    <header th:replace="~{fragments/header-footer :: header-fragment}"></header>
+<section class="standard-container standard-container-wide articles-list">
+    <header class="section-header">
+        <h1 class="page-title-accent" th:text="${topicTitle}">Заголовок розділу</h1>
+        <p class="section-subtitle">Матеріали, присвячені цій темі</p>
+    </header>
 
-    <main class="content-container">
-        <h1 class="topic-header" th:text="${topicTitle}">Заголовок розділу</h1>
-        
-        <div th:if="${articles.isEmpty()}" class="no-content-message">
-            <p>У цьому розділі поки немає опублікованих статей.</p>
+    <div class="articles-grid">
+        <div class="article-card" th:each="article : ${articles}">
+            <div class="article-card-meta">
+                <span th:text="${#temporals.format(article.publishedAt, 'dd.MM.yyyy')}">01.01.2024</span>
+                <span class="category-badge" th:if="${article.category}" th:text="${article.category}">Категорія</span>
+            </div>
+
+            <h2 class="article-card-title">
+                <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок статті</a>
+            </h2>
+
+            <div class="article-tags" th:if="${not #lists.isEmpty(article.tags)}" style="margin-bottom: 10px;">
+                <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}"
+                      style="font-size: 0.8rem; color: #8b7355; margin-right: 8px;"></span>
+            </div>
+
+            <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
+
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="read-more">Читати далі →</a>
         </div>
+    </div>
 
-        <div class="articles-list">
-            <article th:each="article : ${articles}" class="article-preview-card">
-                <h2 class="article-preview-title" th:text="${article.title}">Заголовок статті</h2>
-                
-                <div class="article-tags">
-                    <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}" class="tag-badge"></span>
-                </div>
-
-                <p class="article-preview-desc" th:text="${article.description}">Короткий опис...</p>
-                
-                <a class="read-more-link" th:href="@{/articles/{id}(id=${article.id})}">Читати далі →</a>
-            </article>
-        </div>
-    </main>
-
-    <footer th:replace="~{fragments/header-footer :: footer-fragment}"></footer>
+    <div th:if="${#lists.isEmpty(articles)}" class="empty-state">
+        <p>Наразі статтей у цьому розділі немає, але вони скоро з'являться.</p>
+    </div>
+</section>
 </body>
 </html>

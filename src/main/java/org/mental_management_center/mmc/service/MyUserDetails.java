@@ -1,26 +1,26 @@
 package org.mental_management_center.mmc.service;
 
+import lombok.Getter;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+
 public class MyUserDetails implements UserDetails {
 
-    private final User user;
-    private final Collection<? extends GrantedAuthority> authorities;
+    @Getter
+    private final User user; // Твоя сутність з бази
 
-    public MyUserDetails(
-            User user,
-            Collection<? extends GrantedAuthority> authorities) {
+    public MyUserDetails(User user) {
         this.user = user;
-        this.authorities = authorities;
     }
 
+    // Ми просто просимо твій клас User віддати список прав (авторитетів)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return user.getAuthorities();
     }
 
     @Override
@@ -57,3 +57,5 @@ public class MyUserDetails implements UserDetails {
         return user.isEnabled();
     }
 }
+
+
