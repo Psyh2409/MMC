@@ -3,6 +3,7 @@ package org.mental_management_center.mmc.controller;
 import jakarta.validation.Valid;
 import org.mental_management_center.mmc.model.Article;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.web.form.ArticleForm;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,10 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final UserRepository userRepository;
+    // Якщо в тебе Lombok @RequiredArgsConstructor, просто додай:
+    private final CommentRepository commentRepository;
+// І переконайся, що є UserRepository, якщо ще немає
+// private final UserRepository userRepository;
 
     @GetMapping("/admin/articles")
     public String listArticles(Model model) {

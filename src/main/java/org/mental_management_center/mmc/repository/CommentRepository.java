@@ -1,0 +1,16 @@
+package org.mental_management_center.mmc.repository;
+
+import org.mental_management_center.mmc.model.Article;
+import org.mental_management_center.mmc.model.Comment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import java.util.List;
+import java.util.UUID;
+
+public interface CommentRepository extends JpaRepository<Comment, UUID> {
+
+    // FETCH JOIN каже Hibernate: "Витягни автора відразу, не чекай!"
+    @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.article = :article AND c.parentComment IS NULL ORDER BY c.createdAt ASC")
+    List<Comment> findCommentsWithAuthorsByArticle(@Param("article") Article article);
+}

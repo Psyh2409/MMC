@@ -22,7 +22,66 @@
     <article class="article-content">
         <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
     </article>
+    <hr class="article-divider">
 
+    <section class="comments-section">
+        <h3 class="comments-title">Обговорення</h3>
+
+        <div th:if="${#authorization.expression('isAuthenticated()')}" id="main-comment-form-box" class="comment-form-box">
+
+            <button type="button" id="cancel-reply-btn" style="display: none; margin-bottom: 10px;" onclick="resetReplyForm()" class="btn-cancel-reply">
+                ✖ Скасувати відповідь (написати новий коментар)
+            </button>
+
+            <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post">
+                <input type="hidden" name="parentId" id="parentIdInput" value="">
+
+                <textarea name="content" class="comment-textarea" rows="3" required placeholder="Поділіться своїми думками..."></textarea>
+                <button type="submit" class="btn-submit-comment">Відправити</button>
+            </form>
+        </div>
+
+        <div th:unless="${#authorization.expression('isAuthenticated()')}" class="comment-login-prompt">
+            <p><a th:href="@{/login}">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
+        </div>
+
+        <div class="comments-list" id="comments-container">
+            <div th:if="${#lists.isEmpty(comments)}" class="no-comments">
+                <p>Поки немає коментарів. Будьте першим!</p>
+            </div>
+
+            <div th:each="comment : ${comments}">
+                <div th:replace="~{fragments/comment-tree :: commentNode(${comment}, 0)}"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function moveReplyForm(commentId) {
+            // Беремо форму і переносимо її в контейнер під обраним коментарем
+            const formBox = document.getElementById('main-comment-form-box');
+            const targetContainer = document.getElementById('reply-form-container-' + commentId);
+            targetContainer.appendChild(formBox);
+
+            // Записуємо ID коментаря, щоб бекенд знав, кому ми відповідаємо
+            document.getElementById('parentIdInput').value = commentId;
+
+            // Показуємо кнопку "Скасувати" і фокусуємось на полі вводу
+            document.getElementById('cancel-reply-btn').style.display = 'inline-block';
+            formBox.querySelector('textarea').focus();
+        }
+
+        function resetReplyForm() {
+            // Повертаємо форму на самий верх
+            const formBox = document.getElementById('main-comment-form-box');
+            const commentsList = document.getElementById('comments-container');
+            document.querySelector('.comments-section').insertBefore(formBox, commentsList);
+
+            // Очищаємо ID (тепер це новий незалежний коментар)
+            document.getElementById('parentIdInput').value = '';
+            document.getElementById('cancel-reply-btn').style.display = 'none';
+        }
+    </script>
     <footer class="article-footer">
         <div class="share-block">
             <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>

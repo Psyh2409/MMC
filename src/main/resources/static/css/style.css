@@ -2058,6 +2058,66 @@ h1, h2, h3 {
     text-align: center; /* Вирівнює текст по центру кнопки */
 }
 
+    .btn-reply {
+        background: none;
+        border: none;
+        color: #8b7355;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0;
+        font-size: 0.9rem;
+        text-decoration: underline;
+}
+    .btn-cancel-reply {
+        background: none;
+        border: none;
+        color: #e74c3c;
+        cursor: pointer;
+        font-size: 0.85rem;
+        text-decoration: underline;
+}
+    .comment-actions {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+}
+
+/* Базовий контейнер коментаря з гілками */
+.comment-card-nested {
+    margin-top: 15px;
+    border-left: 2px solid #eee;
+    padding-left: 15px;
+    transition: all 0.2s ease;
+}
+
+/* Динамічні відступи для вкладеності (змійки) */
+.depth-0 { margin-left: 0; border-left: none; }
+.depth-1 { margin-left: 20px; }
+.depth-2 { margin-left: 40px; }
+.depth-3 { margin-left: 60px; }
+.depth-4 { margin-left: 80px; } /* Максимальна вкладеність */
+
+.author-info {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.admin-delete-inline {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.reply-form-placeholder {
+    margin-top: 10px;
+    min-height: 5px; /* Щоб візуально не схлопувалось */
+}
+
+.replies-wrapper {
+    margin-top: 5px;
+}
+
+
+
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
    ========================================= */

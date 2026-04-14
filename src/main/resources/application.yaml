@@ -6,11 +6,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    open-in-view: false
+        # ТИМЧАСОВЕ РІШЕННЯ: Тримає сесію бази відкритою під час рендерингу сторінки.
+      # Дозволяє працювати Lazy-завантаженню в Thymeleaf.
+      # ПРИБРАТИ, коли налаштуємо всі Join Fetch у репозиторіях!
+    open-in-view: true
+      # ... твої інші налаштування jpa (hibernate, show-sql тощо)
+
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   mail:
     host: smtp.gmail.com
     port: 587
