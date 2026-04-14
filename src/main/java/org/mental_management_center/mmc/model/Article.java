@@ -40,6 +40,10 @@ public class Article {
     @Column(nullable = false)
     private String category;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category", referencedColumnName = "category_slug", insertable = false, updatable = false)
+    private CategoryTranslation categoryTranslation;
+
     // Заголовок і опис — тепер просто ТЕКСТ. База буде їх бачити.
     @Column(nullable = false)
     private String title;
@@ -73,21 +77,21 @@ public class Article {
         }
     }
 
-    @Transient // Це поле не йде в базу, воно лише для Thymeleaf
-    public String getDisplayCategory() {
-        if (this.category == null) return "Матеріали";
-
-        return switch (this.category) {
-            case "inner-calm" -> "Тривога та панічні стани";
-            case "restore-resource" -> "Відновлення ресурсу";
-            case "closeness-crisis" -> "Кризи близькості";
-            case "new-meanings" -> "Депресивні стани та сенси";
-            case "freedom-choice" -> "Залежні форми поведінки";
-            case "dialogue" -> "Конфлікти та медіація";
-            case "exit-nearby" -> "Ілюзія, що виходу нема";
-            default -> this.category;
-        };
-    }
+//    @Transient // Це поле не йде в базу, воно лише для Thymeleaf
+//    public String getDisplayCategory() {
+//        if (this.category == null) return "Матеріали";
+//
+//        return switch (this.category) {
+//            case "inner-calm" -> "Тривога та панічні стани";
+//            case "restore-resource" -> "Відновлення ресурсу";
+//            case "closeness-crisis" -> "Кризи близькості";
+//            case "new-meanings" -> "Депресивні стани та сенси";
+//            case "freedom-choice" -> "Залежні форми поведінки";
+//            case "dialogue" -> "Конфлікти та медіація";
+//            case "exit-nearby" -> "Ілюзія, що виходу нема";
+//            default -> this.category;
+//        };
+//    }
 
     private byte[] compress(String str) {
         if (str == null || str.isEmpty()) return null;

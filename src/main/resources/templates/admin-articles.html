@@ -25,7 +25,7 @@
         <tr th:each="article : ${articles}" style="border-bottom: 1px solid #eee;">
             <td style="padding: 10px;" th:text="${article.title}">Назва</td>
             <td style="padding: 10px;">
-                <span class="category-badge" th:text="${article.displayCategory}">Категорія</span>
+                <span class="category-badge" th:text="${article.categoryTranslation?.displayName ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
             </td>
             <td style="padding: 10px;">
                 <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"

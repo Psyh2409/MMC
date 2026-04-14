@@ -1,54 +1,47 @@
 package org.mental_management_center.mmc.controller;
 
+import org.mental_management_center.mmc.model.CategoryTranslation;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.repository.ArticleRepository;
+import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
 import org.mental_management_center.mmc.service.MyUserDetails;
 import org.mental_management_center.mmc.service.OAuth2Principal;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.stereotype.Controller;
+
 import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalModelAttributes {
 
     private final UserService userService;
-    private final ArticleRepository articleRepository;
 
-    // Словник перекладу категорій для меню
-    private static final Map<String, String> TOPIC_TRANSLATIONS = Map.of(
-            "inner-calm", "Тривога та панічні стани",
-            "restore-resource", "Відновлення ресурсу",
-            "closeness-crisis", "Кризи близькості",
-            "new-meanings", "Депресивні стани та сенси",
-            "freedom-choice", "Залежні форми поведінки",
-            "dialogue", "Конфлікти та медіація",
-            "exit-nearby", "Ілюзія, що виходу нема"
-    );
+    // ДОДАНО: Підключаємо наш новий репозиторій словника
+    private final CategoryTranslationRepository categoryTranslationRepository;
 
-    public GlobalModelAttributes(UserService userService, ArticleRepository articleRepository) {
+    // ОНОВЛЕНО: Конструктор тепер приймає CategoryTranslationRepository
+    public GlobalModelAttributes(UserService userService, CategoryTranslationRepository categoryTranslationRepository) {
         this.userService = userService;
-        this.articleRepository = articleRepository;
+        this.categoryTranslationRepository = categoryTranslationRepository;
     }
 
+    // ОНОВЛЕНО: Тепер меню будується динамічно з бази даних
     @ModelAttribute("allCategoriesMap")
     public Map<String, String> allCategoriesMap() {
-        List<String> categoriesFromDb = articleRepository.findAllCategories();
-        Map<String, String> result = new HashMap<>();
-        
-        for (String cat : categoriesFromDb) {
-            // Якщо є переклад - беремо його, якщо немає - лишаємо як є
-            String translated = TOPIC_TRANSLATIONS.getOrDefault(cat, cat);
-            result.put(cat, translated);
-        }
-        return result;
+        return categoryTranslationRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                        CategoryTranslation::getCategorySlug,
+                        CategoryTranslation::getDisplayName
+                ));
     }
 
+    // ====================================================================================
+    // Твій метод для користувача лишається АБСОЛЮТНО без змін
+    // ====================================================================================
     @ModelAttribute("currentUserDisplayName")
     public String currentUserDisplayName(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

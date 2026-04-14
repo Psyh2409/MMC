@@ -39,13 +39,18 @@
                     <option value="freedom-choice">Залежні форми поведінки</option>
                     <option value="dialogue">Конфлікти та медіація</option>
                     <option value="exit-nearby">Ілюзія, що виходу нема</option>
-                    <option value="NEW">+ Додати нову категорію (slug)</option>
+                    <option value="NEW">+ Додати нову категорію</option>
                 </select>
 
                 <input type="text" id="finalCategory" th:field="*{category}"
-                       class="form-control" style="margin-top: 10px; border: 1px dashed orange;"
-                       placeholder="Значення категорії...">
+                       class="form-control hidden-category-field"
+                       placeholder="URL англійською (напр: burnout)">
                 <p class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
+
+                <input type="text" id="finalCategoryNameUa" th:field="*{categoryNameUa}"
+                       class="form-control hidden-category-field"
+                       placeholder="Назва на сайті (напр: Емоційне вигорання)">
+                <p class="error-text" th:if="${#fields.hasErrors('categoryNameUa')}" th:errors="*{categoryNameUa}"></p>
             </div>
 
             <div class="form-group">
@@ -69,17 +74,37 @@
 
 <script>
     function syncCategory(select) {
-        const input = document.getElementById('finalCategory');
+        const slugInput = document.getElementById('finalCategory');
+        const nameInput = document.getElementById('finalCategoryNameUa');
+
+        if (!slugInput || !nameInput) return;
+
         if (select.value === 'NEW') {
-            input.style.display = 'block';
-            input.value = '';
+            // Вибрали нову: показуємо обидва поля (прибираючи клас)
+            slugInput.classList.remove('hidden-category-field');
+            nameInput.classList.remove('hidden-category-field');
+            slugInput.value = '';
+            nameInput.value = '';
+            slugInput.focus();
+        } else if (select.value !== "") {
+            // Вибрали існуючу: ховаємо поля, але копіюємо в них дані
+            slugInput.classList.add('hidden-category-field');
+            nameInput.classList.add('hidden-category-field');
+
+            slugInput.value = select.value;
+            nameInput.value = select.options[select.selectedIndex].text;
         } else {
-            input.value = select.value;
+            // Скинули вибір
+            slugInput.classList.add('hidden-category-field');
+            nameInput.classList.add('hidden-category-field');
+            slugInput.value = '';
+            nameInput.value = '';
         }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        syncCategory(document.getElementById('categorySelector'));
+        const selector = document.getElementById('categorySelector');
+        if (selector) syncCategory(selector);
     });
 </script>
 

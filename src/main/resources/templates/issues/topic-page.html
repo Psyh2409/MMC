@@ -7,7 +7,7 @@
 <body>
 <section class="standard-container standard-container-wide articles-list">
     <header class="section-header">
-        <h1 class="page-title-accent" th:text="${topicTitle}">Заголовок розділу</h1>
+        <h1 class="page-title-accent" th:text="${allCategoriesMap[topic] ?: topicTitle}">Заголовок розділу</h1>
         <p class="section-subtitle">Матеріали, присвячені цій темі</p>
     </header>
 
@@ -15,7 +15,7 @@
         <div class="article-card" th:each="article : ${articles}">
             <div class="article-card-meta">
                 <span th:text="${#temporals.format(article.publishedAt, 'dd.MM.yyyy')}">01.01.2024</span>
-                <span class="category-badge" th:if="${article.category}" th:text="${article.category}">Категорія</span>
+                <span class="category-badge" th:text="${article.categoryTranslation?.displayName ?: article.category}">Категорія</span>
             </div>
 
             <h2 class="article-card-title">

@@ -9,7 +9,10 @@
     <header class="article-header">
         <div class="article-meta">
             <span class="article-date" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
-            <span class="article-category" th:if="${article.category}" th:text="${article.category}">Категорія</span>
+            <span class="article-category"
+                  th:text="${allCategoriesMap[article.category] ?: article.category}">
+                    Категорія
+            </span>
         </div>
         <h1 class="page-title-accent" th:text="${article.title}">Заголовок статті</h1>
     </header>

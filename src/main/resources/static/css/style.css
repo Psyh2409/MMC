@@ -1910,6 +1910,11 @@ h1, h2, h3 {
     cursor: pointer;
 }
 
+.hidden-category-field {
+    display: none;
+    margin-top: 10px;
+}
+
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
    ========================================= */
