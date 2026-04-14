@@ -1916,6 +1916,149 @@ h1, h2, h3 {
 }
 
 /* =========================================
+   ТАБЛИЦЯ АДМІН-ПАНЕЛІ
+   ========================================= */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden; /* Згладжує кути таблиці */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Ледь помітна тінь */
+}
+
+.admin-table thead tr {
+    background-color: #f8f9fa;
+    text-align: left;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.admin-table th {
+    padding: 15px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid #f1f3f5;
+    transition: background-color 0.2s ease;
+}
+
+/* Ефект підсвічування рядка при наведенні мишки */
+.admin-table tbody tr:hover {
+    background-color: #fdfdfd;
+}
+
+.admin-table td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.title-cell {
+    font-weight: 500;
+    color: #2b2b2b;
+}
+
+/* --- Кнопки керування в таблиці (Редагувати/Видалити) --- */
+.action-cell {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.actions-column {
+    width: 200px; /* Фіксована ширина для колонки з кнопками */
+}
+
+.inline-form {
+    margin: 0;
+    display: inline-block;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+/* Кнопка Редагувати (Нейтральна) */
+.btn-edit {
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+}
+
+.btn-edit:hover {
+    background-color: #e9ecef;
+    color: #212529;
+    text-decoration: none;
+}
+
+/* Кнопка Видалити (Небезпечна дія) */
+.btn-delete {
+    background-color: #fff0f0;
+    color: #e03131;
+    border: 1px solid #ffc9c9;
+}
+
+.btn-delete:hover {
+    background-color: #ffe3e3;
+    color: #c92a2a;
+}
+
+/* --- Кнопка "Створити статтю" зверху --- */
+.admin-actions-bar {
+    margin-bottom: 20px;
+}
+
+.btn-create-article {
+    background-color: #2e7d32; /* Зелений колір */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.btn-create-article:hover {
+    background-color: #1b5e20;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-create-article .icon {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+
+    /* ДОДАЙ ЦІ ТРИ РЯДКИ: */
+    display: inline-block;
+    min-width: 110px; /* Змушує кнопки бути однакової ширини */
+    text-align: center; /* Вирівнює текст по центру кнопки */
+}
+
+/* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
    ========================================= */
 @media (max-width: 768px) {

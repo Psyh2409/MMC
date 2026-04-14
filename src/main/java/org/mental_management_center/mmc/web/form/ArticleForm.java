@@ -4,9 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
+
 @Getter
 @Setter
 public class ArticleForm {
+
+    private UUID id; // ДОДАТИ: Якщо id є - це редагування. Якщо null - це нова стаття.
 
     @NotBlank(message = "Заголовок не може бути порожнім")
     private String title;

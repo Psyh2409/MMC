@@ -8,29 +8,33 @@
 <section class="standard-container standard-container-wide admin-list">
     <header class="section-header">
         <h1 class="page-title-accent">Всі публікації</h1>
-        <div class="admin-actions" style="margin-top: 20px;">
-            <a th:href="@{/admin/articles/create}" class="read-more">+ Додати нову статтю</a>
+        <div class="admin-actions-bar">
+            <a th:href="@{/admin/articles/create}" class="btn-create-article">
+                <span class="icon">+</span> Створити нову статтю
+            </a>
         </div>
     </header>
 
-    <table class="article-card" style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+    <table class="admin-table">
         <thead>
-        <tr style="text-align: left; border-bottom: 2px solid #eee;">
-            <th style="padding: 10px;">Заголовок</th>
-            <th style="padding: 10px;">Категорія</th>
-            <th style="padding: 10px;">Дії</th>
+        <tr>
+            <th>Заголовок</th>
+            <th>Категорія</th>
+            <th class="actions-column">Дії</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="article : ${articles}" style="border-bottom: 1px solid #eee;">
-            <td style="padding: 10px;" th:text="${article.title}">Назва</td>
-            <td style="padding: 10px;">
-                <span class="category-badge" th:text="${article.categoryTranslation?.displayName ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
+        <tr th:each="article : ${articles}">
+            <td th:text="${article.title}" class="title-cell">Назва</td>
+            <td>
+                <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
             </td>
-            <td style="padding: 10px;">
+            <td class="action-cell">
+                <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit">Редагувати</a>
+
                 <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
-                      onsubmit="return confirm('Видалити безповоротно?');">
-                    <button type="submit" class="read-more" style="background: #e74c3c; border: none;">Видалити</button>
+                      onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
+                    <button type="submit" class="btn-action btn-delete">Видалити</button>
                 </form>
             </td>
         </tr>

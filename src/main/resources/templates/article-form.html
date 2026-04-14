@@ -14,7 +14,7 @@
 
     <div class="article-card">
         <form th:action="@{/admin/articles/create}" th:object="${articleForm}" method="post">
-
+            <input type="hidden" th:field="*{id}" />
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <div class="form-group">

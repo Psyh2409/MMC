@@ -1,6 +1,7 @@
 package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
+import org.mental_management_center.mmc.model.Article;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.web.form.ArticleForm;
@@ -42,6 +43,31 @@ public class ArticleController {
     @GetMapping("/admin/articles/create")
     public String showCreateForm(Model model) {
         model.addAttribute("articleForm", new ArticleForm());
+        return "article-form";
+    }
+
+    @GetMapping("/admin/articles/edit/{id}")
+    public String editArticle(@PathVariable UUID id, Model model) {
+        Article article = articleService.findById(id);
+
+        ArticleForm form = new ArticleForm();
+        form.setId(article.getId());
+        form.setTitle(article.getTitle());
+        form.setDescription(article.getDescription());
+        form.setCategory(article.getCategory());
+        form.setContent(article.getContent());
+
+        // ДОДАЄМО ТЕГИ (щоб вони теж підтягнулися)
+        if (article.getTags() != null) {
+            form.setTags(String.join(", ", article.getTags()));
+        }
+
+        // ДОДАЄМО НАЗВУ КАТЕГОРІЇ (ось чому вона була порожня!)
+        if (article.getCategoryTranslation() != null) {
+            form.setCategoryNameUa(article.getCategoryTranslation().getDisplayName());
+        }
+
+        model.addAttribute("articleForm", form);
         return "article-form";
     }
 
