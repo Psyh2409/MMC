@@ -11,6 +11,10 @@ import java.util.UUID;
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     // FETCH JOIN каже Hibernate: "Витягни автора відразу, не чекай!"
-    @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.article = :article AND c.parentComment IS NULL ORDER BY c.createdAt ASC")
-    List<Comment> findCommentsWithAuthorsByArticle(@Param("article") Article article);
-}
+    @Query("SELECT c FROM Comment c " +
+            "LEFT JOIN FETCH c.author " +
+            "LEFT JOIN FETCH c.replies r " +
+            "LEFT JOIN FETCH r.author " +
+            "WHERE c.article = :article AND c.parentComment IS NULL " +
+            "ORDER BY c.createdAt ASC")
+    List<Comment> findCommentsWithTreeByArticle(@Param("article") Article article);}

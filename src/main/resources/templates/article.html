@@ -56,32 +56,7 @@
         </div>
     </section>
 
-    <script>
-        function moveReplyForm(commentId) {
-            // Беремо форму і переносимо її в контейнер під обраним коментарем
-            const formBox = document.getElementById('main-comment-form-box');
-            const targetContainer = document.getElementById('reply-form-container-' + commentId);
-            targetContainer.appendChild(formBox);
 
-            // Записуємо ID коментаря, щоб бекенд знав, кому ми відповідаємо
-            document.getElementById('parentIdInput').value = commentId;
-
-            // Показуємо кнопку "Скасувати" і фокусуємось на полі вводу
-            document.getElementById('cancel-reply-btn').style.display = 'inline-block';
-            formBox.querySelector('textarea').focus();
-        }
-
-        function resetReplyForm() {
-            // Повертаємо форму на самий верх
-            const formBox = document.getElementById('main-comment-form-box');
-            const commentsList = document.getElementById('comments-container');
-            document.querySelector('.comments-section').insertBefore(formBox, commentsList);
-
-            // Очищаємо ID (тепер це новий незалежний коментар)
-            document.getElementById('parentIdInput').value = '';
-            document.getElementById('cancel-reply-btn').style.display = 'none';
-        }
-    </script>
     <footer class="article-footer">
         <div class="share-block">
             <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
@@ -91,4 +66,46 @@
             <a href="/contact" class="btn-highlight">Обговорити запит</a>
         </div>
     </footer>
+    <script>
+        function moveReplyForm(commentId) {
+            // 1. Шукаємо форму
+            const formBox = document.getElementById('main-comment-form-box');
+            if (!formBox) {
+                console.log("Форма не знайдена: користувач не авторизований");
+                return;
+            }
+
+            // 2. Шукаємо контейнер під коментарем
+            const targetContainer = document.getElementById('reply-form-container-' + commentId);
+
+            if (targetContainer) {
+                // 3. Переносимо форму в контейнер
+                targetContainer.appendChild(formBox);
+
+                // 4. Записуємо ID коментаря в приховане поле parentId
+                document.getElementById('parentIdInput').value = commentId;
+
+                // 5. Показуємо кнопку скасування і фокусуємось на тексті
+                document.getElementById('cancel-reply-btn').style.display = 'inline-block';
+                formBox.querySelector('textarea').focus();
+            } else {
+                console.error("Контейнер не знайдено для ID: " + commentId);
+            }
+        }
+
+        function resetReplyForm() {
+            // Повертаємо форму на початкове місце (перед списком коментарів)
+            const formBox = document.getElementById('main-comment-form-box');
+            const commentsList = document.getElementById('comments-container');
+
+            if (formBox && commentsList) {
+                // Вставляємо форму назад перед контейнером усіх коментарів
+                commentsList.parentNode.insertBefore(formBox, commentsList);
+
+                // Очищаємо ID (тепер це знову новий незалежний коментар)
+                document.getElementById('parentIdInput').value = '';
+                document.getElementById('cancel-reply-btn').style.display = 'none';
+            }
+        }
+    </script>
 </section>

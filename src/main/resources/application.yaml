@@ -6,11 +6,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-        # ТИМЧАСОВЕ РІШЕННЯ: Тримає сесію бази відкритою під час рендерингу сторінки.
-      # Дозволяє працювати Lazy-завантаженню в Thymeleaf.
-      # ПРИБРАТИ, коли налаштуємо всі Join Fetch у репозиторіях!
-    open-in-view: true
-      # ... твої інші налаштування jpa (hibernate, show-sql тощо)
+
+    open-in-view: false
 
     show-sql: true
     properties:

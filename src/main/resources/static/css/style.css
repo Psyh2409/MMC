@@ -2116,7 +2116,16 @@ h1, h2, h3 {
     margin-top: 5px;
 }
 
+.replies-container {
+    margin-left: 20px;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 15px;
+    margin-top: 10px;
+}
 
+.comment-card-nested {
+    margin-bottom: 15px;
+}
 
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)

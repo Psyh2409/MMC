@@ -45,8 +45,11 @@ public class Comment {
     private Comment parentComment;
 
     // Список усіх відповідей на цей коментар (щоб зручно виводити в HTML)
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("createdAt ASC") // Відповіді сортуємо від старих до нових
-    @Builder.Default
+    @OneToMany(mappedBy = "parentComment",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @OrderBy("createdAt ASC") // Твоє сортування на місці
+    @Builder.Default          // Твій білдер на місці
     private List<Comment> replies = new ArrayList<>();
 }

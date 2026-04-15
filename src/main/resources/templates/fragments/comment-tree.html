@@ -1,10 +1,22 @@
 <div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
     <div class="comment-header">
-        <strong th:if="${comment.author != null}"
-                th:text="${comment.author.name ?: comment.author.email}">Автор</strong>
-        <strong th:if="${comment.author == null}">Гість</strong>
+        <strong th:if="${comment.author != null}" th:text="${comment.author.name ?: comment.author.email}">Автор</strong>
         <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
     </div>
-    <p th:text="${comment.content}">Текст коментаря</p>
 
+    <p th:text="${comment.content}" class="comment-text">Текст коментаря</p>
+
+    <div th:id="'reply-form-container-' + ${comment.id}" class="reply-form-container"></div>
+
+    <button type="button"
+            class="btn-reply"
+            th:onclick="moveReplyForm([[${comment.id}]])">
+        Відповісти
+    </button>
+
+    <div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
+        <div th:each="reply : ${comment.replies}">
+            <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
+        </div>
+    </div>
 </div>

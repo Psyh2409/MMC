@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,7 @@ public class ContentController {
         return "articles";
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable UUID id, Model model) {
         Article article = articleRepository.findById(id)
@@ -50,8 +52,8 @@ public class ContentController {
         model.addAttribute("article", article);
 
         // Ось він, твій List! Тепер ти його бачиш і контролюєш.
-        List<Comment> commentsList = commentRepository.findCommentsWithAuthorsByArticle(article);
-        model.addAttribute("comments", commentsList);
+        List<Comment> comments = commentRepository.findCommentsWithTreeByArticle(article);
+        model.addAttribute("comments", comments);
 
         return "article";
     }
