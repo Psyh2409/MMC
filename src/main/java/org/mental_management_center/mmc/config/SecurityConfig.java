@@ -31,11 +31,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/requests/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/issues/**").authenticated()
+                        .requestMatchers("/articles/**").authenticated()
                         .requestMatchers(
                                 "/",
                                 "/about",
-                                "/articles/**", // Дозволяємо перегляд статтей всім
+                                "/issues/**", // Дозволяємо перегляд опису статті всім
                                 "/contact",
                                 "/first-steps",
                                 "/forgot-password",

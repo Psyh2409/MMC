@@ -1269,13 +1269,6 @@ main {
     box-shadow: 0 16px 45px rgba(78, 52, 46, 0.08);
 }
 
-.dashboard-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 24px;
-}
 
 .dashboard-cta {
     display: inline-flex;
@@ -1902,7 +1895,7 @@ h1, h2, h3 {
 }
 
 .read-more-button {
-    background-color: #2c3e50;
+    background-color: #503a2c;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -2127,6 +2120,426 @@ h1, h2, h3 {
     margin-bottom: 15px;
 }
 
+/* ==========================================================================
+   SECTION: COMMENTS UI (Added 2026-04-15)
+   ========================================================================== */
+
+/* Контейнер всієї секції */
+.comments-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fcfaf7; /* Дуже легкий бежевий, під тон твого сайту */
+    border-radius: 12px;
+}
+
+/* Поле вводу (Textarea) з виправленням ширини */
+.comment-textarea {
+    width: 100%;
+    max-width: 100%;    /* Щоб ніколи не виходило за рамки */
+    box-sizing: border-box; /* КРИТИЧНО: враховує padding у ширині 100% */
+    padding: 15px;
+    border: 1px solid #dcd3c9;
+    border-radius: 8px;
+    background-color: #ffffff;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 10px;
+    display: block;      /* Щоб воно поводилося як окремий блок */
+}
+
+.comment-textarea:focus {
+    outline: none;
+    border-color: #8b7355; /* Твій акцентний колір */
+    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+}
+
+/* Кнопка відправки */
+.btn-submit-comment {
+    background-color: #8b7355;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit-comment:hover {
+    background-color: #6f5c44;
+}
+
+/* Кнопка "Відповісти" під коментарем */
+.btn-reply {
+    background: none;
+    border: none;
+    color: #8b7355;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 0;
+    margin-top: 5px;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.btn-reply:hover {
+    color: #5d4d39;
+}
+
+/* Кнопка скасування відповіді (та сама червона строка) */
+.btn-cancel-reply {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+/* Дерево коментарів (вертикальна лінія зліва) */
+.replies-container {
+    margin-left: 25px;
+    border-left: 2px solid #e9e2db;
+    padding-left: 20px;
+    margin-top: 15px;
+}
+
+/* Картка окремого коментаря */
+.comment-card-nested {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Знаходимо поле введення коментаря */
+.comment-form textarea,
+.comment-section textarea {
+    width: 100%;            /* Займає всю ширину батька */
+    box-sizing: border-box; /* ВКРАЙ ВАЖЛИВО: включає padding і border у загальну ширину */
+    max-width: 100%;        /* Гарантує, що воно не розтягнеться більше ніж можна */
+    display: block;         /* Прибирає зайві відступи знизу */
+    resize: vertical;       /* Дозволяє тягнути тільки вниз, щоб не зламати ширину вручну */
+
+    /* Додатково для гарного вигляду у твоїй кавовій стилістиці */
+    padding: 12px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: var(--bg-card); /* Білий всередині темнішого блоку */
+}
+
+/* Якщо сам контейнер (той темніший блок) має відступи,
+   переконайся, що він теж правильно рахує ширину */
+.comment-form-container {
+    padding: 20px;
+    background-color: #ede7dd; /* Твій темніший беж */
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+/* Робимо всі посилання в списку статей кавовими */
+.articles-list a,
+.article-preview a,
+.read-more {
+    color: var(--link-color) !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.articles-list a:hover,
+.read-more:hover {
+    color: var(--primary-color) !important;
+    text-decoration: underline;
+}
+
+/* Якщо це кнопка-посилання, примусово забираємо блакитний */
+.btn-link {
+    color: var(--link-color);
+}
+
+.btn-admin-sm {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    width: auto; /* Щоб не розтягувалися */
+}
+
+/* Стиль для кнопки "Відкрити бардачок" та основних кнопок керування */
+.admin-nav-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    max-width: 200px;
+}
+
+/* 1. Виправляємо контейнер, щоб не було зайвих прокруток */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: visible; /* Прибираємо примусову прокрутку вбік */
+    margin-top: 20px;
+}
+
+/* 2. Налаштовуємо таблицю */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Дозволяє колонкам підлаштовуватися під контент */
+}
+
+/* 3. Головне: фіксуємо кнопки в один ряд без зміни HTML */
+.action-cell {
+    white-space: nowrap !important; /* ЗАБОРОНЯЄ розрив рядка для кнопок */
+    width: 1%; /* Стискає колонку до мінімально необхідної ширини */
+    text-align: right;
+    vertical-align: middle;
+}
+
+/* 4. Робимо кнопки маленькими та шоколадними прямо тут */
+.btn-action, .btn-edit, .btn-delete, .btn-edit-sm, .btn-delete-sm {
+    display: inline-flex !important; /* Вишиковує в ряд */
+    padding: 4px 10px !important;
+    font-size: 13px !important;
+    margin: 2px !important;
+    text-decoration: none;
+    border-radius: 4px;
+    color: #fff !important;
+    border: none;
+    cursor: pointer;
+}
+
+/* Кольори (Шоколад та Кава) */
+.btn-edit, .btn-edit-sm {
+    background-color: #8d6e63 !important; /* Твоя кава */
+}
+
+.btn-delete, .btn-delete-sm {
+    background-color: #6d4c41 !important; /* Твій шоколад */
+}
+
+/* Форма видалення, щоб не переносила кнопку на новий рядок */
+.inline-form {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* 5. Обмеження довжини назви статті, щоб не "перло" вбік */
+.title-cell, .title-cell-truncate {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   MMC ADMIN & UI REFACTORING (PATCH 2026-04-15)
+   ========================================================================== */
+
+/* 1. ВИПРАВЛЕННЯ КОЛЬОРІВ ТА ПОСИЛАНЬ */
+
+/* Кнопка "Читати далі" (твій специфічний колір) */
+.read-more-button {
+    background-color: #503a2c !important;
+    color: white !important;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Напис "Скасувати" у формі створення статті */
+.form-actions .site-nav-link {
+    color: #4e342e !important;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Прибираємо блакитний з описів статей (SEO-посилання, Кризи близькості тощо) */
+.article-description a,
+.articles-list a,
+.article-preview a {
+    color: var(--link-color, #6d4c41) !important;
+    text-decoration: underline;
+}
+
+/* 2. АДМІН-КНОПКИ (БАРДАЧОК ТА КЕРУВАННЯ) */
+.btn-primary.dashboard-cta {
+    padding: 8px 16px !important; /* Менші на третину */
+    font-size: 0.85rem !important;
+    width: auto !important;
+    min-width: 150px;
+    background-color: var(--primary-color, #8d6e63) !important;
+    border-radius: 8px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ==========================================================================
+   MMC GLOBAL UI FIX - V3 (СПРАВЖНІЙ СТАНДАРТ)
+   ========================================================================== */
+
+/* 1. РОЗУМНІ КНОПКИ ТА СТАТИСТИКА (Більше не "барани" і не прилипають) */
+.dashboard-hero, .admin-actions-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+    justify-content: space-between !important; /* Рівномірно розподіляємо */
+}
+
+.btn-primary.dashboard-cta, .admin-nav-btn {
+    flex: 1 1 auto !important; /* Розумно заповнюють простір */
+    min-width: 200px !important; /* Якщо екран менший за 200px - ідеально стають в стовпчик */
+    text-align: center !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+}
+
+.admin-stats {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+    justify-content: flex-start !important;
+}
+
+/* 2. ТАБЛИЦІ: ВБИВАЄМО БЕГЕМОТА І ПОВЕРТАЄМО 4-Й СТОВПЧИК */
+.table-responsive-wrapper, .table-scroll, .admin-list {
+    width: 100% !important;
+    overflow-x: auto !important; /* СТАНДАРТ: Якщо дуже вузько - таблицю можна посунути пальцем/мишкою */
+    box-sizing: border-box !important;
+    margin-top: 15px !important;
+}
+
+.admin-table, .data-table {
+    width: 100% !important;
+    table-layout: auto !important; /* БРАУЗЕР САМ ВИРІШИТЬ пропорції колонок, не обрізаючи їх */
+    border-collapse: collapse;
+    min-width: 650px !important; /* Захист від стискання в "кашу" на мобільних */
+}
+
+/* Шапка таблиці - струнка і акуратна */
+.admin-table th, .data-table th {
+    white-space: nowrap !important; /* ЗАБОРОНЯЄМО шапці ставати "бегемотом" */
+    padding: 12px 10px !important;
+}
+
+/* Тіло таблиці - текст переноситься адекватно */
+.admin-table td, .data-table td {
+    padding: 12px 10px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    vertical-align: middle !important;
+}
+
+/* 3. ТАБЛИЦІ (Скрол є, але контент переноситься) */
+.table-responsive-wrapper, .table-scroll, .admin-list {
+    width: 100% !important;
+    overflow-x: auto !important;
+    margin-top: 1rem !important; /* Відносно шрифту */
+}
+
+.admin-table, .data-table {
+    width: 100% !important;
+    table-layout: auto !important;
+    min-width: 38rem !important; /* Відносна мінімальна ширина таблиці замість 600px */
+}
+
+/* ШАПКА ТАБЛИЦЬ */
+.admin-table th, .data-table th {
+    white-space: nowrap !important;
+    padding: 0.8rem !important; /* Відносно шрифту */
+}
+
+/* ТІЛО: ПРИМУСОВИЙ ПЕРЕНОС НАЗВ СТАТЕЙ */
+.admin-table td, .data-table td, .title-cell, .title-cell-truncate {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    padding: 0.8rem !important;
+    vertical-align: middle !important;
+}
+
+/* Використовуємо відсотки для розподілу простору */
+.admin-table td:nth-child(1), .admin-table th:nth-child(1) {
+    width: 45% !important; /* Назва забирає майже половину простору */
+}
+.admin-table td:nth-child(2), .admin-table th:nth-child(2) {
+    width: 35% !important; /* Категорія */
+}
+
+/* 4. КНОПКИ ДІЙ В ТАБЛИЦІ (СТОВПЧИК) */
+.action-cell, .actions-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.4rem !important; /* Відносний відступ */
+    width: 20% !important;  /* Стовпчик забирає 20% таблиці */
+    min-width: 7rem !important; /* Захист від надмірного стискання, відносно шрифту */
+}
+
+.action-cell form, .btn-group-nowrap {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+}
+
+.btn-action {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.4rem 0.2rem !important;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+}
+
+/* 5. ФОРМИ, ПОСИЛАННЯ ТА КНОПКА "СТВОРИТИ СТАТТЮ" (ВІДНОСНІ ОДИНИЦІ) */
+.admin-actions-bar {
+    margin-bottom: 1.5rem !important; /* Відступ відносно шрифту */
+    display: block !important; /* Щоб кнопка не зникала */
+}
+
+.btn-create-article, .btn-publish-article {
+    display: inline-flex !important;
+    padding: 0.6rem 1.2rem !important; /* Відносні відступи замість px */
+    font-size: 1rem !important; /* Масштабується з базовим шрифтом */
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-radius: 0.5rem !important; /* Відносне закруглення */
+    font-weight: bold !important;
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* Кнопка "Читати далі" на інших сторінках */
+.read-more-button {
+    background-color: #503a2c !important; /* Твій вказаний колір */
+    color: white !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 1rem !important;
+    border: none !important;
+    border-radius: 0.25rem !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+/* Напис "Скасувати" у формі створення (робимо видимим) */
+.btn-secondary, .form-actions .site-nav-link {
+    color: #4e342e !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
+    font-size: 1rem !important;
+    margin-left: 0.8rem !important; /* Відступ від кнопки "Опублікувати" */
+}
+
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
    ========================================= */
@@ -2183,8 +2596,10 @@ h1, h2, h3 {
     }
 
     .dashboard-hero {
-        flex-direction: column;
-        align-items: stretch;
+        display: flex;
+        flex-direction: column; /* Стають одна під одну */
+        gap: 12px;
+        align-items: flex-start; /* Вирівнювання по лівому краю */
     }
 
     .dashboard-cta {
@@ -2200,3 +2615,4 @@ h1, h2, h3 {
         padding: 0 15px;
     }
 }
+

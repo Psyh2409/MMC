@@ -9,37 +9,41 @@
     <header class="section-header">
         <h1 class="page-title-accent">Всі публікації</h1>
         <div class="admin-actions-bar">
-            <a th:href="@{/admin/articles/create}" class="btn-create-article">
+            <a th:href="@{/admin/articles/create}" class="btn-publish-article">
                 <span class="icon">+</span> Створити нову статтю
             </a>
         </div>
     </header>
 
-    <table class="admin-table">
-        <thead>
-        <tr>
-            <th>Заголовок</th>
-            <th>Категорія</th>
-            <th class="actions-column">Дії</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="article : ${articles}">
-            <td th:text="${article.title}" class="title-cell">Назва</td>
-            <td>
-                <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
-            </td>
-            <td class="action-cell">
-                <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit">Редагувати</a>
+    <div class="table-responsive-wrapper">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Заголовок</th>
+                <th>Категорія</th>
+                <th class="actions-column">Дії</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="article : ${articles}">
+                <td th:text="${article.title}" class="title-cell-truncate">Назва</td>
+                <td>
+                    <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
+                </td>
+                <td class="action-cell">
+                    <div class="btn-group-nowrap">
+                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit-sm">Редагувати</a>
 
-                <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
-                      onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
-                    <button type="submit" class="btn-action btn-delete">Видалити</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                        <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
+                              onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
+                            <button type="submit" class="btn-action btn-delete-sm">Видалити</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>
