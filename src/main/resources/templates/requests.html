@@ -40,7 +40,7 @@
 
             <td>
                 <span th:text="${req.senderName}"
-                      th:style="${req.user != null} ? 'font-weight: bold;' : 'font-style: italic;'"></span>
+                      th:classappend="${req.user != null} ? 'request-sender-registered' : 'request-sender-guest'"></span>
             </td>
 
             <td>

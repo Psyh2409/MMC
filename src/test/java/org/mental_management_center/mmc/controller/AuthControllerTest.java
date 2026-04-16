@@ -1,8 +1,12 @@
 package org.mental_management_center.mmc.controller;
 
 import org.junit.jupiter.api.Test;
+import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
+import org.mental_management_center.mmc.repository.SiteStatsRepository;
+import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
     @Autowired
@@ -23,9 +28,18 @@ class AuthControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private UserRepository userRepository;
+
+    @MockBean
+    private SiteStatsRepository siteStatsRepository;
+
+    @MockBean
+    private CategoryTranslationRepository categoryTranslationRepository;
+
     @Test
     void testForgotPasswordGet() throws Exception {
-        mockMvc.perform(get("/forgot-password"))
+        mockMvc.perform(get("/forgot-password").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("forgot-password"))
                 .andExpect(model().attributeExists("forgotPasswordForm"));

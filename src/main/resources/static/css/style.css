@@ -40,14 +40,15 @@ html, body {
 }
 
 .standard-container {
-    max-width: 700px;
-    width: 90%;
-    margin: 60px auto;
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
     background: white;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     box-sizing: border-box;
+    overflow-x: hidden; /* Щоб нічого не вилазило вбік */
 }
 
 .standard-container-narrow {
@@ -371,9 +372,27 @@ html, body {
     font-size: 0.9em;
 }
 
+.contact-direct-email {
+    margin: 8px 0 4px;
+    color: #4e342e;
+    font-weight: bold;
+}
+
+.contact-direct-info {
+    margin: 0;
+    color: #8d6e63;
+}
+
 .contact-direct-phone {
     font-weight: bold;
     color: #4e342e;
+}
+
+.form-helper-text {
+    display: block;
+    margin-top: 5px;
+    color: #8d8d8d;
+    font-size: 0.85em;
 }
 
 .site-header {
@@ -499,6 +518,27 @@ html, body {
     display: flex;
     justify-content: space-between; /* Розштовхує: ліво-центр-право */
     align-items: center;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+    display: flex;
+    align-items: center;
+}
+
+.footer-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.footer-right {
+    justify-content: flex-end;
+}
+
+.footer-action-text,
+.site-brand-text-footer {
+    margin-left: 6px;
 }
 
 /* Стиль логотипу у футері (копіюємо стиль хедера) */
@@ -672,6 +712,10 @@ main {
     text-align: center;
     background: linear-gradient(rgba(78,52,46,0.8), rgba(78,52,46,0.8));
     color: #f5f5dc;
+}
+
+.steps-content {
+    background: #fdfbf7;
 }
 
 .steps-hero-title {
@@ -1655,6 +1699,15 @@ h1, h2, h3 {
     margin-bottom: 2rem;
 }
 
+.profile-card-spaced {
+    margin-top: 24px;
+}
+
+.profile-section-title {
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+}
+
 .profile-row {
     display: flex;
     justify-content: space-between;
@@ -1686,6 +1739,13 @@ h1, h2, h3 {
 .badge-therapist { background: #e3f2fd; color: #1565c0; }
 .badge-client { background: #e8f5e9; color: #2e7d32; }
 .badge-reader { background: #f3e5f5; color: #7b1fa2; }
+
+.role-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
 
 .btn-disabled {
     opacity: 0.6;
@@ -1862,6 +1922,41 @@ h1, h2, h3 {
     margin-bottom: 25px;
 }
 
+.articles-grid {
+    display: grid;
+    gap: 24px;
+}
+
+.article-card-meta,
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: #8d6e63;
+    font-size: 0.9rem;
+}
+
+.article-card-title,
+.article-header h1 {
+    margin: 0;
+}
+
+.article-card-title a {
+    color: #4e342e;
+    text-decoration: none;
+}
+
+.article-card-title a:hover {
+    color: #6d4c41;
+}
+
+.article-excerpt {
+    margin: 0;
+    color: #5d4037;
+    line-height: 1.7;
+}
+
 .article-description {
     font-style: italic;
     color: #555;
@@ -1872,10 +1967,16 @@ h1, h2, h3 {
     margin: 10px 0;
 }
 
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
 .tag-item {
-    margin-right: 12px;
-    color: #007bff;
-    font-size: 0.9em;
+    color: #8b7355;
+    font-size: 0.8rem;
     font-weight: 500;
 }
 
@@ -1892,15 +1993,6 @@ h1, h2, h3 {
     color: #d9534f;
     font-size: 0.9em;
     margin-top: 5px;
-}
-
-.read-more-button {
-    background-color: #503a2c;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .hidden-category-field {
@@ -1995,6 +2087,16 @@ h1, h2, h3 {
     text-decoration: none;
 }
 
+.btn-edit-sm {
+    background-color: #8d6e63;
+    color: #fff;
+}
+
+.btn-edit-sm:hover {
+    background-color: #795548;
+    color: #fff;
+}
+
 /* Кнопка Видалити (Небезпечна дія) */
 .btn-delete {
     background-color: #fff0f0;
@@ -2005,6 +2107,16 @@ h1, h2, h3 {
 .btn-delete:hover {
     background-color: #ffe3e3;
     color: #c92a2a;
+}
+
+.btn-delete-sm {
+    background-color: #6d4c41;
+    color: #fff;
+}
+
+.btn-delete-sm:hover {
+    background-color: #5d4037;
+    color: #fff;
 }
 
 /* --- Кнопка "Створити статтю" зверху --- */
@@ -2033,54 +2145,6 @@ h1, h2, h3 {
 .btn-create-article .icon {
     font-size: 1.2rem;
     margin-right: 8px;
-}
-
-.btn-action {
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-
-    /* ДОДАЙ ЦІ ТРИ РЯДКИ: */
-    display: inline-block;
-    min-width: 110px; /* Змушує кнопки бути однакової ширини */
-    text-align: center; /* Вирівнює текст по центру кнопки */
-}
-
-    .btn-reply {
-        background: none;
-        border: none;
-        color: #8b7355;
-        font-weight: bold;
-        cursor: pointer;
-        padding: 0;
-        font-size: 0.9rem;
-        text-decoration: underline;
-}
-    .btn-cancel-reply {
-        background: none;
-        border: none;
-        color: #e74c3c;
-        cursor: pointer;
-        font-size: 0.85rem;
-        text-decoration: underline;
-}
-    .comment-actions {
-        display: flex;
-        align-items: center;
-        margin-top: 8px;
-}
-
-/* Базовий контейнер коментаря з гілками */
-.comment-card-nested {
-    margin-top: 15px;
-    border-left: 2px solid #eee;
-    padding-left: 15px;
-    transition: all 0.2s ease;
 }
 
 /* Динамічні відступи для вкладеності (змійки) */
@@ -2116,10 +2180,6 @@ h1, h2, h3 {
     margin-top: 10px;
 }
 
-.comment-card-nested {
-    margin-bottom: 15px;
-}
-
 /* ==========================================================================
    SECTION: COMMENTS UI (Added 2026-04-15)
    ========================================================================== */
@@ -2130,6 +2190,31 @@ h1, h2, h3 {
     padding: 20px;
     background-color: #fcfaf7; /* Дуже легкий бежевий, під тон твого сайту */
     border-radius: 12px;
+}
+
+.comments-title {
+    margin: 0 0 16px;
+    color: #4e342e;
+    font-family: 'Georgia', serif;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comment-form-box {
+    margin-bottom: 24px;
+}
+
+.comment-login-prompt,
+.no-comments {
+    padding: 16px 18px;
+    border: 1px dashed #d7ccc8;
+    border-radius: 10px;
+    color: #6d4c41;
+    background: #fffaf4;
 }
 
 /* Поле вводу (Textarea) з виправленням ширини */
@@ -2213,10 +2298,32 @@ h1, h2, h3 {
 /* Картка окремого коментаря */
 .comment-card-nested {
     background: white;
+    margin-top: 15px;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
+    border-left: 2px solid #eee;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    color: #8d6e63;
+    font-size: 0.9rem;
+}
+
+.comment-text {
+    margin: 0;
+    color: #4e342e;
+    line-height: 1.6;
+}
+
+.reply-form-container {
+    margin-top: 12px;
 }
 
 /* Знаходимо поле введення коментаря */
@@ -2259,6 +2366,147 @@ h1, h2, h3 {
     text-decoration: underline;
 }
 
+.section-header {
+    margin-bottom: 32px;
+}
+
+.section-subtitle {
+    margin: 12px 0 0;
+    color: #8d6e63;
+    font-size: 1.05rem;
+}
+
+.article-view {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.article-header,
+.article-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.article-date,
+.article-category {
+    color: #8d6e63;
+}
+
+.article-divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid #e5d9d1;
+}
+
+.article-content {
+    color: #4e342e;
+    line-height: 1.8;
+}
+
+.share-block {
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: #fcf7f1;
+    color: #6d4c41;
+}
+
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-dashboard-link,
+.btn-highlight,
+.btn-delete-small,
+.btn-filter,
+.btn-action-email,
+.btn-action-sms {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-dashboard-link,
+.btn-filter {
+    background: #f1e6e0;
+    color: #4e342e;
+    border-color: #d7ccc8;
+}
+
+.btn-highlight,
+.btn-action-email,
+.btn-action-sms {
+    background: #8d6e63;
+    color: #fdf5e6;
+}
+
+.btn-delete-small {
+    background: #6d4c41;
+    color: #fff;
+}
+
+.btn-dashboard-link:hover,
+.btn-filter:hover {
+    background: #e7d8d0;
+}
+
+.btn-highlight:hover,
+.btn-action-email:hover,
+.btn-action-sms:hover,
+.btn-delete-small:hover {
+    background: #5d4037;
+    color: #fff;
+}
+
+.read-more-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #503a2c;
+    color: #fff;
+    text-decoration: none;
+}
+
+.dashboard-actions,
+.contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 16px;
+}
+
+.article-form-section,
+.issue-content {
+    display: block;
+}
+
+.request-sender-registered {
+    font-weight: bold;
+}
+
+.request-sender-guest {
+    font-style: italic;
+}
+
 /* Якщо це кнопка-посилання, примусово забираємо блакитний */
 .btn-link {
     color: var(--link-color);
@@ -2278,82 +2526,11 @@ h1, h2, h3 {
     max-width: 200px;
 }
 
-/* 1. Виправляємо контейнер, щоб не було зайвих прокруток */
-.table-responsive-wrapper {
-    width: 100%;
-    overflow-x: visible; /* Прибираємо примусову прокрутку вбік */
-    margin-top: 20px;
-}
-
-/* 2. Налаштовуємо таблицю */
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto; /* Дозволяє колонкам підлаштовуватися під контент */
-}
-
-/* 3. Головне: фіксуємо кнопки в один ряд без зміни HTML */
-.action-cell {
-    white-space: nowrap !important; /* ЗАБОРОНЯЄ розрив рядка для кнопок */
-    width: 1%; /* Стискає колонку до мінімально необхідної ширини */
-    text-align: right;
-    vertical-align: middle;
-}
-
-/* 4. Робимо кнопки маленькими та шоколадними прямо тут */
-.btn-action, .btn-edit, .btn-delete, .btn-edit-sm, .btn-delete-sm {
-    display: inline-flex !important; /* Вишиковує в ряд */
-    padding: 4px 10px !important;
-    font-size: 13px !important;
-    margin: 2px !important;
-    text-decoration: none;
-    border-radius: 4px;
-    color: #fff !important;
-    border: none;
-    cursor: pointer;
-}
-
-/* Кольори (Шоколад та Кава) */
-.btn-edit, .btn-edit-sm {
-    background-color: #8d6e63 !important; /* Твоя кава */
-}
-
-.btn-delete, .btn-delete-sm {
-    background-color: #6d4c41 !important; /* Твій шоколад */
-}
-
-/* Форма видалення, щоб не переносила кнопку на новий рядок */
-.inline-form {
-    display: inline-block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* 5. Обмеження довжини назви статті, щоб не "перло" вбік */
-.title-cell, .title-cell-truncate {
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 /* ==========================================================================
    MMC ADMIN & UI REFACTORING (PATCH 2026-04-15)
    ========================================================================== */
 
 /* 1. ВИПРАВЛЕННЯ КОЛЬОРІВ ТА ПОСИЛАНЬ */
-
-/* Кнопка "Читати далі" (твій специфічний колір) */
-.read-more-button {
-    background-color: #503a2c !important;
-    color: white !important;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-}
 
 /* Напис "Скасувати" у формі створення статті */
 .form-actions .site-nav-link {
@@ -2440,40 +2617,18 @@ h1, h2, h3 {
     vertical-align: middle !important;
 }
 
-/* 3. ТАБЛИЦІ (Скрол є, але контент переноситься) */
-.table-responsive-wrapper, .table-scroll, .admin-list {
-    width: 100% !important;
-    overflow-x: auto !important;
-    margin-top: 1rem !important; /* Відносно шрифту */
-}
-
-.admin-table, .data-table {
-    width: 100% !important;
-    table-layout: auto !important;
-    min-width: 38rem !important; /* Відносна мінімальна ширина таблиці замість 600px */
-}
-
-/* ШАПКА ТАБЛИЦЬ */
-.admin-table th, .data-table th {
-    white-space: nowrap !important;
-    padding: 0.8rem !important; /* Відносно шрифту */
-}
-
-/* ТІЛО: ПРИМУСОВИЙ ПЕРЕНОС НАЗВ СТАТЕЙ */
-.admin-table td, .data-table td, .title-cell, .title-cell-truncate {
-    white-space: normal !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-    padding: 0.8rem !important;
-    vertical-align: middle !important;
-}
-
 /* Використовуємо відсотки для розподілу простору */
 .admin-table td:nth-child(1), .admin-table th:nth-child(1) {
     width: 45% !important; /* Назва забирає майже половину простору */
 }
 .admin-table td:nth-child(2), .admin-table th:nth-child(2) {
     width: 35% !important; /* Категорія */
+}
+
+.title-cell-truncate {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 4. КНОПКИ ДІЙ В ТАБЛИЦІ (СТОВПЧИК) */
@@ -2502,7 +2657,6 @@ h1, h2, h3 {
 /* 5. ФОРМИ, ПОСИЛАННЯ ТА КНОПКА "СТВОРИТИ СТАТТЮ" (ВІДНОСНІ ОДИНИЦІ) */
 .admin-actions-bar {
     margin-bottom: 1.5rem !important; /* Відступ відносно шрифту */
-    display: block !important; /* Щоб кнопка не зникала */
 }
 
 .btn-create-article, .btn-publish-article {
@@ -2515,19 +2669,6 @@ h1, h2, h3 {
     font-weight: bold !important;
     text-decoration: none !important;
     border: none !important;
-}
-
-/* Кнопка "Читати далі" на інших сторінках */
-.read-more-button {
-    background-color: #503a2c !important; /* Твій вказаний колір */
-    color: white !important;
-    padding: 0.6rem 1.2rem !important;
-    font-size: 1rem !important;
-    border: none !important;
-    border-radius: 0.25rem !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    display: inline-block !important;
 }
 
 /* Напис "Скасувати" у формі створення (робимо видимим) */
@@ -2740,6 +2881,11 @@ h1, h2, h3 {
     border-bottom: 1px solid #ddd;
 }
 
+.reply-preview-bar-private {
+    background: #e8f1fb;
+    border-left-color: #6d8bb1;
+}
+
 .hidden { display: none !important; }
 
 .message-box {
@@ -2783,19 +2929,6 @@ h1, h2, h3 {
     color: #777;
     font-style: italic;
     margin-bottom: 3px;
-}
-
-.hidden { display: none !important; }
-
-/* Стиль для плашки відповіді над полем вводу */
-.reply-preview-bar {
-    background: #eee;
-    padding: 5px 15px;
-    font-size: 0.8rem;
-    display: flex;
-    justify-content: space-between;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
 }
 
 .uuid-cell {
@@ -2873,8 +3006,6 @@ h1, h2, h3 {
     font-size: 0.85rem;
     color: #555;
 }
-
-.hidden { display: none !important; }
 
 .message-actions {
     display: flex;

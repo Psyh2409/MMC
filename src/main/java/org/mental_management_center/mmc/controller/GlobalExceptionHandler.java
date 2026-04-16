@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice(annotations = Controller.class)
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     public String handleAccessDenied(AccessDeniedException exception, HttpServletResponse response, Model model) {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         fillModel(model, HttpStatus.FORBIDDEN);
+        return "error";
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public String handleBadRequest(MethodArgumentTypeMismatchException exception, HttpServletResponse response, Model model) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        fillModel(model, HttpStatus.BAD_REQUEST);
         return "error";
     }
 

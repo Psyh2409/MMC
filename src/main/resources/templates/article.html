@@ -29,7 +29,7 @@
 
         <div th:if="${#authorization.expression('isAuthenticated()')}" id="main-comment-form-box" class="comment-form-box">
 
-            <button type="button" id="cancel-reply-btn" style="display: none; margin-bottom: 10px;" onclick="resetReplyForm()" class="btn-cancel-reply">
+            <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-cancel-reply hidden">
                 ✖ Скасувати відповідь (написати новий коментар)
             </button>
 
@@ -86,7 +86,7 @@
                 document.getElementById('parentIdInput').value = commentId;
 
                 // 5. Показуємо кнопку скасування і фокусуємось на тексті
-                document.getElementById('cancel-reply-btn').style.display = 'inline-block';
+                document.getElementById('cancel-reply-btn').classList.remove('hidden');
                 formBox.querySelector('textarea').focus();
             } else {
                 console.error("Контейнер не знайдено для ID: " + commentId);
@@ -104,7 +104,7 @@
 
                 // Очищаємо ID (тепер це знову новий незалежний коментар)
                 document.getElementById('parentIdInput').value = '';
-                document.getElementById('cancel-reply-btn').style.display = 'none';
+                document.getElementById('cancel-reply-btn').classList.add('hidden');
             }
         }
     </script>

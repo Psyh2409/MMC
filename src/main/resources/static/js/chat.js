@@ -7,6 +7,21 @@ let currentRecipientId = 'PUBLIC'; // за замовчуванням
 let activeTab = 'public'; // Слідкуємо, де зараз користувач
 let lastDisplayedDate = null; // Змінна для відстеження дат
 
+function scrollChatToBottom(targetId) {
+    const chatArea = document.getElementById(targetId);
+    if (!chatArea) {
+        return;
+    }
+
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function scrollChatToBottomDeferred(targetId, delay = 120) {
+    window.setTimeout(() => {
+        window.requestAnimationFrame(() => scrollChatToBottom(targetId));
+    }, delay);
+}
+
 function checkAndDisplayDate(message, targetArea) {
     const messageDate = new Date(message.timestamp).toLocaleDateString('uk-UA', {
         day: 'numeric',
@@ -63,6 +78,7 @@ function switchChat(type) {
         privArea.classList.remove('hidden');
         document.getElementById('private-badge').classList.add('hidden');
         document.getElementById('private-badge').innerText = '0';
+        scrollChatToBottomDeferred('private-messages');
     }
 }
 
@@ -90,6 +106,7 @@ function loadPublicHistory() {
                 checkAndDisplayDate(msg, chatArea);
                 showMessage(msg, 'chat-messages');
             });
+            scrollChatToBottomDeferred('chat-messages');
         });
 }
 
@@ -104,6 +121,7 @@ function loadPrivateHistory() {
                 checkAndDisplayDate(msg, privArea);
                 showMessage(msg, 'private-messages');
             });
+            scrollChatToBottomDeferred('private-messages');
         });
 }
 
@@ -121,10 +139,7 @@ function prepareReply(messageId, senderName, type, senderUuid) {
     if (replyPreview && replyToText) {
         const modeText = type === 'private' ? '🔒 Приватна відповідь для ' : '💬 Публічна відповідь для ';
         replyToText.innerText = modeText + senderName;
-
-        // Можна змінити колір плашки для привату, щоб юзер бачив різницю
-        replyPreview.style.backgroundColor = type === 'private' ? '#e3f2fd' : '#f1f3f4';
-
+        replyPreview.classList.toggle('reply-preview-bar-private', type === 'private');
         replyPreview.classList.remove('hidden');
     }
     document.getElementById('messageInput').focus();
@@ -133,7 +148,10 @@ function prepareReply(messageId, senderName, type, senderUuid) {
 function cancelReply() {
     currentParentId = null;
     const replyPreview = document.getElementById('reply-preview');
-    if (replyPreview) replyPreview.classList.add('hidden');
+    if (replyPreview) {
+        replyPreview.classList.add('hidden');
+        replyPreview.classList.remove('reply-preview-bar-private');
+    }
 }
 
 // В sendMessage додаємо жорсткий фільтр

@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,15 +36,24 @@ class WebAccessIntegrationTests {
 
         mockMvc.perform(get("/issues/inner-calm"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("issues/inner-calm"));
+                .andExpect(view().name("issues/topic-page"));
 
         mockMvc.perform(get("/issues/not-existing-topic"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("issues/default"));
+                .andExpect(view().name("issues/topic-page"));
+    }
+
+    @Test
+    void articlesRequireAuthentication() throws Exception {
+        UUID articleId = UUID.randomUUID();
 
         mockMvc.perform(get("/articles"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("articles"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+
+        mockMvc.perform(get("/articles/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
     @Test
@@ -94,6 +105,14 @@ class WebAccessIntegrationTests {
     }
 
     @Test
+    @WithMockUser(roles = "READER")
+    void articlesAreAvailableForAuthenticatedUsers() throws Exception {
+        mockMvc.perform(get("/articles"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("articles"));
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void requestsPageIsAvailableForAdmins() throws Exception {
         mockMvc.perform(get("/requests"))
@@ -104,10 +123,12 @@ class WebAccessIntegrationTests {
     @Test
     @WithMockUser(roles = "ADMIN")
     void mutatingEndpointsRequireCsrfToken() throws Exception {
-        mockMvc.perform(post("/requests/delete/999"))
+        UUID requestId = UUID.randomUUID();
+
+        mockMvc.perform(post("/requests/delete/" + requestId))
                 .andExpect(status().isForbidden());
 
-        mockMvc.perform(post("/requests/delete/999").with(csrf()))
+        mockMvc.perform(post("/requests/delete/" + requestId).with(csrf()))
                 .andExpect(status().is3xxRedirection());
     }
 

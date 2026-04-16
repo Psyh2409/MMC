@@ -31,8 +31,8 @@
         </div>
     </div>
 
-    <div class="profile-card" style="margin-top: 24px;">
-        <h3 class="contact-intro-title" style="font-size: 1.4rem; margin-bottom: 16px;">Дані профілю</h3>
+    <div class="profile-card profile-card-spaced">
+        <h3 class="contact-intro-title profile-section-title">Дані профілю</h3>
 
         <div th:if="${profileSuccess}" class="status-message status-success" th:text="${profileSuccess}"></div>
         <div th:if="${profileError}" class="status-message status-error" th:text="${profileError}"></div>
@@ -50,8 +50,8 @@
         </form>
     </div>
 
-    <div class="profile-card" style="margin-top: 24px;">
-        <h3 class="contact-intro-title" style="font-size: 1.4rem; margin-bottom: 16px;">Зміна пароля</h3>
+    <div class="profile-card profile-card-spaced">
+        <h3 class="contact-intro-title profile-section-title">Зміна пароля</h3>
 
         <div th:if="${passwordSuccess}" class="status-message status-success" th:text="${passwordSuccess}"></div>
         <div th:if="${passwordError}" class="status-message status-error" th:text="${passwordError}"></div>

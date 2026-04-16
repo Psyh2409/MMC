@@ -22,9 +22,8 @@
                 <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок статті</a>
             </h2>
 
-            <div class="article-tags" th:if="${not #lists.isEmpty(article.tags)}" style="margin-bottom: 10px;">
-                <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}"
-                      style="font-size: 0.8rem; color: #8b7355; margin-right: 8px;"></span>
+            <div class="article-tags" th:if="${not #lists.isEmpty(article.tags)}">
+                <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}" class="tag-item"></span>
             </div>
 
             <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
