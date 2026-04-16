@@ -2629,7 +2629,326 @@ h1, h2, h3 {
     padding: 10px 20px;
 }
 
+/* Контейнер для кнопок в таблиці */
+.admin-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 160px;
+}
 
+/* Базовий стиль для всіх перемикачів */
+.btn-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Колірні схеми для статусів */
+.btn-site-ok  { background-color: #e6fffa; color: #234e52; border-color: #b2f5ea; }
+.btn-site-ban { background-color: #fff5f5; color: #822727; border-color: #feb2b2; }
+
+.btn-chat-ok  { background-color: #ebf8ff; color: #2a4365; border-color: #bee3f8; }
+.btn-chat-ban { background-color: #fffaf0; color: #7b341e; border-color: #feebc8; }
+
+.btn-comm-ok  { background-color: #f0fff4; color: #22543d; border-color: #c6f6d5; }
+.btn-comm-ban { background-color: #f7fafc; color: #2d3748; border-color: #e2e8f0; }
+
+/* Ховер ефекти */
+.btn-toggle:hover {
+    filter: brightness(0.95);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Стиль кнопки видалення */
+.form-delete-account {
+    margin-top: 4px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 8px;
+}
+
+/* Контейнер повідомлень */
+.message {
+    padding: 10px 15px;
+    border-radius: 12px;
+    max-width: 80%;
+    margin-bottom: 10px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-out {
+    align-self: flex-end;
+    background-color: #eefeeb;
+    border: 1px solid #c8e6c9;
+}
+
+.message-in {
+    align-self: flex-start;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.msg-id { color: #999; font-size: 0.7rem; }
+
+/* Стиль цитати */
+.message-reply-ref {
+    font-size: 0.75rem;
+    color: #666;
+    background: rgba(0,0,0,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    border-left: 2px solid #4caf50;
+}
+
+/* Кнопка "Відповісти" */
+.btn-reply-link {
+    background: none;
+    border: none;
+    color: #2196f3;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 5px;
+}
+
+/* Панель перед відправкою */
+.reply-preview-bar {
+    background: #efebe9;
+    color: #4e342e;
+    border-left: 4px solid #8d6e63;
+    padding: 8px 15px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.hidden { display: none !important; }
+
+.message-box {
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-message {
+    align-self: flex-end;
+    background-color: #eefeeb;
+    border: 1px solid #c8e6c9;
+}
+
+.other-message {
+    align-self: flex-start;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+}
+
+.message-meta { font-size: 0.85rem; margin-bottom: 5px; }
+.message-text { line-height: 1.4; }
+
+.reply-btn {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-size: 0.7rem;
+    cursor: pointer;
+    align-self: flex-end;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.reply-indicator {
+    font-size: 0.7rem;
+    color: #777;
+    font-style: italic;
+    margin-bottom: 3px;
+}
+
+.hidden { display: none !important; }
+
+/* Стиль для плашки відповіді над полем вводу */
+.reply-preview-bar {
+    background: #eee;
+    padding: 5px 15px;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.uuid-cell {
+    max-width: 120px; /* Обмежуємо ширину */
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.uuid-text {
+    display: inline-block;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Додає "..." автоматично */
+    vertical-align: bottom;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+/* Кнопка копіювання, яка з'являється при наведенні */
+.btn-copy-uuid {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0 5px;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.uuid-cell:hover .btn-copy-uuid {
+    opacity: 1;
+}
+
+.chat-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: #d7ccc8;
+    color: #4e342e;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.tab-btn.active {
+    background: #8d6e63;
+    color: white;
+    border-bottom: 2px solid #4e342e;
+}
+
+.badge {
+    background: red;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+.quote-box {
+    background: rgba(0,0,0,0.05);
+    border-left: 3px solid #ccc;
+    padding: 4px 8px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.hidden { display: none !important; }
+
+.message-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+    border-top: 1px dashed #eee;
+    padding-top: 5px;
+}
+
+.private-btn {
+    color: #ef6c00 !important; /* Помаранчевий колір для привату, як знак уваги */
+    font-weight: bold;
+}
+
+/* Вертикальна форма чату */
+.chat-form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+/* Поле для тексту */
+.chat-textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 12px;
+    border: 2px solid #d7ccc8;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: #fafafa;
+    resize: vertical; /* Дозволяємо юзеру розтягувати тільки по висоті */
+}
+
+.chat-textarea:focus {
+    outline: none;
+    border-color: #8d6e63;
+    box-shadow: 0 0 5px rgba(141, 110, 99, 0.3);
+}
+
+/* Кнопка відправки */
+.btn-send {
+    align-self: flex-end;
+    background-color: #4e342e; /* Глибокий шоколадний */
+    color: #f5f5f5; /* Молочна пінка */
+    border: 1px solid #3e2723;
+    padding: 8px 25px;
+    border-radius: 4px; /* Робимо більш класичною, квадратною */
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-send:hover {
+    background-color: #3e2723; /* Темний шоколад */
+}
+
+.date-separator {
+    text-align: center;
+    margin: 20px 0;
+    border-bottom: 1px solid #d7ccc8; /* Світлий беж */
+    line-height: 0.1em;
+}
+
+.date-separator span {
+    background: #fff; /* Або колір фону чату */
+    padding: 0 15px;
+    color: #8d6e63; /* Кава з молоком */
+    font-size: 0.8rem;
+    font-style: italic;
+}
 
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)

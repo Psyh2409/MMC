@@ -98,12 +98,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/admin/toggle-status/{id}")
-    public String toggleUserStatus(@PathVariable UUID id) {
-        userService.toggleUserStatus(id);
-        return "redirect:/admin/users";
-    }
-
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("googleOAuthEnabled", isProviderEnabled("google"));
@@ -139,19 +133,6 @@ public class AuthController {
 
         model.addAttribute("forgotPasswordForm", new ForgotPasswordForm());
         return "forgot-password";
-    }
-
-    // Тимчасовий тестовий endpoint для перевірки відновлення пароля без CSRF
-    @GetMapping("/test/forgot-password/{email}")
-    @ResponseBody
-    public String testForgotPassword(@PathVariable String email) {
-        try {
-            userService.initiatePasswordReset(email);
-            return "SUCCESS: Password reset initiated for " + email;
-        } catch (Exception e) {
-            logger.error("Test forgot password failed for {}: {}", email, e.getMessage(), e);
-            return "ERROR: " + e.getMessage();
-        }
     }
 
     @GetMapping("/reset-password")
@@ -214,45 +195,6 @@ public class AuthController {
         }
 
         return "index";
-    }
-
-    @GetMapping("/admin/users")
-    public String showAdminUsers(Model model) {
-        model.addAttribute("allUsers", userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
-
-        // Використовуємо наш новий метод з репозиторію
-        model.addAttribute("countUsers", userRepository.countByRoleMask(RoleBit.READER.getMask()));
-        model.addAttribute("countClients", userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
-
-        UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
-        SiteStats siteStats = siteStatsRepository.findById(statsId).orElse(new SiteStats());
-        model.addAttribute("totalVisits", siteStats.getGuestVisits());
-
-        return "admin-users";
-    }
-
-    @PostMapping("/admin/promote/{id}")
-    public String promoteToClient(@PathVariable UUID id) {
-        userService.promoteToClient(id);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/admin/update-notes/{id}")
-    public String updateNotes(@PathVariable UUID id, @RequestParam("notes") String notes) {
-        User user = userRepository.findById(id).orElseThrow();
-        user.setAdminNotes(notes);
-        userRepository.save(user);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/admin/delete/{id}")
-    public String deleteUser(@PathVariable UUID id, Principal principal) {
-        try {
-            userService.deleteUserById(id, principal.getName());
-            return "redirect:/admin/users?success";
-        } catch (RuntimeException e) {
-            return "redirect:/admin/users?error=" + e.getMessage();
-        }
     }
 
     private boolean hasText(String value) {

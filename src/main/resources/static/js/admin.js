@@ -11,3 +11,11 @@ function filterTable(role) {
 
     })
 }
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("ID скопійовано: " + text);
+    }).catch(err => {
+        console.error('Помилка копіювання: ', err);
+    });
+}

@@ -42,6 +42,12 @@ public class User {
     // Стан акаунта (Активний/Заблокований)
     private boolean enabled = false;
 
+    @Column(name = "chat_enabled", nullable = false)
+    private boolean chatEnabled = true;
+
+    @Column(name = "comments_enabled", nullable = false)
+    private boolean commentsEnabled = true;
+
     @Column(name = "roles_mask")
     private int rolesMask = 2; // READER за замовчуванням
 

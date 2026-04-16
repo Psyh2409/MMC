@@ -63,7 +63,15 @@
         </thead>
         <tbody>
         <tr th:each="u : ${allUsers}" th:attr="data-role=${u.primaryRoleName}">
-            <td th:text="${u.id}"></td>
+            <td class="uuid-cell">
+                <th:block th:if="${u != null and u.id != null}">
+                    <span class="uuid-text" th:text="${u.id}">ID</span>
+                    <button type="button" class="btn-copy-uuid"
+                            th:attr="onclick=|copyToClipboard('${u.id}')|">
+                        📋
+                    </button>
+                </th:block>
+            </td>
             <td th:text="${u.name}"></td>
             <td th:text="${u.email}"></td>
 
@@ -94,26 +102,33 @@
             </td>
 
             <td>
-                <form th:if="${!u.isAdmin()}" th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post" style="display:inline;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit"
-                            th:class="${u.enabled} ? 'btn-ban-small' : 'btn-unban-small'"
-                            th:text="${u.enabled} ? 'Забанити' : 'Розбанити'">
-                    </button>
-                </form>
+                <div class="admin-controls-wrapper" th:if="${!u.isAdmin()}">
 
-                <form th:if="${!u.isAdmin()}"
-                      th:action="@{/admin/delete/{id}(id=${u.id})}"
-                      method="post"
-                      style="display:inline;"
-                      onsubmit="return confirm('Ви впевнені? Це видалить користувача назавжди!')">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="btn-delete-small">Видалити</button>
-                </form>
+                    <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
+                        <button type="submit" th:class="${u.enabled} ? 'btn-toggle btn-site-ok' : 'btn-toggle btn-site-ban'">
+                            <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
+                        </button>
+                    </form>
 
-                <span th:if="${u.isAdmin()}" class="admin-badge-self">Це Ви</span>
-                <div th:if="${u.isClient()}" class="admin-badge-client" style="margin-top: 5px;">У ТЕРАПІЇ</div>
-                <div th:if="${!u.enabled}" style="color: red; font-weight: bold; font-size: 0.8em;">ЗАБЛОКОВАНИЙ</div>
+                    <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
+                        <button type="submit" th:class="${u.chatEnabled} ? 'btn-toggle btn-chat-ok' : 'btn-toggle btn-chat-ban'">
+                            <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/toggle-comments/{id}(id=${u.id})}" method="post">
+                        <button type="submit" th:class="${u.commentsEnabled} ? 'btn-toggle btn-comm-ok' : 'btn-toggle btn-comm-ban'">
+                            <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
+                          class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
+                        <button type="submit" class="btn-delete-small">Видалити акаунт</button>
+                    </form>
+                </div>
+
+                <span th:if="${u.isAdmin()}" class="admin-badge-self">Адміністратор (Ви)</span>
             </td>
         </tr>
         </tbody>

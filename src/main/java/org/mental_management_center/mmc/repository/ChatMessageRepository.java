@@ -19,6 +19,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
             "ORDER BY m.timestamp ASC")
     List<ChatMessage> findChatHistory(@Param("userA") String userA, @Param("userB") String userB);
 
+    // Знайти історію, де юзер бере участь, але ЦЕ НЕ ПУБЛІЧНИЙ ЧАТ
+    @Query("SELECT m FROM ChatMessage m WHERE (m.senderId = :userId OR m.recipientId = :userId) " +
+            "AND m.recipientId != 'PUBLIC' ORDER BY m.timestamp ASC")
+    List<ChatMessage> findPrivateConversationHistory(@Param("userId") String userId);
+
     // Знайти всі непрочитані повідомлення для конкретного користувача
     List<ChatMessage> countByRecipientIdAndStatus(String recipientId, MessageStatus status);
 

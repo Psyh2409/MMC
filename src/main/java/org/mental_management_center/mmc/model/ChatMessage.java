@@ -27,6 +27,12 @@ public class ChatMessage {
     @Column(name = "recipient_id", nullable = false)
     private String recipientId;
 
+    @Column(name = "parent_id")
+    private Long parentId; // ID повідомлення, на яке відповідаємо (теж Long)
+
+    @Column(name = "sender_name")
+    private String senderName;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 

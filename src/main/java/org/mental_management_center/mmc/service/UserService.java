@@ -160,15 +160,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void toggleUserStatus(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
-
-        // Міняємо true на false або навпаки
-        user.setEnabled(!user.isEnabled());
-        userRepository.save(user);
-    }
-
     @Transactional
     public void changePassword(String email, String currentPassword, String newPassword, String confirmNewPassword) {
         User user = userRepository.findByEmail(email)
@@ -253,5 +244,31 @@ public class UserService {
         VerificationToken verificationToken = new VerificationToken(token, user);
         tokenRepository.save(verificationToken);
         emailService.sendVerificationEmail(user.getEmail(), token);
+    }
+
+    @Transactional
+    public void toggleChatStatus(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setChatEnabled(!user.isChatEnabled());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void toggleCommentsStatus(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setCommentsEnabled(!user.isCommentsEnabled());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void toggleUserStatus(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        // Міняємо true на false або навпаки
+        user.setEnabled(!user.isEnabled());
+        userRepository.save(user);
     }
 }

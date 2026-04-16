@@ -15,12 +15,33 @@
         <h2 class="section-title">Спільний простір MMC</h2>
 
         <div id="chat-panel" class="chat-wrapper">
+
+            <div class="chat-tabs">
+                <button type="button" id="tab-public" class="tab-btn active" onclick="switchChat('public')">
+                    🌐 Спільнота
+                </button>
+                <button type="button" id="tab-private" class="tab-btn" onclick="switchChat('private')">
+                    🔒 Приватні
+                    <span id="private-badge" class="badge hidden">0</span>
+                </button>
+            </div>
+
             <div id="chat-messages" class="chat-window">
             </div>
 
-            <form id="messageForm" class="chat-form">
-                <input type="text" id="messageInput" class="form-input" placeholder="Напишіть повідомлення..." autocomplete="off" required>
-                <button type="submit" class="btn-primary">Надіслати</button>
+            <div id="private-messages" class="chat-window hidden">
+            </div>
+
+            <div id="reply-preview" class="reply-preview-bar hidden">
+                <span id="reply-to-text"></span>
+                <button type="button" onclick="cancelReply()" class="btn-cancel-reply">✕</button>
+            </div>
+
+            <form id="messageForm" class="chat-form-vertical">
+                <textarea id="messageInput" class="chat-textarea" placeholder="Напишіть повідомлення..." rows="3" required></textarea>
+                <button type="submit" class="btn-send">
+                    <span>Надіслати</span>
+                </button>
             </form>
         </div>
     </div>
