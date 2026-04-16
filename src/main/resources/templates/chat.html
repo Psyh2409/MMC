@@ -1,35 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+        ~{::title},
+        ~{::#chat-content},
+        ~{::#chat-scripts}
+      )}">
 <head>
-    <meta charset="UTF-8">
-    <title>Live Chat - MMC</title>
-    <meta name="current-user" th:content="${#authentication.name}" />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Спільний простір MMC</title>
 </head>
-<body class="page-shell">
-<div class="standard-container">
-    <h2 class="section-title">Спільний простір MMC</h2>
-    <p style="color: #6d4c41; margin-bottom: 20px;">
-        Тут ви можете поділитися думками або запитати поради. Це повідомлення побачать усі учасники спільноти.
-    </p>
+<body>
 
-    <div id="chat-panel" style="border: 1px solid #d7ccc8; border-radius: 8px; padding: 15px; background: #fdfbf7;">
+<div id="chat-content">
+    <div class="standard-container">
+        <h2 class="section-title">Спільний простір MMC</h2>
 
-        <div id="chat-messages" style="height: 500px; overflow-y: auto; margin-bottom: 15px; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 5px; display: flex; flex-direction: column; gap: 10px;">
+        <div id="chat-panel" class="chat-wrapper">
+            <div id="chat-messages" class="chat-window">
+            </div>
+
+            <form id="messageForm" class="chat-form">
+                <input type="text" id="messageInput" class="form-input" placeholder="Напишіть повідомлення..." autocomplete="off" required>
+                <button type="submit" class="btn-primary">Надіслати</button>
+            </form>
         </div>
-
-        <form id="messageForm" class="stack-form" style="flex-direction: row; margin: 0;">
-            <input type="text" id="messageInput" class="form-input" style="flex: 1;" placeholder="Напишіть у спільний простір..." autocomplete="off" required>
-            <button type="submit" class="btn-primary">Надіслати всім</button>
-        </form>
-
     </div>
 </div>
 
-<script th:src="@{/js/chat.js}"></script>
+<th:block id="chat-scripts">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <meta name="current-user" th:content="${#authentication.name}" />
+    <script th:src="@{/js/chat.js}"></script>
+</th:block>
+
 </body>
 </html>

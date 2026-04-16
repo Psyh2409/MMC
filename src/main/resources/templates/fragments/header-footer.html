@@ -10,20 +10,11 @@
         <a href="/" class="site-brand">
             🌿 <span class="site-brand-text">Шлях до себе</span>
         </a>
-        <div class="standard-container-narrow" sec:authorize="isAuthenticated()">
-            <div class="cta-panel cta-panel-light" style="margin: 20px auto; padding: 25px; border-color: #8d6e63;">
-                <h3 style="margin-top: 0; color: #4e342e;">Потрібна порада чи підтримка просто зараз?</h3>
-                <p style="color: #6d4c41; font-size: 0.95em;">
-                    Фахівці Mental Management Center на зв'язку. Ви можете обговорити свій запит у приватному чаті.
-                </p>
-                <a th:href="@{/chat}" class="btn-primary" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    Відкрити живий чат
-                </a>
-            </div>
-        </div>
+        <a th:href="@{/chat}"
+           sec:authorize="isAuthenticated()"
+           class="btn-nav-round">
+            Чат спільноти
+        </a>
         <nav class="site-nav">
 
             <div class="dropdown">

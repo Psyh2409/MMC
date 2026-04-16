@@ -25,6 +25,11 @@ public class ChatController {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
 
+    @GetMapping("/chat")
+    public String chatPage() {
+        return "chat";
+    }
+
     // 1. Обробка повідомлень у реальному часі
     // Клієнт буде відправляти повідомлення на адресу /app/chat
     @MessageMapping("/chat")

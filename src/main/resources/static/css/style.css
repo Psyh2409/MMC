@@ -2540,6 +2540,97 @@ h1, h2, h3 {
     margin-left: 0.8rem !important; /* Відступ від кнопки "Опублікувати" */
 }
 
+/* Стилі для спільного чату */
+.chat-wrapper {
+    border: 1px solid #d7ccc8;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: #fdfbf7;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chat-window {
+    height: 500px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+/* Стилізація самих повідомлень (для JS) */
+.message-item {
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.message-mine {
+    align-self: flex-end;
+    background-color: #eefeeb;
+    border: 1px solid #c8e6c9;
+}
+
+.message-others {
+    align-self: flex-start;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+}
+
+/* Кнопка чату в навігації */
+/* Уніфікована кругла кнопка для навігації */
+.btn-nav-round {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 20px;
+    background-color: #4e342e; /* Темно-коричневий фон, як у інших кнопок */
+    color: #f5e9c2 !important; /* Жовтуватий текст */
+    border: 1px solid #8d6e63;
+    border-radius: 25px; /* Робить кнопку круглою */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-nav-round:hover {
+    background-color: #5d4037;
+    color: #fff !important; /* При наведенні можна трохи висвітлити */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+
+.chat-icon-svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}
+
+/* Якщо хедер занадто високий, можна додати обмеження */
+.page-header .standard-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+
+
 /* =========================================
    6. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
    ========================================= */
