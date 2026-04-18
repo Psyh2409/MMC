@@ -1,4 +1,4 @@
-/* --- БЛОК 1: BASE LAYOUT (ФАРБУВАННЯ ТА ФУНДАМЕНТ) --- */
+/* --- БЛОК 1: BASE LAYOUT (ФУНДАМЕНТ) --- */
 
 html, body {
     margin: 0;
@@ -7,7 +7,8 @@ html, body {
     width: 100vw;
     overflow: hidden;
     background-color: var(--bg-main);
-    transition: background-color 0.5s ease; /* Плавна зміна теми */
+    color: var(--text-main);
+    transition: all 0.5s ease-in-out; /* Плавність для всього сайту */
 }
 
 body {
@@ -15,26 +16,25 @@ body {
     flex-direction: column;
 }
 
-/* ПОВЕРТАЄМО КОЛІР РАМЦІ: Тепер змінні керують усім */
 header, footer, .site-header, .site-footer {
     flex-shrink: 0;
     background-color: var(--primary-color) !important;
     color: var(--text-on-primary) !important;
     z-index: 1000;
     width: 100%;
-    transition: background-color 0.5s ease; /* Щоб колір хедера теж мінявся плавно */
+    transition: background-color 0.5s ease;
 }
 
 header {
     min-height: 5rem;
-    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    border-bottom: 0.0625rem solid var(--border-color);
 }
 
 footer {
     min-height: 4rem;
+    border-top: 0.0625rem solid var(--border-color);
 }
 
-/* КОРИДОР КОНТЕНТУ */
 main, .page-main {
     flex: 1;
     overflow-y: auto;
@@ -55,15 +55,14 @@ main, .page-main {
     align-items: center !important;
     justify-content: space-between !important;
     width: 100% !important;
-    padding: 0.8rem 2.5rem !important; /* Трохи більше відступу по краях */
+    padding: 0.8rem 2.5rem !important;
     box-sizing: border-box !important;
     background: transparent !important;
 }
 
-/* ЛІВО: Бренд та Чат (Відсуваємо від лого) */
 .site-brand {
     flex-shrink: 0 !important;
-    margin-right: 3rem !important; /* Збільшено для простору логотипу */
+    margin-right: 3rem !important;
 }
 
 .btn-nav-round {
@@ -71,7 +70,6 @@ main, .page-main {
     margin-right: 1.5rem !important;
 }
 
-/* НАВІГАЦІЯ */
 .site-nav {
     display: flex !important;
     flex-direction: row !important;
@@ -81,7 +79,7 @@ main, .page-main {
     gap: 1.5rem !important;
 }
 
-/* --- DROPDOWN (ВИПРАВЛЕННЯ ТІНЕЙ ТА ПОВЕДІНКИ) --- */
+/* DROPDOWN (Логіка та захист від виходу тіней) */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -92,13 +90,20 @@ main, .page-main {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: var(--primary-color);
-    min-width: 280px;
-    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.4) !important; /* Глибша тінь меню */
+    background-color: var(--dropdown-bg);
+
+    /* Твоя гумова логіка: ширина по тексту, але з межами */
+    width: max-content;
+    min-width: 15rem; /* Щоб меню не було занадто вузьким для коротких слів */
+    max-width: 25rem;
+
+    box-shadow: 0 0.5rem 1.5rem var(--shadow-color) !important;
     z-index: 1001;
     border-radius: 0.5rem;
     padding: 0.5rem 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 0.0625rem solid var(--border-color);
+    /* ЗАХИСТ: Відсікаємо все, що виходить за межі рамки */
+    overflow: hidden;
 }
 
 .dropdown:hover .dropdown-content {
@@ -107,53 +112,56 @@ main, .page-main {
 }
 
 .dropdown-content a {
-    padding: 0.8rem 1.2rem !important;
-    text-align: left;
+    /* ПРИМУСОВО: Вирівнюємо текст по лівому краю */
+    text-align: left !important;
+    display: block !important;
+    width: 100% !important;
+
+    /* Трохи більше "повітря" зліва для кращого сприйняття */
+    padding: 0.8rem 1.5rem !important;
+
     border: none !important;
     background: transparent !important;
-    width: 100% !important;
     border-radius: 0 !important;
     margin: 0 !important;
-    /* ПРИБИРАЄМО ТІНЬ ТА ПІДСТРИБУВАННЯ, що псували вигляд */
+    box-shadow: none !important;
+    transform: none !important;
+    transition: background 0.2s ease;
+
+    box-sizing: border-box !important;
+}
+
+.dropdown-content a:hover {
+    background: var(--user-zone-bg) !important;
     box-shadow: none !important;
     transform: none !important;
 }
 
-.dropdown-content a:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-}
-
-/* ПРАВО: Адмінка та Юзер-меню (Вирівнювання в рядок) */
+/* ПРАВА КИШЕНЬКА */
 .user-menu {
     margin-left: auto !important;
     display: flex !important;
-    flex-direction: row !important; /* Щоб не було "куцо" */
+    flex-direction: row !important;
     align-items: center !important;
     gap: 1rem !important;
     padding: 0.4rem 1rem !important;
-    background: rgba(255, 255, 255, 0.05) !important; /* Легка рамка зони */
+    background: var(--user-zone-bg) !important;
     border-radius: 0.75rem;
+    border: 0.0625rem solid var(--border-color);
 }
 
-div:has(> .admin-link),
-.admin-link {
+div:has(> .admin-link), .admin-link {
     margin-left: auto !important;
 }
 
-/* ФУТЕР: Розподіл елементів */
 .footer-left {
     display: flex !important;
     align-items: center !important;
     flex: 0 0 auto !important;
 }
 
-/* Жорстко розсовуємо Контакти та Нічний режим */
-.footer-left a, .footer-link-action {
+.footer-link-action {
     margin-right: 2.5rem !important;
-}
-
-.footer-right {
-    flex: 0 0 auto !important;
 }
 
 .footer-center {
@@ -161,112 +169,251 @@ div:has(> .admin-link),
     text-align: center !important;
 }
 
-/* --- БЛОК 3: NAVIGATION & ACTIONS (АДАПТИВНІ) --- */
+/* --- БЛОК 3: NAVIGATION & ACTIONS (СИСТЕМНИЙ КОНТРОЛЬ) --- */
 
-/* 1. Обмежуємо кнопки ТІЛЬКИ рамкою */
-header a, footer a, header nav a, footer nav a, .nav-action {
+/* 1. ГЛОБАЛЬНІ ПОСИЛАННЯ: Витісняємо стандарт браузера нашими змінними */
+a {
+    color: var(--primary-color); /* Тепер посилання завжди в кольорі обраної теми */
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:visited {
+    color: var(--primary-color); /* Відвідані посилання не стають фіолетовими */
+    filter: brightness(0.85);    /* Вони просто стають на 15% темнішими від кольору теми */
+}
+
+a:hover {
+    filter: brightness(1.2);     /* Підсвічування при наведенні */
+}
+
+/* 2. КНОПКИ ТА ЕЛЕМЕНТИ РАМИ (Header/Footer) */
+header a, footer a, .nav-action, .logout-button, .btn-submit {
     padding: 0.5rem 1rem;
     border-radius: var(--main-radius, 0.75rem);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    color: var(--text-on-primary) !important;
+    background: var(--user-zone-bg);
+    border: 0.0625rem solid var(--border-color);
+}
+
+header a:hover, footer a:hover, .logout-button:hover {
+    background-color: var(--accent-color) !important;
+    color: var(--text-on-primary) !important;
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.25rem 0.75rem var(--shadow-color);
+    filter: brightness(1.1);
+}
+
+/* --- БЛОК 3: NAVIGATION & ACTIONS (ФІНАЛЬНА ШЛІФОВКА) --- */
+
+/* 3. ФОРМИ ТА ПОЛЯ ВВОДУ: Стабільний колір + Акцентна тінь */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-main) !important; /* ЗАВЖДИ колір тла сторінки */
+    border: 0.0625rem solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    box-shadow: inset 0 0.0625rem 0.1875rem var(--shadow-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Стан активного поля (Focus): Тільки тінь і межа, без білого кольору */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color) !important;
+    /* Тінь створює ефект виділення, не змінюючи колір самого поля */
+    box-shadow: 0 0 0.625rem var(--shadow-color);
+}
+
+/* 4. СКРОЛБАР: Адаптація під кольорову схему сайту */
+::-webkit-scrollbar {
+    width: 0.6rem;
+    background-color: var(--bg-main);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color); /* Повзунок кольору меж теми */
+    border-radius: 0.3rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color); /* При наведенні стає активним кольором */
+}
+
+/* 5. КНОПКИ ТА ПЕРЕМИКАЧІ */
+header a, footer a, .nav-action, .logout-button, .btn-submit,
+button[type="submit"], .article-form button, .footer-link-action {
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--main-radius, 0.75rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     font-size: 0.9rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
     color: var(--text-on-primary) !important;
-    background: rgba(255, 255, 255, 0.1);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+    background: var(--user-zone-bg);
+    border: 0.0625rem solid var(--border-color);
 }
 
-header a:hover, footer a:hover, header nav a:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
+header a:hover, footer a:hover, .logout-button:hover,
+.btn-submit:hover, .footer-link-action:hover {
+    background-color: var(--accent-color) !important;
     transform: translateY(-0.125rem);
-    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.2);
+    box-shadow: 0 0.25rem 0.75rem var(--shadow-color);
 }
 
-/* 2. ЗАХИСНИЙ БЛОК (Те, що я загубив): Приземляємо контент */
-/* Якщо назва статті заїжджає під хедер, цей код її виштовхне */
+/* 6. ЗАХИСТ КОНТЕНТУ */
 main h1, main h2, .article-title, main a h1, main a h2 {
-    position: relative !important; /* Не даємо їй бути fixed/absolute */
-    display: block !important;    /* Робимо її частиною потоку тексту */
-    margin-top: 2rem !important;   /* Додатковий відступ зверху відносно контенту */
-    z-index: 1 !important;         /* Ховаємо ПІД хедер (у якого z-index: 1000) */
+    position: relative !important;
+    display: block !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
     color: var(--primary-color);
-    pointer-events: auto;          /* Щоб на неї можна було натиснути, якщо це посилання */
+    text-decoration: none;
+    z-index: 1 !important;
+    pointer-events: auto;
 }
 
-/* --- БЛОК 4: INTERACTIONS (КНОПКИ ТА ДІЇ) --- */
+/* --- БЛОК 4: INTERACTIONS (СТРУКТУРА ТАБЛИЦЬ ТА КНОПОК) --- */
 
+/* 1. УНІВЕРСАЛЬНИЙ СТИЛЬ КНОПКИ (Клас .btn-ui) */
+/* Використовуй цей клас у HTML для посилань, які мають стати кнопками */
 button, .btn-ui, input[type="submit"], .logout-button {
     appearance: none;
-    background-color: var(--accent-color);
+    background-color: var(--accent-color) !important;
     color: var(--text-on-primary) !important;
-    border: 0.0625rem solid rgba(255, 255, 255, 0.1);
-    padding: 0.625rem 1.5rem; /* 10px 24px -> 0.625rem 1.5rem */
-    border-radius: var(--btn-radius, 1.5625rem); /* 25px -> 1.5625rem */
+    border: 0.0625rem solid var(--border-color);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--main-radius, 0.75rem);
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.625rem;
+    gap: 0.5rem;
+    text-decoration: none !important;
     transition: all 0.3s ease;
+    margin: 0.2rem;
 }
 
 button:hover, .btn-ui:hover {
     filter: brightness(1.1);
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.15);
+    transform: translateY(-0.1rem);
+    box-shadow: 0 0.2rem 0.5rem var(--shadow-color);
 }
 
-/* Специфіка для кнопок ВСЕРЕДИНІ темної рамки */
-header button, footer button, header .btn-ui {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    border: 0.0625rem solid rgba(255, 255, 255, 0.3);
+/* 2. ТАБЛИЦЯ: Порядок з вертикальними смужками */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--card-bg) !important;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 0.0625rem solid var(--border-color);
+    margin: 1.5rem 0;
+    box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
 }
 
-/* --- КРУЖЕЧКИ ТЕМ (Теж у rem) --- */
+th, td {
+    padding: 1rem;
+    /* Вертикальні смужки між стовпчиками */
+    border-right: 0.0625rem solid var(--border-color);
+    border-bottom: 0.0625rem solid var(--border-color);
+    color: var(--text-main);
+}
+
+/* Прибираємо крайню праву смужку */
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+th {
+    background-color: var(--user-zone-bg);
+    color: var(--text-on-primary);
+    text-align: left;
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* 3 КРУЖЕЧКИ ТЕМ */
+
 .theme-circle {
-    width: 1.875rem; /* 30px */
-    height: 1.875rem;
-    border-radius: 50%;
-    border: 0.125rem solid transparent;
+    appearance: none;
+    width: 1.875rem !important;
+    height: 1.875rem !important;
+    border-radius: 50% !important;
+    /* Використовуємо межу та тінь поточної теми для інтеграції в дизайн */
+    border: 0.125rem solid var(--border-color) !important;
+    box-shadow: 0 0.125rem 0.3125rem var(--shadow-color);
     cursor: pointer;
-    transition: transform 0.2s;
-    padding: 0;
+    transition: transform 0.2s, border-color 0.2s;
+    padding: 0 !important;
+    margin: 0.3rem !important;
+    display: inline-block !important;
 }
 
 .theme-circle:hover {
     transform: scale(1.2);
-    border-color: var(--text-main);
+    /* При наведенні підсвічуємо головним кольором поточної теми */
+    border-color: var(--primary-color) !important;
 }
 
-/* Кольори палітри (жорстко за вашим Квантовим Спектром) */
-.theme-red { background-color: #d32f2f; }
-.theme-red-orange { background-color: #ff5722; }
-.theme-orange { background-color: #fb8c00; }
-.theme-amber { background-color: #ffc107; }
-.theme-yellow { background-color: #fdd835; }
-.theme-lime { background-color: #c0ca33; }
-.theme-green { background-color: #2e7d32; }
-.theme-teal { background-color: #00897b; }
-.theme-light-blue { background-color: #039be5; }
-.theme-blue { background-color: #0d47a1; }
-.theme-indigo { background-color: #3949ab; }
-.theme-purple { background-color: #8e24aa; }
-.theme-pink { background-color: #d81b60; }
-.theme-gray { background-color: #546e7a; }
+/* Квантовий Спектр Кружечків (Константи для вибору тем) */
+/* Кольори точно відповідають значенням --primary-color з вашого Спектру */
+
+.theme-brown       { background-color: #6d4c41 !important; }
+.theme-red         { background-color: #d32f2f !important; }
+.theme-red-orange  { background-color: #ff5722 !important; }
+.theme-orange      { background-color: #fb8c00 !important; }
+.theme-amber       { background-color: #ffc107 !important; }
+.theme-yellow      { background-color: #fdd835 !important; }
+.theme-lime        { background-color: #c0ca33 !important; }
+.theme-green       { background-color: #2e7d32 !important; }
+.theme-teal        { background-color: #00897b !important; }
+.theme-light-blue  { background-color: #039be5 !important; }
+.theme-blue        { background-color: #0d47a1 !important; }
+.theme-indigo      { background-color: #3949ab !important; }
+.theme-purple      { background-color: #8e24aa !important; }
+.theme-pink        { background-color: #d81b60 !important; }
+.theme-gray        { background-color: #546e7a !important; }
 
 /* --- БЛОК 5: CONTAINERS & FORMS (ПРОСТІР ТА ВВІД) --- */
 
-/* 1. Поля вводу (Твоя "тиха" зона) */
-input[type="text"], input[type="password"], input[type="email"], textarea, select {
+/* 1. ПОЛЯ ВВОДУ: "Тиха зона", що поважає тло */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
     width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border-color);
-    border-radius: var(--main-radius); /* Твої 12px */
+    padding: 0.75rem 1rem;
+    border: 0.0938rem solid var(--border-color); /* 1.5px -> 0.0938rem */
+    border-radius: var(--main-radius, 0.75rem);
     background-color: var(--card-bg);
     color: var(--text-main);
     font-family: inherit;
@@ -275,61 +422,74 @@ input[type="text"], input[type="password"], input[type="email"], textarea, selec
     box-sizing: border-box;
 }
 
-/* Стан фокусу (коли клікаємо в поле) */
-input:focus, textarea:focus {
+/* Стан фокусу: Жодного білого, тільки чистота відтінку */
+input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.2);
-    background-color: #fff; /* Трохи висвітлюємо для концентрації */
+    border-color: var(--primary-color) !important;
+    background-color: var(--bg-main) !important;
+    /* Екологічне підсвічування */
+    filter: brightness(1.05);
+    box-shadow: 0 0 0.5rem var(--shadow-color);
 }
 
-/* 2. Картки та Блоки (Де лежить контент) */
-.profile-card, .article-card, .chat-window, .card-container {
+/* 2. КАРТКИ ТА БЛОКИ: Фундамент для контенту */
+.profile-card,
+.article-card,
+.chat-window,
+.card-container {
     background-color: var(--card-bg);
-    border-radius: var(--main-radius);
-    padding: 25px;
-    box-shadow: 0 4px 20px var(--shadow-color);
-    border: 1px solid var(--border-color);
-    margin-bottom: 20px;
+    border-radius: var(--main-radius, 0.75rem);
+    padding: 1.5rem; /* 25px -> ~1.5rem */
+    box-shadow: 0 0.25rem 1.25rem var(--shadow-color);
+    border: 0.0625rem solid var(--border-color);
+    margin-bottom: 1.25rem;
 }
 
-/* Заголовки всередині карток */
-.card-container h2, .profile-card h3 {
+/* Заголовки всередині карток: Чітка ієрархія */
+.card-container h2, .profile-card h3, .article-card h2 {
     margin-top: 0;
     color: var(--primary-color);
-    border-bottom: 2px solid var(--bg-main);
-    padding-bottom: 10px;
+    border-bottom: 0.125rem solid var(--bg-main); /* Відсікаємо лінією кольору підлоги */
+    padding-bottom: 0.625rem;
+    margin-bottom: 1rem;
 }
 
-/* --- КВАНТОВИЙ СПЕКТР (14 ОРГАНІЧНИХ ТЕМ) --- */
+/* Специфіка для текстових областей (textarea) */
+textarea {
+    min-height: 8rem;
+    line-height: 1.5;
+    resize: vertical; /* Дозволяємо тягнути тільки вниз, щоб не ламати верстку */
+}
 
-/* 1. Red (Червоний) */
-[data-theme='red'] { --primary-color: #d32f2f; --accent-color: #b71c1c; --bg-main: #fff5f5; --card-bg: #ffebee; --text-main: #7f0000; --text-on-primary: #ffebf0; }
-/* 2. Red-Orange (Червоно-гарячий) */
-[data-theme='red-orange'] { --primary-color: #ff5722; --accent-color: #e64a19; --bg-main: #fdf2f0; --card-bg: #ffebe5; --text-main: #bf360c; --text-on-primary: #fff2ee; }
-/* 3. Orange (Помаранчевий) */
-[data-theme='orange'] { --primary-color: #fb8c00; --accent-color: #f57c00; --bg-main: #fff9f0; --card-bg: #fff3e0; --text-main: #e65100; --text-on-primary: #fff7eb; }
-/* 4. Amber (Бурштиновий) */
-[data-theme='amber'] { --primary-color: #ffc107; --accent-color: #ffa000; --bg-main: #fffbf0; --card-bg: #fff8e1; --text-main: #5d4037; --text-on-primary: #3e2723; }
-/* 5. Yellow (Жовтий) */
-[data-theme='yellow'] { --primary-color: #fdd835; --accent-color: #fbc02d; --bg-main: #fffef0; --card-bg: #fffde7; --text-main: #5c5510; --text-on-primary: #332b00; }
-/* 6. Lime (Салатовий) */
-[data-theme='lime'] { --primary-color: #c0ca33; --accent-color: #afb42b; --bg-main: #fcfdf5; --card-bg: #f9fbe7; --text-main: #33691e; --text-on-primary: #1b3a00; }
-/* 7. Green (Зелений) */
-[data-theme='green'] { --primary-color: #2e7d32; --accent-color: #1b5e20; --bg-main: #f1f8f1; --card-bg: #e8f5e9; --text-main: #0a2d0c; --text-on-primary: #e8f5e9; }
-/* 8. Teal (Смарагдовий) */
-[data-theme='teal'] { --primary-color: #00897b; --accent-color: #00695c; --bg-main: #f0f7f7; --card-bg: #e0f2f1; --text-main: #002e2c; --text-on-primary: #e0f2f2; }
-/* 9. Light-Blue (Блакитний) */
-[data-theme='light-blue'] { --primary-color: #039be5; --accent-color: #0288d1; --bg-main: #f0f9ff; --card-bg: #e1f5fe; --text-main: #013a6b; --text-on-primary: #e1f5ff; }
-/* 10. Blue (Синій) */
-[data-theme='blue'] { --primary-color: #0d47a1; --accent-color: #1565c0; --bg-main: #f0f4fb; --card-bg: #e3f2fd; --text-main: #061a40; --text-on-primary: #e3f2ff; }
-/* 11. Indigo (Індиго) */
-[data-theme='indigo'] { --primary-color: #3949ab; --accent-color: #283593; --bg-main: #f1f2f9; --card-bg: #e8eaf6; --text-main: #10164a; --text-on-primary: #e8eaff; }
-/* 12. Purple (Фіолетовий) */
-[data-theme='purple'] { --primary-color: #8e24aa; --accent-color: #7b1fa2; --bg-main: #f6f0f8; --card-bg: #f3e5f5; --text-main: #310a5d; --text-on-primary: #f3e5ff; }
-/* 13. Pink (Пурпуровий) */
-[data-theme='pink'] { --primary-color: #d81b60; --accent-color: #c2185b; --bg-main: #f9f0f4; --card-bg: #fce4ec; --text-main: #5a002b; --text-on-primary: #fce4f0; }
-/* 14. Gray (Нейтральний сірий) */
-[data-theme='gray'] { --primary-color: #546e7a; --accent-color: #37474f; --bg-main: #f5f7f8; --card-bg: #eceff1; --text-main: #1c2529; --text-on-primary: #cfd8dc; }
+/* --- КВАНТОВИЙ СПЕКТР (СИСТЕМНИЙ ТА ЧИСТИЙ) --- */
 
-
+/* 0. Brown */
+[data-theme='brown'] { --primary-color: #6d4c41; --accent-color: #4e342e; --bg-main: #efebe9; --card-bg: #d7ccc8; --text-main: #3e2723; --text-on-primary: #fbe9e7; --user-zone-bg: #8d6e63; --dropdown-bg: #5d4037; --border-color: #a1887f; --shadow-color: rgba(62,39,35,0.15); }
+/* 1. Red */
+[data-theme='red'] { --primary-color: #d32f2f; --accent-color: #b71c1c; --bg-main: #fff5f5; --card-bg: #ffebee; --text-main: #7f0000; --text-on-primary: #ffebf0; --user-zone-bg: #e53935; --dropdown-bg: #c62828; --border-color: #ef9a9a; --shadow-color: rgba(127,0,0,0.15); }
+/* 2. Red-Orange */
+[data-theme='red-orange'] { --primary-color: #ff5722; --accent-color: #e64a19; --bg-main: #fdf2f0; --card-bg: #ffebe5; --text-main: #bf360c; --text-on-primary: #fff2ee; --user-zone-bg: #ff7043; --dropdown-bg: #f4511e; --border-color: #ffab91; --shadow-color: rgba(191,54,12,0.15); }
+/* 3. Orange */
+[data-theme='orange'] { --primary-color: #fb8c00; --accent-color: #f57c00; --bg-main: #fff9f0; --card-bg: #fff3e0; --text-main: #e65100; --text-on-primary: #fff7eb; --user-zone-bg: #ffa726; --dropdown-bg: #ef6c00; --border-color: #ffcc80; --shadow-color: rgba(230,81,0,0.15); }
+/* 4. Amber */
+[data-theme='amber'] { --primary-color: #ffc107; --accent-color: #ffa000; --bg-main: #fffbf0; --card-bg: #fff8e1; --text-main: #5d4037; --text-on-primary: #3e2723; --user-zone-bg: #ffca28; --dropdown-bg: #ffb300; --border-color: #ffe082; --shadow-color: rgba(93,64,55,0.15); }
+/* 5. Yellow */
+[data-theme='yellow'] { --primary-color: #fdd835; --accent-color: #fbc02d; --bg-main: #fffef0; --card-bg: #fffde7; --text-main: #5c5510; --text-on-primary: #332b00; --user-zone-bg: #ffee58; --dropdown-bg: #fbc02d; --border-color: #fff59d; --shadow-color: rgba(92,85,16,0.15); }
+/* 6. Lime */
+[data-theme='lime'] { --primary-color: #c0ca33; --accent-color: #afb42b; --bg-main: #fcfdf5; --card-bg: #f9fbe7; --text-main: #33691e; --text-on-primary: #1b3a00; --user-zone-bg: #d4e157; --dropdown-bg: #afb42b; --border-color: #e6ee9c; --shadow-color: rgba(51,105,30,0.15); }
+/* 7. Green */
+[data-theme='green'] { --primary-color: #2e7d32; --accent-color: #1b5e20; --bg-main: #f1f8f1; --card-bg: #e8f5e9; --text-main: #0a2d0c; --text-on-primary: #e8f5e9; --user-zone-bg: #43a047; --dropdown-bg: #2e7d32; --border-color: #a5d6a7; --shadow-color: rgba(10,45,12,0.15); }
+/* 8. Teal */
+[data-theme='teal'] { --primary-color: #00897b; --accent-color: #00695c; --bg-main: #f0f7f7; --card-bg: #e0f2f1; --text-main: #002e2c; --text-on-primary: #e0f2f2; --user-zone-bg: #26a69a; --dropdown-bg: #00796b; --border-color: #80cbc4; --shadow-color: rgba(0,46,44,0.15); }
+/* 9. Light-Blue */
+[data-theme='light-blue'] { --primary-color: #039be5; --accent-color: #0288d1; --bg-main: #f0f9ff; --card-bg: #e1f5fe; --text-main: #013a6b; --text-on-primary: #e1f5ff; --user-zone-bg: #29b6f6; --dropdown-bg: #0288d1; --border-color: #81d4fa; --shadow-color: rgba(1,58,107,0.15); }
+/* 10. Blue */
+[data-theme='blue'] { --primary-color: #0d47a1; --accent-color: #1565c0; --bg-main: #f0f4fb; --card-bg: #e3f2fd; --text-main: #061a40; --text-on-primary: #e3f2ff; --user-zone-bg: #1976d2; --dropdown-bg: #0a3d91; --border-color: #90caf9; --shadow-color: rgba(6,26,64,0.15); }
+/* 11. Indigo */
+[data-theme='indigo'] { --primary-color: #3949ab; --accent-color: #283593; --bg-main: #f1f2f9; --card-bg: #e8eaf6; --text-main: #10164a; --text-on-primary: #e8eaff; --user-zone-bg: #5c6bc0; --dropdown-bg: #303f9f; --border-color: #9fa8da; --shadow-color: rgba(16,22,74,0.15); }
+/* 12. Purple */
+[data-theme='purple'] { --primary-color: #8e24aa; --accent-color: #7b1fa2; --bg-main: #f6f0f8; --card-bg: #f3e5f5; --text-main: #310a5d; --text-on-primary: #f3e5ff; --user-zone-bg: #ab47bc; --dropdown-bg: #7b1fa2; --border-color: #ce93d8; --shadow-color: rgba(49,10,93,0.15); }
+/* 13. Pink */
+[data-theme='pink'] { --primary-color: #d81b60; --accent-color: #c2185b; --bg-main: #f9f0f4; --card-bg: #fce4ec; --text-main: #5a002b; --text-on-primary: #fce4f0; --user-zone-bg: #ec407a; --dropdown-bg: #c2185b; --border-color: #f48fb1; --shadow-color: rgba(90,0,43,0.15); }
+/* 14. Gray */
+[data-theme='gray'] { --primary-color: #546e7a; --accent-color: #37474f; --bg-main: #f5f7f8; --card-bg: #eceff1; --text-main: #1c2529; --text-on-primary: #f5f7f8; --user-zone-bg: #78909c; --dropdown-bg: #455a64; --border-color: #b0bec5; --shadow-color: rgba(28,37,41,0.15); }
