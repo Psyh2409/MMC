@@ -34,3 +34,4 @@ build/
 run.ps1
 .env
 #**/DataInitializer.java
+FULL_PROJECT.txt

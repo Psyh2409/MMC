@@ -7,10 +7,10 @@
 <body>
 
 <section class="standard-container standard-container-wide article-form-section">
-    <header class="section-header">
+    <div class="section-hdr">
         <h1 class="page-title-accent">Створення матеріалу</h1>
         <p class="section-subtitle">Заповніть поля для публікації в базу знань</p>
-    </header>
+    </div>
 
     <div class="article-card">
         <form th:action="@{/admin/articles/create}" th:object="${articleForm}" method="post">

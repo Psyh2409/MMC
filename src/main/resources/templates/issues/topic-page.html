@@ -6,10 +6,10 @@
 </head>
 <body>
 <section class="standard-container standard-container-wide articles-list">
-    <header class="section-header">
+    <div class="section-hdr">
         <h1 class="page-title-accent" th:text="${allCategoriesMap[topic] ?: topicTitle}">Заголовок розділу</h1>
         <p class="section-subtitle">Матеріали, присвячені цій темі</p>
-    </header>
+    </div>
 
     <div class="articles-grid">
         <div class="article-card" th:each="article : ${articles}">

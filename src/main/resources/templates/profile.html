@@ -2,37 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
-    <title>Мій Профіль | Психотерапія</title>
+    <title>Мій Профіль | ММЦ</title>
 </head>
 <body>
 <section class="standard-container standard-container-compact">
-    <h2 class="contact-intro-title">Особистий кабінет</h2>
 
-    <div class="profile-card">
-        <div class="profile-row">
-            <span class="profile-label">Ім'я:</span>
-            <span class="profile-value" th:text="${user.name}">Ім'я</span>
+    <div class="profile-hdr-zone">
+        <div class="profile-avatar-circle">
+            <span th:text="${#strings.substring(user.name, 0, 1).toUpperCase()}">U</span>
         </div>
-        <div class="profile-row">
-            <span class="profile-label">Ваш статус:</span>
-            <div class="role-badges">
-                <span th:if="${user.admin}"
-                    class="badge badge-admin">Адміністратор</span>
+        <div class="profile-welcome-text">
+            <h2 class="contact-intro-title" style="margin: 0;">Вітаємо, <span th:text="${user.name}">Користувач</span>!
+            </h2>
+            <p style="color: var(--link-color); margin-top: 5px;">Ваш особистий простір для відновлення</p>
+        </div>
+    </div>
+    <div class="profile-card">
+        <h3>Персоналізація простору</h3>
 
-                <span th:if="${user.therapist}"
-                      class="badge badge-therapist">Терапевт</span>
+        <div class="theme-picker-container">
+            <p>Оберіть тональність вашого простору:</p>
+            <div class="theme-grid">
+                <button class="theme-circle theme-red" onclick="setTheme('red')" title="Червоний"></button>
+                <button class="theme-circle theme-red-orange" onclick="setTheme('red-orange')" title="Червоно-гарячий"></button>
+                <button class="theme-circle theme-orange" onclick="setTheme('orange')" title="Помаранчевий"></button>
+                <button class="theme-circle theme-amber" onclick="setTheme('amber')" title="Бурштиновий"></button>
+                <button class="theme-circle theme-yellow" onclick="setTheme('yellow')" title="Жовтий"></button>
+                <button class="theme-circle theme-lime" onclick="setTheme('lime')" title="Салатовий"></button>
+                <button class="theme-circle theme-green" onclick="setTheme('green')" title="Зелений"></button>
+                <button class="theme-circle theme-teal" onclick="setTheme('teal')" title="Смарагдовий"></button>
+                <button class="theme-circle theme-light-blue" onclick="setTheme('light-blue')" title="Блакитний"></button>
+                <button class="theme-circle theme-blue" onclick="setTheme('blue')" title="Синій"></button>
+                <button class="theme-circle theme-indigo" onclick="setTheme('indigo')" title="Індиго"></button>
+                <button class="theme-circle theme-purple" onclick="setTheme('purple')" title="Фіолетовий"></button>
+                <button class="theme-circle theme-pink" onclick="setTheme('pink')" title="Пурпуровий"></button>
+                <button class="theme-circle theme-gray" onclick="setTheme('gray')" title="Нейтральний"></button>
+            </div>
+        </div>
 
-                <span th:if="${user.client}"
-                      class="badge badge-client">Клієнт</span>
+        <div class="wave-control">
+            <button class="btn-ui" onclick="toggleColorWave()">Увімкнути/Вимкнути Прибій</button>
 
-                <span th:if="${user.reader}"
-                      class="badge badge-reader">Читач</span>
+            <div class="tempo-control">
+                <p>Швидкість прибою (ритм дихання):</p>
+                <input type="range" id="wave-tempo" min="0.01" max="0.1" step="0.01" value="0.04" oninput="updateWaveTempo(this.value)">
             </div>
         </div>
     </div>
+    <div class="profile-card profile-card-highlight">
+        <h3 class="profile-section-title-small">Ваш поточний статус у центрі:</h3>
+        <div class="role-badges-expanded">
+            <span th:if="${user.admin}" class="badge-v2 badge-admin-v2">
+                <i class="fas fa-shield-alt"></i> Адміністратор системи
+            </span>
+            <span th:if="${user.therapist}" class="badge-v2 badge-therapist-v2">
+                <i class="fas fa-user-md"></i> Спеціаліст ММЦ
+            </span>
+            <span th:if="${user.client}" class="badge-v2 badge-client-v2">
+                <i class="fas fa-heart"></i> Активна терапія
+            </span>
+            <span th:if="${user.reader}" class="badge-v2 badge-reader-v2">
+                <i class="fas fa-book-open"></i> Читач ресурсу
+            </span>
+        </div>
 
-    <div class="profile-card profile-card-spaced">
-        <h3 class="contact-intro-title profile-section-title">Дані профілю</h3>
+        <div class="profile-info-mini">
+            <span><strong>Email:</strong> <span th:text="${user.email}">user@example.com</span></span>
+        </div>
+    </div>
+
+    <div class="profile-card profile-card-spaced shadow-soft">
+        <h3 class="contact-intro-title profile-section-title">Налаштування профілю</h3>
 
         <div th:if="${profileSuccess}" class="status-message status-success" th:text="${profileSuccess}"></div>
         <div th:if="${profileError}" class="status-message status-error" th:text="${profileError}"></div>
@@ -41,17 +81,17 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
             <div class="form-field">
-                <label class="form-label">Ім'я для відображення</label>
-                <input type="text" th:field="*{name}" class="form-input" placeholder="Як до вас звертатися?">
+                <label class="form-label">Ваше публічне ім'я (буде видно в чаті)</label>
+                <input type="text" th:field="*{name}" class="form-input-v2" placeholder="Як до вас звертатися?">
                 <div class="form-error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
-            <button type="submit" class="submit-button submit-button-soft">Зберегти зміни</button>
+            <button type="submit" class="submit-button submit-button-soft">Оновити дані</button>
         </form>
     </div>
 
-    <div class="profile-card profile-card-spaced">
-        <h3 class="contact-intro-title profile-section-title">Зміна пароля</h3>
+    <div class="profile-card profile-card-spaced shadow-soft">
+        <h3 class="contact-intro-title profile-section-title">Безпека</h3>
 
         <div th:if="${passwordSuccess}" class="status-message status-success" th:text="${passwordSuccess}"></div>
         <div th:if="${passwordError}" class="status-message status-error" th:text="${passwordError}"></div>
@@ -60,33 +100,45 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
             <div class="form-field">
-                <label class="form-label">Поточний пароль</label>
-                <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Введіть поточний пароль">
-                <div class="form-error-text" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                <label class="form-label">Діючий пароль</label>
+                <input type="password" th:field="*{currentPassword}" class="form-input-v2"
+                       placeholder="Введіть поточний пароль">
             </div>
 
             <div class="form-field">
                 <label class="form-label">Новий пароль</label>
-                <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Щонайменше 8 символів">
-                <div class="form-error-text" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+                <input type="password" th:field="*{newPassword}" class="form-input-v2" placeholder="Мінімум 8 символів">
             </div>
 
             <div class="form-field">
-                <label class="form-label">Підтвердіть новий пароль</label>
-                <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Повторіть новий пароль">
-                <div class="form-error-text" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></div>
+                <label class="form-label">Повторіть новий пароль</label>
+                <input type="password" th:field="*{confirmNewPassword}" class="form-input-v2"
+                       placeholder="Для підтвердження">
             </div>
 
-            <button type="submit" class="submit-button submit-button-brown">Оновити пароль</button>
+            <button type="submit" class="submit-button submit-button-brown">Змінити пароль</button>
         </form>
     </div>
 
-    <div class="profile-actions">
-        <a href="/" class="btn-dashboard-link">Повернутися</a>
+    <div class="profile-actions" style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn-return-soft">← Повернутися на головну</a>
     </div>
 </section>
 
 <th:block th:fragment="page-scripts">
+    <script>
+        // 1. Спочатку оголошуємо "інструмент" (функцію)
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('user-theme', themeName);
+            console.log("Тему змінено на: " + themeName); // щоб ти бачив у консолі, що працює
+        }
+
+        // 2. В самому кінці кажемо браузеру: "А тепер застосуй те, що збережено"
+        const savedTheme = localStorage.getItem('user-theme') || 'default';
+        setTheme(savedTheme);
+    </script>
 </th:block>
+
 </body>
 </html>

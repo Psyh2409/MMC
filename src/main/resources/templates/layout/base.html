@@ -14,12 +14,13 @@
 <div th:replace="~{fragments/header-footer :: header-fragment}"></div>
 
 <main class="page-main">
-    <div th:replace="${mainContent}"></div>
+    <div th:replace="${mainContent}">
+    </div>
 </main>
 
 <div th:replace="~{fragments/header-footer :: footer-fragment}"></div>
 
-<th:block th:replace="${pageScripts} ?: ~{}"></th:block>
-
+<!--<th:block th:replace="${pageScripts} ?: ~{}"></th:block>-->
+<script th:src="@{/js/theme-manager.js}"></script>
 </body>
 </html>

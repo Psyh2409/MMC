@@ -1,5 +1,5 @@
 <div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
-    <div class="comment-header">
+    <div class="comment-hdr">
         <strong th:if="${comment.author != null}" th:text="${comment.author.name ?: comment.author.email}">Автор</strong>
         <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
     </div>
