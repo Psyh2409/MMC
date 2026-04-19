@@ -16,62 +16,64 @@
     </div>
 
     <div class="table-scroll">
-    <table class="data-table">
-        <thead>
-        <tr>
-            <th>Статус</th>
-            <th>Відправник</th>
-            <th>Зв'язок</th>
-            <th>Повідомлення</th>
-            <th>Дата</th>
-            <th>Дії</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="req : ${requests}"
-            th:classappend="${req.clientRequest} ? 'row-priority-client' : ''">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Статус</th>
+                <th>Відправник</th>
+                <th>Зв'язок</th>
+                <th>Повідомлення</th>
+                <th>Дата</th>
+                <th>Дії</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="req : ${requests}"
+                th:classappend="${req.clientRequest} ? 'row-priority-client' : ''">
 
-            <td>
+                <td>
                 <span class="badge"
                       th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
                       th:text="${req.roleLabel}">
                 </span>
-            </td>
+                </td>
 
-            <td>
+                <td>
                 <span th:text="${req.senderName}"
                       th:classappend="${req.user != null} ? 'request-sender-registered' : 'request-sender-guest'"></span>
-            </td>
+                </td>
 
-            <td>
-                <div class="contact-actions">
-                    <a th:if="${req.smsContact != null}"
-                       th:href="'sms:' + ${req.smsContact}"
-                       class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
+                <td>
+                    <div class="contact-actions">
+                        <a th:if="${req.smsContact != null}"
+                           th:href="'sms:' + ${req.smsContact}"
+                           class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
 
-                    <a th:if="${req.emailContact != null}"
-                       th:href="'mailto:' + ${req.emailContact}"
-                       class="btn-action-email" title="Надіслати лист">📧 Email</a>
-                </div>
-            </td>
+                        <a th:if="${req.emailContact != null}"
+                           th:href="'mailto:' + ${req.emailContact}"
+                           class="btn-action-email" title="Надіслати лист">📧 Email</a>
+                    </div>
+                </td>
 
-            <td th:text="${req.message}" class="data-table-message"></td>
+                <td th:text="${req.message}" class="data-table-message"></td>
 
-            <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
 
-            <td>
-                <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="btn-delete-small">Видалити</button>
-                </form>
-            </td>
-        </tr>
+                <td>
+                    <div class="admin-controls-wrapper">
+                        <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit" class="btn-delete-small" title="Видалити">🗑️</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
 
-        <tr th:if="${#lists.isEmpty(requests)}">
-            <td colspan="6" class="empty-state">У бардачку поки порожньо. Спокійний день!</td>
-        </tr>
-        </tbody>
-    </table>
+            <tr th:if="${#lists.isEmpty(requests)}">
+                <td colspan="6" class="empty-state">У бардачку поки порожньо. Спокійний день!</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </section>
 </body>

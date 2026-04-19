@@ -9,34 +9,35 @@
     <div class="section-hdr">
         <h1 class="page-title-accent">Всі публікації</h1>
         <div class="admin-actions-bar">
-            <a th:href="@{/admin/articles/create}" class="btn-publish-article">
-                <span class="icon">+</span> Створити нову статтю
-            </a>
+            <button th:onclick="|window.location.href='@{/admin/articles/create}'|" class="btn-ui">
+                <span class="icon">+</span> Створити статтю
+            </button>
         </div>
     </div>
 
-    <div class="table-responsive-wrapper">
-        <table class="admin-table">
+    <div class="table-scroll">
+        <table class="data-table">
             <thead>
             <tr>
                 <th>Заголовок</th>
                 <th>Категорія</th>
-                <th class="actions-column">Дії</th>
+                <th>Дії</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="article : ${articles}">
-                <td th:text="${article.title}" class="title-cell-truncate">Назва</td>
+                <td th:text="${article.title}">Назва</td>
                 <td>
-                    <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
+                    <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️'}">Категорія</span>
                 </td>
-                <td class="action-cell">
-                    <div class="btn-group-nowrap">
-                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit-sm">Редагувати</a>
+                <td>
+                    <div class="admin-controls-wrapper">
+                        <button th:onclick="|window.location.href='@{/admin/articles/edit/{id}(id=${article.id})}'|"
+                                class="btn-ui" title="Редагувати">✎</button>
 
                         <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
-                              onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
-                            <button type="submit" class="btn-action btn-delete-sm">Видалити</button>
+                              onsubmit="return confirm('Видалити?');" class="inline-form">
+                            <button type="submit" class="btn-delete-small">🗑️</button>
                         </form>
                     </div>
                 </td>

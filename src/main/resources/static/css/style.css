@@ -8,12 +8,15 @@ html, body {
     overflow: hidden;
     background-color: var(--bg-main);
     color: var(--text-main);
-    transition: all 0.5s ease-in-out; /* Плавність для всього сайту */
+    transition: background-color 0.5s ease-in-out;
 }
 
 body {
     display: flex;
     flex-direction: column;
+    /* Виключаємо субпіксельне розмиття для чіткості системних шрифтів */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 header, footer, .site-header, .site-footer {
@@ -22,16 +25,19 @@ header, footer, .site-header, .site-footer {
     color: var(--text-on-primary) !important;
     z-index: 1000;
     width: 100%;
-    transition: background-color 0.5s ease;
 }
 
 header {
-    min-height: 5rem;
+    min-height: 4.5rem;
+    display: flex;
+    align-items: center;
     border-bottom: 0.0625rem solid var(--border-color);
 }
 
 footer {
     min-height: 4rem;
+    display: flex;
+    align-items: center;
     border-top: 0.0625rem solid var(--border-color);
 }
 
@@ -39,7 +45,7 @@ main, .page-main {
     flex: 1;
     overflow-y: auto;
     width: 100%;
-    max-width: 75rem;
+    max-width: 90rem;
     margin: 0 auto;
     padding: 2rem 1.5rem;
     box-sizing: border-box;
@@ -171,48 +177,81 @@ div:has(> .admin-link), .admin-link {
 
 /* --- БЛОК 3: NAVIGATION & ACTIONS (СИСТЕМНИЙ КОНТРОЛЬ) --- */
 
-/* 1. ГЛОБАЛЬНІ ПОСИЛАННЯ: Витісняємо стандарт браузера нашими змінними */
+.site-header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    /* Еластичний зазор: стискається до 0.25rem, розширюється до 1rem */
+    gap: clamp(0.25rem, 1.5vw, 1rem);
+    padding: 0.5rem 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Логотип: тепер це чистий текст без вигляду кнопки */
+.site-brand, .site-brand-footer {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-on-primary) !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    transition: opacity 0.3s ease;
+}
+
+.site-brand:hover, .site-brand-footer:hover {
+    opacity: 0.85; /* Легке згасання замість трансформації кнопки */
+}
+
+/* 1. ГЛОБАЛЬНІ ПОСИЛАННЯ */
 a {
-    color: var(--primary-color); /* Тепер посилання завжди в кольорі обраної теми */
+    color: var(--primary-color);
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
 a:visited {
-    color: var(--primary-color); /* Відвідані посилання не стають фіолетовими */
-    filter: brightness(0.85);    /* Вони просто стають на 15% темнішими від кольору теми */
+    color: var(--primary-color);
+    filter: brightness(0.85);
 }
 
 a:hover {
-    filter: brightness(1.2);     /* Підсвічування при наведенні */
+    filter: brightness(1.2);
 }
 
 /* 2. КНОПКИ ТА ЕЛЕМЕНТИ РАМИ (Header/Footer) */
-header a, footer a, .nav-action, .logout-button, .btn-submit {
-    padding: 0.5rem 1rem;
-    border-radius: var(--main-radius, 0.75rem);
+header a, footer a, .nav-action, .logout-button, .btn-submit, .footer-link-action, .btn-nav-round {
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    white-space: nowrap;
 
+    /* Використовуємо кольори спектру замінь білого */
     color: var(--text-on-primary) !important;
     background: var(--user-zone-bg);
     border: 0.0625rem solid var(--border-color);
 }
 
-header a:hover, footer a:hover, .logout-button:hover {
+header a:hover, footer a:hover, .logout-button:hover, .btn-submit:hover, .footer-link-action:hover {
     background-color: var(--accent-color) !important;
-    color: var(--text-on-primary) !important;
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.25rem 0.75rem var(--shadow-color);
-    filter: brightness(1.1);
+    transform: translateY(-0.0625rem);
+    box-shadow: 0 0.125rem 0.5rem var(--shadow-color);
 }
 
-/* --- БЛОК 3: NAVIGATION & ACTIONS (ФІНАЛЬНА ШЛІФОВКА) --- */
-
-/* 3. ФОРМИ ТА ПОЛЯ ВВОДУ: Стабільний колір + Акцентна тінь */
+/* 3. ФОРМИ ТА ПОЛЯ ВВОДУ (Без абсолютного білого) */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -220,7 +259,7 @@ textarea,
 select {
     width: 100%;
     padding: 0.75rem 1rem;
-    background-color: var(--bg-main) !important; /* ЗАВЖДИ колір тла сторінки */
+    background-color: var(--bg-main) !important; /* М'який колір теми */
     border: 0.0625rem solid var(--border-color) !important;
     color: var(--text-main) !important;
     border-radius: 0.5rem;
@@ -229,15 +268,13 @@ select {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Стан активного поля (Focus): Тільки тінь і межа, без білого кольору */
 input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--primary-color) !important;
-    /* Тінь створює ефект виділення, не змінюючи колір самого поля */
     box-shadow: 0 0 0.625rem var(--shadow-color);
 }
 
-/* 4. СКРОЛБАР: Адаптація під кольорову схему сайту */
+/* 4. СКРОЛБАР (Адаптований) */
 ::-webkit-scrollbar {
     width: 0.6rem;
     background-color: var(--bg-main);
@@ -248,37 +285,17 @@ input:focus, textarea:focus, select:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-color); /* Повзунок кольору меж теми */
+    background: var(--border-color);
     border-radius: 0.3rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color); /* При наведенні стає активним кольором */
+    background: var(--primary-color);
 }
 
 /* 5. КНОПКИ ТА ПЕРЕМИКАЧІ */
-header a, footer a, .nav-action, .logout-button, .btn-submit,
-button[type="submit"], .article-form button, .footer-link-action {
-    padding: 0.5rem 1.2rem;
-    border-radius: var(--main-radius, 0.75rem);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    color: var(--text-on-primary) !important;
-    background: var(--user-zone-bg);
-    border: 0.0625rem solid var(--border-color);
-}
-
-header a:hover, footer a:hover, .logout-button:hover,
-.btn-submit:hover, .footer-link-action:hover {
-    background-color: var(--accent-color) !important;
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.25rem 0.75rem var(--shadow-color);
+button[type="submit"], .article-form button {
+    /* Наслідує стилі з пункту 2 */
 }
 
 /* 6. ЗАХИСТ КОНТЕНТУ */
@@ -295,17 +312,40 @@ main h1, main h2, .article-title, main a h1, main a h2 {
 
 /* --- БЛОК 4: INTERACTIONS (СТРУКТУРА ТАБЛИЦЬ ТА КНОПОК) --- */
 
-/* 1. УНІВЕРСАЛЬНИЙ СТИЛЬ КНОПКИ (Клас .btn-ui) */
-/* Використовуй цей клас у HTML для посилань, які мають стати кнопками */
-button, .btn-ui, input[type="submit"], .logout-button {
+/* 1. КАРТКИ (Блог + Головна сторінка) */
+.article-card,
+.home-service-card {
+    background-color: var(--card-bg);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: var(--main-radius, 0.75rem);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.25rem 0.75rem var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.article-card:hover, .home-service-card:hover {
+    transform: translateY(-0.3rem);
+    box-shadow: 0 0.6rem 1.2rem var(--shadow-color);
+    border-color: var(--primary-color);
+}
+
+.home-service-link { text-decoration: none !important; color: inherit; display: block; }
+
+/* 2. УНІВЕРСАЛЬНІ КНОПКИ ТА ПОВЗУНОК */
+button, .btn-ui, input[type="submit"], .read-more-button, .btn-submit-comment, .home-hero-cta {
     appearance: none;
     background-color: var(--accent-color) !important;
     color: var(--text-on-primary) !important;
     border: 0.0625rem solid var(--border-color);
-    padding: 0.5rem 1.25rem;
+    padding: 0.7rem 1.5rem;
     border-radius: var(--main-radius, 0.75rem);
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
@@ -314,93 +354,160 @@ button, .btn-ui, input[type="submit"], .logout-button {
     gap: 0.5rem;
     text-decoration: none !important;
     transition: all 0.3s ease;
-    margin: 0.2rem;
 }
 
-button:hover, .btn-ui:hover {
-    filter: brightness(1.1);
-    transform: translateY(-0.1rem);
-    box-shadow: 0 0.2rem 0.5rem var(--shadow-color);
+/* Стилізація повзунка (Range) під колір теми */
+input[type="range"] {
+    appearance: none;
+    width: 100%;
+    background: transparent;
 }
 
-/* 2. ТАБЛИЦЯ: Порядок з вертикальними смужками */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 0.4rem;
+    background: var(--border-color);
+    border-radius: 1rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    height: 1.2rem;
+    width: 1.2rem;
+    background: var(--primary-color) !important;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -0.4rem;
+    box-shadow: 0 0.1rem 0.3rem var(--shadow-color);
+}
+
+/* 3. ТАБЛИЦІ ТА АДМІН-ПАНЕЛЬ */
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    border: 0.0625rem solid var(--border-color);
+    margin: 1.5rem 0;
+}
+
 table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     background-color: var(--card-bg) !important;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    border: 0.0625rem solid var(--border-color);
-    margin: 1.5rem 0;
-    box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
+    font-size: 0.85rem;
 }
 
 th, td {
-    padding: 1rem;
-    /* Вертикальні смужки між стовпчиками */
+    padding: 0.4rem 0.6rem;
     border-right: 0.0625rem solid var(--border-color);
     border-bottom: 0.0625rem solid var(--border-color);
     color: var(--text-main);
+    vertical-align: middle;
 }
 
-/* Прибираємо крайню праву смужку */
-th:last-child, td:last-child {
-    border-right: none;
+thead th {
+    background-color: var(--user-zone-bg) !important;
+    color: var(--text-on-primary) !important;
 }
 
-th {
-    background-color: var(--user-zone-bg);
-    color: var(--text-on-primary);
-    text-align: left;
-    font-weight: 600;
+/* Приховування ID та необов'язкових колонок */
+.col-optional { display: none; }
+
+/* Розумні нотатки: жорстке приборкання висоти */
+.admin-notes {
+    width: 100%;
+    min-width: 10rem;
+    height: 1.4rem !important;
+    line-height: 1.2;
+    font-size: 0.8rem;
+    background: var(--bg-main) !important;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    box-sizing: border-box;
+    transition: height 0.3s ease;
+    resize: none;
+    overflow: hidden;
+    display: block;
 }
 
-tr:last-child td {
-    border-bottom: none;
+.admin-notes:focus {
+    height: 6rem !important;
+    overflow-y: auto;
 }
 
-/* 3 КРУЖЕЧКИ ТЕМ */
+/* Уніфікація кнопок у всіх таблицях (Юзери + Статті + Запити) */
+.admin-controls-wrapper, .btn-group-nowrap {
+    display: flex !important;
+    gap: 0.4rem !important;
+    align-items: center !important;
+    justify-content: flex-start;
+}
 
+.admin-controls-wrapper .btn-ui,
+.admin-controls-wrapper .btn-delete-small,
+.admin-controls-wrapper .btn-toggle,
+.admin-controls-wrapper .btn-edit-sm,
+.admin-controls-wrapper .btn-delete-sm {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    font-size: 1.1rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.4rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* Колірна ідентифікація */
+.btn-delete-small, .btn-delete-sm { background-color: #d32f2f !important; }
+.btn-edit-sm { background-color: var(--primary-color) !important; }
+
+/* Шапка адмінки */
+.dashboard-hero-v2 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+.hero-center-text { flex: 2; text-align: center; }
+.admin-stats-row { display: flex; justify-content: center; gap: 2rem; background: var(--card-bg); padding: 0.75rem; border-radius: 0.5rem; border: 0.0625rem solid var(--border-color); margin-bottom: 1rem; }
+.filter-bar-center { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+
+/* 4. КРУЖЕЧКИ ТЕМ (ГЕОМЕТРИЧНИЙ ЗАХИСТ) */
 .theme-circle {
     appearance: none;
-    width: 1.875rem !important;
-    height: 1.875rem !important;
-    border-radius: 50% !important;
-    /* Використовуємо межу та тінь поточної теми для інтеграції в дизайн */
-    border: 0.125rem solid var(--border-color) !important;
-    box-shadow: 0 0.125rem 0.3125rem var(--shadow-color);
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-    padding: 0 !important;
-    margin: 0.3rem !important;
     display: inline-block !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    aspect-ratio: 1 / 1 !important;
+    flex: 0 0 2.2rem !important;
+    border-radius: 50% !important;
+    border: 0.1875rem solid var(--border-color) !important;
+    box-shadow: 0 0.2rem 0.4rem var(--shadow-color);
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin: 0.4rem !important;
+    padding: 0 !important;
 }
 
-.theme-circle:hover {
-    transform: scale(1.2);
-    /* При наведенні підсвічуємо головним кольором поточної теми */
-    border-color: var(--primary-color) !important;
-}
+.theme-circle:hover { transform: scale(1.1); border-color: var(--primary-color) !important; }
 
-/* Квантовий Спектр Кружечків (Константи для вибору тем) */
-/* Кольори точно відповідають значенням --primary-color з вашого Спектру */
-
-.theme-brown       { background-color: #6d4c41 !important; }
-.theme-red         { background-color: #d32f2f !important; }
-.theme-red-orange  { background-color: #ff5722 !important; }
-.theme-orange      { background-color: #fb8c00 !important; }
-.theme-amber       { background-color: #ffc107 !important; }
-.theme-yellow      { background-color: #fdd835 !important; }
-.theme-lime        { background-color: #c0ca33 !important; }
-.theme-green       { background-color: #2e7d32 !important; }
-.theme-teal        { background-color: #00897b !important; }
-.theme-light-blue  { background-color: #039be5 !important; }
-.theme-blue        { background-color: #0d47a1 !important; }
-.theme-indigo      { background-color: #3949ab !important; }
-.theme-purple      { background-color: #8e24aa !important; }
-.theme-pink        { background-color: #d81b60 !important; }
-.theme-gray        { background-color: #546e7a !important; }
+/* Кольори Спектру */
+.theme-brown { background-color: #6d4c41 !important; }
+.theme-red { background-color: #d32f2f !important; }
+.theme-red-orange { background-color: #ff5722 !important; }
+.theme-orange { background-color: #fb8c00 !important; }
+.theme-amber { background-color: #ffc107 !important; }
+.theme-yellow { background-color: #fdd835 !important; }
+.theme-lime { background-color: #c0ca33 !important; }
+.theme-green { background-color: #2e7d32 !important; }
+.theme-teal { background-color: #00897b !important; }
+.theme-light-blue { background-color: #039be5 !important; }
+.theme-blue { background-color: #0d47a1 !important; }
+.theme-indigo { background-color: #3949ab !important; }
+.theme-purple { background-color: #8e24aa !important; }
+.theme-pink { background-color: #d81b60 !important; }
+.theme-gray { background-color: #546e7a !important; }
 
 /* --- БЛОК 5: CONTAINERS & FORMS (ПРОСТІР ТА ВВІД) --- */
 
@@ -459,6 +566,64 @@ textarea {
     min-height: 8rem;
     line-height: 1.5;
     resize: vertical; /* Дозволяємо тягнути тільки вниз, щоб не ламати верстку */
+}
+
+/* ==========================================================================
+   БЛОК 6: TYPOGRAPHY (ОНОВЛЕНО: ГЕОМЕТРІЯ ТА ЧИТАБЕЛЬНІСТЬ)
+   ========================================================================== */
+
+/* Піднімаємо базовий розмір для всього сайту */
+html {
+    font-size: 115%; /* Це збільшить усі rem-одиниці разом, полегшуючи читання */
+}
+
+h1.page-title-accent {
+    font-size: 2.75rem; /* Став трохи більшим */
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+    margin-bottom: 2rem;
+}
+
+.article-content {
+    /* ТЕПЕР ТЕКСТ ЗАЙМАЄ ВЕСЬ ПРОСТІР ВІД КРАЮ ДО КРАЮ КОНТЕЙНЕРА */
+    width: 100%;
+    max-width: 100%; /* Прибираємо обмеження в 70ch, щоб він став у рівень з лініями hr */
+
+    font-size: 1.3rem; /* Збільшений шрифт для зручності */
+    line-height: 1.8;   /* Більше простору між рядками для легкого читання */
+    color: var(--text-main);
+
+    /* Вирівнювання по обох боках (захоплення стінок) */
+    text-align: justify;
+    hyphens: auto; /* Додаємо переноси, щоб не було великих дірок між словами */
+}
+
+.article-content p {
+    margin-bottom: 1.8rem;
+}
+
+/* Оформлення мета-даних над заголовком */
+.article-meta {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Коментарі та витяги */
+.article-excerpt {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.comment-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    padding: 1.2rem;
+    line-height: 1.5;
 }
 
 /* --- КВАНТОВИЙ СПЕКТР (СИСТЕМНИЙ ТА ЧИСТИЙ) --- */
