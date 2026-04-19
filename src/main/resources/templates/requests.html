@@ -6,13 +6,14 @@
     <title>Бардачок | Вхідні заявки</title>
 </head>
 <body>
-<section class="standard-container standard-container-wide requests-shell">
-    <div class="dashboard-hero">
-        <div>
-            <h1 class="contact-intro-title">Журнал звернень</h1>
-            <p class="contact-intro-text">Тут зібрані всі повідомлення з контактної форми, відсортовані від нових до старих.</p>
+<section class="card-container">
+
+    <div class="dashboard-hero-v2">
+        <div class="hero-left-text">
+            <h1 class="page-title-accent">Журнал звернень</h1>
+            <p class="article-excerpt">Усі повідомлення з контактної форми, відсортовані за датою.</p>
         </div>
-        <a href="/admin/users" class="btn-dashboard-link dashboard-cta">До адмінки</a>
+        <a href="/admin/users" class="btn-ui">До адмінки</a>
     </div>
 
     <div class="table-scroll">
@@ -24,7 +25,7 @@
                 <th>Зв'язок</th>
                 <th>Повідомлення</th>
                 <th>Дата</th>
-                <th>Дії</th>
+                <th style="width: 1%;">Дії</th>
             </tr>
             </thead>
             <tbody>
@@ -32,36 +33,39 @@
                 th:classappend="${req.clientRequest} ? 'row-priority-client' : ''">
 
                 <td>
-                <span class="badge"
-                      th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
-                      th:text="${req.roleLabel}">
-                </span>
+                    <span class="badge"
+                          th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
+                          th:text="${req.roleLabel}">
+                    </span>
                 </td>
 
-                <td>
-                <span th:text="${req.senderName}"
-                      th:classappend="${req.user != null} ? 'request-sender-registered' : 'request-sender-guest'"></span>
+                <td class="sender-cell">
+                    <span th:text="${req.senderName}"
+                          th:classappend="${req.user != null} ? 'request-sender-registered' : 'request-sender-guest'"></span>
                 </td>
-
-                <td>
-                    <div class="contact-actions">
-                        <a th:if="${req.smsContact != null}"
-                           th:href="'sms:' + ${req.smsContact}"
-                           class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
-
-                        <a th:if="${req.emailContact != null}"
-                           th:href="'mailto:' + ${req.emailContact}"
-                           class="btn-action-email" title="Надіслати лист">📧 Email</a>
-                    </div>
-                </td>
-
-                <td th:text="${req.message}" class="data-table-message"></td>
-
-                <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
 
                 <td>
                     <div class="admin-controls-wrapper">
-                        <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                        <a th:if="${req.smsContact != null}"
+                           th:href="'sms:' + ${req.smsContact}"
+                           class="btn-edit-sm" title="Написати СМС">✉️</a>
+
+                        <a th:if="${req.emailContact != null}"
+                           th:href="'mailto:' + ${req.emailContact}"
+                           class="btn-edit-sm" title="Надіслати лист">📧</a>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="admin-table-message-text" th:text="${req.message}"></div>
+                </td>
+
+                <td class="date-cell" th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+
+                <td>
+                    <div class="admin-controls-wrapper">
+                        <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post"
+                              onsubmit="return confirm('Видалити цей запис?')">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <button type="submit" class="btn-delete-small" title="Видалити">🗑️</button>
                         </form>

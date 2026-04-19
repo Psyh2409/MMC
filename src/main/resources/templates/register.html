@@ -5,8 +5,8 @@
     <title>Реєстрація | Психотерапія</title>
 </head>
 <body>
-<section class="standard-container standard-container-compact">
-    <h2 class="contact-intro-title">Реєстрація користувача</h2>
+<section class="card-container login-page-wrapper">
+    <h2 class="page-title-accent">Реєстрація користувача</h2>
 
     <div th:if="${error}" class="status-message status-error" th:text="${error}">
         Помилка реєстрації
@@ -17,7 +17,7 @@
 
         <div class="form-field">
             <label class="form-label">Ваше ім'я:</label>
-            <input type="text" th:field="*{name}" placeholder="Як до вас звертатися?" required
+            <input type="text" th:field="*{name}" placeholder="Як до Вас звертатися?" required
                    class="form-input" />
             <div class="form-error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                 Помилка в імені
@@ -37,15 +37,16 @@
             <label class="form-label">Пароль (від 8 символів):</label>
             <div class="password-container">
                 <input type="password" th:field="*{password}" required placeholder="••••••••"
-                   class="form-input" id="password"/>
-                <button type="button" id="togglePassword" class="toggle-password-btn" tabindex="-1">
+                       class="form-input" id="password"/>
+                <button type="button" id="togglePassword" class="password-toggle-btn" tabindex="-1">
                     👁️
                 </button>
             </div>
             <div class="form-error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-                    Пароль занадто короткий
+                Пароль занадто короткий
             </div>
         </div>
+
         <div class="form-field">
             <label class="form-label">Повторіть пароль:</label>
             <div class="password-container">
@@ -55,8 +56,7 @@
                        required
                        placeholder="••••••••"
                        class="form-input" />
-
-                <button type="button" id="toggleConfirmPassword" class="toggle-password-btn" tabindex="-1">
+                <button type="button" id="toggleConfirmPassword" class="password-toggle-btn" tabindex="-1">
                     👁️
                 </button>
             </div>
@@ -64,15 +64,19 @@
                 Паролі не збігаються
             </div>
         </div>
-        <button type="submit" class="submit-button submit-button-soft">
+
+        <button type="submit" class="btn-ui btn-login-submit">
             Зареєструватися
         </button>
     </form>
 
-    <p class="helper-text-centered">
-        Вже маєте акаунт? <a href="/login" class="helper-link">Увійти</a>
-    </p>
+    <div class="helper-links-block">
+        <p class="helper-text-centered">
+            Вже маєте акаунт? <a href="/login" class="helper-link">Увійти</a>
+        </p>
+    </div>
 </section>
+
 <th:block th:fragment="page-scripts">
     <script th:src="@{/js/password-toggle.js}"></script>
 </th:block>

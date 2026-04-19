@@ -5,10 +5,10 @@
     <title>Блог | Психотерапія та самопізнання</title>
 </head>
 <body>
-<section class="standard-container standard-container-wide articles-list">
-    <div class="section-hdr">
+<section class="articles-list profile-shell">
+    <div class="section-hdr" style="text-align: center; margin-bottom: 3rem;">
         <h1 class="page-title-accent">Матеріали та роздуми</h1>
-        <p class="section-subtitle">Шлях до себе через усвідомлення та знання</p>
+        <p class="article-excerpt">Шлях до себе через усвідомлення та знання</p>
     </div>
 
     <div class="articles-grid">
@@ -23,13 +23,13 @@
             <h2 class="article-card-title">
                 <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок</a>
             </h2>
-            <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
+            <p class="article-meta" th:text="${article.description}">Короткий опис...</p>
             <a th:href="@{/articles/{id}(id=${article.id})}" class="read-more">Читати далі →</a>
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(articles)}" class="empty-state">
-        <p>Наразі статтей немає, але вони скоро з'являться.</p>
+    <div th:if="${#lists.isEmpty(articles)}" class="card-container shadow-soft" style="text-align: center; margin-top: 3rem;">
+        <p class="article-meta">Наразі статтей немає, але вони скоро з'являться.</p>
     </div>
 </section>
 </body>

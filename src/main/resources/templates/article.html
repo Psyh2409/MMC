@@ -5,7 +5,7 @@
     <title th:text="${article.title} + ' | Психотерапія'">Назва статті</title>
 </head>
 <body>
-<section class="standard-container standard-container-wide article-view">
+<section class="page-main article-view">
     <div class="article-hdr">
         <div class="article-meta">
             <span class="article-date" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
@@ -56,16 +56,16 @@
         </div>
     </section>
 
-
-    <div class="article-ftr">
+    <div class="article-ftr" style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div class="share-block">
-            <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
+            <p style="margin: 0;">Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
         </div>
-        <div class="profile-actions">
-            <a href="/articles" class="btn-dashboard-link">← До всіх статей</a>
-            <a href="/contact" class="btn-highlight">Обговорити запит</a>
+        <div class="profile-actions" style="display: flex; gap: 1rem;">
+            <a href="/articles" class="btn-ui" style="background-color: var(--gray) !important;">← До всіх статей</a>
+            <a href="/contact" class="btn-ui">Обговорити запит</a>
         </div>
     </div>
+
     <script>
         function moveReplyForm(commentId) {
             // 1. Шукаємо форму

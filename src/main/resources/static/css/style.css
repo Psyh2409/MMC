@@ -310,9 +310,17 @@ main h1, main h2, .article-title, main a h1, main a h2 {
     pointer-events: auto;
 }
 
-/* --- БЛОК 4: INTERACTIONS (СТРУКТУРА ТАБЛИЦЬ ТА КНОПОК) --- */
+/* ==========================================================================
+   БЛОК 4: INTERACTIONS (СТРУКТУРА ТАБЛИЦЬ ТА КНОПОК)
+   ========================================================================== */
 
-/* 1. КАРТКИ (Блог + Головна сторінка) */
+/* 1. КАРТКИ ТА СІТКА (Блог + Головна сторінка) */
+.home-services-grid, .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.5rem;
+}
+
 .article-card,
 .home-service-card {
     background-color: var(--card-bg);
@@ -326,6 +334,43 @@ main h1, main h2, .article-title, main a h1, main a h2 {
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
+}
+
+/* Специфіка для карток у Блозі */
+.article-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.category-badge {
+    background: var(--user-zone-bg);
+    color: var(--text-on-primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.4rem;
+    font-weight: 600;
+}
+
+.article-card-title {
+    margin: 0 0 1rem 0 !important;
+    font-size: 1.5rem !important;
+}
+
+.read-more {
+    margin-top: auto;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-align: right;
+    text-decoration: none;
+}
+
+.home-service-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    border: none !important;
 }
 
 .article-card:hover, .home-service-card:hover {
@@ -356,7 +401,6 @@ button, .btn-ui, input[type="submit"], .read-more-button, .btn-submit-comment, .
     transition: all 0.3s ease;
 }
 
-/* Стилізація повзунка (Range) під колір теми */
 input[type="range"] {
     appearance: none;
     width: 100%;
@@ -382,7 +426,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* 3. ТАБЛИЦІ ТА АДМІН-ПАНЕЛЬ */
-
 .table-scroll {
     width: 100%;
     overflow-x: auto;
@@ -412,33 +455,111 @@ thead th {
     color: var(--text-on-primary) !important;
 }
 
-/* Приховування ID та необов'язкових колонок */
 .col-optional { display: none; }
 
-/* Розумні нотатки: жорстке приборкання висоти */
+/* =========================================
+   РОБОЧИЙ ПРОСТІР АДМІНА (App-подібний вигляд) - МАКСИМАЛЬНЕ СТИСНЕННЯ
+   ========================================= */
+
+/* 1. Тотальне ущільнення сторінки */
+.admin-shell {
+    /* МАГІЯ: Компенсуємо ті самі 2rem невидимого відступу батьківського <main> */
+    margin-top: -1.75rem !important;  /* З'їдаємо верхню дірку, залишаємо міліметр для дихання */
+    margin-bottom: -1.5rem !important; /* Підтягуємо низ від футера */
+
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    /* Змушуємо сторінку тягнутися на всі 100% доступної висоти */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden !important;
+}
+
+/* Вбиваємо абсолютно всі паразитні відступи текстів у шапці */
+.admin-shell h2,
+.admin-shell p.article-meta {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2;
+}
+
+/* Притискаємо верхні елементи один до одного */
+.dashboard-hero-v2 {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    margin-top: 0 !important;
+    margin-bottom: 0.3rem !important;
+    flex-shrink: 0;
+}
+
+.hero-center-text { flex: 1; }
+
+.admin-stats-row {
+    display: flex; justify-content: center; gap: 2rem;
+    background: var(--card-bg);
+    padding: 0.25rem;
+    border-radius: 0.4rem; border: 0.0625rem solid var(--border-color);
+    margin-bottom: 0.3rem !important;
+    flex-shrink: 0;
+}
+
+.filter-bar-center {
+    margin-bottom: 0.3rem !important;
+    flex-shrink: 0;
+}
+
+/* 2. Магія таблиці: забирає ВЕСЬ залишок екрану (...і прокручується ТІЛЬКИ вона) */
+.admin-shell .table-scroll {
+    flex: 1;
+    margin: 0 !important; /* Вбиваємо ту грьобану лінію/відступ знизу */
+    overflow-y: auto;
+    overflow-x: auto;
+    min-height: 0;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+/* Фіксована шапка таблиці (не тікає при прокрутці) */
+.admin-shell .table-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: 0 1px 0 var(--border-color); /* Акуратна межа під шапкою */
+}
+
+/* 3. Ремонт скролбару (щоб горизонтальна смуга не була як колода) */
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem; /* Задаємо висоту, і лінія стане тонкою та акуратною */
+}
+
+/* 4. Компактні нотатки */
 .admin-notes {
     width: 100%;
     min-width: 10rem;
-    height: 1.4rem !important;
+    min-height: 2.2rem !important; /* Броня від розтягування */
+    height: 2.2rem !important;
     line-height: 1.2;
     font-size: 0.8rem;
     background: var(--bg-main) !important;
     border: 0.0625rem solid var(--border-color);
     border-radius: 0.4rem;
-    padding: 0.1rem 0.4rem;
+    padding: 0.4rem;
     box-sizing: border-box;
-    transition: height 0.3s ease;
+    transition: height 0.3s ease, min-height 0.3s ease;
     resize: none;
     overflow: hidden;
     display: block;
 }
 
 .admin-notes:focus {
+    min-height: 6rem !important;
     height: 6rem !important;
     overflow-y: auto;
 }
 
-/* Уніфікація кнопок у всіх таблицях (Юзери + Статті + Запити) */
+/* 5. Кнопки управління (без змін, твоя логіка) */
 .admin-controls-wrapper, .btn-group-nowrap {
     display: flex !important;
     gap: 0.4rem !important;
@@ -461,19 +582,31 @@ thead th {
     justify-content: center !important;
     border-radius: 0.4rem !important;
     flex-shrink: 0 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--primary-color) !important;
+    color: var(--text-on-primary) !important;
+    border: 0.0625rem solid var(--border-color);
 }
 
-/* Колірна ідентифікація */
-.btn-delete-small, .btn-delete-sm { background-color: #d32f2f !important; }
-.btn-edit-sm { background-color: var(--primary-color) !important; }
+.admin-controls-wrapper button:hover,
+.admin-controls-wrapper a:hover {
+    background-color: var(--accent-color) !important;
+    transform: translateY(-0.1rem);
+    box-shadow: 0 0.2rem 0.5rem var(--shadow-color);
+}
 
-/* Шапка адмінки */
-.dashboard-hero-v2 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
-.hero-center-text { flex: 2; text-align: center; }
-.admin-stats-row { display: flex; justify-content: center; gap: 2rem; background: var(--card-bg); padding: 0.75rem; border-radius: 0.5rem; border: 0.0625rem solid var(--border-color); margin-bottom: 1rem; }
-.filter-bar-center { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+/* 4. КРУЖЕЧКИ ТЕМ */
+.theme-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.2rem;
+    margin: 1.5rem 0;
+    width: 100%;
+}
 
-/* 4. КРУЖЕЧКИ ТЕМ (ГЕОМЕТРИЧНИЙ ЗАХИСТ) */
 .theme-circle {
     appearance: none;
     display: inline-block !important;
@@ -486,13 +619,16 @@ thead th {
     box-shadow: 0 0.2rem 0.4rem var(--shadow-color);
     cursor: pointer;
     transition: transform 0.2s;
-    margin: 0.4rem !important;
+    margin: 0 !important;
     padding: 0 !important;
 }
 
 .theme-circle:hover { transform: scale(1.1); border-color: var(--primary-color) !important; }
 
-/* Кольори Спектру */
+@media (max-width: 40rem) {
+    .theme-grid { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+}
+
 .theme-brown { background-color: #6d4c41 !important; }
 .theme-red { background-color: #d32f2f !important; }
 .theme-red-orange { background-color: #ff5722 !important; }
@@ -509,17 +645,20 @@ thead th {
 .theme-pink { background-color: #d81b60 !important; }
 .theme-gray { background-color: #546e7a !important; }
 
-/* --- БЛОК 5: CONTAINERS & FORMS (ПРОСТІР ТА ВВІД) --- */
+/* ==========================================================================
+   БЛОК 5: CONTAINERS & FORMS (ПРОСТІР ТА ВВІД)
+   ========================================================================== */
 
-/* 1. ПОЛЯ ВВОДУ: "Тиха зона", що поважає тло */
+/* 1. ПОЛЯ ВВОДУ */
 input[type="text"],
 input[type="password"],
 input[type="email"],
 textarea,
-select {
+select,
+.form-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 0.0938rem solid var(--border-color); /* 1.5px -> 0.0938rem */
+    border: 0.0938rem solid var(--border-color);
     border-radius: var(--main-radius, 0.75rem);
     background-color: var(--card-bg);
     color: var(--text-main);
@@ -529,81 +668,242 @@ select {
     box-sizing: border-box;
 }
 
-/* Стан фокусу: Жодного білого, тільки чистота відтінку */
-input:focus, textarea:focus, select:focus {
+input:focus, textarea:focus, select:focus, .form-input:focus {
     outline: none;
     border-color: var(--primary-color) !important;
     background-color: var(--bg-main) !important;
-    /* Екологічне підсвічування */
     filter: brightness(1.05);
-    box-shadow: 0 0 0.5rem var(--shadow-color);
+    box-shadow: 0 0.5rem 0.5rem var(--shadow-color);
 }
 
-/* 2. КАРТКИ ТА БЛОКИ: Фундамент для контенту */
-.profile-card,
-.article-card,
-.chat-window,
+/* 2. КАРТКИ ТА БЛОКИ */
 .card-container {
     background-color: var(--card-bg);
     border-radius: var(--main-radius, 0.75rem);
-    padding: 1.5rem; /* 25px -> ~1.5rem */
+    padding: 1.5rem;
     box-shadow: 0 0.25rem 1.25rem var(--shadow-color);
     border: 0.0625rem solid var(--border-color);
     margin-bottom: 1.25rem;
 }
 
-/* Заголовки всередині карток: Чітка ієрархія */
-.card-container h2, .profile-card h3, .article-card h2 {
+.card-container h2, .card-container h3 {
     margin-top: 0;
     color: var(--primary-color);
-    border-bottom: 0.125rem solid var(--bg-main); /* Відсікаємо лінією кольору підлоги */
+    border-bottom: 0.125rem solid var(--bg-main);
     padding-bottom: 0.625rem;
     margin-bottom: 1rem;
 }
 
-/* Специфіка для текстових областей (textarea) */
+/* РОБОЧИЙ ПРОСТІР АДМІНІСТРАТОРА (Широкі форми) */
+.article-form-section .card-container {
+    max-width: 98% !important; /* Даємо максимум місця для редагування */
+    width: 98% !important;
+    margin: 0 auto;
+}
+
+/* Збільшуємо висоту поля для контенту статті */
+textarea#content {
+    min-height: 35rem !important;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
 textarea {
     min-height: 8rem;
     line-height: 1.5;
-    resize: vertical; /* Дозволяємо тягнути тільки вниз, щоб не ламати верстку */
+    resize: vertical;
 }
 
+/* 3. СПЕЦИФІКАЦІЯ АУТЕНТИФІКАЦІЇ ТА ПРОФІЛЮ */
+.login-page-wrapper {
+    max-width: 30rem;
+    margin: 4rem auto;
+    text-align: center;
+}
+
+/* 3.1 Помилки */
+.error-content-box { padding: 2.5rem; text-align: center; }
+.error-large-code { font-size: 5rem; font-weight: bold; margin-bottom: 0.5rem; opacity: 0.5; }
+.error-title-clean { margin-bottom: 1.5rem; border-bottom: none !important; }
+.error-actions-group { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+
+.profile-shell { max-width: 50rem; margin: 2rem auto; }
+/* --- Оболонка для редактора статей (максимальна ширина) --- */
+.ed/* --- Оболонка для редактора статей (максимальна ширина) --- */
+   .editor-shell {
+       width: 94%; /* Залишаємо по 3% фону з кожного боку */
+       max-width: 85rem; /* Захист для дуже великих моніторів (щоб рядки не були нескінченними) */
+       margin: 1rem auto;
+   }
+
+   .editor-shell .card-container {
+       width: 100%;
+       /* Додаємо box-sizing, щоб внутрішні відступи (padding) не розпирали картку назовні */
+       box-sizing: border-box;
+       padding: 2.5rem clamp(1.5rem, 4vw, 4rem);
+   }
+.profile-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
+.profile-avatar {
+    background: var(--user-zone-bg);
+    color: var(--text-on-primary);
+    width: 4.5rem; height: 4.5rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: bold; border: 0.125rem solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.password-container { position: relative; display: flex; align-items: center; }
+.password-toggle-btn {
+    position: absolute; right: 0.5rem; background: none !important; border: none !important;
+    padding: 0 !important; width: 2.2rem; height: 2.2rem; cursor: pointer;
+    font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+    color: var(--text-main); z-index: 2;
+}
+
+/* 4. ДОПОМІЖНІ КЛАСИ */
+.wave-control-panel { text-align: center; padding: 1.5rem; border-top: 0.0625rem solid var(--border-color); margin-top: 1rem; }
+.tempo-slider-group { margin-top: 1.5rem; }
+.badge-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+.btn-full-width { width: 100%; }
+.return-link-wrapper { text-align: center; margin-top: 2.5rem; }
+
+/* 5. КОНТАКТИ ТА ГОЛОВНА */
+.contact-direct-box { margin-top: 2.5rem; text-align: center; border: none !important; background: var(--bg-main) !important; }
+.contact-email-text { font-size: 1.2rem !important; margin-bottom: 0.5rem !important; border: none !important; }
+.contact-info-subtext { font-size: 0.9rem !important; opacity: 0.7; }
+
+/* 5.3 ПЕРШІ КРОКИ */
+.steps-hero-zone { text-align: center; background: transparent !important; border: none !important; box-shadow: none !important; padding-top: 3rem; }
+.steps-hero-title { font-size: 3rem; }
+.steps-main-card { max-width: 50rem; margin: 0 auto 2rem; }
+.steps-pull-quote { font-style: italic; border-left: 0.25rem solid var(--primary-color); padding-left: 1.5rem; margin: 2rem 0; }
+.steps-grid-zone { margin: 0 auto 3rem; }
+.steps-centered-text { text-align: center; }
+.steps-cta-zone { text-align: center; margin: 0 auto 4rem; }
+.btn-cta-large { padding: 1rem 3rem !important; }
+
+/* 5.4 ЦЕНТРОВАНА HERO-ЗОНА (ПОВЕРНЕННЯ ДО ЛОГІКИ) */
+.home-hero-zone {
+    text-align: center;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-hero-zone p,
+.home-hero-zone div,
+.home-hero-zone span {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-main-title { font-size: 3.5rem; margin-bottom: 1rem; }
+.hero-subtitle-text { font-size: 1.5rem; opacity: 0.9; }
+.hero-action-gap { margin-top: 2.5rem; }
+.hero-return-gap { margin-top: 2rem; }
+.hero-return-text { font-size: 1.2rem; }
+
+/* 6. БРЕНДИНГ ТА РОЗДІЛЬНИКИ (ФІНАЛЬНА КОРЕКЦІЯ ГУГЛА) */
+.btn-ui.oauth-google-brand {
+    display: flex !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 2.75rem !important;
+    padding: 0 1rem !important;
+    background-color: #ffffff !important;
+    color: #757575 !important;
+    border: 0.0625rem solid #dadce0 !important;
+    border-radius: 0.4rem !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    font-family: 'Roboto', arial, sans-serif;
+    font-size: 0.9rem !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.btn-ui.oauth-google-brand:hover {
+    background-color: #f8f9fa !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+    transform: translateY(-1px);
+}
+
+.oauth-icon-google {
+    width: 1.1rem;
+    height: 1.1rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.oauth-icon-google svg {
+    width: 100%;
+    height: 100%;
+}
+
+.oauth-divider {
+    margin: 1.25rem 0;
+    border-bottom: 0.0625rem solid var(--border-color);
+    line-height: 0.1rem;
+    text-align: center;
+}
+
+.oauth-divider span {
+    background: var(--card-bg);
+    padding: 0 0.75rem;
+    color: var(--text-main);
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.btn-login-submit { width: 100%; margin-top: 1rem; }
+.helper-links-block { margin-top: 1.5rem; }
+
 /* ==========================================================================
-   БЛОК 6: TYPOGRAPHY (ОНОВЛЕНО: ГЕОМЕТРІЯ ТА ЧИТАБЕЛЬНІСТЬ)
+   БЛОК 6: TYPOGRAPHY (ВИПРАВЛЕНО: ЛОКАЛЬНИЙ JUSTIFY)
    ========================================================================== */
 
-/* Піднімаємо базовий розмір для всього сайту */
 html {
-    font-size: 115%; /* Це збільшить усі rem-одиниці разом, полегшуючи читання */
+    font-size: 115%;
 }
 
 h1.page-title-accent {
-    font-size: 2.75rem; /* Став трохи більшим */
+    font-size: 2.75rem;
     font-weight: 700;
     color: var(--primary-color);
     line-height: 1.2;
     margin-bottom: 2rem;
 }
 
-.article-content {
-    /* ТЕПЕР ТЕКСТ ЗАЙМАЄ ВЕСЬ ПРОСТІР ВІД КРАЮ ДО КРАЮ КОНТЕЙНЕРА */
-    width: 100%;
-    max-width: 100%; /* Прибираємо обмеження в 70ch, щоб він став у рівень з лініями hr */
-
-    font-size: 1.3rem; /* Збільшений шрифт для зручності */
-    line-height: 1.8;   /* Більше простору між рядками для легкого читання */
-    color: var(--text-main);
-
-    /* Вирівнювання по обох боках (захоплення стінок) */
+/* ВИРІВНЮВАННЯ ПО ШИРИНІ ТІЛЬКИ ТАМ, ДЕ ТРЕБА (КАРТКИ ТА СТАТТІ) */
+.article-content p,
+.article-card p,
+.home-service-card p,
+.article-meta,
+.article-excerpt {
     text-align: justify;
-    hyphens: auto; /* Додаємо переноси, щоб не було великих дірок між словами */
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
+.article-content {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--text-main);
 }
 
 .article-content p {
     margin-bottom: 1.8rem;
 }
 
-/* Оформлення мета-даних над заголовком */
 .article-meta {
     font-size: 1rem;
     margin-bottom: 0.5rem;
@@ -611,7 +911,6 @@ h1.page-title-accent {
     font-weight: 500;
 }
 
-/* Коментарі та витяги */
 .article-excerpt {
     font-size: 1.15rem;
     line-height: 1.6;
@@ -625,6 +924,98 @@ h1.page-title-accent {
     padding: 1.2rem;
     line-height: 1.5;
 }
+
+/* ==========================================================================
+   БЛОК 7: CHAT SYSTEM (ІНТЕРФЕЙС ЖИВОГО СПІЛКУВАННЯ)
+   ========================================================================== */
+
+.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 70vh; /* Обмежуємо висоту для зручності на десктопі */
+}
+
+.chat-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 0.0625rem solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+    background: var(--user-zone-bg);
+    color: var(--text-on-primary);
+    border: 0.0625rem solid var(--border-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    box-shadow: inset 0 -0.2rem 0 var(--accent-color);
+}
+
+.chat-window {
+    flex: 1;
+    background: var(--card-bg);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: var(--main-radius, 0.75rem);
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: inset 0 0.1rem 0.5rem var(--shadow-color);
+}
+
+.chat-window.hidden { display: none; }
+
+/* Панель відповіді */
+.reply-preview-bar {
+    background: var(--user-zone-bg);
+    color: var(--text-on-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    border: 0.0625rem solid var(--border-color);
+}
+
+.reply-preview-bar.hidden { display: none; }
+
+.btn-cancel-reply {
+    background: transparent;
+    border: none;
+    color: var(--text-on-primary);
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* Форма відправки */
+.chat-form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.chat-textarea {
+    resize: none; /* Забороняємо ручне розтягування, щоб не ламати верстку */
+    min-height: 5rem;
+}
+
+.btn-send {
+    align-self: flex-end;
+    min-width: 10rem;
+}
+
+/* Бейдж повідомлень */
+.badge.hidden { display: none; }
 
 /* --- КВАНТОВИЙ СПЕКТР (СИСТЕМНИЙ ТА ЧИСТИЙ) --- */
 

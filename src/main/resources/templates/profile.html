@@ -5,26 +5,25 @@
     <title>Мій Профіль | ММЦ</title>
 </head>
 <body>
-<section class="standard-container standard-container-compact">
+<section class="card-container profile-shell">
 
-    <div class="profile-hdr-zone">
-        <div class="profile-avatar-circle">
+    <div class="profile-header">
+        <div class="profile-avatar">
             <span th:text="${#strings.substring(user.name, 0, 1).toUpperCase()}">U</span>
         </div>
-        <div class="profile-welcome-text">
-            <h2 class="contact-intro-title" style="margin: 0;">Вітаємо, <span th:text="${user.name}">Користувач</span>!
-            </h2>
-            <p style="color: var(--link-color); margin-top: 5px;">Ваш особистий простір для відновлення</p>
+        <div class="hero-left-text">
+            <h2 class="page-title-accent">Вітаємо, <span th:text="${user.name}">Користувач</span>!</h2>
+            <p class="article-excerpt">Ваш особистий простір для відновлення</p>
         </div>
     </div>
-    <div class="profile-card">
-        <h3>Персоналізація простору</h3>
+
+    <div class="card-container shadow-soft">
+        <h3 class="page-title-accent">Персоналізація простору</h3>
 
         <div class="theme-picker-container">
-            <p>Оберіть тональність вашого простору:</p>
+            <p class="article-meta">Оберіть тональність вашого простору:</p>
             <div class="theme-grid">
-                <button class="theme-circle theme-brown" onclick="setTheme('brown')" title="Коричневий (Дефолт)" style="background-color: #6d4c41;"></button>
-
+                <button class="theme-circle theme-brown" onclick="setTheme('brown')" title="Коричневий (Дефолт)"></button>
                 <button class="theme-circle theme-red" onclick="setTheme('red')" title="Червоний"></button>
                 <button class="theme-circle theme-red-orange" onclick="setTheme('red-orange')" title="Червоно-гарячий"></button>
                 <button class="theme-circle theme-orange" onclick="setTheme('orange')" title="Помаранчевий"></button>
@@ -42,39 +41,40 @@
             </div>
         </div>
 
-        <div class="wave-control">
+        <div class="wave-control-panel">
             <button class="btn-ui" onclick="toggleColorWave()">Увімкнути/Вимкнути Прибій</button>
 
-            <div class="tempo-control">
-                <p>Швидкість прибою (ритм дихання):</p>
+            <div class="tempo-slider-group">
+                <p class="article-meta">Швидкість прибою (ритм дихання):</p>
                 <input type="range" id="wave-tempo" min="0.01" max="0.1" step="0.01" value="0.04" oninput="updateWaveTempo(this.value)">
             </div>
         </div>
     </div>
-    <div class="profile-card profile-card-highlight">
-        <h3 class="profile-section-title-small">Ваш поточний статус у центрі:</h3>
-        <div class="role-badges-expanded">
-            <span th:if="${user.admin}" class="badge-v2 badge-admin-v2">
+
+    <div class="card-container shadow-soft">
+        <h3 class="page-title-accent" style="font-size: 1.1rem;">Ваш поточний статус у центрі:</h3>
+        <div class="badge-group">
+            <span th:if="${user.admin}" class="badge badge-client">
                 <i class="fas fa-shield-alt"></i> Адміністратор системи
             </span>
-            <span th:if="${user.therapist}" class="badge-v2 badge-therapist-v2">
+            <span th:if="${user.therapist}" class="badge badge-guest">
                 <i class="fas fa-user-md"></i> Спеціаліст ММЦ
             </span>
-            <span th:if="${user.client}" class="badge-v2 badge-client-v2">
+            <span th:if="${user.client}" class="badge badge-client">
                 <i class="fas fa-heart"></i> Активна терапія
             </span>
-            <span th:if="${user.reader}" class="badge-v2 badge-reader-v2">
+            <span th:if="${user.reader}" class="badge badge-guest">
                 <i class="fas fa-book-open"></i> Читач ресурсу
             </span>
         </div>
 
-        <div class="profile-info-mini">
+        <div class="article-meta">
             <span><strong>Email:</strong> <span th:text="${user.email}">user@example.com</span></span>
         </div>
     </div>
 
-    <div class="profile-card profile-card-spaced shadow-soft">
-        <h3 class="contact-intro-title profile-section-title">Налаштування профілю</h3>
+    <div class="card-container shadow-soft">
+        <h3 class="page-title-accent">Налаштування профілю</h3>
 
         <div th:if="${profileSuccess}" class="status-message status-success" th:text="${profileSuccess}"></div>
         <div th:if="${profileError}" class="status-message status-error" th:text="${profileError}"></div>
@@ -84,16 +84,16 @@
 
             <div class="form-field">
                 <label class="form-label">Ваше публічне ім'я (буде видно в чаті)</label>
-                <input type="text" th:field="*{name}" class="form-input-v2" placeholder="Як до вас звертатися?">
+                <input type="text" th:field="*{name}" class="form-input" placeholder="Як до вас звертатися?">
                 <div class="form-error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
-            <button type="submit" class="submit-button submit-button-soft">Оновити дані</button>
+            <button type="submit" class="btn-ui btn-full-width">Оновити дані</button>
         </form>
     </div>
 
-    <div class="profile-card profile-card-spaced shadow-soft">
-        <h3 class="contact-intro-title profile-section-title">Безпека</h3>
+    <div class="card-container shadow-soft">
+        <h3 class="page-title-accent">Безпека</h3>
 
         <div th:if="${passwordSuccess}" class="status-message status-success" th:text="${passwordSuccess}"></div>
         <div th:if="${passwordError}" class="status-message status-error" th:text="${passwordError}"></div>
@@ -103,42 +103,52 @@
 
             <div class="form-field">
                 <label class="form-label">Діючий пароль</label>
-                <input type="password" th:field="*{currentPassword}" class="form-input-v2"
-                       placeholder="Введіть поточний пароль">
+                <div class="password-container">
+                    <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Введіть поточний пароль">
+                    <button type="button" class="password-toggle-btn" onclick="toggleLocalPassword(this)">👁️</button>
+                </div>
             </div>
 
             <div class="form-field">
                 <label class="form-label">Новий пароль</label>
-                <input type="password" th:field="*{newPassword}" class="form-input-v2" placeholder="Мінімум 8 символів">
+                <div class="password-container">
+                    <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Мінімум 8 символів">
+                    <button type="button" class="password-toggle-btn" onclick="toggleLocalPassword(this)">👁️</button>
+                </div>
             </div>
 
             <div class="form-field">
                 <label class="form-label">Повторіть новий пароль</label>
-                <input type="password" th:field="*{confirmNewPassword}" class="form-input-v2"
-                       placeholder="Для підтвердження">
+                <div class="password-container">
+                    <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Для підтвердження">
+                    <button type="button" class="password-toggle-btn" onclick="toggleLocalPassword(this)">👁️</button>
+                </div>
             </div>
 
-            <button type="submit" class="submit-button submit-button-brown">Змінити пароль</button>
+            <button type="submit" class="btn-ui btn-full-width">Змінити пароль</button>
         </form>
     </div>
 
-    <div class="profile-actions" style="text-align: center; margin-top: 30px;">
-        <a href="/" class="btn-return-soft">← Повернутися на головну</a>
+    <div class="return-link-wrapper">
+        <a href="/" class="btn-ui">← Повернутися на головну</a>
     </div>
 </section>
 
 <th:block th:fragment="page-scripts">
     <script>
-        // 1. Спочатку оголошуємо "інструмент" (функцію)
         function setTheme(themeName) {
-            document.documentElement.setAttribute('data-theme', themeName);
-            localStorage.setItem('user-theme', themeName);
-            console.log("Тему змінено на: " + themeName); // щоб ти бачив у консолі, що працює
+        document.documentElement.setAttribute('data-theme', themeName);
+        localStorage.setItem('user-theme', themeName);
+        console.log("Тему змінено на: " + themeName);
         }
 
-        // 2. В самому кінці кажемо браузеру: "А тепер застосуй те, що збережено"
-        const savedTheme = localStorage.getItem('user-theme') || 'default';
+        const savedTheme = localStorage.getItem('user-theme') || 'brown';
         setTheme(savedTheme);
+
+        function toggleLocalPassword(btn) {
+            const input = btn.parentElement.querySelector('input');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
     </script>
 </th:block>
 
