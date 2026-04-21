@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
 <header th:fragment="header-fragment"
         xmlns:th="http://www.thymeleaf.org"
@@ -36,10 +36,6 @@
             <a href="/about" class="site-nav-link">Про мене</a>
             <a href="/first-steps" class="site-nav-link">Перші кроки</a>
 
-            <div sec:authorize="hasRole('ADMIN')">
-                <a th:href="@{/admin/users}" class="admin-link">⚙️Адмінка</a>
-            </div>
-
             <div sec:authorize="isAnonymous()">
                 <a href="/login" class="site-nav-link">Увійти</a>
             </div>
@@ -64,13 +60,17 @@
 <footer th:fragment="footer-fragment" class="site-footer">
     <div class="site-footer-inner">
         <div class="footer-left">
-            <a th:href="@{/contact}" class="footer-link-action">
-                📩<span class="footer-action-text">Контакти</span>
+            <a sec:authorize="!hasRole('ADMIN')" th:href="@{/contact}" class="footer-link-action">
+                📩 <span class="footer-action-text">Контакти</span>
+            </a>
+
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}" class="footer-link-action">
+                ⚙️ <span class="footer-action-text">Адмінка</span>
             </a>
         </div>
         <div class="night-mode-zone">
-            <button type="button" onclick="toggleNightMode()" class="btn-night-toggle">
-                <span class="moon-icon">🌙</span> Режим: <span id="mode-text">Денний</span>
+            <button type="button" onclick="toggleNightMode()" class="btn-night-toggle" id="theme-toggle-btn">
+                <span class="moon-icon">🌙</span> <span id="mode-text">Нічний</span>
             </button>
         </div>
         <div class="footer-center">

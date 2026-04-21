@@ -1,0 +1,114 @@
+/* ==========================================================================
+   02 - BASE & TYPOGRAPHY
+   Фундамент сторінки та базові налаштування тексту
+   Синхронізовано з Блоками 1 та 6 моноліту
+   ========================================================================== */
+
+/* --- БЛОК 1: BASE LAYOUT (ФУНДАМЕНТ) --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.5s ease-in-out;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    /* Виключаємо субпіксельне розмиття для чіткості системних шрифтів */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- БЛОК 6: TYPOGRAPHY (ТИПОГРАФІКА ТА ТЕКСТ) --- */
+html {
+    font-size: 115%;
+}
+
+h1.page-title-accent {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+    margin-bottom: 2rem;
+}
+
+/* ЗАХИСТ КОНТЕНТУ (Заголовки в main) */
+main h1, main h2, .article-title, main a h1, main a h2 {
+    position: relative !important;
+    display: block !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    color: var(--primary-color);
+    text-decoration: none;
+    z-index: 1 !important;
+    pointer-events: auto;
+}
+
+/* ВИРІВНЮВАННЯ ПО ШИРИНІ ТІЛЬКИ ТАМ, ДЕ ТРЕБА (КАРТКИ ТА СТАТТІ) */
+.article-content p,
+.article-card p,
+.home-service-card p,
+.article-meta,
+.article-excerpt {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
+.article-content {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--text-main);
+}
+
+.article-content p {
+    margin-bottom: 1.8rem;
+}
+
+.article-meta {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.article-excerpt {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.article-divider {
+    border: none;
+    border-top: 0.0625rem solid var(--border-color);
+    margin: 2.5rem 0;
+}
+
+/* ПОЛЕ ДЛЯ КОМЕНТАРІВ */
+.comment-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    padding: 1.2rem;
+    line-height: 1.5;
+}
+
+/* ВІДНОВЛЕНО З МОНОЛІТУ: Глобальні фокуси */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0.625rem var(--shadow-color);
+}
+
+/* Глобальний скролбар вікна */
+::-webkit-scrollbar { width: 0.6rem; background-color: var(--bg-main); }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 0.3rem; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }

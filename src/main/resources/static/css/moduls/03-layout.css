@@ -1,0 +1,290 @@
+/* ==========================================================================
+   03 - LAYOUT & SHELLS (СИНХРОНІЗОВАНО З МОНОЛІТОМ)
+   ========================================================================== */
+
+/* --- 1. ГЛОБАЛЬНІ КОНТЕЙНЕРИ --- */
+header, footer {
+    flex-shrink: 0;
+    background-color: var(--primary-color) !important;
+    color: var(--text-on-primary) !important;
+    z-index: 1000;
+    width: 100%;
+}
+
+header {
+    min-height: 4.5rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+footer {
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    border-top: 0.0625rem solid var(--border-color);
+}
+
+main, .page-main {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 90rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- КОНТЕЙНЕР СТОРІНКИ ЛОГІНУ --- */
+.login-page-wrapper {
+    width: 100%;
+    max-width: 26rem; /* Встановлюємо вузьку ширину (це і є "здорова" форма) */
+    margin: 4rem auto; /* Відцентровуємо по горизонталі */
+    padding: 2.5rem 2rem;
+    background-color: var(--card-bg); /* Твоя базова змінна */
+    border: 0.0625rem solid var(--border-color);
+    border-radius: var(--main-radius, 0.75rem);
+    box-shadow: 0 0.5rem 1.5rem var(--shadow-color);
+    box-sizing: border-box;
+}
+
+/* Центруємо заголовок саме всередині цього контейнера */
+.login-page-wrapper .page-title-accent {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+/* --- 2. ВНУТРІШНЯ РОЗСТАНОВКА (SITE WRAPPERS) --- */
+.site-header-inner, .site-footer-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    padding: 0.8rem 2.5rem !important; /* ВІДНОВЛЕНО З МОНОЛІТУ */
+    box-sizing: border-box !important;
+    background: transparent !important;
+    overflow: visible !important;
+}
+
+/* Уточнення саме для Хедера */
+.site-header-inner {
+    gap: 2rem !important; /* Тільки для хедера */
+}
+
+.site-header-inner .site-nav {
+    gap: 1.5rem !important; /* Дистанція в навігації хедера */
+    margin-left: auto !important; /* ТЕ САМЕ ПРАВИЛО: Притискає все меню до правого краю */
+}
+
+/* Логотип (Шлях до себе 🌿) */
+.site-brand, .site-brand-footer {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--text-on-primary) !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    margin-right: 3rem !important;
+    flex-shrink: 0 !important;
+    transition: opacity 0.3s ease;
+}
+
+.site-brand:hover, .site-brand-footer:hover { opacity: 0.85; }
+
+/* Навігація та меню */
+.site-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex: 1 !important;
+    justify-content: flex-start !important;
+    gap: 1.5rem !important; /* ВІДНОВЛЕНО З МОНОЛІТУ */
+}
+
+/* DROPDOWN (ПОВНА КОПІЯ БЛОКУ 2 МОНОЛІТУ) */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0;
+    background-color: var(--dropdown-bg);
+    width: max-content;
+    min-width: 15rem;
+    max-width: 25rem;
+    box-shadow: 0 0.5rem 1.5rem var(--shadow-color) !important;
+    z-index: 1001;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    border: 0.0625rem solid var(--border-color);
+    overflow: hidden; /* ЗАХИСТ З МОНОЛІТУ */
+}
+.dropdown:hover .dropdown-content { display: flex; flex-direction: column; }
+.dropdown-content a {
+    text-align: left !important; display: block !important; width: 100% !important;
+    padding: 0.8rem 1.5rem !important; border: none !important;
+    background: transparent !important; border-radius: 0 !important;
+    margin: 0 !important; box-shadow: none !important;
+    transform: none !important; transition: background 0.2s ease;
+    box-sizing: border-box !important;
+}
+.dropdown-content a:hover { background: var(--user-zone-bg) !important; }
+
+/* Зона користувача */
+.user-menu {
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.4rem 1rem !important;
+    background: var(--user-zone-bg) !important;
+    border-radius: 0.75rem;
+    border: 0.0625rem solid var(--border-color);
+    flex-shrink: 0 !important;
+}
+
+/* Футер: Розстановка (ВІДНОВЛЕНО З МОНОЛІТУ) */
+.footer-left { display: flex !important; align-items: center !important; flex: 0 0 auto !important; }
+.footer-center { flex: 1 !important; text-align: center !important; }
+
+/* Уточнення саме для Футера */
+.site-footer-inner {
+    padding-top: 1.5rem !important; /* Якщо в підвалі треба інший відступ */
+    justify-content: center !important; /* Наприклад, якщо хочеш інше вирівнювання */
+}
+
+/* Захист від обрізання тіней хедера */
+header, .site-header { overflow: visible !important; }
+
+/* --- 3. СПЕЦИФІЧНІ ОБОЛОНКИ (SHELLS) --- */
+
+/* Робочий простір Адміна (ВІДНОВЛЕНО ПОВНУ ЛОГІКУ СТИСНЕННЯ) */
+.admin-shell {
+    margin-top: -1.75rem !important;
+    margin-bottom: -1.5rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden !important;
+}
+
+.dashboard-hero-v2, .admin-stats-row, .filter-bar-center {
+    flex-shrink: 0 !important;
+}
+
+.admin-stats-row {
+    display: flex;            /* Вмикаємо гнучкий рядок */
+    justify-content: center;  /* Центруємо елементи горизонтально */
+    align-items: center;      /* Центруємо елементи вертикально (якщо треба) */
+    gap: 20px;               /* Робимо відступи між картками статистики */
+    flex-wrap: wrap;          /* Дозволяємо переносити блоки на новий рядок, якщо вони не влазять */
+}
+
+.filter-bar-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.05rem;
+}
+
+/* --- ВЕРХНЯ ПАНЕЛЬ (DASHBOARD HERO) --- */
+.dashboard-hero-v2 {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* 3 колонки: бокові гнучкі, центр по контенту */
+    align-items: center; /* Вирівнювання по вертикалі */
+    width: 100%;
+    margin-bottom: 0.2rem;
+}
+
+/* Притискаємо кнопки до їхніх країв екрану */
+.nav-btn-left {
+    justify-self: start;
+}
+
+.nav-btn-right {
+    justify-self: end;
+}
+
+/* Центральний блок */
+.hero-center-text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Скидаємо базові відступи, щоб заголовок не розпирав шапку */
+.hero-center-text .page-title-accent {
+    margin: 0;
+}
+
+.hero-center-text .article-meta {
+    margin: 0.25rem 0 0 0;
+}
+
+/* Оболонка редактора */
+.editor-shell {
+    width: 94%;
+    max-width: 85rem;
+    margin: 1rem auto;
+}
+
+/* Табличний скрол */
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    border: 0.0625rem solid var(--border-color);
+    margin: 1.5rem 0;
+}
+
+/* Hero-зони (ПОВЕРНЕНО ЦЕНТРОВАНУ ЛОГІКУ) */
+.home-hero-zone {
+    text-align: center;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-hero-zone p, .home-hero-zone div, .home-hero-zone span {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.steps-hero-zone {
+    text-align: center;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding-top: 3rem;
+}
+
+/* --- 4. СИСТЕМНІ ЕЛЕМЕНТИ ВІКНА --- */
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: var(--bg-main);
+}
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 0.3rem;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }

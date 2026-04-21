@@ -10,8 +10,8 @@
     <div class="dashboard-hero-v2">
         <button th:onclick="|window.location.href='@{/admin/articles}'|" class="btn-ui nav-btn-left">📝 Статті</button>
 
-        <div class="hero-center-text" style="text-align: center;">
-            <h2 class="page-title-accent" style="margin-bottom: 0;">Центр керування</h2>
+        <div class="hero-center-text">
+            <h2 class="page-title-accent">Центр керування</h2>
             <p class="article-meta">Робочий простір фахівця</p>
         </div>
 
@@ -24,7 +24,7 @@
         <div class="stat-item"><strong>Візити:</strong> <span th:text="${totalVisits}">0</span></div>
     </div>
 
-    <div class="filter-bar-center" style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+    <div class="filter-bar-center">
         <button onclick="filterTable('ALL')" class="btn-ui" type="button">Всі</button>
         <button onclick="filterTable('ADMIN')" class="btn-ui" type="button">Адмін</button>
         <button onclick="filterTable('THERAPIST')" class="btn-ui" type="button">Колеги</button>
@@ -49,10 +49,10 @@
             <tr th:each="u : ${allUsers}" th:attr="data-role=${u.primaryRoleName}">
                 <td class="uuid-cell col-optional">
                     <th:block th:if="${u != null and u.id != null}">
-                        <span class="uuid-text" th:text="${u.id}" style="font-size: 0.75rem; opacity: 0.7;">ID</span>
+                        <span class="uuid-text" th:text="${u.id}">ID</span>
                         <button type="button" class="btn-edit-sm"
                                 th:attr="onclick=|copyToClipboard('${u.id}')|" title="Копіювати UUID">
-                            📋
+                            📑
                         </button>
                     </th:block>
                 </td>
@@ -60,26 +60,26 @@
                 <td th:text="${u.email}"></td>
 
                 <td>
-                    <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}" style="font-weight: bold;"></span>
+                    <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}" class="role-badge-text"></span>
 
                     <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
                           th:action="@{/admin/promote/{id}(id=${u.id})}"
-                          method="post">
+                          method="post" class="form-promote">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn-ui" style="margin-top: 0.5rem; padding: 0.2rem 0.5rem; font-size: 0.8rem;">У клієнти</button>
+                        <button type="submit" class="btn-ui btn-sm">Працює</button>
                     </form>
                 </td>
 
                 <td class="col-optional" th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
 
                 <td>
-                    <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post" class="form-notes">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <textarea name="notes"
                                   th:text="${u.adminNotes}"
                                   placeholder="Додайте коментар..."
                                   class="admin-notes"></textarea>
-                        <button type="submit" class="btn-ui" style="align-self: flex-start; padding: 0.2rem 0.6rem; font-size: 0.8rem;">Зберегти</button>
+                        <button type="submit" class="btn-ui btn-sm form-notes-btn">Зберегти</button>
                     </form>
                 </td>
 
@@ -112,7 +112,7 @@
                         </form>
                     </div>
 
-                    <span th:if="${u.isAdmin()}" style="font-weight: bold; color: var(--primary-color);">Адміністратор (Ви)</span>
+                    <span th:if="${u.isAdmin()}" class="admin-badge-self">Адміністратор (Ви)</span>
                 </td>
             </tr>
             </tbody>

@@ -1,0 +1,91 @@
+/* ==========================================================================
+   01 - THEMES & QUANTUM SPECTRUM
+   Кольорові змінні та логіка перемикання тем
+   Синхронізовано з фінальним Блоком моноліту
+   ========================================================================== */
+
+/* --- КВАНТОВИЙ СПЕКТР (СИСТЕМНИЙ ТА ЧИСТИЙ) --- */
+
+/* 0. Brown */
+[data-theme='brown'] { --primary-color: #6d4c41; --accent-color: #4e342e; --bg-main: #efebe9; --card-bg: #d7ccc8; --text-main: #3e2723; --text-on-primary: #fbe9e7; --user-zone-bg: #8d6e63; --dropdown-bg: #5d4037; --border-color: #a1887f; --shadow-color: rgba(62,39,35,0.15); }
+/* 1. Red */
+[data-theme='red'] { --primary-color: #d32f2f; --accent-color: #b71c1c; --bg-main: #fff5f5; --card-bg: #ffebee; --text-main: #7f0000; --text-on-primary: #ffebf0; --user-zone-bg: #e53935; --dropdown-bg: #c62828; --border-color: #ef9a9a; --shadow-color: rgba(127,0,0,0.15); }
+/* 2. Red-Orange */
+[data-theme='red-orange'] { --primary-color: #ff5722; --accent-color: #e64a19; --bg-main: #fdf2f0; --card-bg: #ffebe5; --text-main: #bf360c; --text-on-primary: #fff2ee; --user-zone-bg: #ff7043; --dropdown-bg: #f4511e; --border-color: #ffab91; --shadow-color: rgba(191,54,12,0.15); }
+/* 3. Orange */
+[data-theme='orange'] { --primary-color: #fb8c00; --accent-color: #f57c00; --bg-main: #fff9f0; --card-bg: #fff3e0; --text-main: #e65100; --text-on-primary: #fff7eb; --user-zone-bg: #ffa726; --dropdown-bg: #ef6c00; --border-color: #ffcc80; --shadow-color: rgba(230,81,0,0.15); }
+/* 4. Amber */
+[data-theme='amber'] { --primary-color: #ffc107; --accent-color: #ffa000; --bg-main: #fffbf0; --card-bg: #fff8e1; --text-main: #5d4037; --text-on-primary: #3e2723; --user-zone-bg: #ffca28; --dropdown-bg: #ffb300; --border-color: #ffe082; --shadow-color: rgba(93,64,55,0.15); }
+/* 5. Yellow */
+[data-theme='yellow'] { --primary-color: #fdd835; --accent-color: #fbc02d; --bg-main: #fffef0; --card-bg: #fffde7; --text-main: #5c5510; --text-on-primary: #332b00; --user-zone-bg: #ffee58; --dropdown-bg: #fbc02d; --border-color: #fff59d; --shadow-color: rgba(92,85,16,0.15); }
+/* 6. Lime */
+[data-theme='lime'] { --primary-color: #c0ca33; --accent-color: #afb42b; --bg-main: #fcfdf5; --card-bg: #f9fbe7; --text-main: #33691e; --text-on-primary: #1b3a00; --user-zone-bg: #d4e157; --dropdown-bg: #afb42b; --border-color: #e6ee9c; --shadow-color: rgba(51,105,30,0.15); }
+/* 7. Green */
+[data-theme='green'] { --primary-color: #2e7d32; --accent-color: #1b5e20; --bg-main: #f1f8f1; --card-bg: #e8f5e9; --text-main: #0a2d0c; --text-on-primary: #e8f5e9; --user-zone-bg: #43a047; --dropdown-bg: #2e7d32; --border-color: #a5d6a7; --shadow-color: rgba(10,45,12,0.15); }
+/* 8. Teal */
+[data-theme='teal'] { --primary-color: #00897b; --accent-color: #00695c; --bg-main: #f0f7f7; --card-bg: #e0f2f1; --text-main: #002e2c; --text-on-primary: #e0f2f2; --user-zone-bg: #26a69a; --dropdown-bg: #00796b; --border-color: #80cbc4; --shadow-color: rgba(0,46,44,0.15); }
+/* 9. Light-Blue */
+[data-theme='light-blue'] { --primary-color: #039be5; --accent-color: #0288d1; --bg-main: #f0f9ff; --card-bg: #e1f5fe; --text-main: #013a6b; --text-on-primary: #e1f5ff; --user-zone-bg: #29b6f6; --dropdown-bg: #0288d1; --border-color: #81d4fa; --shadow-color: rgba(1,58,107,0.15); }
+/* 10. Blue */
+[data-theme='blue'] { --primary-color: #0d47a1; --accent-color: #1565c0; --bg-main: #f0f4fb; --card-bg: #e3f2fd; --text-main: #061a40; --text-on-primary: #e3f2ff; --user-zone-bg: #1976d2; --dropdown-bg: #0a3d91; --border-color: #90caf9; --shadow-color: rgba(6,26,64,0.15); }
+/* 11. Indigo */
+[data-theme='indigo'] { --primary-color: #3949ab; --accent-color: #283593; --bg-main: #f1f2f9; --card-bg: #e8eaf6; --text-main: #10164a; --text-on-primary: #e8eaff; --user-zone-bg: #5c6bc0; --dropdown-bg: #303f9f; --border-color: #9fa8da; --shadow-color: rgba(16,22,74,0.15); }
+/* 12. Purple */
+[data-theme='purple'] { --primary-color: #8e24aa; --accent-color: #7b1fa2; --bg-main: #f6f0f8; --card-bg: #f3e5f5; --text-main: #310a5d; --text-on-primary: #f3e5ff; --user-zone-bg: #ab47bc; --dropdown-bg: #7b1fa2; --border-color: #ce93d8; --shadow-color: rgba(49,10,93,0.15); }
+/* 13. Pink */
+[data-theme='pink'] { --primary-color: #d81b60; --accent-color: #c2185b; --bg-main: #f9f0f4; --card-bg: #fce4ec; --text-main: #5a002b; --text-on-primary: #fce4f0; --user-zone-bg: #ec407a; --dropdown-bg: #c2185b; --border-color: #f48fb1; --shadow-color: rgba(90,0,43,0.15); }
+/* 14. Gray */
+[data-theme='gray'] { --primary-color: #546e7a; --accent-color: #37474f; --bg-main: #f5f7f8; --card-bg: #eceff1; --text-main: #1c2529; --text-on-primary: #f5f7f8; --user-zone-bg: #78909c; --dropdown-bg: #455a64; --border-color: #b0bec5; --shadow-color: rgba(28,37,41,0.15); }
+
+/* --- ВІЗУАЛІЗАЦІЯ ПЕРЕМИКАЧІВ (КРУЖЕЧКИ) --- */
+.theme-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.2rem;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.theme-circle {
+    appearance: none;
+    display: inline-block !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    aspect-ratio: 1 / 1 !important;
+    flex: 0 0 2.2rem !important;
+    border-radius: 50% !important;
+    border: 0.1875rem solid var(--border-color) !important;
+    box-shadow: 0 0.2rem 0.4rem var(--shadow-color);
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.theme-circle:hover {
+    transform: scale(1.1);
+    border-color: var(--primary-color) !important;
+}
+
+@media (max-width: 40rem) {
+    .theme-grid { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+}
+
+/* ФОНОВІ КОЛЬОРИ ДЛЯ КРУЖЕЧКІВ */
+.theme-brown { background-color: #6d4c41 !important; }
+.theme-red { background-color: #d32f2f !important; }
+.theme-red-orange { background-color: #ff5722 !important; }
+.theme-orange { background-color: #fb8c00 !important; }
+.theme-amber { background-color: #ffc107 !important; }
+.theme-yellow { background-color: #fdd835 !important; }
+.theme-lime { background-color: #c0ca33 !important; }
+.theme-green { background-color: #2e7d32 !important; }
+.theme-teal { background-color: #00897b !important; }
+.theme-light-blue { background-color: #039be5 !important; }
+.theme-blue { background-color: #0d47a1 !important; }
+.theme-indigo { background-color: #3949ab !important; }
+.theme-purple { background-color: #8e24aa !important; }
+.theme-pink { background-color: #d81b60 !important; }
+.theme-gray { background-color: #546e7a !important; }
