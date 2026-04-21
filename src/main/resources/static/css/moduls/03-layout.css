@@ -28,6 +28,7 @@ footer {
 main, .page-main {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden; /* <--- ДОДАЙ ЦЕЙ РЯДОК (Вбиває горизонтальний повзунок) */
     width: 100%;
     max-width: 90rem;
     margin: 0 auto;
@@ -64,20 +65,17 @@ main, .page-main {
     align-items: center !important;
     justify-content: space-between !important;
     width: 100% !important;
-    padding: 0.8rem 2.5rem !important; /* ВІДНОВЛЕНО З МОНОЛІТУ */
+    max-width: 90rem !important; /* Тримаємо в тих же межах, що і main */
+    margin: 0 auto !important; /* Центруємо по екрану */
+    padding: 0.8rem 2.5rem !important;
     box-sizing: border-box !important;
     background: transparent !important;
-    overflow: visible !important;
 }
 
 /* Уточнення саме для Хедера */
 .site-header-inner {
-    gap: 2rem !important; /* Тільки для хедера */
-}
-
-.site-header-inner .site-nav {
-    gap: 1.5rem !important; /* Дистанція в навігації хедера */
-    margin-left: auto !important; /* ТЕ САМЕ ПРАВИЛО: Притискає все меню до правого краю */
+    flex-wrap: nowrap !important; /* ЖОРСТКА ЗАБОРОНА падати на новий рядок */
+    gap: 2rem !important;
 }
 
 /* Логотип (Шлях до себе 🌿) */
@@ -93,8 +91,7 @@ main, .page-main {
     border: none !important;
     padding: 0 !important;
     box-shadow: none !important;
-    margin-right: 3rem !important;
-    flex-shrink: 0 !important;
+    flex-shrink: 0 !important; /* Заборона стискати логотип */
     transition: opacity 0.3s ease;
 }
 
@@ -104,14 +101,36 @@ main, .page-main {
 .site-nav {
     display: flex !important;
     flex-direction: row !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
+    justify-content: flex-end !important; /* Притискаємо все чітко вправо */
+    gap: 1.5rem !important;
+    margin-left: auto !important; /* Штовхає навігацію до правого краю */
     flex: 1 !important;
-    justify-content: flex-start !important;
-    gap: 1.5rem !important; /* ВІДНОВЛЕНО З МОНОЛІТУ */
+}
+
+/* Запобіжник для тексту: тільки кнопки і лінки не переносяться */
+.site-nav > a,
+.site-nav > div > span,
+.btn-nav-round {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important; /* Заборона стискати текст меню */
+}
+
+/* Зона користувача */
+.user-menu {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.4rem 1rem !important;
+    background: var(--user-zone-bg) !important;
+    border-radius: 0.75rem;
+    border: 0.0625rem solid var(--border-color);
+    flex-shrink: 0 !important; /* Заборона стискати профіль */
 }
 
 /* DROPDOWN (ПОВНА КОПІЯ БЛОКУ 2 МОНОЛІТУ) */
-.dropdown { position: relative; display: inline-block; }
+.dropdown { position: relative; display: inline-block; flex-shrink: 0 !important; }
 .dropdown-content {
     display: none;
     position: absolute;
@@ -125,7 +144,7 @@ main, .page-main {
     border-radius: 0.5rem;
     padding: 0.5rem 0;
     border: 0.0625rem solid var(--border-color);
-    overflow: hidden; /* ЗАХИСТ З МОНОЛІТУ */
+    overflow: hidden;
 }
 .dropdown:hover .dropdown-content { display: flex; flex-direction: column; }
 .dropdown-content a {
@@ -135,21 +154,9 @@ main, .page-main {
     margin: 0 !important; box-shadow: none !important;
     transform: none !important; transition: background 0.2s ease;
     box-sizing: border-box !important;
+    white-space: normal !important; /* Дозволяємо довгому тексту в меню падати на новий рядок */
 }
 .dropdown-content a:hover { background: var(--user-zone-bg) !important; }
-
-/* Зона користувача */
-.user-menu {
-    margin-left: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 1rem !important;
-    padding: 0.4rem 1rem !important;
-    background: var(--user-zone-bg) !important;
-    border-radius: 0.75rem;
-    border: 0.0625rem solid var(--border-color);
-    flex-shrink: 0 !important;
-}
 
 /* Футер: Розстановка (ВІДНОВЛЕНО З МОНОЛІТУ) */
 .footer-left { display: flex !important; align-items: center !important; flex: 0 0 auto !important; }
@@ -249,17 +256,67 @@ header, .site-header { overflow: visible !important; }
     margin: 1.5rem 0;
 }
 
-/* Hero-зони (ПОВЕРНЕНО ЦЕНТРОВАНУ ЛОГІКУ) */
-.home-hero-zone {
+/* --- HERO-ЗОНА (ВИПРАВЛЕНО: БЕЗ RGBA, ТІЛЬКИ ЗМІННІ) --- */
+/*.home-hero-zone {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 6rem 2rem;
     margin-bottom: 2rem;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
+
+    /* Використовуємо color-mix для створення прозорого шару на основі змінної теми */
+   /* background-image: linear-gradient(
+                          color-mix(in srgb, var(--card-bg), transparent 10%),
+                          color-mix(in srgb, var(--card-bg), transparent 30%)
+                      ),
+                      url('/images/hero-bg.jpg') !important;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    border: 0.0625rem solid var(--border-color) !important;
+    border-radius: var(--main-radius, 0.75rem);
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0 0.25rem 0.75rem var(--shadow-color) !important;
+} */
+
+/* --- HERO-ЗОНА: FULL WIDTH (ВИПРАВЛЕНО ЦЕНТРУВАННЯ І СКРОЛ) --- */
+.home-hero-zone {
+    text-align: center;
+
+    /* Новий метод розтягування без зміщення центру */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Підтягуємо до хедера */
+    margin-top: -2rem;
+    margin-bottom: 3rem;
+    padding: 8rem 2rem;
+
+    /* Твій прозорий градієнт і малюнок */
+    background-image: linear-gradient(
+                          color-mix(in srgb, var(--card-bg), transparent 0%),
+                          color-mix(in srgb, var(--card-bg), transparent 100%)
+                      ),
+                      url('/images/hero-bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Виправлення тіні тексту через змінні */
+.hero-main-title {
+    text-shadow: 0 0.1rem 0.2rem var(--shadow-color);
+    margin-bottom: 1rem;
 }
 
 .home-hero-zone p, .home-hero-zone div, .home-hero-zone span {

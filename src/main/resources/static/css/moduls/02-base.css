@@ -22,6 +22,7 @@ body {
     /* Виключаємо субпіксельне розмиття для чіткості системних шрифтів */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 /* --- БЛОК 6: TYPOGRAPHY (ТИПОГРАФІКА ТА ТЕКСТ) --- */
