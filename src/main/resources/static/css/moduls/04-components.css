@@ -358,3 +358,28 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 0.9rem;
     margin-right: 0.3rem;
 }
+
+/* --- АВАТАРКА У ПРОФІЛІ (.profile-avatar) --- */
+.profile-avatar {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 4rem !important; /* Трохи більша для сторінки профілю */
+    height: 4rem !important;
+    background-color: var(--primary-color) !important;
+    color: var(--text-on-primary) !important;
+    border-radius: 50% !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    flex-shrink: 0 !important;
+    border: 0.125rem solid var(--border-color) !important;
+    box-shadow: 0 0.25rem 0.75rem var(--shadow-color) !important;
+    margin-right: 1.5rem;
+}
+
+/* Контейнер для вирівнювання аватара з текстом */
+.profile-header {
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 2.5rem !important;
+}
