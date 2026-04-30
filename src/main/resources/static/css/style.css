@@ -1,20 +1,52 @@
-:root {
-    /* Кава з молоком / Беж (Фони, другорядні елементи) */
-    --bg-main: #f5f0e8;
-    --bg-card: #ffffff;
-
-    /* Дерево / Теплий коричневий (Акценти, кнопки) */
-    --primary-color: #8d6e63;
-
-    /* Шоколад / Глибокий коричневий (Текст, заголовки) */
-    --text-main: #3e2723;
-    --header-dark: #2d1b18;
-
-    /* Колір для посилань (м'який кавовий) */
-    --link-color: #6d4c41;
+/* КВАНТОВА ПАЛІТРА - 15 СТАНІВ */
+/* КВАНТОВА ПАЛІТРА - 15 СТАНІВ */
+:root, [data-theme='brown'] {
+    --primary-color: #6d4c41; --accent-color: #4e342e; --bg-main: #efebe9;
+    --card-bg: #d7ccc8; --text-main: #3e2723; --text-on-primary: #fbe9e7; --border-color: #a1887f;
+    --shadow-main: rgba(62, 39, 35, 0.2);  /* Це твій --text-main, але прозорий */
+    --overlay-light: rgba(245, 240, 232, 0.4); /* Це твій --bg-main, але прозорий */
 }
+/* 1. Red */
+[data-theme='red'] { --primary-color: #d32f2f; --accent-color: #b71c1c; --bg-main: #fff5f5; --card-bg: #ffebee; --text-main: #7f0000; --text-on-primary: #ffebf0; --border-color: #ef9a9a; --shadow-main: rgba(183, 28, 28, 0.2); --overlay-light: rgba(255, 245, 245, 0.4); }
 
-/* =========================================
+/* 2. Red-Orange */
+[data-theme='red-orange'] { --primary-color: #ff5722; --accent-color: #e64a19; --bg-main: #fdf2f0; --card-bg: #ffebe5; --text-main: #bf360c; --text-on-primary: #fff2ee; --border-color: #ffab91; --shadow-main: rgba(230, 74, 25, 0.2); --overlay-light: rgba(253, 242, 240, 0.4); }
+
+/* 3. Orange */
+[data-theme='orange'] { --primary-color: #fb8c00; --accent-color: #f57c00; --bg-main: #fff9f0; --card-bg: #fff3e0; --text-main: #e65100; --text-on-primary: #fff7eb; --border-color: #ffcc80; --shadow-main: rgba(245, 124, 0, 0.2); --overlay-light: rgba(255, 249, 240, 0.5); }
+
+/* 4. Amber */
+[data-theme='amber'] { --primary-color: #ffc107; --accent-color: #ffa000; --bg-main: #fffbf0; --card-bg: #fff8e1; --text-main: #5d4037; --text-on-primary: #3e2723; --border-color: #ffe082; --shadow-main: rgba(255, 160, 0, 0.25); --overlay-light: rgba(255, 251, 240, 0.5); }
+
+/* 5. Yellow */
+[data-theme='yellow'] { --primary-color: #fdd835; --accent-color: #fbc02d; --bg-main: #fffef0; --card-bg: #fffde7; --text-main: #5c5510; --text-on-primary: #332b00; --border-color: #fff59d; --shadow-main: rgba(251, 192, 45, 0.3); --overlay-light: rgba(255, 254, 240, 0.6); }
+
+/* 6. Lime */
+[data-theme='lime'] { --primary-color: #c0ca33; --accent-color: #afb42b; --bg-main: #fcfdf5; --card-bg: #f9fbe7; --text-main: #33691e; --text-on-primary: #1b3a00; --border-color: #e6ee9c; --shadow-main: rgba(175, 180, 43, 0.2); --overlay-light: rgba(252, 253, 245, 0.4); }
+
+/* 7. Green */
+[data-theme='green'] { --primary-color: #2e7d32; --accent-color: #1b5e20; --bg-main: #f1f8f1; --card-bg: #e8f5e9; --text-main: #0a2d0c; --text-on-primary: #e8f5e9; --border-color: #a5d6a7; --shadow-main: rgba(27, 94, 32, 0.2); --overlay-light: rgba(241, 248, 241, 0.4); }
+
+/* 8. Teal */
+[data-theme='teal'] { --primary-color: #00897b; --accent-color: #00695c; --bg-main: #f0f7f7; --card-bg: #e0f2f1; --text-main: #002e2c; --text-on-primary: #e0f2f2; --border-color: #80cbc4; --shadow-main: rgba(0, 105, 92, 0.2); --overlay-light: rgba(240, 247, 247, 0.4); }
+
+/* 9. Light-Blue */
+[data-theme='light-blue'] { --primary-color: #039be5; --accent-color: #0288d1; --bg-main: #f0f9ff; --card-bg: #e1f5fe; --text-main: #013a6b; --text-on-primary: #e1f5ff; --border-color: #81d4fa; --shadow-main: rgba(2, 136, 209, 0.2); --overlay-light: rgba(240, 249, 255, 0.4); }
+
+/* 10. Blue */
+[data-theme='blue'] { --primary-color: #0d47a1; --accent-color: #1565c0; --bg-main: #f0f4fb; --card-bg: #e3f2fd; --text-main: #061a40; --text-on-primary: #e3f2ff; --border-color: #90caf9; --shadow-main: rgba(21, 101, 192, 0.2); --overlay-light: rgba(240, 244, 251, 0.4); }
+
+/* 11. Indigo */
+[data-theme='indigo'] { --primary-color: #3949ab; --accent-color: #283593; --bg-main: #f1f2f9; --card-bg: #e8eaf6; --text-main: #10164a; --text-on-primary: #e8eaff; --border-color: #9fa8da; --shadow-main: rgba(40, 53, 147, 0.2); --overlay-light: rgba(241, 242, 249, 0.4); }
+
+/* 12. Purple */
+[data-theme='purple'] { --primary-color: #8e24aa; --accent-color: #7b1fa2; --bg-main: #f6f0f8; --card-bg: #f3e5f5; --text-main: #310a5d; --text-on-primary: #f3e5ff; --border-color: #ce93d8; --shadow-main: rgba(123, 31, 162, 0.2); --overlay-light: rgba(246, 240, 248, 0.4); }
+
+/* 13. Pink */
+[data-theme='pink'] { --primary-color: #d81b60; --accent-color: #c2185b; --bg-main: #f9f0f4; --card-bg: #fce4ec; --text-main: #5a002b; --text-on-primary: #fce4f0; --border-color: #f48fb1; --shadow-main: rgba(194, 24, 91, 0.2); --overlay-light: rgba(249, 240, 244, 0.4); }
+
+/* 14. Gray (PTSD / Deprivation) */
+[data-theme='gray'] { --primary-color: #546e7a; --accent-color: #37474f; --bg-main: #f5f7f8; --card-bg: #eceff1; --text-main: #1c2529; --text-on-primary: #f5f7f8; --border-color: #b0bec5; --shadow-main: rgba(55, 71, 79, 0.4); --overlay-light: rgba(245, 247, 248, 0.2); }/* =========================================
    1. БАЗОВІ НАЛАШТУВАННЯ ТА ЛЕЙАУТ
    ========================================= */
 html, body {
@@ -29,7 +61,7 @@ html, body {
     overflow: hidden;
     font-family: Arial, sans-serif;
     background-color: #fdfbf7;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .page-main {
@@ -46,7 +78,7 @@ html, body {
     background: white;
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px var(--shadow-main);
     box-sizing: border-box;
 }
 
@@ -59,7 +91,7 @@ html, body {
     max-width: 450px;
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px var(--shadow-main);
 }
 
 .standard-container-login {
@@ -77,7 +109,7 @@ html, body {
     color: #795548;
     font-size: 1.4em;
     margin-top: 30px;
-    border-bottom: 1px solid #d7ccc8;
+    border-bottom: 1px solid var(--card-bg);
     padding-bottom: 5px;
 }
 
@@ -106,7 +138,7 @@ html, body {
     padding: 30px;
     border-radius: 15px;
     text-align: center;
-    border: 1px solid #d7ccc8;
+    border: 1px solid var(--card-bg);
 }
 
 .cta-panel-light {
@@ -115,7 +147,7 @@ html, body {
 
 .cta-panel-title {
     margin-top: 0;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .link-cta {
@@ -183,7 +215,7 @@ html, body {
 .form-input,
 .form-textarea {
     padding: 12px;
-    border: 1px solid #d7ccc8;
+    border: 1px solid var(--card-bg);
     border-radius: 8px;
     background: #fffaf0;
     box-sizing: border-box;
@@ -212,12 +244,12 @@ html, body {
 }
 
 .submit-button-brown {
-    background-color: #6d4c41;
+    background-color: var(--primary-color);
 }
 
 .submit-button-soft {
     background-color: #8d6e63;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px var(--shadow-main);
 }
 
 .helper-text-centered {
@@ -227,7 +259,7 @@ html, body {
 }
 
 .helper-link {
-    color: #6d4c41;
+    color: var(--primary-color);
     font-weight: bold;
     text-decoration: underline;
 }
@@ -255,7 +287,7 @@ html, body {
     top: 50%;
     left: 0;
     right: 0;
-    border-top: 1px solid #d7ccc8;
+    border-top: 1px solid var(--card-bg);
 }
 
 .oauth-divider span {
@@ -270,7 +302,7 @@ html, body {
     justify-content: center;
     gap: 12px;
     padding: 14px 18px;
-    border: 1px solid #d7ccc8;
+    border: 1px solid var(--card-bg);
     border-radius: 18px;
     text-align: center;
     text-decoration: none;
@@ -297,12 +329,12 @@ html, body {
 
 .oauth-button-google {
     background: #ffffff;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .oauth-button-google:hover {
     background: #f7f3ee;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 .oauth-button-facebook {
@@ -313,7 +345,7 @@ html, body {
 
 .oauth-button-facebook:hover {
     background: #1669d6;
-    box-shadow: 0 6px 16px rgba(24, 119, 242, 0.24);
+    box-shadow: 0 6px 16px var(--shadow-main);
 }
 
 .oauth-disabled-note {
@@ -321,13 +353,13 @@ html, body {
     border: 1px dashed #bcaaa4;
     border-radius: 18px;
     background: #faf7f5;
-    color: #6d4c41;
+    color: var(--primary-color);
     font-size: 0.95em;
     line-height: 1.5;
 }
 
 .oauth-disabled-google {
-    border-color: #d7ccc8;
+    border-color: var(--card-bg);
 }
 
 .oauth-disabled-facebook {
@@ -344,25 +376,25 @@ html, body {
     padding: 2px 6px;
     border-radius: 6px;
     background: #f1e6e0;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .contact-intro-title {
     text-align: center;
-    color: #4e342e;
+    color: var(--accent-color);
     font-family: 'Georgia', serif;
 }
 
 .contact-intro-text {
     text-align: center;
-    color: #6d4c41;
+    color: var(--primary-color);
     margin-bottom: 30px;
 }
 
 .contact-direct {
     margin-top: 40px;
     text-align: center;
-    border-top: 1px solid #d7ccc8;
+    border-top: 1px solid var(--card-bg);
     padding-top: 20px;
 }
 
@@ -373,7 +405,7 @@ html, body {
 
 .contact-direct-phone {
     font-weight: bold;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .site-header {
@@ -381,8 +413,8 @@ html, body {
     top: 0;
     z-index: 1000;
     padding: 12px 0;
-    background: #4e342e;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    background: var(--accent-color);
+    box-shadow: 0 2px 15px var(--shadow-main);
 }
 
 .site-header-inner {
@@ -432,7 +464,7 @@ html, body {
 .admin-link {
     color: #fff9c4;
     text-decoration: none;
-    border: 1px solid rgba(255,249,196,0.4);
+    border: 1px solid var(--overlay-light);
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.85em;
@@ -478,8 +510,8 @@ html, body {
     max-height: 55px;
     min-height: 45px;
 
-    background: #3e2723; /* Твій фірмовий колір */
-    color: #d7ccc8;
+    background: var(--text-main); /* Твій фірмовий колір */
+    color: var(--card-bg);
     font-family: 'Georgia', serif;
     border-top: 2px solid #8d6e63;
 
@@ -520,7 +552,7 @@ html, body {
     text-decoration: none;
     font-weight: bold;
     padding: 6px 15px;
-    background: rgba(141, 110, 99, 0.4); /* Напівпрозорий тон */
+    background: var(--primary-color); /* Напівпрозорий тон */
     border-radius: 20px;
     font-size: 0.9rem;
     transition: background 0.3s;
@@ -554,7 +586,7 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background: linear-gradient(rgba(78,52,46,0.5), rgba(78,52,46,0.5)), url('/images/hero-bg.jpg') center/cover;
+    background: linear-gradient(var(--shadow-main), var(--shadow-main)), url('/images/hero-bg.jpg') center/cover;
 }
 
 .home-hero-title {
@@ -562,7 +594,7 @@ main {
     font-family: 'Georgia', serif;
     font-size: 3.5em;
     color: #fdf5e6;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 4px var(--shadow-main);
 }
 
 .home-hero-subtitle {
@@ -571,13 +603,13 @@ main {
     font-size: 1.8em;
     font-style: italic;
     color: #fff9c4;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    text-shadow: 1px 1px 3px var(--shadow-main);
 }
 
 .home-hero-cta {
     display: inline-block;
     padding: 18px 50px;
-    border: 1px solid rgba(255,245,220,0.2);
+    border: 1px solid var(--overlay-light);
     border-radius: 40px;
     background: #8d6e63;
     color: #fdf5e6;
@@ -585,13 +617,13 @@ main {
     font-family: 'Georgia', serif;
     font-size: 1.2em;
     font-weight: bold;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 20px var(--shadow-main);
     transition: 0.3s;
 }
 
 .home-hero-return {
     padding-top: 10px;
-    border-top: 1px solid rgba(255,249,196,0.3);
+    border-top: 1px solid var(--overlay-light);
     color: #fff9c4;
     font-family: 'Georgia', serif;
     font-size: 1.1em;
@@ -612,7 +644,7 @@ main {
     text-align: center;
     font-family: 'Georgia', serif;
     font-size: 2.2em;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .home-services-grid {
@@ -631,14 +663,14 @@ main {
     padding: 35px;
     background: white;
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 25px var(--shadow-main);
     border-top: 5px solid #8d6e63;
     transition: 0.3s;
 }
 
 .home-service-card h3 {
     margin-bottom: 15px;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .home-service-card p {
@@ -648,7 +680,7 @@ main {
 }
 
 .border-top-taupe {
-    border-top-color: #a1887f;
+    border-top-color: var(--border-color);
 }
 
 .border-top-brown {
@@ -660,7 +692,7 @@ main {
 }
 
 .border-top-dark {
-    border-top-color: #3e2723;
+    border-top-color: var(--text-main);
 }
 
 .border-top-clay {
@@ -670,7 +702,7 @@ main {
 .steps-hero {
     padding: 80px 20px;
     text-align: center;
-    background: linear-gradient(rgba(78,52,46,0.8), rgba(78,52,46,0.8));
+    background: linear-gradient(var(--shadow-main), var(--shadow-main));
     color: #f5f5dc;
 }
 
@@ -690,7 +722,7 @@ main {
     max-width: 800px;
     margin: 50px auto;
     padding: 0 20px;
-    color: #4e342e;
+    color: var(--accent-color);
     line-height: 1.8;
     font-family: 'Georgia', serif;
 }
@@ -706,7 +738,7 @@ main {
     max-width: 850px;
     margin: 60px auto;
     padding: 40px;
-    border: 1px solid #efebe9;
+    border: 1px solid var(--bg-main);
     border-radius: 15px;
     background: #fafafa;
     font-family: 'Georgia', serif;
@@ -715,7 +747,7 @@ main {
 .steps-expectations h2 {
     margin-bottom: 40px;
     text-align: center;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .steps-grid {
@@ -728,7 +760,7 @@ main {
     padding: 20px;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    box-shadow: 0 5px 15px var(--shadow-main);
 }
 
 .steps-card h3 {
@@ -749,7 +781,7 @@ main {
 }
 
 .steps-summary p {
-    color: #4e342e;
+    color: var(--accent-color);
     font-size: 1.1em;
     font-weight: bold;
 }
@@ -758,12 +790,12 @@ main {
     margin-top: 40px;
     padding: 60px;
     text-align: center;
-    background: #d7ccc8;
+    background: var(--card-bg);
     border-radius: 15px 15px 0 0;
 }
 
 .steps-cta h2 {
-    color: #4e342e;
+    color: var(--accent-color);
     font-family: 'Georgia', serif;
 }
 
@@ -776,11 +808,11 @@ main {
     margin-top: 20px;
     padding: 15px 35px;
     border-radius: 25px;
-    background: #4e342e;
+    background: var(--accent-color);
     color: white;
     text-decoration: none;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(78,52,46,0.3);
+    box-shadow: 0 4px 15px var(--shadow-main);
     transition: 0.3s;
 }
 
@@ -794,17 +826,17 @@ main {
     padding: 50px;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    box-shadow: 0 10px 40px var(--shadow-main);
     font-family: 'Georgia', serif;
 }
 
 .issue-article-heavy {
     padding: 60px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.07);
+    box-shadow: 0 15px 50px var(--shadow-main);
 }
 
 .issue-border-top-brown {
-    border-top: 8px solid #4e342e;
+    border-top: 8px solid var(--accent-color);
 }
 
 .issue-border-top-slate {
@@ -821,8 +853,8 @@ main {
 
 .issue-title {
     padding-bottom: 20px;
-    border-bottom: 2px solid #d7ccc8;
-    color: #4e342e;
+    border-bottom: 2px solid var(--card-bg);
+    color: var(--accent-color);
     font-size: 2.5em;
 }
 
@@ -839,12 +871,12 @@ main {
 
 .issue-title-burn {
     color: #bf360c;
-    border-bottom-color: #fbe9e7;
+    border-bottom-color: var(--text-on-primary);
 }
 
 .issue-intro {
     margin-top: 30px;
-    color: #4e342e;
+    color: var(--accent-color);
     font-size: 1.2em;
     line-height: 1.9;
 }
@@ -861,7 +893,7 @@ main {
 
 .issue-section-title {
     margin-top: 45px;
-    color: #6d4c41;
+    color: var(--primary-color);
     font-size: 1.8em;
 }
 
@@ -878,7 +910,7 @@ main {
 }
 
 .issue-text {
-    color: #4e342e;
+    color: var(--accent-color);
     line-height: 1.8;
 }
 
@@ -906,7 +938,7 @@ main {
 }
 
 .issue-callout p {
-    color: #4e342e;
+    color: var(--accent-color);
     line-height: 1.7;
 }
 
@@ -926,14 +958,14 @@ main {
 }
 
 .issue-callout-bordered {
-    border: 1px solid #efebe9;
-    color: #3e2723;
+    border: 1px solid var(--bg-main);
+    color: var(--text-main);
 }
 
 .issue-callout-note {
     background: #fff9c4;
     border-left: 6px solid #8d6e63;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .issue-callout-note strong {
@@ -941,7 +973,7 @@ main {
 }
 
 .issue-callout-quote {
-    border: 1px dashed #d7ccc8;
+    border: 1px dashed var(--card-bg);
     border-radius: 10px;
     background: #fdfaf5;
     color: #5d4037;
@@ -999,8 +1031,8 @@ main {
     color: #8d6e63;
     font-style: italic;
     font-size: 1.2em;
-    border-top: 1px solid #d7ccc8;
-    border-bottom: 1px solid #d7ccc8;
+    border-top: 1px solid var(--card-bg);
+    border-bottom: 1px solid var(--card-bg);
 }
 
 .issue-quote-large {
@@ -1070,7 +1102,7 @@ main {
 }
 
 .issue-step-text {
-    color: #4e342e;
+    color: var(--accent-color);
     line-height: 1.6;
 }
 
@@ -1079,12 +1111,12 @@ main {
     padding: 45px;
     text-align: center;
     border-radius: 20px;
-    background: #efebe9;
+    background: var(--bg-main);
 }
 
 .issue-cta p {
     margin-bottom: 25px;
-    color: #4e342e;
+    color: var(--accent-color);
     font-size: 1.3em;
     font-weight: bold;
 }
@@ -1108,7 +1140,7 @@ main {
     margin-top: 70px;
     padding: 50px;
     border-radius: 25px;
-    background: #4e342e;
+    background: var(--accent-color);
     color: #f5f5dc;
 }
 
@@ -1127,7 +1159,7 @@ main {
 }
 
 .issue-cta-burn {
-    background: #fbe9e7;
+    background: var(--text-on-primary);
 }
 
 .issue-cta-burn p {
@@ -1162,14 +1194,14 @@ main {
 
 .sidebar-heading {
     padding-bottom: 10px;
-    border-bottom: 1px solid #d7ccc8;
-    color: #4e342e;
+    border-bottom: 1px solid var(--card-bg);
+    color: var(--accent-color);
     font-size: 1.1em;
 }
 
 .article-title {
     margin-bottom: 30px;
-    color: #4e342e;
+    color: var(--accent-color);
     font-family: 'Georgia', serif;
 }
 
@@ -1202,11 +1234,11 @@ main {
     padding: 20px;
     text-align: center;
     border-radius: 15px;
-    background: #efebe9;
+    background: var(--bg-main);
 }
 
 .article-cta-title {
-    color: #4e342e;
+    color: var(--accent-color);
     font-weight: bold;
 }
 
@@ -1246,7 +1278,7 @@ main {
     padding: 35px 40px;
     border-radius: 20px;
     background: white;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px var(--shadow-main);
 }
 
 .admin-page,
@@ -1255,7 +1287,7 @@ main {
 .requests-shell {
     padding: 40px;
     background-color: #f5f5dc;
-    color: #4e342e;
+    color: var(--accent-color);
     font-family: 'Segoe UI', 'Georgia', serif;
 }
 
@@ -1266,7 +1298,7 @@ main {
 .admin-shell,
 .requests-shell {
     border-radius: 28px;
-    box-shadow: 0 16px 45px rgba(78, 52, 46, 0.08);
+    box-shadow: 0 16px 45px var(--shadow-main);
 }
 
 
@@ -1291,7 +1323,7 @@ main {
     padding: 15px;
     border-radius: 8px;
     border-left: 5px solid #8d6e63;
-    background: #efebe9;
+    background: var(--bg-main);
 }
 
 .admin-stat-card-client {
@@ -1310,7 +1342,7 @@ main {
     border-collapse: collapse;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px var(--shadow-main);
 }
 
 .table-scroll {
@@ -1339,12 +1371,12 @@ main {
 .data-table td {
     padding: 15px;
     vertical-align: top;
-    border-bottom: 1px solid #efebe9;
+    border-bottom: 1px solid var(--bg-main);
 }
 
 .data-table-compact td {
     padding: 10px;
-    border-bottom: 1px solid #d7ccc8;
+    border-bottom: 1px solid var(--card-bg);
 }
 
 .data-table tbody tr:hover {
@@ -1394,7 +1426,7 @@ main {
     width: 180px;
     height: 50px;
     padding: 5px;
-    border: 1px solid #d7ccc8;
+    border: 1px solid var(--card-bg);
     border-radius: 4px;
     background-color: #fff9f0;
     font-size: 0.9em;
@@ -1418,7 +1450,7 @@ main {
 .page-heading {
     margin-bottom: 30px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #d7ccc8;
+    border-bottom: 2px solid var(--card-bg);
     color: #795548;
     font-family: 'Georgia', serif;
 }
@@ -1461,7 +1493,7 @@ main {
     padding: 36px 32px;
     border-radius: 24px;
     background: #fffdf8;
-    box-shadow: 0 18px 45px rgba(78, 52, 46, 0.12);
+    box-shadow: 0 18px 45px var(--shadow-main);
     text-align: center;
 }
 
@@ -1485,7 +1517,7 @@ main {
     padding: 40px 20px;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px var(--shadow-main);
 }
 
 .manifesto-title {
@@ -1545,16 +1577,16 @@ main {
 h1, h2, h3 {
     font-family: 'Georgia', serif;
     font-weight: normal;
-    color: #4e342e;
+    color: var(--accent-color);
 }
 
 .hero-title-light {
     color: #f5f5dc;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+    text-shadow: 2px 2px 5px var(--shadow-main);
 }
 
 .btn-primary {
-    background-color: #6d4c41;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 12px 25px;
@@ -1572,7 +1604,7 @@ h1, h2, h3 {
 
 .btn-primary:hover {
     background-color: #8d6e63;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 /* =========================================
@@ -1586,9 +1618,9 @@ h1, h2, h3 {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #4e342e;
+    background-color: var(--accent-color);
     min-width: 240px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px var(--shadow-main);
     z-index: 100;
     border-radius: 8px;
     top: 100%;
@@ -1601,7 +1633,7 @@ h1, h2, h3 {
     text-decoration: none;
     display: block;
     font-size: 0.9em;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--overlay-light);
 }
 
 .dropdown-content a:hover {
@@ -1651,7 +1683,7 @@ h1, h2, h3 {
     border-top: 4px solid var(--primary-color); /* тонка лінія кольору дерева зверху */
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1); /* тінь у тон шоколаду */
+    box-shadow: 0 4px 15px var(--shadow-main); /* тінь у тон шоколаду */
     margin-bottom: 2rem;
 }
 
@@ -1711,7 +1743,7 @@ h1, h2, h3 {
     padding: 40px;
     background: var(--bg-card);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px var(--shadow-main);
 }
 
 .admin-actions {
@@ -1726,7 +1758,7 @@ h1, h2, h3 {
 }
 
 .admin-table th, .admin-table td {
-    border-bottom: 1px solid #efebe9;
+    border-bottom: 1px solid var(--bg-main);
     padding: 16px;
     text-align: left;
 }
@@ -1771,7 +1803,7 @@ h1, h2, h3 {
 .footer-nav {
     margin-top: 40px;
     text-align: center;
-    border-top: 1px solid #efebe9;
+    border-top: 1px solid var(--bg-main);
     padding-top: 20px;
 }
 
@@ -1917,7 +1949,7 @@ h1, h2, h3 {
     background-color: white;
     border-radius: 8px;
     overflow: hidden; /* Згладжує кути таблиці */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Ледь помітна тінь */
+    box-shadow: 0 2px 10px var(--shadow-main); /* Ледь помітна тінь */
 }
 
 .admin-table thead tr {
@@ -2153,7 +2185,7 @@ h1, h2, h3 {
 .comment-textarea:focus {
     outline: none;
     border-color: #8b7355; /* Твій акцентний колір */
-    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    box-shadow: 0 0 0 3px var(--primary-color);
 }
 
 /* Кнопка відправки */
@@ -2216,7 +2248,7 @@ h1, h2, h3 {
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 4px var(--shadow-main);
 }
 
 /* Знаходимо поле введення коментаря */
@@ -2319,7 +2351,7 @@ h1, h2, h3 {
 }
 
 .btn-delete, .btn-delete-sm {
-    background-color: #6d4c41 !important; /* Твій шоколад */
+    background-color: var(--primary-color) !important; /* Твій шоколад */
 }
 
 /* Форма видалення, щоб не переносила кнопку на новий рядок */
@@ -2357,7 +2389,7 @@ h1, h2, h3 {
 
 /* Напис "Скасувати" у формі створення статті */
 .form-actions .site-nav-link {
-    color: #4e342e !important;
+    color: var(--accent-color) !important;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -2366,7 +2398,7 @@ h1, h2, h3 {
 .article-description a,
 .articles-list a,
 .article-preview a {
-    color: var(--link-color, #6d4c41) !important;
+    color: var(--link-color, var(--primary-color)) !important;
     text-decoration: underline;
 }
 
@@ -2532,7 +2564,7 @@ h1, h2, h3 {
 
 /* Напис "Скасувати" у формі створення (робимо видимим) */
 .btn-secondary, .form-actions .site-nav-link {
-    color: #4e342e !important;
+    color: var(--accent-color) !important;
     font-weight: bold !important;
     text-decoration: underline !important;
     opacity: 1 !important;
@@ -2542,12 +2574,12 @@ h1, h2, h3 {
 
 /* Стилі для спільного чату */
 .chat-wrapper {
-    border: 1px solid #d7ccc8;
+    border: 1px solid var(--card-bg);
     border-radius: 8px;
     padding: 1.5rem;
     background-color: #fdfbf7;
     margin-top: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px var(--shadow-main);
 }
 
 .chat-window {
@@ -2597,7 +2629,7 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     padding: 8px 20px;
-    background-color: #4e342e; /* Темно-коричневий фон, як у інших кнопок */
+    background-color: var(--accent-color); /* Темно-коричневий фон, як у інших кнопок */
     color: #f5e9c2 !important; /* Жовтуватий текст */
     border: 1px solid #8d6e63;
     border-radius: 25px; /* Робить кнопку круглою */
@@ -2611,7 +2643,7 @@ h1, h2, h3 {
 .btn-nav-round:hover {
     background-color: #5d4037;
     color: #fff !important; /* При наведенні можна трохи висвітлити */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px var(--shadow-main);
     text-decoration: none;
 }
 
@@ -2663,7 +2695,7 @@ h1, h2, h3 {
 /* Ховер ефекти */
 .btn-toggle:hover {
     filter: brightness(0.95);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px var(--shadow-main);
 }
 
 /* Стиль кнопки видалення */
@@ -2680,7 +2712,7 @@ h1, h2, h3 {
     max-width: 80%;
     margin-bottom: 10px;
     position: relative;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px var(--shadow-main);
 }
 
 .message-out {
@@ -2708,7 +2740,7 @@ h1, h2, h3 {
 .message-reply-ref {
     font-size: 0.75rem;
     color: #666;
-    background: rgba(0,0,0,0.05);
+    background: var(--shadow-main);
     padding: 2px 6px;
     border-radius: 4px;
     margin-bottom: 5px;
@@ -2728,8 +2760,8 @@ h1, h2, h3 {
 
 /* Панель перед відправкою */
 .reply-preview-bar {
-    background: #efebe9;
-    color: #4e342e;
+    background: var(--bg-main);
+    color: var(--accent-color);
     border-left: 4px solid #8d6e63;
     padding: 8px 15px;
     border-radius: 8px 8px 0 0;
@@ -2842,8 +2874,8 @@ h1, h2, h3 {
 .tab-btn {
     padding: 10px 20px;
     border: none;
-    background: #d7ccc8;
-    color: #4e342e;
+    background: var(--card-bg);
+    color: var(--accent-color);
     cursor: pointer;
     border-radius: 5px 5px 0 0;
     font-size: 0.9rem;
@@ -2853,7 +2885,7 @@ h1, h2, h3 {
 .tab-btn.active {
     background: #8d6e63;
     color: white;
-    border-bottom: 2px solid #4e342e;
+    border-bottom: 2px solid var(--accent-color);
 }
 
 .badge {
@@ -2866,7 +2898,7 @@ h1, h2, h3 {
 }
 
 .quote-box {
-    background: rgba(0,0,0,0.05);
+    background: var(--shadow-main);
     border-left: 3px solid #ccc;
     padding: 4px 8px;
     margin-bottom: 5px;
@@ -2904,7 +2936,7 @@ h1, h2, h3 {
     width: 100%;
     min-height: 60px;
     padding: 12px;
-    border: 2px solid #d7ccc8;
+    border: 2px solid var(--card-bg);
     border-radius: 8px;
     font-family: inherit;
     font-size: 1rem;
@@ -2915,15 +2947,15 @@ h1, h2, h3 {
 .chat-textarea:focus {
     outline: none;
     border-color: #8d6e63;
-    box-shadow: 0 0 5px rgba(141, 110, 99, 0.3);
+    box-shadow: 0 0 5px var(--primary-color);
 }
 
 /* Кнопка відправки */
 .btn-send {
     align-self: flex-end;
-    background-color: #4e342e; /* Глибокий шоколадний */
+    background-color: var(--accent-color); /* Глибокий шоколадний */
     color: #f5f5f5; /* Молочна пінка */
-    border: 1px solid #3e2723;
+    border: 1px solid var(--text-main);
     padding: 8px 25px;
     border-radius: 4px; /* Робимо більш класичною, квадратною */
     cursor: pointer;
@@ -2932,13 +2964,13 @@ h1, h2, h3 {
 }
 
 .btn-send:hover {
-    background-color: #3e2723; /* Темний шоколад */
+    background-color: var(--text-main); /* Темний шоколад */
 }
 
 .date-separator {
     text-align: center;
     margin: 20px 0;
-    border-bottom: 1px solid #d7ccc8; /* Світлий беж */
+    border-bottom: 1px solid var(--card-bg); /* Світлий беж */
     line-height: 0.1em;
 }
 
