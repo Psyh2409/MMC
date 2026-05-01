@@ -26,6 +26,9 @@ import java.util.UUID;
 @Controller
 public class ChatController {
 
+    // Використовуємо стабільний UUID для публічної кімнати
+    private static final UUID PUBLIC_CHAT_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
@@ -37,8 +40,8 @@ public class ChatController {
     @MessageMapping("/chat.public")
     @SendTo("/topic/public")
     public ChatMessage processPublicMessage(@Payload ChatMessage chatMessage) {
-        User user = findUserSafely(chatMessage.getSenderId());
-
+        // Шукаємо за UUID безпосередньо
+        User user = userRepository.findById(chatMessage.getSenderId()).orElse(null);
         // Перевірка бану
         if (user == null || !user.isEnabled() || !user.isChatEnabled()) {
             log.warn("Блокування публічного повідомлення від: {}", chatMessage.getSenderId());
@@ -48,15 +51,15 @@ public class ChatController {
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setSenderName(user.getName());
         chatMessage.setStatus(MessageStatus.DELIVERED);
-        chatMessage.setRecipientId("PUBLIC");
+        chatMessage.setRecipientId(PUBLIC_CHAT_ID);
 
         return chatMessageRepository.save(chatMessage);
     }
 
     // 2. ПРИВАТНІ ПОВІДОМЛЕННЯ (Твій метод, який ти просив залишити)
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessage chatMessage) {
-        User user = findUserSafely(chatMessage.getSenderId());
+    public void processMessage(@Payload ChatMessage chatMessage, java.security.Principal principal) {
+        User user = userRepository.findById(chatMessage.getSenderId()).orElse(null);
 
         if (user == null || !user.isEnabled() || !user.isChatEnabled()) {
             return;
@@ -68,18 +71,21 @@ public class ChatController {
 
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
 
-        // ВІДПРАВКА ОТРИМУВАЧУ
-        // У методі processMessage
-        messagingTemplate.convertAndSendToUser(
-                chatMessage.getRecipientId(),
-                "/queue/messages",
-                savedMessage
-        );
+        // Знаходимо імейл отримувача, щоб WebSocket знав, куди слати
+        User recipientUser = userRepository.findById(chatMessage.getRecipientId()).orElse(null);
 
+        if (recipientUser != null) {
+            // Відправка отримувачу за його Email
+            messagingTemplate.convertAndSendToUser(
+                    recipientUser.getEmail(),
+                    "/queue/messages",
+                    savedMessage
+            );
+        }
 // Відправляємо копію собі, ТІЛЬКИ якщо ми не є отримувачем (щоб не було дублів)
         if (!chatMessage.getSenderId().equals(chatMessage.getRecipientId())) {
             messagingTemplate.convertAndSendToUser(
-                    chatMessage.getSenderId(),
+                    principal.getName(),
                     "/queue/messages",
                     savedMessage
             );
@@ -89,22 +95,20 @@ public class ChatController {
     // 3. ІСТОРІЯ (Твій HTTP ендпоінт)
     @GetMapping("/api/chat/history/public")
     public ResponseEntity<List<ChatMessage>> getPublicHistory() {
-        return ResponseEntity.ok(chatMessageRepository.findByRecipientIdOrderByTimestampAsc("PUBLIC"));
+        return ResponseEntity.ok(chatMessageRepository.findByRecipientIdOrderByTimestampAsc(PUBLIC_CHAT_ID));
     }
 
     // 4. СТОРІНКА (Твій мапінг на шаблон)
     @GetMapping("/chat")
-    public String chatPage() {
-        return "chat";
-    }
+    public String chatPage(java.security.Principal principal, org.springframework.ui.Model model) {
+        if (principal != null) {
+            // Знаходимо користувача за email (який лежить у Principal)
+            User user = userRepository.findByEmail(principal.getName()).orElse(null);
 
-    // 5. БЕЗПЕЧНИЙ ПОШУК (Допоміжний метод, щоб не копіювати try-catch)
-    private User findUserSafely(String id) {
-        try {
-            return userRepository.findById(UUID.fromString(id)).orElse(null);
-        } catch (Exception e) {
-            return userRepository.findByEmail(id).orElse(null);
+            // Передаємо об'єкт користувача в модель сторінки
+            model.addAttribute("user", user);
         }
+        return "chat";
     }
 
     @GetMapping("/api/chat/history/private")
@@ -113,10 +117,14 @@ public class ChatController {
 
         log.info("Запит приватної історії для: {}", principal.getName());
 
-        // Передаємо email (principal.getName()) прямо в запит
-        List<ChatMessage> history = chatMessageRepository.findPrivateConversationHistory(principal.getName());
+        // Знаходимо користувача за email, щоб отримати його UUID
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        log.info("Знайдено повідомлень: {}", history.size());
+        log.info("Знайдено повідомлень: {}", user.getId());
+
+        // Використовуємо репозиторій з UUID параметрами
+        List<ChatMessage> history = chatMessageRepository.findPrivateConversationHistory(user.getId(), PUBLIC_CHAT_ID);
 
         return ResponseEntity.ok(history);
     }

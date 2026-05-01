@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -18,17 +19,17 @@ import java.time.LocalDateTime;
 public class ChatMessage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "sender_id", nullable = false)
-    private String senderId;
+    private UUID senderId;
 
     @Column(name = "recipient_id", nullable = false)
-    private String recipientId;
+    private UUID recipientId;
 
     @Column(name = "parent_id")
-    private Long parentId; // ID повідомлення, на яке відповідаємо (теж Long)
+    private UUID parentId;
 
     @Column(name = "sender_name")
     private String senderName;
