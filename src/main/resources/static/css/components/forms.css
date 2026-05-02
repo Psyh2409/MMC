@@ -1,0 +1,437 @@
+/* БАЗОВІ ФОРМИ ТА ЛЕЙАУТ */
+.stack-form {
+    display: flex;
+    flex-direction: column;
+    /* 15px -> приблизно 4 кроки (16px). Це дає кращу візуальну сітку */
+    gap: var(--space-md);
+}
+
+.stack-form-sans {
+    /* Використовуємо системний шрифт без засічок, якщо він десь прописаний глобально,
+       або залишаємо так для службових форм */
+    font-family: sans-serif;[cite: 10]
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    /* 5px -> замінюємо на 1.25 нашого кроку, щоб зберегти щільність,
+       але прив'язатися до системи */
+    gap: calc(var(--step) * 1.25);
+}
+
+.form-label {
+    /* Використовуємо семантичний колір тексту замість загального акценту */
+    color: var(--text-primary);
+    font-weight: bold;
+    /* Додаємо невеликий відступ знизу через системний крок,
+       якщо це не суперечить gap у батька */
+    margin-bottom: calc(var(--step) * 0.5);
+}
+
+/* ІНПУТИ ТА ТЕКСТАРЕЇ — СИСТЕМНА СТЕРИЛІЗАЦІЯ */
+.form-input,
+.form-textarea {
+    /* 1. ГЕОМЕТРІЯ: 12px -> 3 кроки сітки */
+    padding: calc(var(--step) * 3);
+
+    /* 2. РАДІУС: 8px -> системний середній токен */
+    border-radius: var(--radius-md);
+
+    /* 3. МЕЖІ: замість 1px solid — тонка rem-лінія та м'який колір */
+    border: 0.0625rem solid var(--border-soft);
+
+    /* 4. КОЛЬОРИ: Семантичний фон для інпутів (змінюється разом із темою) */
+    background-color: var(--bg-input);[cite: 11]
+    color: var(--text-primary);[cite: 11]
+
+    /* 5. UX: Включаємо модель боксу та додаємо плавність */
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    /* ТИПОГРАФІКА */
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.form-textarea {
+    /* Дозволяємо тягнути тільки вниз, щоб не зламати ширину */
+    resize: vertical;
+    min-height: calc(var(--step) * 20); /* Встановлюємо комфортну мінімальну висоту (80px) */
+}
+
+/* СТАН ФОКУСУ: Той самий ідеальний Glow, який ми обговорювали */
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--border-strong);[cite: 11]
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);[cite: 11]
+}
+
+/* ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК */
+.form-error-text {
+    /* 1. КОЛІР: Використовуємо спеціальний токен статусу помилки */
+    color: var(--status-error);
+    /* 2. ТИПОГРАФІКА: Залишаємо відносні 0.8em для ієрархії */
+    font-size: 0.8em;
+    /* 3. ГЕОМЕТРІЯ: 5px -> замінюємо на кратне кроку (1.25 * 4px) */
+    margin-top: calc(var(--step) * 1.25);
+    font-weight: 500;
+}
+
+.helper-text-centered {
+    text-align: center;
+    /* 25px -> 6.25 кроків (що дає рівно 25px при кроці 4px) */
+    margin-top: calc(var(--step) * 6.25);[cite: 11]
+    /* Використовуємо вторинний колір тексту для підказок */
+    color: var(--text-secondary);[cite: 11]
+    font-size: 0.9rem;
+}
+
+.helper-link {
+    /* Використовуємо акцентний колір для інтерактивних посилань */
+    color: var(--accent-primary);
+    font-weight: bold;
+    text-decoration: underline;
+    /* Додаємо зміщення підкреслення для кращої читабельності */
+    text-underline-offset: 0.125rem;
+    transition: color 0.2s ease;
+}
+
+.helper-link:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+}
+
+.oauth-login-block {
+    /* 18px -> 4.5 кроки сітки (4.5 * 0.25rem = 1.125rem) */
+    margin-top: calc(var(--step) * 4.5);[cite: 11]
+    /* Гарантуємо, що блок займає всю ширину */
+    width: 100%;
+}
+
+/* АДМІНІСТРАТИВНІ МІКРО-ФОРМИ */
+.admin-action-form-inline {
+    /* 5px -> 1.25 кроку (1.25 * 0.25rem = 5px) */
+    margin-top: calc(var(--step) * 1.25);
+}
+
+.admin-notes {
+    /* 1. ГЕОМЕТРІЯ: 180px та 50px переводимо в rem для стабільності масштабу */
+    width: 11.25rem;
+    height: 3.125rem;
+
+    /* 2. ВНУТРІШНІ ВІДСТУПИ: 5px -> 1.25 кроку */
+    padding: calc(var(--step) * 1.25);
+
+    /* 3. РАДІУС: 4px -> системний малий токен */
+    border-radius: var(--radius-sm);[cite: 11]
+
+    /* 4. МЕЖІ ТА КОЛЬОРИ: Тільки системні токени тем */
+    border: 0.0625rem solid var(--border-soft);[cite: 11]
+    background-color: var(--bg-input);[cite: 11]
+    color: var(--text-primary);[cite: 11]
+
+    /* 5. ТИПОГРАФІКА */
+    font-size: 0.9em;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+/* Стан фокусу для нотаток */
+.admin-notes:focus {
+    outline: none;
+    border-color: var(--border-strong);[cite: 11]
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);[cite: 11]
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;[cite: 10]
+    /* Гарантуємо, що контейнер займає всю ширину форми */
+    width: 100%;
+}
+
+.password-container .form-input {
+    /* 40px -> 10 кроків сітки (10 * 0.25rem = 2.5rem) */
+    /* Це місце для кнопки перемикання видимості пароля */
+    padding-right: calc(var(--step) * 10);[cite: 11]
+    width: 100%;[cite: 10]
+}
+
+/* АДМІНІСТРАТИВНИЙ ЛЕЙАУТ */
+.admin-actions {
+    /* 30px -> 7.5 кроків сітки (7.5 * 0.25rem = 1.875rem) */
+    margin-bottom: calc(var(--step) * 7.5);
+}
+
+.admin-form {
+    /* 1. КОЛЬОРИ: Використовуємо системний фон канвасу або поверхні */
+    background-color: var(--bg-canvas);
+
+    /* 2. ГЕОМЕТРІЯ: 30px -> 7.5 кроків сітки */
+    padding: calc(var(--step) * 7.5);
+
+    /* 3. МЕЖІ: Тонка rem-лінія та системний м'який колір */
+    border: 0.0625rem solid var(--border-soft);
+
+    /* 4. РАДІУС: 8px -> системний середній токен */
+    border-radius: var(--radius-md);
+
+    /* Додаємо невелику тінь для об'єму, як у стандартних контейнерах */
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+}
+
+.form-group {
+    /* 20px -> 5 кроків сітки (5 * 0.25rem = 1.25rem) */
+    margin-bottom: var(--space-md);
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    /* 8px -> 2 кроки сітки (системний токен sm) */
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+.form-control {
+    width: 100%;
+    /* 10px -> 2.5 кроки сітки (2.5 * 0.25rem = 0.625rem) */
+    padding: calc(var(--step) * 2.5);
+
+    /* МЕЖІ: Використовуємо системну м'яку межу замість primary-color,
+       щоб інпут не "кричав", поки в нього не клікнули */
+    border: 0.0625rem solid var(--border-soft);
+
+    /* 4px -> системний малий радіус */
+    border-radius: var(--radius-sm);
+
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-textarea {
+    width: 100%;
+    padding: calc(var(--step) * 2.5);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 5rem;
+}
+
+/* Стан фокусу для обох контролів */
+.form-control:focus,
+.form-control-textarea:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
+}
+
+/* ПІДКАЗКИ ТА ДИНАМІЧНІ ПОЛЯ */
+
+.error-text {
+    /* Використовуємо системний статусний колір для помилок */
+    color: var(--status-error);
+    font-size: 0.9em;
+    /* 5px -> 1.25 кроку сітки */
+    margin-top: calc(var(--step) * 1.25);
+    display: block;
+    font-weight: 500;
+}
+
+.new-category-input {
+    /* 10px -> 2.5 кроки сітки */
+    margin-top: calc(var(--step) * 2.5);
+    display: none; /* Керується через JS */
+}
+
+.category-input-hidden {
+    display: none;
+}
+
+.hidden-category-field {
+    display: none;
+    /* 10px -> 2.5 кроки сітки (2.5 * 0.25rem = 0.625rem) */
+    margin-top: calc(var(--step) * 2.5);
+}
+
+.admin-actions-bar {
+    /* 20px -> рівно 5 кроків сітки (5 * 0.25rem = 1.25rem) */
+    margin-bottom: calc(var(--step) * 5);
+    display: block; /* Гарантуємо видимість контейнера для кнопок */
+}
+
+/* ТЕКСТАРЕЯ ДЛЯ КОМЕНТАРІВ */
+.comment-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    /* 1. ГЕОМЕТРІЯ: 15px -> 3.75 кроки сітки */
+    padding: calc(var(--step) * 3.75);
+    /* 10px -> 2.5 кроки сітки */
+    margin-bottom: calc(var(--step) * 2.5);
+
+    /* 2. МЕЖІ ТА РАДІУС: Використовуємо системні токени */
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+
+    /* 3. КОЛЬОРИ ТЕМИ: Замість #ffffff використовуємо токен інпуту */
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+
+    /* 4. ТИПОГРАФІКА */
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    /* 5. ПОВЕДІНКА */
+    resize: vertical;
+    display: block;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-textarea:focus {
+    outline: none;
+    /* Використовуємо системний сильний колір межі замість хардкоду #8b7355 */
+    border-color: var(--border-strong);
+    /* Наш фірмовий квантовий Glow */
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
+}
+
+/* КОНТЕЙНЕРИ ТА ПОЛЯ КОМЕНТАРІВ */
+
+.comment-form-container {
+    /* 1. ГЕОМЕТРІЯ: 20px -> рівно 5 кроків сітки */
+    padding: calc(var(--step) * 5);
+
+    /* 2. КОЛЬОРОВА ПІДКЛАДКА: Замість #ede7dd використовуємо семантичну поверхню */
+    background-color: var(--bg-surface);
+
+    /* 3. РАДІУС: 12px -> системний великий токен */
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+}
+
+.comment-form textarea,
+.comment-section textarea {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    display: block;
+    resize: vertical;
+
+    /* 4. ГЕОМЕТРІЯ ВНУТРІШНЯ: 12px -> 3 кроки сітки */
+    padding: calc(var(--step) * 3);
+
+    /* 5. МЕЖІ: Використовуємо системну тонку лінію */
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+
+    /* 6. КОЛЬОРИ: Семантичний фон інпуту (завжди світліший або темніший за фон контейнера) */
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ФОКУС ДЛЯ ТЕКСТАРЕА */
+.comment-form textarea:focus,
+.comment-section textarea:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
+}
+
+/* ПАНЕЛЬ ДІЙ В АДМІНЦІ */
+.admin-actions-bar {
+    /* 1. ГЕОМЕТРІЯ: 15px -> 3.75 кроки, 1.5rem -> 6 кроків */
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+
+    /* 2. ЛЕЙАУТ: Використовуємо Flexbox як основний стандарт */
+    display: flex;
+    flex-wrap: wrap;
+    /* Розподіляємо елементи: кнопки зліва, пошук або фільтри справа */
+    justify-content: space-between;
+    align-items: center;
+
+    /* 3. ОЧИЩЕННЯ: Прибираємо !important, бо в окремому файлі
+       пріоритет і так буде правильним */
+}
+
+/* ФОРМИ ЧАТУ ТА ПОВІДОМЛЕНЬ */
+
+.chat-form {
+    display: flex;
+    /* 10px -> 2.5 кроки сітки */
+    gap: calc(var(--step) * 2.5);
+    margin: 0;
+    align-items: flex-end; /* Вирівнюємо кнопку по базовій лінії текстареа */
+}
+
+.chat-form-vertical {
+    display: flex;
+    flex-direction: column;
+    /* 8px -> рівно 2 кроки сітки (var(--space-sm)) */
+    gap: var(--space-sm);
+    /* 10px -> 2.5 кроки сітки */
+    padding: calc(var(--step) * 2.5);
+
+    background-color: var(--bg-canvas);
+    /* Системна тонка лінія зверху для відокремлення від історії чату */
+    border-top: 0.0625rem solid var(--border-soft);
+}
+
+/* СПЕЦІАЛЬНА ТЕКСТАРЕЯ ДЛЯ ЧАТУ */
+.chat-textarea {
+    width: 100%;
+    /* 60px -> 15 кроків сітки (15 * 0.25rem = 3.75rem) */
+    min-height: 3.75rem;
+    /* 12px -> 3 кроки сітки */
+    padding: calc(var(--step) * 3);
+
+    /* МЕЖІ: 2px -> 0.125rem. Використовуємо м'який колір у спокої */
+    border: 0.125rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+
+    font-family: inherit;
+    font-size: 1rem;
+    /* Семантичний фон інпуту замість загального bg-main */
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-textarea:focus {
+    outline: none;
+    /* При фокусі межа стає виразною */
+    border-color: var(--border-strong);
+    /* Замість 5px ставимо нашу квантову тінь 0.125rem (2px) */
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
+}
+
+/* components/forms.css */
+.oauth-disabled-facebook {
+    border-color: #b7c8f7;
+    background: #f4f7ff;
+    color: #2f4d92; /* Залишаємо брендовий синій */
+}
+
+.contact-direct {
+    margin-top: var(--space-xl);
+    border-top: 1px solid var(--border-soft);
+    padding-top: var(--space-lg);
+}
+

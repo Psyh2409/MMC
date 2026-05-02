@@ -1,0 +1,109 @@
+/* =========================================
+   CARDS SYSTEM - ATOMIC EDITION (FULL)
+   ========================================= */
+
+/* 1. СПІЛЬНІ БАЗОВІ ВЛАСТИВОСТІ */
+.home-service-card,
+.steps-card,
+.issue-grid-card,
+.admin-stat-card,
+.error-card,
+.profile-card,
+.article-card {
+    background-color: var(--bg-canvas);
+    box-sizing: border-box;
+    border-radius: var(--radius-md); /* Базовий радіус для всіх */
+}
+
+/* 2. ЕФЕКТИ (Тіні та Транзиції) */
+.home-service-card,
+.profile-card,
+.error-card,
+.steps-card {
+    box-shadow: 0 var(--space-sm) var(--space-lg) var(--bg-overlay);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 3. ДЕТАЛЬНЕ НАЛАШТУВАННЯ КАРТОК */
+
+.home-service-card {
+    height: 100%;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border-top: var(--space-xs) solid var(--accent-primary);
+}
+
+.profile-card {
+    background: var(--bg-surface);
+    border-top: var(--space-xs) solid var(--accent-primary);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.admin-stat-card {
+    flex: 1;
+    padding: var(--space-md);
+    border-left: var(--space-xs) solid var(--accent-primary);
+}
+
+.error-card {
+    max-width: 40rem;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+}
+
+/* 4. КОМПОНЕНТИ СТАТЕЙ (ISSUE ELEMENTS) */
+
+.issue-callout {
+    margin: var(--space-xl) 0;
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+}
+
+.issue-callout p {
+    color: var(--text-primary);
+    line-height: 1.7;
+}
+
+.issue-callout-left {
+    border-left: 0.3125rem solid var(--accent-primary);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.issue-callout-note {
+    background: var(--bg-surface-alt);
+    border-left: 0.375rem solid var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.issue-callout-quote {
+    border: 0.0625rem dashed var(--border-soft);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    font-style: italic;
+}
+
+.issue-callout-secondary {
+    border: 0.0625rem solid var(--border-soft);
+    border-left: 0.3125rem solid var(--accent-primary);
+    background: var(--bg-surface);
+    padding: var(--space-lg);
+}
+
+/* 5. ЦИТАТИ (QUOTES) */
+
+.issue-quote {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--accent-primary);
+    font-style: italic;
+    border-top: 0.0625rem solid var(--border-soft);
+    border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.issue-quote-double {
+    border-top: 0.1875rem double var(--border-soft);
+    border-bottom: 0.1875rem double var(--border-soft);
+}

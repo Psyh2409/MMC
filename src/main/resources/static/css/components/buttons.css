@@ -1,0 +1,1467 @@
+
+/* РЕЗЕРВНИЙ СТИЛЬ ДЛЯ ЗАБУТИХ КНОПОК */
+button:not([class]), .btn-default {
+    padding: calc(var(--step) * 2) calc(var(--step) * 4);
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+/* Базовий клас кнопки — без жодного пікселя! */
+.btn-primary {
+    /* 1. КОЛЬОРИ: Використовуємо семантику замість назв кольорів */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);[cite: 1]
+    border: none;
+
+    /* 2. ГЕОМЕТРІЯ: Квантова сітка (4px * 3 та 4px * 6) */
+    padding: calc(var(--step) * 3) calc(var(--step) * 6);[cite: 1]
+    border-radius: var(--radius-md);[cite: 1]
+
+    /* 3. ТИПОГРАФІКА: Відносні одиниці */
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 4. ДИНАМІКА: Плавність без навантаження */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+/* Стан при наведенні — системний ховер */
+.btn-primary:hover {
+    background-color: var(--accent-hover);[cite: 1]
+    box-shadow:0 0.25rem 0.75rem var(--bg-overlay);[cite: 1]
+}
+
+/* 1. Основний контейнер панелі */
+.cta-panel {
+    /* Відступ зверху: 50px -> 3.125rem (або через calc) */
+    margin-top: calc(var(--step) * 12.5);
+    /* Внутрішні відступи: 30px -> 1.875rem */
+    padding: calc(var(--step) * 7.5);
+    /* Радіус: 15px -> 0.9375rem (або ближчий системний токен) */
+    border-radius: var(--radius-md);
+    text-align: center;
+    /* Тонка межа через rem (1px) */
+    border: 0.0625rem solid var(--border-soft);[cite: 1]
+}
+
+/* 2. Світла модифікація панелі */
+.cta-panel-light {
+    /* Використовуємо системний токен фону замість хардкоду */
+    background-color: var(--bg-canvas);[cite: 1]
+}
+
+/* 3. Заголовок всередині панелі */
+.cta-panel-title {
+    margin-top: 0;
+    /* Семантичний колір з variables.css */
+    color: var(--text-primary);[cite: 1]
+    font-size: 1.5rem;
+    font-family: 'Georgia', serif;
+}
+
+/* Базовий стиль посилання-кнопки (CTA) */
+.link-cta {
+    display: inline-block;
+
+    /* 1. ГЕОМЕТРІЯ: Квантова сітка (4px * 3.75 для 15px та 4px * 3/7.5 для padding) */
+    margin-top: calc(var(--step) * 3.75);
+    padding: calc(var(--step) * 3) calc(var(--step) * 7.5);
+
+    /* 2. РАДІУС: 25px -> системний токен для круглих кнопок */
+    border-radius: var(--radius-full);
+
+    /* 3. ТИПОГРАФІКА ТА КОЛЬОР: Беремо фон із системи */
+    color: var(--text-on-accent);[cite: 1]
+    text-decoration: none;
+    font-weight: bold;
+
+    /* 4. ДИНАМІКА: Плавність для всіх станів */
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Універсальний акцентний стиль для посилання-кнопки */
+.link-cta-primary {
+    /* Використовуємо системний акцент теми */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);[cite: 1]
+}
+
+.link-cta-primary:hover {
+    /* Автоматично підхоплює ховер поточної теми */
+    background-color: var(--accent-hover);[cite: 1]
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);[cite: 1]
+}
+
+/* Базовий клас кнопки відправки */
+.submit-button {
+    /* 1. ГЕОМЕТРІЯ: Квантова сітка (10px -> 2.5 кроки, 15px -> 3.75 кроки) */
+    margin-top: calc(var(--step) * 2.5);
+    padding: calc(var(--step) * 3.75);
+
+    /* 2. РАДІУС: 25px -> Повне закруглення (капсула) */
+    border-radius: var(--radius-full);
+    border: none;
+
+    /* 3. ТИПОГРАФІКА ТА UX */
+    cursor: pointer;
+    color: var(--text-on-accent);
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+
+    /* 4. АНІМАЦІЯ: 0.3s -> 0.2s для чіткості */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Наша нова універсальна праймері-кнопка (колишня brown) */
+.submit-button-primary {
+    background-color: var(--accent-primary);
+}
+
+/* Варіант soft: піксельні тіні замінено на rem-еквіваленти */
+.submit-button-soft {
+    background-color: var(--accent-primary);
+    /* 2px 5px -> 0.125rem 0.3125rem */
+    box-shadow: 0 0.125rem 0.3125rem var(--bg-overlay);
+}
+
+/* Спільний стан наведення для всіх сабмітів */
+.submit-button:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+}
+
+/* Контейнер для кнопок входу (сітка) */
+.oauth-buttons {
+    display: grid;
+    /* 12px -> 3 кроки */
+    gap: calc(var(--step) * 3);
+}
+
+/* Базова база OAuth (Геометрія) */
+.oauth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 12px -> 3 кроки */
+    gap: calc(var(--step) * 3);
+    /* 14px 18px -> 3.5rem 4.5rem */
+    padding: calc(var(--step) * 3.5) calc(var(--step) * 4.5);
+    /* 18px -> системний радіус (або 4.5 кроки) */
+    border-radius: var(--radius-md);
+
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    /* 1px -> rem */
+    border: 0.0625rem solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+/* Іконки (стандартизація розміру) */
+.oauth-button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 22px -> 1.375rem */
+    width: 1.375rem;
+    height: 1.375rem;
+}
+
+.oauth-button-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- БРЕНДОВІ КОЛЬОРИ (Консервація) --- */
+
+/* Google: Залишаємо чистим та впізнаваним */
+.oauth-button-google {
+    background-color: #ffffff !important;
+    color: #3c4043 !important; /* Стандартний колір тексту Google */
+    border-color: #dadce0 !important;
+}
+
+.oauth-button-google:hover {
+    background-color: #f8f9fa !important;
+    box-shadow: 0 0.25rem 0.5rem var(--bg-overlay);
+}
+
+/* Facebook: Оригінальний синій */
+.oauth-button-facebook {
+    background-color: #1877f2 !important;
+    border-color: #1877f2 !important;
+    color: #ffffff !important;
+}
+
+.oauth-button-facebook:hover {
+    background-color: #1669d6 !important;
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+}
+
+/* Загальний ефект натискання */
+.oauth-button:hover {
+    transform: translateY(-0.0625rem); /* 1px */
+}
+
+/* Кнопка виходу (Logout) */
+.logout-button {
+    /* 1. КОЛЬОРИ: Системний акцент теми */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border: none;
+
+    /* 2. ГЕОМЕТРІЯ: 7px -> 1.75 кроки, 18px -> 4.5 кроки */
+    padding: calc(var(--step) * 1.75) calc(var(--step) * 4.5);
+
+    /* 3. РАДІУС: 25px -> Капсула */
+    border-radius: var(--radius-full);
+
+    /* 4. ТИПОГРАФІКА ТА UX */
+    font-size: 0.9rem; /* Трохи менша за основні кнопки */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.logout-button:hover {
+    background-color: var(--accent-hover);
+    /* Легкий ефект при наведенні без важких тіней */
+    filter: brightness(1.1);
+}
+
+.logout-button:active {
+    transform: scale(0.96);
+}
+
+/* Головна кнопка Hero-секції — найвищий пріоритет */
+.home-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 1. ГЕОМЕТРІЯ: 18px 50px -> 4.5 та 12.5 кроків сітки */
+    padding: calc(var(--step) * 4.5) calc(var(--step) * 12.5);
+
+    /* 2. РАДІУС: 40px -> Повне закруглення (капсула) */
+    border-radius: var(--radius-full);
+
+    /* 3. КОНТУР ТА ТІНЬ: 1px -> rem, важка тінь через системний оверлей */
+    border: 0.0625rem solid var(--border-soft);
+    box-shadow: 0 0.375rem 1.25rem var(--bg-overlay);
+
+    /* 4. КОЛЬОРИ: Твій системний акцент замість хардкоду */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* 5. ТИПОГРАФІКА */
+    text-decoration: none;
+    font-family: 'Georgia', serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    /* 6. ДИНАМІКА: 0.3s -> 0.2s для чіткості */
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.home-hero-cta:hover {
+    background-color: var(--accent-hover);
+    /* Посилення тіні та легкий підйом */
+    box-shadow: 0 0.5rem 1.5rem var(--bg-overlay);
+    transform: translateY(-0.125rem);
+}
+
+.home-hero-cta:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 1. КОНТЕЙНЕР ОЧІКУВАНЬ */
+.steps-expectations {
+    /* 850px -> 53.125rem */
+    max-width: 53.125rem;
+    /* 60px -> 15 кроків */
+    margin: calc(var(--step) * 15) auto;
+    /* 40px -> 10 кроків */
+    padding: calc(var(--step) * 10);
+
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-canvas);
+    font-family: 'Georgia', serif;
+}
+
+.steps-expectations h2 {
+    margin-bottom: calc(var(--step) * 10);
+    text-align: center;
+    color: var(--accent-primary);
+}
+
+/* 2. БЛОК ЗАКЛИКУ (CTA) */
+.steps-cta {
+    /* 40px зверху, 60px padding */
+    margin-top: calc(var(--step) * 10);
+    padding: calc(var(--step) * 15);
+    text-align: center;
+    background-color: var(--bg-surface);
+    /* 15px радіус зверху */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.steps-cta h2, .steps-cta p {
+    color: var(--text-primary);
+}
+
+/* 3. КНОПКА ВСЕРЕДИНІ STEPS (link-cta-primary) */
+.steps-cta-link {
+    display: inline-block;
+    /* 20px -> 5 кроків */
+    margin-top: calc(var(--step) * 5);
+    /* 15px 35px -> 3.75 та 8.75 кроків */
+    padding: calc(var(--step) * 3.75) calc(var(--step) * 8.75);
+
+    border-radius: var(--radius-full);
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    text-decoration: none;
+    font-weight: bold;
+
+    /* Тінь та анімація */
+    box-shadow: 0 0.25rem 0.9375rem var(--bg-overlay);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.steps-cta-link:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-0.125rem);
+}
+
+/* 4. АДАПТИВНІСТЬ (Без медіа-запитів з пікселями) */
+@media (max-width: 48rem) {
+    .steps-expectations,
+    .issue-article,
+    .article-body {
+        padding: calc(var(--step) * 6); /* 24px */
+    }
+
+    .steps-cta,
+    .issue-cta {
+        padding: calc(var(--step) * 7.5) calc(var(--step) * 5); /* 30px 20px */
+    }
+}
+
+/* --- БЛОК ISSUE CTA (СИСТЕМНИЙ) --- */
+
+/* Базовий контейнер */
+.issue-cta {
+    margin-top: calc(var(--step) * 15); /* 60px */
+    padding: calc(var(--step) * 11.25); /* 45px */
+    text-align: center;
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+}
+
+.issue-cta p {
+    margin-bottom: calc(var(--step) * 6.25); /* 25px */
+    color: var(--accent-primary);
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* Модифікація: Compact */
+.issue-cta-compact {
+    margin-top: calc(var(--step) * 12.5); /* 50px */
+    padding: calc(var(--step) * 10);      /* 40px */
+}
+
+.issue-cta-compact p {
+    font-size: 1.2rem;
+    margin-bottom: calc(var(--step) * 5); /* 20px */
+}
+
+/* Модифікація: primary (Акцентна) */
+.issue-cta-primary {
+    margin-top: calc(var(--step) * 17.5); /* 70px */
+    padding: calc(var(--step) * 12.5);   /* 50px */
+    border-radius: var(--radius-lg);
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+}
+
+.issue-cta-primary p {
+    color: var(--text-on-accent);
+    font-size: 1.4rem;
+    margin-bottom: calc(var(--step) * 7.5); /* 30px */
+}
+
+/* Модифікація: Secondary (замість slate/burn) */
+.issue-cta-secondary {
+    background-color: var(--bg-canvas);
+    border-color: var(--border-soft);
+}
+
+.issue-cta-secondary p {
+    color: var(--text-primary);
+}
+
+/* Блок заклику до дії всередині статей */
+.article-cta {
+    /* 40px -> 10 кроків сітки */
+    margin-top: calc(var(--step) * 10);
+    /* 20px -> 5 кроків */
+    padding: calc(var(--step) * 5);
+
+    text-align: center;
+    /* 15px -> системний середній радіус */
+    border-radius: var(--radius-md);
+    background-color: var(--bg-canvas);
+    border: 0.0625rem solid var(--border-soft);
+}
+
+.article-cta-title {
+    /* Використовуємо акцент поточної теми */
+    color: var(--accent-primary);
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.article-cta-subtitle {
+    /* 15px -> 3.75 кроки */
+    margin-bottom: calc(var(--step) * 3.75);
+    /* 0.9em -> 0.9rem для стабільності */
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Кнопка заклику до дії в панелі керування (Dashboard) */
+.dashboard-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    width: 100%;
+
+    /* 1. ГЕОМЕТРІЯ: Додаємо системні відступи (наприклад, 10px 20px -> 2.5 та 5 кроків) */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+    gap: calc(var(--step) * 2); /* Відступ між текстом та іконкою */
+
+    /* 2. ТИПОГРАФІКА ТА UX */
+    text-decoration: none;
+    white-space: nowrap;
+    font-weight: 600;
+
+    /* 3. АНІМАЦІЯ */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Якщо це посилання має бути схожим на кнопку, додаємо радіус */
+.dashboard-cta {
+    border-radius: var(--radius-md);
+}
+
+/* --- АДМІНІСТРАТИВНІ КНОПКИ (MICRO-UI) --- */
+
+/* Другорядна кнопка (наприклад, для таблиць) */
+.admin-secondary-button {
+    /* 4px 8px -> 1 та 2 кроки сітки */
+    padding: var(--step) calc(var(--step) * 2);
+    border: none;
+    /* 3px -> 0.1875rem */
+    border-radius: 0.1875rem;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* Кнопка збереження в адмінці */
+.admin-save-button {
+    /* 3px -> 0.75 кроку */
+    margin-top: calc(var(--step) * 0.75);
+    /* 4px 10px -> 1 та 2.5 кроки */
+    padding: var(--step) calc(var(--step) * 2.5);
+    border: none;
+    border-radius: 0.1875rem;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+/* Мала адмін-кнопка (універсальна) */
+.btn-admin-small {
+    padding: var(--step) calc(var(--step) * 2.5);
+    font-size: 0.85rem;
+    border-radius: 0.25rem;
+    width: auto;
+}
+
+/* Кнопки навігації адмінки (Бардачок) */
+.admin-nav-btn {
+    /* 6px 12px -> 1.5 та 3 кроки */
+    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    font-size: 0.9rem;
+    /* 200px -> 12.5rem */
+    max-width: 12.5rem;
+}
+
+/* Спільний ховер для мікро-кнопок */
+.admin-secondary-button:hover,
+.admin-save-button:hover,
+.btn-admin-small:hover,
+.admin-nav-btn:hover {
+    background-color: var(--accent-hover);
+    filter: brightness(1.1);
+}
+
+/* Delete: Використовуємо вторинний акцент або спеціальний токен помилки,
+   якщо він є. Якщо ні — робимо її контурною, щоб не «кричала» */
+.btn-delete, .btn-delete-small {
+    background-color: var(--bg-canvas);
+    color: var(--accent-primary);
+    border: 0.0625rem solid var(--accent-primary);[cite: 9]
+    padding: calc(var(--step) * 1.5) calc(var(--step) * 3); /* Додай відступи */
+    border-radius: var(--radius-sm); /* Додай радіус */
+    cursor: pointer; /* РОБИТЬ МИШКУ "РУЧКОЮ" */
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-delete .btn-delete-small:hover {
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+}
+
+/* Кнопка Маніфесту — ідеологічний центр проекту */
+.manifesto-button {
+    display: inline-block;
+
+    /* 1. ГЕОМЕТРІЯ: 20px -> 5 кроків сітки */
+    margin-top: calc(var(--step) * 5);
+
+    /* 2. ВІДСТУПИ: 12px 25px -> 3 та 6.25 кроків */
+    padding: calc(var(--step) * 3) calc(var(--step) * 6.25);
+
+    /* 3. РАДІУС: 6px -> 0.375rem (стабільний малий радіус) */
+    border-radius: var(--radius-sm);
+
+    /* 4. КОЛЬОРИ ТА UX: Використовуємо системні токени тем */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* 5. ТИПОГРАФІКА */
+    text-decoration: none;
+    font-weight: bold;
+
+    /* 6. ДИНАМІКА */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    cursor: pointer;
+}
+
+.manifesto-button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem); /* Легкий підйом на 1px */
+}
+
+/* Кнопка "Око" (Toggle Password) — UX елемент всередині інпута */
+.toggle-password-btn {
+    position: absolute;
+    /* 12px -> 3 кроки сітки */
+    right: calc(var(--step) * 3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+
+    /* Використовуємо вторинний текст, щоб кнопка була делікатною */
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password-btn:hover {
+    /* При наведенні стає акцентною, показуючи активність */
+    color: var(--accent-primary);
+}
+
+/* Базовий стиль для всіх перемикачів (Toggles) */
+.btn-toggle {
+    width: 100%;
+    text-align: left;
+    /* 4px 10px -> 1 та 2.5 кроки сітки */
+    padding: var(--step) calc(var(--step) * 2.5);
+    font-size: 0.8rem;
+    font-weight: 500;
+    /* 4px -> системний малий радіус */
+    border-radius: var(--radius-sm);
+    /* 1px -> rem */
+    border: 0.0625rem solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+/* Ховер ефекти перемикачів */
+.btn-toggle:hover {
+    background-color: var(--bg-canvas);
+    border-color: var(--border-soft);
+    box-shadow: 0 0.0625rem 0.1875rem var(--bg-overlay);
+}
+
+/* Стан заблокованої кнопки (Disabled) */
+.btn-disabled {
+    /* 1. UX: Курсор "Цегла" та ніяких подій миші */
+    cursor: not-allowed !important;
+    pointer-events: none;
+
+    /* 2. ВІЗУАЛ: Системне згасання */
+    opacity: 0.5;
+
+    /* 3. ДЕАКТИВАЦІЯ: Прибираємо всі ефекти */
+    text-decoration: none;
+    box-shadow: none !important;
+    transform: none !important;
+
+    /* 4. КОЛЬОРИ: Нейтралізація під будь-яку тему */
+    filter: grayscale(1);
+}
+
+/* Кнопка успішної дії (Підтвердження/Збереження) */
+.btn-success {
+    /* 1. ГЕОМЕТРІЯ: 10px 20px -> 2.5 та 5 кроків сітки */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+
+    /* 2. РАДІУС: 4px -> системний малий радіус */
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+
+    /* 3. КОЛЬОРИ: Використовуємо системний акцент та контрастний текст */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* 4. UX ТА АНІМАЦІЯ */
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem);
+}
+
+.btn-success:active {
+    transform: scale(0.98);
+}
+
+/* --- ДРУГОРЯДНІ ДІЇ (Secondary Actions) --- */
+
+/* Базова другорядна кнопка */
+.btn-secondary {
+    display: inline-block;
+    /* 10px 20px -> 2.5 та 5 кроків сітки */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    /* 10px -> 2.5 кроки */
+    margin-left: calc(var(--step) * 2.5);
+
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 0.0625rem solid var(--border-soft);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-surface);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* Спеціальний стиль для "Скасувати" у формах */
+.form-actions .site-nav-link {
+    color: var(--accent-primary);
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    /* 0.8rem -> стабільний відступ */
+    margin-left: 0.8rem;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.form-actions .site-nav-link:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+}
+
+.btn-action:active {
+    transform: scale(0.97);
+}
+
+/* Мобільна адаптація (замість твого display: block !important) */
+@media (max-width: 30em) {
+    .btn-action {
+        display: flex;
+        width: 100%;
+        min-width: 0; /* Прибираємо фікс для мобілок */
+    }
+}
+
+/* ==========================================================================
+   ГРУПА КНОПОК РЕДАГУВАННЯ ТА ДІЙ (BTN-EDIT / BTN-ACTION)
+   ФІНАЛЬНА СИСТЕМНА РЕДАКЦІЯ
+   ========================================================================== */
+
+.btn-edit, .btn-edit-small, .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    /* ГЕОМЕТРІЯ: 6px 12px -> переводимо в систему кроків */
+    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    /* 110px -> 6.875rem (стабільна ширина для списків) */
+    min-width: 6.875rem;
+    margin: calc(var(--step) * 0.5);
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+
+    /* СТИЛІЗАЦІЯ */
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+
+    /* КОЛЬОРИ: Тільки системні токени тем (Шоколад/Кава/Акцент) */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* АНІМАЦІЯ */
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* Ховер та Активні стани для всієї групи */
+.btn-edit:hover, .btn-edit-small:hover, .btn-action:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem);
+}
+
+.btn-edit:active, .btn-action:active {
+    transform: scale(0.97);
+}
+
+/* Мобільна адаптація: на маленьких екранах кнопки стають гнучкими */
+@media (max-width: 30em) {
+    .btn-edit, .btn-action {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* ==========================================================================
+   КНОПКИ СТВОРЕННЯ ТА ПУБЛІКАЦІЇ (PRIMARY ACTIONS)
+   ========================================================================== */
+
+.btn-create-article,
+.btn-publish-article {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: Базуємо на системному кроці сітки */
+    padding: calc(var(--step) * 3) calc(var(--step) * 6);
+
+    /* ТИПОГРАФІКА */
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+
+    /* СТИЛІЗАЦІЯ: Тільки системні токени тем */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+
+    /* ДИНАМІКА */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Ховер: використовуємо системний акцент замість хардкоду #1b5e20 */
+.btn-create-article:hover,
+.btn-publish-article:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem);
+}
+
+/* Іконка всередині кнопки (наприклад, "плюсик") */
+.btn-create-article .icon,
+.btn-publish-article .icon {
+    font-size: 1.2rem;
+    /* 8px -> 2 кроки сітки */
+    margin-right: calc(var(--step) * 2);
+}
+
+/* Адаптація для мобілок (заміна display: block !important) */
+@media (max-width: 30em) {
+    .btn-create-article,
+    .btn-publish-article {
+        display: flex;
+        width: 100%;
+        margin: var(--step) 0;
+    }
+}
+
+/* --- КНОПКА ВІДПОВІДІ (REPLY) --- */
+
+.btn-reply,
+.btn-reply-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+
+    /* ГЕОМЕТРІЯ: замість 5px використовуємо крок сітки */
+    padding: var(--step) 0;
+    margin-top: var(--step);
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: underline;
+    /* Зміщення підкреслення для естетики */
+    text-underline-offset: 0.1875rem;
+
+    /* КОЛЬОРИ: Тільки системний акцент теми */
+    color: var(--accent-primary);
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+/* Ховер: затемнення або зміна акценту через системну змінну */
+.btn-reply:hover,
+.btn-reply-link:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+}
+
+.btn-reply:active {
+    transform: translateY(0.0625rem);
+}
+
+/* Адаптація для мобілок (em) */
+@media (max-width: 30em) {
+    .btn-reply,
+    .btn-reply-link {
+        font-size: 0.85rem;
+        padding: calc(var(--step) * 1.5) 0;
+    }
+}
+
+/* Кнопка скасування відповіді (Cancel Reply) — системна логіка MMC */
+.btn-cancel-reply {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: 8px 15px -> 2 та 3.75 кроків сітки */
+    padding: calc(var(--step) * 2) calc(var(--step) * 3.75);
+    margin-bottom: calc(var(--step) * 3.75);
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+
+    /* КОЛЬОРИ: Використовуємо системний фон для помилок/скасувань, якщо він є,
+       або нейтральний фон теми з акцентом */
+    background-color: var(--bg-surface);
+    color: var(--accent-primary);
+
+    /* МЕЖІ: 1px -> rem */
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-sm);
+
+    transition: all 0.2s ease;
+}
+
+.btn-cancel-reply:hover {
+    /* При наведенні стає "тривожною" за рахунок інверсії або яскравішого акценту */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border-color: var(--accent-primary);
+}
+
+/* АДАПТАЦІЯ: Суворо в em */
+@media (max-width: 30em) {
+    .btn-cancel-reply {
+        width: 100%;
+        padding: calc(var(--step) * 3);
+    }
+}
+
+/* Кнопка відправки коментаря (Submit Comment) — Стерильна версія */
+.btn-submit-comment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: замість 10px 25px використовуємо кроки сітки */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 6.25);
+
+    /* ТИПОГРАФІКА */
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    /* СТИЛІЗАЦІЯ: Тільки системні токени MMC */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+
+    /* ДИНАМІКА */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-submit-comment:hover {
+    /* Автоматична адаптація ховеру під будь-яку тему */
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem);
+}
+
+.btn-submit-comment:active {
+    transform: scale(0.98);
+}
+
+/* АДАПТАЦІЯ: Суворо в EM */
+@media (max-width: 30em) {
+    .btn-submit-comment {
+        display: flex;
+        width: 100%;
+        padding: calc(var(--step) * 4);
+        margin: var(--step) 0;
+    }
+}
+
+/* --- СПИСОК СТАТЕЙ ТА ПРЕВ'Ю (Articles & Previews) --- */
+
+/* 1. Посилання в заголовках та списках */
+.articles-list a,
+.article-preview a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.articles-list a:hover,
+.article-preview a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+}
+
+/* 2. Кнопка "Читати далі" (Read More) — ОСТАТОЧНА ВЕРСІЯ */
+.read-more-button,
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: 10px 20px -> 2.5 та 5 кроків сітки */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+
+    /* ТИПОГРАФІКА */
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+
+    /* КОЛЬОРИ */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* ДИНАМІКА */
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.read-more-button:hover,
+.read-more:hover {
+    background-color: var(--accent-hover);
+    color: var(--text-on-accent); /* Фіксуємо колір, щоб underline не виліз */
+    text-decoration: none; /* Прибираємо спадковість від звичайних посилань */
+    transform: translateY(-0.0625rem);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+}
+
+/* 3. АДАПТАЦІЯ: Тільки EM (30em = 480px) */
+@media (max-width: 30em) {
+    .read-more-button,
+    .read-more {
+        display: flex;
+        width: 100%;
+        padding: calc(var(--step) * 4);
+    }
+}
+
+/* ==========================================================================
+   ЛЕГКІ КНОПКИ ТА ПОСИЛАННЯ (LIGHT BUTTONS / LINKS)
+   ========================================================================== */
+
+/* 1. Базова кнопка-посилання */
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    /* ТИПОГРАФІКА */
+    font-size: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+
+    /* КОЛЬОРИ: Використовуємо системний акцент */
+    color: var(--accent-primary);
+    transition: all 0.2s ease;
+}
+
+.btn-link:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+    transform: translateY(-0.0625rem);
+}
+
+/* 2. Кнопка-посилання для небезпечних дій (Danger Link) */
+.btn-link-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: суворо без пікселів */
+    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--border-soft);
+
+    /* КОЛЬОРИ ТА UX */
+    background-color: var(--bg-canvas);
+    color: var(--accent-primary); /* Можна змінити на var(--accent-danger), якщо він є в системі */
+    cursor: pointer;
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-link-danger:hover {
+    /* Інверсія: акцент теми стає фоном */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+}
+
+/* 3. АДАПТАЦІЯ: Тільки EM (30em = 480px) */
+@media (max-width: 30em) {
+    .btn-link, .btn-link-danger {
+        padding: var(--step) 0;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   КОНТЕЙНЕРИ ДІЙ (ACTION CONTAINERS) — ОСТАТОЧНА СТЕРИЛІЗАЦІЯ
+   ========================================================================== */
+
+/* Форма в комірці дій (видалення/редагування) */
+.action-cell form {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
+
+/* Групування кнопок: Тільки в ряд (Row) за замовчуванням */
+.btn-group-nowrap {
+    display: flex;
+    flex-direction: row; /* Повертаємо нормальний стан замість column */
+    flex-wrap: nowrap;
+    align-items: center;
+    /* Квантовий крок замість пікселів */
+    gap: var(--step);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .btn-group-nowrap {
+        /* Тільки на мобілках дозволяємо перенос, якщо кнопки занадто широкі */
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: calc(var(--step) * 2);
+    }
+
+    .action-cell form {
+        display: flex;
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   КРУГЛА НАВІГАЦІЙНА КНОПКА (BTN-NAV-ROUND) — ОСТАТОЧНА РЕДАКЦІЯ
+   ========================================================================== */
+
+.btn-nav-round {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: замість 8px 20px — системні кроки */
+    padding: calc(var(--step) * 2) calc(var(--step) * 4);
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+
+    /* СТИЛІЗАЦІЯ: Тільки системні токени */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    /* 1px -> rem, 25px -> системний радіус */
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-full); /* Використовуй значення для капсули */
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-nav-round:hover {
+    background-color: var(--accent-hover);
+    color: var(--text-on-accent);
+    box-shadow: 0 0.125rem 0.25rem var(--bg-overlay);
+    text-decoration: none;
+    transform: translateY(-0.0625rem);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .btn-nav-round {
+        padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+        font-size: 0.95rem;
+    }
+}
+
+/* ==========================================================================
+   СЕМАНТИЧНІ СТАТУСИ (STATUS BADGES / BUTTONS)
+   ========================================================================== */
+
+/* Загальні налаштування для статусних кнопок */
+.btn-site-ok, .btn-chat-ok, .btn-comm-ok,
+.btn-site-ban, .btn-chat-ban, .btn-comm-ban {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid; /* Товщина в rem */
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: default; /* Якщо це просто статус, а не кнопка */
+    transition: all 0.2s ease;
+}
+
+/* СТАН: OK (Успіх / Дозволено) */
+.btn-site-ok, .btn-chat-ok, .btn-comm-ok {
+    background-color: var(--bg-surface); /* Або спеціальний var(--success-bg) */
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+/* СТАН: BAN (Небезпека / Заборонено) */
+.btn-site-ban, .btn-chat-ban, .btn-comm-ban {
+    background-color: var(--bg-canvas);
+    color: var(--text-secondary); /* Або var(--danger-color), якщо є */
+    border-color: var(--border-soft);
+}
+
+/* Додаємо інтерактивність, якщо це все ж таки кнопки */
+[class*="-ok"]:hover, [class*="-ban"]:hover {
+    filter: brightness(0.9);
+    transform: translateY(-0.0625rem);
+}
+
+/* АДАПТАЦІЯ: Тільки EM */
+@media (max-width: 30em) {
+    [class*="btn-"][class*="-o"], [class*="btn-"][class*="-b"] {
+        padding: calc(var(--step) * 2);
+        font-size: 0.875rem;
+    }
+}
+
+/* Кнопка "Відповісти" (Reply Button) — Стерильна версія MMC */
+.reply-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    /* Вирівнювання: залишаємо flex-end, як було в задумі */
+    align-self: flex-end;
+    display: inline-flex;
+
+    /* ГЕОМЕТРІЯ: замість 5px використовуємо крок сітки */
+    padding: 0;
+    margin-top: var(--step);
+
+    /* ТИПОГРАФІКА: піднімаємо до 0.85rem для кращого UX */
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+
+    /* КОЛЬОРИ: Тільки системний акцент теми */
+    color: var(--accent-primary);
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.reply-btn:hover {
+    color: var(--accent-hover);
+    text-decoration: none;
+}
+
+.reply-btn:active {
+    transform: translateY(0.0625rem);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em = твій новий стандарт) */
+@media (max-width: 30em) {
+    .reply-btn {
+        font-size: 0.9rem; /* Збільшуємо для мобільних */
+        padding: var(--step) 0;
+    }
+}
+
+/* Кнопка копіювання UUID (Copy Action) */
+.btn-copy-uuid {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.9rem;
+    color: var(--accent-primary);
+
+    /* ГЕОМЕТРІЯ: замість 5px — системний крок */
+    padding: 0 calc(var(--step) * 1.25);
+
+    /* СТАН: напівпрозорість для зменшення візуального шуму */
+    opacity: 0.4;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+/* Поява при наведенні на батьківську комірку */
+.uuid-cell:hover .btn-copy-uuid {
+    opacity: 1;
+}
+
+.btn-copy-uuid:hover {
+    color: var(--accent-hover);
+    transform: scale(1.1);
+}
+
+.btn-copy-uuid:active {
+    transform: scale(0.95);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .btn-copy-uuid {
+        opacity: 1; /* На тач-пристроях ховера немає, тому робимо видимою завжди */
+        padding: var(--step);
+    }
+}
+
+/* Вкладки (Tab Buttons) — Архітектурна чистота MMC */
+.tab-btn {
+    /* ГЕОМЕТРІЯ: замість 10px 20px */
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
+
+    /* ТИПОГРАФІКА */
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    /* КОЛЬОРИ ТА СТИЛЬ */
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+
+    /* РАДІУС: Тільки зверху, на основі системного радіуса */
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+
+    /* ПОЗИЦІОНУВАННЯ */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* АКТИВНИЙ СТАН */
+.tab-btn.active {
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    /* Замість 2px — точна rem-одиниця */
+    box-shadow: inset 0 -0.125rem 0 var(--accent-hover);
+}
+
+.tab-btn:hover:not(.active) {
+    background-color: var(--bg-canvas);
+    color: var(--accent-primary);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .tab-btn {
+        width: 100%; /* На мобільних таби часто стають в ряд */
+        padding: calc(var(--step) * 3);
+        border-radius: var(--radius-sm); /* На мобільних краще повний радіус */
+        margin-bottom: calc(var(--step) * 0.5);
+    }
+}
+
+/* Кнопка або маркер приватності (Private Action) */
+.private-btn {
+    /* КОЛЬОРИ: Використовуємо системний акцент замість хардкоду */
+    color: var(--accent-primary);
+    font-weight: 700; /* Bold без пікселів */
+
+    /* UX: Додаємо візуальний маркер, щоб підкреслити особливість */
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--step) * 1.5);
+
+    transition: color 0.2s ease;
+}
+
+.private-btn:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+}
+
+/* Якщо це справді "знак уваги", можна додати легкий індикатор */
+.private-btn::before {
+    content: "•"; /* Або іконка замочка через FontAwesome */
+    font-size: 1.2em;
+    line-height: 0;
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .private-btn {
+        font-size: 1rem;
+        padding: var(--step) 0;
+    }
+}
+
+/* Кнопка відправки (Send Button) — Стерильна версія MMC */
+.btn-send {
+    /* ПОЗИЦІОНУВАННЯ: залишаємо задум із вирівнюванням */
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ГЕОМЕТРІЯ: замість 8px 25px -> 2 та 6.25 кроків */
+    padding: calc(var(--step) * 2) calc(var(--step) * 6.25);
+    /* 4px -> системний малий радіус */
+    border-radius: var(--radius-sm);
+    /* 1px -> rem */
+    border: 0.0625rem solid var(--border-soft);
+
+    /* ТИПОГРАФІКА */
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    /* КОЛЬОРИ: Тільки системні пари */
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-send:hover {
+    /* Використовуємо системний колір ховеру замість випадкових змінних */
+    background-color: var(--accent-hover);
+    transform: translateY(-0.0625rem);
+}
+
+.btn-send:active {
+    transform: scale(0.98);
+}
+
+/* АДАПТАЦІЯ: Тільки EM (30em) */
+@media (max-width: 30em) {
+    .btn-send {
+        width: 100%;
+        padding: calc(var(--step) * 4);
+        font-size: 1.1rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

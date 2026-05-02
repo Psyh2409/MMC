@@ -269,7 +269,7 @@ html, body {
     font-weight: bold;
 }
 
-.link-cta-brown {
+.link-cta-primary {
     background: var(--primary-color);
 }
 
@@ -352,7 +352,7 @@ html, body {
     transition: background 0.3s;
 }
 
-.submit-button-brown {
+.submit-button-primary {
     background-color: var(--primary-color);
 }
 
@@ -792,15 +792,15 @@ main {
     border-top-color: var(--border-color);
 }
 
-.border-top-brown {
+.border-top-primary {
     border-top-color: var(--accent-color);
 }
 
-.border-top-slate {
+.border-top-secondary {
     border-top-color: var(--primary-color);
 }
 
-.border-top-dark {
+.border-top-primary {
     border-top-color: var(--text-main);
 }
 
@@ -944,19 +944,19 @@ main {
     box-shadow: 0 15px 50px var(--shadow-main);
 }
 
-.issue-border-top-brown {
+.issue-border-top-primary {
     border-top: 8px solid var(--accent-color);
 }
 
-.issue-border-top-slate {
+.issue-border-top-secondary {
     border-top: 6px solid var(--primary-color);
 }
 
-.issue-border-top-burn {
+.issue-border-top-secondary {
     border-top: 6px solid var(--text-main);
 }
 
-.issue-border-left-brown {
+.issue-border-left-primary {
     border-left: 8px solid var(--accent-color);
 }
 
@@ -973,12 +973,12 @@ main {
     border-bottom: none;
 }
 
-.issue-title-slate {
+.issue-title-secondary {
     color: var(--text-main);
     border-bottom-color: var(--card-bg);
 }
 
-.issue-title-burn {
+.issue-title-secondary {
     color: var(--text-main);
     border-bottom-color: var(--text-on-primary);
 }
@@ -995,7 +995,7 @@ main {
     font-size: 1.25em;
 }
 
-.issue-intro-slate {
+.issue-intro-secondary {
     color: var(--accent-color);
     font-size: 1.25em;
 }
@@ -1010,11 +1010,11 @@ main {
     margin-top: 50px;
 }
 
-.issue-section-title-slate {
+.issue-section-title-secondary {
     color: var(--accent-color);
 }
 
-.issue-section-title-burn {
+.issue-section-title-secondary {
     color: var(--accent-color);
 }
 
@@ -1027,7 +1027,7 @@ main {
     color: var(--text-main);
 }
 
-.issue-text-slate {
+.issue-text-secondary {
     color: var(--accent-color);
 }
 
@@ -1090,45 +1090,45 @@ main {
     line-height: 1.7;
 }
 
-.issue-callout-slate {
+.issue-callout-secondary {
     border: 1px solid var(--bg-main);
     background: var(--bg-main);
     color: var(--accent-color);
 }
 
-.issue-callout-slate h3 {
+.issue-callout-secondary h3 {
     padding-bottom: 10px;
     border-bottom: 1px solid var(--card-bg);
     color: var(--accent-color);
     font-size: 1.5em;
 }
 
-.issue-callout-slate p {
+.issue-callout-secondary p {
     color: var(--accent-color);
     line-height: 1.8;
     font-size: 1.1em;
 }
 
-.issue-callout-slate-emphasis {
+.issue-callout-secondary-emphasis {
     margin-top: 15px;
     padding-left: 20px;
     border-left: 3px solid var(--primary-color);
     font-style: italic;
 }
 
-.issue-callout-burn {
+.issue-callout-secondary {
     border-left: 5px solid var(--accent-color);
     border-radius: 0 15px 15px 0;
     background: var(--bg-main);
     color: var(--accent-color);
 }
 
-.issue-callout-burn h3 {
+.issue-callout-secondary h3 {
     color: var(--accent-color);
     font-size: 1.4em;
 }
 
-.issue-callout-burn-strong {
+.issue-callout-secondary-strong {
     margin-bottom: 0;
     font-weight: bold;
 }
@@ -1158,7 +1158,7 @@ main {
     border-bottom: 1px double var(--card-bg);
 }
 
-.issue-quote-burn {
+.issue-quote-secondary {
     font-size: 1.25em;
     line-height: 1.6;
 }
@@ -1245,7 +1245,7 @@ main {
     margin-bottom: 20px;
 }
 
-.issue-cta-dark {
+.issue-cta-primary {
     margin-top: 70px;
     padding: 50px;
     border-radius: 25px;
@@ -1253,25 +1253,25 @@ main {
     color: var(--card-bg);
 }
 
-.issue-cta-dark p {
+.issue-cta-primary p {
     color: var(--card-bg);
     font-size: 1.4em;
     margin-bottom: 30px;
 }
 
-.issue-cta-slate {
+.issue-cta-secondary {
     background: var(--bg-main);
 }
 
-.issue-cta-slate p {
+.issue-cta-secondary p {
     color: var(--text-main);
 }
 
-.issue-cta-burn {
+.issue-cta-secondary {
     background: var(--text-on-primary);
 }
 
-.issue-cta-burn p {
+.issue-cta-secondary p {
     color: var(--text-main);
 }
 
@@ -1287,17 +1287,17 @@ main {
     font-size: 0.95em;
 }
 
-.issue-link-slate,
-.issue-link-burn {
+.issue-link-secondary,
+.issue-link-secondary {
     font-weight: bold;
     text-decoration: underline;
 }
 
-.issue-link-slate {
+.issue-link-secondary {
     color: var(--primary-color);
 }
 
-.issue-link-burn {
+.issue-link-secondary {
     color: var(--text-main);
 }
 
@@ -3155,7 +3155,7 @@ h1, h2, h3 {
 
     .steps-cta,
     .issue-cta,
-    .issue-cta-dark,
+    .issue-cta-primary,
     .admin-page,
     .requests-page,
     .admin-shell,

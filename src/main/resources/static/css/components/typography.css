@@ -1,0 +1,167 @@
+/* navigation.css або typography.css */
+
+.section-title {
+    color: var(--accent-primary); /* var(--accent-color) */
+    font-size: 1.4rem;
+    /* 30px -> calc(var(--step) * 7.5) або найближчий токен */
+    margin-top: calc(var(--step) * 8);
+    border-bottom: var(--space-xs) solid var(--border-soft);
+    padding-bottom: var(--space-xs);
+}
+
+.page-title-centered {
+    text-align: center;
+    margin-bottom: calc(var(--step) * 8);
+}
+
+.page-title-accent {
+    color: var(--accent-primary);
+}
+
+/* typography.css */
+
+.quote-block {
+    text-align: center;
+    /* 40px -> calc(var(--step) * 10) або var(--space-xl) */
+    margin-bottom: var(--space-xl);
+}
+
+.quote-text {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--accent-primary); /* var(--primary-color) у системі токенів */
+}
+
+/* status.css */
+
+.status-message {
+    padding: var(--space-md); /* 16px - системний відступ */
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg); /* 24px - системний ритм */
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+}
+
+.status-message-strong {
+    /* Замість 15px беремо найближчий логічний крок */
+    padding: var(--space-md);
+    /* Замість 25px беремо системний XL */
+    margin-bottom: var(--space-xl); /* 40px */
+    font-weight: bold;
+}
+
+/* status.css */
+
+.status-error {
+    color: var(--status-error); /* Яскравий сигнал тривоги */
+    background: var(--status-error-bg); /* М'який фон для читабельності */
+    border-color: var(--status-error);
+}
+
+.status-success {
+    color: var(--status-success); /* Спокійний зелений успіх */
+    background: var(--status-success-bg); /* Світлий позитивний фон */
+    border-color: var(--status-success);
+}
+
+/* typography.css */
+
+.home-section-title {
+    /* 50px -> найближчий системний крок calc(var(--step) * 12) або var(--space-xl) + крок */
+    margin-bottom: calc(var(--step) * 12);
+    text-align: center;
+    font-family: 'Georgia', serif;
+    font-size: 2.2rem;
+    color: var(--accent-primary);
+}
+
+.steps-hero-title {
+    font-family: 'Georgia', serif;
+    font-size: 2.8rem;
+    color: var(--accent-primary); /* Додаємо системний колір для консистентності */
+}
+
+.steps-hero-subtitle {
+    /* 700px -> переводимо в rem для масштабованості: 700/16 = 43.75rem */
+    max-width: 43.75rem;
+    margin: 0 auto;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* typography.css */
+
+.issue-title {
+    /* 20px -> рівно 5 кроків -> var(--space-xl) у деяких системах,
+       але за твоїм табом це calc(var(--step) * 5).
+       Оскільки 20px — це база, використаємо системний токен для великих просторів. */
+    padding-bottom: var(--space-xl);
+    border-bottom: 0.125rem solid var(--border-soft);
+    color: var(--accent-primary);
+    font-size: 2.5rem;
+}
+
+.issue-title-centered {
+    /* 40px -> це рівно 10 кроків. Замість calc використовуємо
+       найбільший доступний токен простору. */
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    border-bottom: none;
+}
+
+/* typography.css */
+
+/* Об'єднуємо дубльовані класи в один логічний блок */
+.issue-title-secondary {
+    color: var(--text-primary);
+    /* Використовуємо м'яку межу замість конкретних кольорів фону */
+    border-bottom-color: var(--border-soft);
+}
+
+.issue-section-title {
+    /* 45px -> підтягуємо до 44px або 48px.
+       44px — це рівно 11 кроків. Використовуємо системний простір. */
+    margin-top: calc(var(--step) * 11);
+    color: var(--accent-primary);
+    font-size: 1.8rem;
+}
+
+.issue-section-title-wide {
+    /* 50px -> підтягуємо до 48px (рівно 12 кроків), щоб не було хаосу */
+    margin-top: calc(var(--step) * 12);
+}
+
+/* Об'єднуємо дублікати */
+.issue-section-title-secondary {
+    color: var(--accent-primary);
+}
+
+/* typography.css */
+
+/* 1. ГЛОБАЛЬНІ ЗАГОЛОВКИ */
+h1, h2, h3 {
+    font-family: 'Georgia', serif;
+    font-weight: normal;
+    color: var(--accent-primary); /* var(--accent-color) */
+    margin-top: 0; /* Зануляємо дефолтні відступи */
+}
+
+/* 2. СПЕЦИФІКАЦІЯ H3 */
+h3 {
+    /* Підбираємо середнє значення font-size з твоїх дублікатів (1.4em - 1.5em) */
+    font-size: 1.45rem;
+    /* Відступи та межі через токени */
+    padding-bottom: var(--space-xs); /* 4px замість 10px для чіткості */
+    border-bottom: 0.0625rem solid var(--border-soft); /* 1px через токен */
+    margin-bottom: var(--space-md); /* calc(var(--step) * 4) */
+}
+
+/* 3. ЗАГОЛОВОК СТАТТІ */
+.article-title {
+    font-family: 'Georgia', serif;
+    color: var(--accent-primary);
+    var(--space-xl); /* 40px - системний крок */
+    font-size: 2rem; /* Базовий розмір для назви статті */
+}

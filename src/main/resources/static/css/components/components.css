@@ -1,0 +1,112 @@
+/* ==========================================================================
+   MMC COMPONENTS SYSTEM - ФІНАЛЬНА ЗБІРКА (БЕЗ ПІКСЕЛІВ ТА HEX)
+   ========================================================================== */
+
+/* --- 1. КОНТЕЙНЕРИ СТАТЕЙ (ISSUE LAYOUT) --- */
+
+.issue-shell {
+    max-width: 53rem; /* ~850px */
+    margin: var(--space-xl) auto 0;
+    padding: var(--space-lg);
+}
+
+.issue-article {
+    padding: 3rem; /* 12 кроків */
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-deep);
+    font-family: 'Georgia', serif;
+    color: var(--text-main);
+}
+
+.issue-article-heavy {
+    padding: 3.75rem; /* 15 кроків */
+    box-shadow: var(--shadow-ultra);
+}
+
+/* Декоративні акценти статей */
+.issue-border-top-primary { border-top: 0.5rem solid var(--accent-primary); }
+.issue-border-top-secondary { border-top: 0.375rem solid var(--accent-muted); }
+.issue-border-left-primary { border-left: 0.5rem solid var(--accent-primary); }
+
+
+/* --- 2. СИСТЕМА КОМЕНТАРІВ (TREE STRUCTURE) --- */
+
+.comment-card-nested {
+    margin-top: var(--space-md);
+    border-left: 0.125rem solid var(--border-color);
+    padding-left: var(--space-md);
+    background: var(--bg-surface-alt); /* Відрізняємо від основної картки */
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Динамічна вкладеність (Змійка) */
+.depth-1 { margin-left: 1.25rem; }
+.depth-2 { margin-left: 2.5rem; }
+.depth-3 { margin-left: 3.75rem; }
+.depth-4 { margin-left: 5rem; }
+
+
+/* --- 3. ЧАТ ТА ПОВІДОМЛЕННЯ (REAL-TIME UI) --- */
+
+.chat-window {
+    height: 31.25rem; /* ~500px */
+    overflow-y: auto;
+    background: var(--bg-canvas);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.message-box, .message-item {
+    padding: 0.625rem 0.9375rem;
+    border-radius: var(--radius-md);
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+/* Свої повідомлення */
+.message-mine, .message-out {
+    align-self: flex-end;
+    background-color: var(--bg-surface-alt);
+    border: 0.0625rem solid var(--success-color);
+    color: var(--text-main);
+}
+
+/* Чужі повідомлення */
+.message-others, .message-in {
+    align-self: flex-start;
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-color);
+}
+
+
+/* --- 4. ЕЛЕМЕНТИ ІНТЕРФЕЙСУ (UI UTILS) --- */
+
+.reply-preview-bar {
+    background: var(--bg-surface-alt);
+    padding: var(--space-xs) var(--space-md);
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+.date-separator {
+    text-align: center;
+    margin: var(--space-lg) 0;
+    border-bottom: 0.0625rem solid var(--card-bg);
+    line-height: 0.1rem;
+}
+
+.date-separator span {
+    background: var(--bg-canvas);
+    padding: 0 var(--space-md);
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    font-style: italic;
+}

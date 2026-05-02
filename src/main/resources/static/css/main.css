@@ -1,0 +1,18 @@
+/* 1. ФУНДАМЕНТ (Константи та скидання) */
+@import "variables.css";
+@import "themes.css";
+@import "components/reset.css";
+
+/* 2. ГЛОБАЛЬНІ КОНСТРУКЦІЇ (Основа) */
+@import "components/typography.css";
+@import "components/layout.css";     /* Контейнери */
+@import "components/navigation.css"; /* Хедер та Футер — ТУТ */
+
+/* 3. КОМПОНЕНТИ (Елементи взаємодії) */
+@import "components/buttons.css";    /* Твої 1000 рядків тут */
+@import "components/forms.css";
+@import "components/cards.css";
+@import "components/tables.css";     /* ТУТ: Логічне місце для таблиць */
+
+/* 4. СКЛАДНІ ВУЗЛИ (Components) <-- ТУТ ЙОГО МІСЦЕ */
+@import "components/components.css"; /* Чат, Коментарі, Дерево вкладеності */

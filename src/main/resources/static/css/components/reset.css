@@ -1,0 +1,16 @@
+/* RESET & BASE */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+img, svg {
+    display: block;
+    max-width: 100%; /* Малюнок не буде ширшим за текст статті */
+    height: auto;    /* Зберігаємо пропорції при масштабуванні */
+}

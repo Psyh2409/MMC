@@ -1,0 +1,117 @@
+/* =========================================
+   NAVIGATION SYSTEM - ATOMIC VERIFICATION
+   ========================================= */
+
+/* 1. БАЗОВА ШАПКА */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: var(--space-sm) 0; /* Квантовий відступ */
+    background: var(--accent-primary);
+    box-shadow: 0 var(--space-xs) var(--space-lg) var(--bg-overlay);
+}
+
+/* Контейнери в шапці */
+.site-header .standard-container,
+.site-header-inner {
+    max-width: calc(var(--step) * 300); /* Замість 1200px / 75rem */
+    margin: 0 auto;
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* 2. БРЕНДИНГ ТА НАВІГАЦІЯ */
+.site-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--bg-canvas);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.site-nav-link {
+    color: var(--bg-surface);
+    text-decoration: none;
+}
+
+/* 3. МЕНЮ КОРИСТУВАЧА */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.user-menu-greeting {
+    color: var(--accent-muted);
+}
+
+.user-menu-name {
+    color: var(--bg-canvas);
+}
+
+/* 4. ФУТЕР (КВАНТОВА ГЕОМЕТРІЯ) */
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 6vh;
+    /* Системні обмеження через кроки */
+    max-height: calc(var(--step) * 14);
+    min-height: calc(var(--step) * 11);
+
+    background: var(--text-primary);
+    color: var(--bg-surface);
+    border-top: var(--space-xs) solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.site-footer-inner {
+    width: 100%;
+    max-width: calc(var(--step) * 300);
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-link-action {
+    color: var(--bg-surface);
+    text-decoration: none;
+    font-weight: bold;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--accent-primary);
+    border-radius: var(--radius-full);
+}
+
+/* 5. АДАПТИВНІСТЬ (БЕЗ ПІКСЕЛЬНИХ BREAKPOINTS) */
+/* Використовуємо 48rem як стандартний поріг (768px / 16) */
+@media (max-width: 48rem) {
+    .site-header-inner,
+    .site-nav,
+    .user-menu {
+        flex-direction: row;
+    }
+
+    .site-footer-grid,
+    .footer-meta {
+        text-align: center;
+    }
+}

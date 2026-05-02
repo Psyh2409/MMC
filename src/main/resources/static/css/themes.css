@@ -1,0 +1,157 @@
+/* ==========================================================================
+   КВАНТОВА ПАЛІТРА 2.0 - ПОВНА АРХІТЕКТУРА (15 СТАНІВ)
+   ========================================================================== */
+
+/* 0. DEFAULT & BROWN */
+:root, [data-theme='brown'] {
+    /* Бренд */
+    --primary-color: #6d4c41; --accent-color: #4e342e; --bg-main: #efebe9; --card-bg: #d7ccc8;
+    /* Типографіка та межі */
+    --text-main: #3e2723; --text-muted: #8d6e63; --text-on-primary: #fbe9e7; --border-color: #a1887f;
+    /* Ефекти */
+    --shadow-main: rgba(62, 39, 35, 0.2); --overlay-light: rgba(245, 240, 232, 0.4);
+    /* Сигнальні стани (Danger / Success / Warning) */
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 1. RED */
+[data-theme='red'] {
+    --primary-color: #d32f2f; --accent-color: #b71c1c; --bg-main: #fff5f5; --card-bg: #ffebee;
+    --text-main: #7f0000; --text-muted: #e57373; --text-on-primary: #ffebf0; --border-color: #ef9a9a;
+    --shadow-main: rgba(183, 28, 28, 0.2); --overlay-light: rgba(255, 245, 245, 0.4);
+    --danger-color: #9b0000; --danger-hover-bg: #ffcdd2; --danger-hover-text: #5c0000;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 2. RED-ORANGE */
+[data-theme='red-orange'] {
+    --primary-color: #ff5722; --accent-color: #e64a19; --bg-main: #fdf2f0; --card-bg: #ffebe5;
+    --text-main: #bf360c; --text-muted: #ff8a65; --text-on-primary: #fff2ee; --border-color: #ffab91;
+    --shadow-main: rgba(230, 74, 25, 0.2); --overlay-light: rgba(253, 242, 240, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 3. ORANGE */
+[data-theme='orange'] {
+    --primary-color: #fb8c00; --accent-color: #f57c00; --bg-main: #fff9f0; --card-bg: #fff3e0;
+    --text-main: #e65100; --text-muted: #ffb74d; --text-on-primary: #fff7eb; --border-color: #ffcc80;
+    --shadow-main: rgba(245, 124, 0, 0.2); --overlay-light: rgba(255, 249, 240, 0.5);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #e65100;
+}
+
+/* 4. AMBER */
+[data-theme='amber'] {
+    --primary-color: #ffc107; --accent-color: #ffa000; --bg-main: #fffbf0; --card-bg: #fff8e1;
+    --text-main: #5d4037; --text-muted: #a1887f; --text-on-primary: #3e2723; --border-color: #ffe082;
+    --shadow-main: rgba(255, 160, 0, 0.25); --overlay-light: rgba(255, 251, 240, 0.5);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 5. YELLOW */
+[data-theme='yellow'] {
+    --primary-color: #fdd835; --accent-color: #fbc02d; --bg-main: #fffef0; --card-bg: #fffde7;
+    --text-main: #5c5510; --text-muted: #a89f32; --text-on-primary: #332b00; --border-color: #fff59d;
+    --shadow-main: rgba(251, 192, 45, 0.3); --overlay-light: rgba(255, 254, 240, 0.6);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 6. LIME */
+[data-theme='lime'] {
+    --primary-color: #c0ca33; --accent-color: #afb42b; --bg-main: #fcfdf5; --card-bg: #f9fbe7;
+    --text-main: #33691e; --text-muted: #7cb342; --text-on-primary: #1b3a00; --border-color: #e6ee9c;
+    --shadow-main: rgba(175, 180, 43, 0.2); --overlay-light: rgba(252, 253, 245, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #1b5e20; --success-hover-bg: #c8e6c9; --success-hover-text: #0a2d0c;
+    --warning-color: #f57c00;
+}
+
+/* 7. GREEN */
+[data-theme='green'] {
+    --primary-color: #2e7d32; --accent-color: #1b5e20; --bg-main: #f1f8f1; --card-bg: #e8f5e9;
+    --text-main: #0a2d0c; --text-muted: #66bb6a; --text-on-primary: #e8f5e9; --border-color: #a5d6a7;
+    --shadow-main: rgba(27, 94, 32, 0.2); --overlay-light: rgba(241, 248, 241, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #00796b; --success-hover-bg: #b2dfdb; --success-hover-text: #004d40;
+    --warning-color: #f57c00;
+}
+
+/* 8. TEAL */
+[data-theme='teal'] {
+    --primary-color: #00897b; --accent-color: #00695c; --bg-main: #f0f7f7; --card-bg: #e0f2f1;
+    --text-main: #002e2c; --text-muted: #4db6ac; --text-on-primary: #e0f2f2; --border-color: #80cbc4;
+    --shadow-main: rgba(0, 105, 92, 0.2); --overlay-light: rgba(240, 247, 247, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 9. LIGHT-BLUE */
+[data-theme='light-blue'] {
+    --primary-color: #039be5; --accent-color: #0288d1; --bg-main: #f0f9ff; --card-bg: #e1f5fe;
+    --text-main: #013a6b; --text-muted: #4fc3f7; --text-on-primary: #e1f5ff; --border-color: #81d4fa;
+    --shadow-main: rgba(2, 136, 209, 0.2); --overlay-light: rgba(240, 249, 255, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 10. BLUE */
+[data-theme='blue'] {
+    --primary-color: #0d47a1; --accent-color: #1565c0; --bg-main: #f0f4fb; --card-bg: #e3f2fd;
+    --text-main: #061a40; --text-muted: #64b5f6; --text-on-primary: #e3f2ff; --border-color: #90caf9;
+    --shadow-main: rgba(21, 101, 192, 0.2); --overlay-light: rgba(240, 244, 251, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 11. INDIGO */
+[data-theme='indigo'] {
+    --primary-color: #3949ab; --accent-color: #283593; --bg-main: #f1f2f9; --card-bg: #e8eaf6;
+    --text-main: #10164a; --text-muted: #7986cb; --text-on-primary: #e8eaff; --border-color: #9fa8da;
+    --shadow-main: rgba(40, 53, 147, 0.2); --overlay-light: rgba(241, 242, 249, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 12. PURPLE */
+[data-theme='purple'] {
+    --primary-color: #8e24aa; --accent-color: #7b1fa2; --bg-main: #f6f0f8; --card-bg: #f3e5f5;
+    --text-main: #310a5d; --text-muted: #ba68c8; --text-on-primary: #f3e5ff; --border-color: #ce93d8;
+    --shadow-main: rgba(123, 31, 162, 0.2); --overlay-light: rgba(246, 240, 248, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 13. PINK */
+[data-theme='pink'] {
+    --primary-color: #d81b60; --accent-color: #c2185b; --bg-main: #f9f0f4; --card-bg: #fce4ec;
+    --text-main: #5a002b; --text-muted: #f06292; --text-on-primary: #fce4f0; --border-color: #f48fb1;
+    --shadow-main: rgba(194, 24, 91, 0.2); --overlay-light: rgba(249, 240, 244, 0.4);
+    --danger-color: #d32f2f; --danger-hover-bg: #ffcdd2; --danger-hover-text: #b71c1c;
+    --success-color: #2e7d32; --success-hover-bg: #c8e6c9; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
+
+/* 14. GRAY (PTSD / Deprivation) */
+[data-theme='gray'] {
+    --primary-color: #546e7a; --accent-color: #37474f; --bg-main: #f5f7f8; --card-bg: #eceff1;
+    --text-main: #1c2529; --text-muted: #90a4ae; --text-on-primary: #f5f7f8; --border-color: #b0bec5;
+    --shadow-main: rgba(55, 71, 79, 0.4); --overlay-light: rgba(245, 247, 248, 0.2);
+    --danger-color: #c62828; --danger-hover-bg: #ef9a9a; --danger-hover-text: #8e0000;
+    --success-color: #2e7d32; --success-hover-bg: #a5d6a7; --success-hover-text: #1b5e20;
+    --warning-color: #f57c00;
+}
