@@ -1,4 +1,3 @@
-
 /* РЕЗЕРВНИЙ СТИЛЬ ДЛЯ ЗАБУТИХ КНОПОК */
 button:not([class]), .btn-default {
     padding: calc(var(--step) * 2) calc(var(--step) * 4);
@@ -13,12 +12,12 @@ button:not([class]), .btn-default {
 .btn-primary {
     /* 1. КОЛЬОРИ: Використовуємо семантику замість назв кольорів */
     background-color: var(--accent-primary);
-    color: var(--text-on-accent);[cite: 1]
+    color: var(--text-on-accent);
     border: none;
 
     /* 2. ГЕОМЕТРІЯ: Квантова сітка (4px * 3 та 4px * 6) */
-    padding: calc(var(--step) * 3) calc(var(--step) * 6);[cite: 1]
-    border-radius: var(--radius-md);[cite: 1]
+    padding: calc(var(--step) * 3) calc(var(--step) * 6);
+    border-radius: var(--radius-md);
 
     /* 3. ТИПОГРАФІКА: Відносні одиниці */
     font-size: 1rem;
@@ -36,8 +35,8 @@ button:not([class]), .btn-default {
 
 /* Стан при наведенні — системний ховер */
 .btn-primary:hover {
-    background-color: var(--accent-hover);[cite: 1]
-    box-shadow:0 0.25rem 0.75rem var(--bg-overlay);[cite: 1]
+    background-color: var(--accent-hover);
+    box-shadow:0 0.25rem 0.75rem var(--bg-overlay);
 }
 
 /* 1. Основний контейнер панелі */
@@ -50,20 +49,20 @@ button:not([class]), .btn-default {
     border-radius: var(--radius-md);
     text-align: center;
     /* Тонка межа через rem (1px) */
-    border: 0.0625rem solid var(--border-soft);[cite: 1]
+    border: 0.0625rem solid var(--border-soft);
 }
 
 /* 2. Світла модифікація панелі */
 .cta-panel-light {
     /* Використовуємо системний токен фону замість хардкоду */
-    background-color: var(--bg-canvas);[cite: 1]
+    background-color: var(--bg-canvas);
 }
 
 /* 3. Заголовок всередині панелі */
 .cta-panel-title {
     margin-top: 0;
     /* Семантичний колір з variables.css */
-    color: var(--text-primary);[cite: 1]
+    color: var(--text-primary);
     font-size: 1.5rem;
     font-family: 'Georgia', serif;
 }
@@ -80,25 +79,26 @@ button:not([class]), .btn-default {
     border-radius: var(--radius-full);
 
     /* 3. ТИПОГРАФІКА ТА КОЛЬОР: Беремо фон із системи */
-    color: var(--text-on-accent);[cite: 1]
+    color: var(--text-on-accent);
     text-decoration: none;
     font-weight: bold;
 
     /* 4. ДИНАМІКА: Плавність для всіх станів */
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 /* Універсальний акцентний стиль для посилання-кнопки */
 .link-cta-primary {
     /* Використовуємо системний акцент теми */
     background-color: var(--accent-primary);
-    color: var(--text-on-accent);[cite: 1]
+    color: var(--text-on-accent);
 }
 
 .link-cta-primary:hover {
     /* Автоматично підхоплює ховер поточної теми */
-    background-color: var(--accent-hover);[cite: 1]
-    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);[cite: 1]
+    background-color: var(--accent-hover);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
 }
 
 /* Базовий клас кнопки відправки */
@@ -120,7 +120,7 @@ button:not([class]), .btn-default {
     width: 100%;
 
     /* 4. АНІМАЦІЯ: 0.3s -> 0.2s для чіткості */
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 /* Наша нова універсальна праймері-кнопка (колишня brown) */
@@ -139,6 +139,11 @@ button:not([class]), .btn-default {
 .submit-button:hover {
     background-color: var(--accent-hover);
     box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+    transform: translateY(-0.0625rem);
+}
+
+.submit-button:active {
+    transform: scale(0.98);
 }
 
 /* Контейнер для кнопок входу (сітка) */
@@ -187,13 +192,13 @@ button:not([class]), .btn-default {
 
 /* Google: Залишаємо чистим та впізнаваним */
 .oauth-button-google {
-    background-color: #ffffff !important;
-    color: #3c4043 !important; /* Стандартний колір тексту Google */
-    border-color: #dadce0 !important;
+    background-color: var(--bg-main) !important;
+    color: var(--text-main) !important; /* Стандартний колір тексту Google */
+    border-color: var(--border-color) !important;
 }
 
 .oauth-button-google:hover {
-    background-color: #f8f9fa !important;
+    background-color: var(--bg-main) !important;
     box-shadow: 0 0.25rem 0.5rem var(--bg-overlay);
 }
 
@@ -201,7 +206,7 @@ button:not([class]), .btn-default {
 .oauth-button-facebook {
     background-color: #1877f2 !important;
     border-color: #1877f2 !important;
-    color: #ffffff !important;
+    color: var(--bg-main) !important;
 }
 
 .oauth-button-facebook:hover {
@@ -483,6 +488,7 @@ button:not([class]), .btn-default {
     color: var(--text-on-accent);
     cursor: pointer;
     font-size: 0.8rem;
+    transition: background-color 0.2s ease, filter 0.2s ease;
 }
 
 /* Кнопка збереження в адмінці */
@@ -497,6 +503,7 @@ button:not([class]), .btn-default {
     color: var(--text-on-accent);
     cursor: pointer;
     font-size: 0.75rem;
+    transition: background-color 0.2s ease, filter 0.2s ease;
 }
 
 /* Мала адмін-кнопка (універсальна) */
@@ -530,7 +537,7 @@ button:not([class]), .btn-default {
 .btn-delete, .btn-delete-small {
     background-color: var(--bg-canvas);
     color: var(--accent-primary);
-    border: 0.0625rem solid var(--accent-primary);[cite: 9]
+    border: 0.0625rem solid var(--accent-primary);
     padding: calc(var(--step) * 1.5) calc(var(--step) * 3); /* Додай відступи */
     border-radius: var(--radius-sm); /* Додай радіус */
     cursor: pointer; /* РОБИТЬ МИШКУ "РУЧКОЮ" */
@@ -538,7 +545,7 @@ button:not([class]), .btn-default {
     transition: all 0.2s ease;
 }
 
-.btn-delete .btn-delete-small:hover {
+.btn-delete:hover, .btn-delete-small:hover {
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
 }
@@ -796,7 +803,7 @@ button:not([class]), .btn-default {
     padding: calc(var(--step) * 3) calc(var(--step) * 6);
 
     /* ТИПОГРАФІКА */
-    font-size: 1rem;
+    font-size: 1rem; /* Вирішено конфлікт, залишено 1rem */
     font-weight: bold;
     text-decoration: none;
 
@@ -1240,10 +1247,10 @@ button:not([class]), .btn-default {
     display: inline-flex;
 
     /* ГЕОМЕТРІЯ: замість 5px використовуємо крок сітки */
-    padding: 0;
+    padding: var(--step) 0;
     margin-top: var(--step);
 
-    /* ТИПОГРАФІКА: піднімаємо до 0.85rem для кращого UX */
+    /* ТИПОГРАФІКА */
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: underline;
@@ -1263,11 +1270,11 @@ button:not([class]), .btn-default {
     transform: translateY(0.0625rem);
 }
 
-/* АДАПТАЦІЯ: Тільки EM (30em = твій новий стандарт) */
+/* Адаптація для мобілок (em) */
 @media (max-width: 30em) {
     .reply-btn {
         font-size: 0.9rem; /* Збільшуємо для мобільних */
-        padding: var(--step) 0;
+        padding: calc(var(--step) * 1.5) 0;
     }
 }
 
@@ -1439,29 +1446,3 @@ button:not([class]), .btn-default {
         font-size: 1.1rem;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -30,29 +30,29 @@ main {
 .standard-container {
     max-width: 43.75rem; /* 700px */
     width: 90%;
-    margin: 3.75rem auto; /* 60px */[cite: 2]
-    background: var(--bg-main);[cite: 2]
-    padding: 2.5rem; /* 40px - 10 кроків */[cite: 2]
-    border-radius: var(--radius-md);[cite: 2]
-    box-shadow: 0 0.625rem 1.875rem var(--shadow-main);[cite: 2]
+    margin: 3.75rem auto; /* 60px */
+    background: var(--bg-main);
+    padding: 2.5rem; /* 40px - 10 кроків */
+    border-radius: var(--radius-md);
+    box-shadow: 0 0.625rem 1.875rem var(--shadow-main);
     box-sizing: border-box;
 }
 
 .standard-container-narrow {
-    max-width: 37.5rem; /* 600px */[cite: 2]
-    padding: 1.25rem; /* 20px - 5 кроків */[cite: 2]
+    max-width: 37.5rem; /* 600px */
+    padding: 1.25rem; /* 20px - 5 кроків */
 }
 
 .standard-container-compact {
-    max-width: 28.125rem; /* 450px */[cite: 2]
-    padding: 1.875rem; /* 30px */[cite: 2]
-    border-radius: var(--radius-sm);[cite: 2]
-    box-shadow: 0 0.25rem 0.9375rem var(--shadow-main);[cite: 2]
+    max-width: 28.125rem; /* 450px */
+    padding: 1.875rem; /* 30px */
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0.25rem 0.9375rem var(--shadow-main);
 }
 
 .standard-container-login {
-    max-width: 25rem; /* 400px */[cite: 2]
-    margin: 5rem auto; /* 80px */[cite: 2]
+    max-width: 25rem; /* 400px */
+    margin: 5rem auto; /* 80px */
 }
 
 /* 3. ШИРОКІ КОНТЕЙНЕРИ */
@@ -60,29 +60,29 @@ main {
 .content-with-sidebar,
 .admin-container,
 .standard-container-wide {
-    max-width: 75rem; /* 1200px */[cite: 2]
+    max-width: 75rem; /* 1200px */
     margin: 0 auto;
-    padding: 0 var(--space-md);[cite: 2]
+    padding: 0 var(--space-md);
 }
 
 /* 4. СІТКИ ТА ГРІДИ */
 .home-services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); /* ~350px */[cite: 2]
-    gap: var(--space-lg);[cite: 2]
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); /* ~350px */
+    gap: var(--space-lg);
 }
 
 .content-with-sidebar {
     display: grid;
-    grid-template-columns: 17.5rem minmax(0, 1fr); /* 280px */[cite: 2]
-    gap: var(--space-xl);[cite: 2]
-    margin-top: var(--space-xl);[cite: 2]
+    grid-template-columns: 17.5rem minmax(0, 1fr); /* 280px */
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
 }
 
 /* 5. HERO СЕКЦІЇ (Вичищено від px) */
 .home-hero, .steps-hero {
-    min-height: 28.125rem; /* 450px */[cite: 2]
-    padding: 7.5rem 1.25rem; /* 120px 20px */[cite: 2]
+    min-height: 28.125rem; /* 450px */
+    padding: 7.5rem 1.25rem; /* 120px 20px */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,20 +92,20 @@ main {
 
 .home-hero {
     background: linear-gradient(var(--shadow-main), var(--shadow-main)),
-                url('/images/hero-bg.jpg') center/cover;[cite: 2]
+                url('/images/hero-bg.jpg') center/cover;
 }
 
 .home-hero-title {
-    margin-bottom: 0.9375rem; /* 15px */[cite: 2]
+    margin-bottom: 0.9375rem; /* 15px */
     font-size: 3.5rem;
-    color: var(--bg-main);[cite: 2]
-    text-shadow: 0.125rem 0.125rem 0.25rem var(--shadow-main);[cite: 2]
+    color: var(--bg-main);
+    text-shadow: 0.125rem 0.125rem 0.25rem var(--shadow-main);
 }
 
 .home-hero-subtitle {
-    margin-bottom: 2.5rem; /* 40px */[cite: 2]
+    margin-bottom: 2.5rem; /* 40px */
     font-size: 1.8rem;
     font-style: italic;
-    color: var(--overlay-light);[cite: 2]
-    text-shadow: 0.0625rem 0.0625rem 0.1875rem var(--shadow-main);[cite: 2]
+    color: var(--overlay-light);
+    text-shadow: 0.0625rem 0.0625rem 0.1875rem var(--shadow-main);
 }

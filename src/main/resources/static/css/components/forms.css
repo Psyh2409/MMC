@@ -9,7 +9,7 @@
 .stack-form-sans {
     /* Використовуємо системний шрифт без засічок, якщо він десь прописаний глобально,
        або залишаємо так для службових форм */
-    font-family: sans-serif;[cite: 10]
+    font-family: sans-serif;
 }
 
 .form-field {
@@ -42,8 +42,8 @@
     border: 0.0625rem solid var(--border-soft);
 
     /* 4. КОЛЬОРИ: Семантичний фон для інпутів (змінюється разом із темою) */
-    background-color: var(--bg-input);[cite: 11]
-    color: var(--text-primary);[cite: 11]
+    background-color: var(--bg-input);
+    color: var(--text-primary);
 
     /* 5. UX: Включаємо модель боксу та додаємо плавність */
     box-sizing: border-box;
@@ -64,8 +64,8 @@
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--border-strong);[cite: 11]
-    box-shadow: 0 0 0 0.125rem var(--bg-overlay);[cite: 11]
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
 }
 
 /* ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК */
@@ -82,9 +82,9 @@
 .helper-text-centered {
     text-align: center;
     /* 25px -> 6.25 кроків (що дає рівно 25px при кроці 4px) */
-    margin-top: calc(var(--step) * 6.25);[cite: 11]
+    margin-top: calc(var(--step) * 6.25);
     /* Використовуємо вторинний колір тексту для підказок */
-    color: var(--text-secondary);[cite: 11]
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -105,7 +105,7 @@
 
 .oauth-login-block {
     /* 18px -> 4.5 кроки сітки (4.5 * 0.25rem = 1.125rem) */
-    margin-top: calc(var(--step) * 4.5);[cite: 11]
+    margin-top: calc(var(--step) * 4.5);
     /* Гарантуємо, що блок займає всю ширину */
     width: 100%;
 }
@@ -125,12 +125,12 @@
     padding: calc(var(--step) * 1.25);
 
     /* 3. РАДІУС: 4px -> системний малий токен */
-    border-radius: var(--radius-sm);[cite: 11]
+    border-radius: var(--radius-sm);
 
     /* 4. МЕЖІ ТА КОЛЬОРИ: Тільки системні токени тем */
-    border: 0.0625rem solid var(--border-soft);[cite: 11]
-    background-color: var(--bg-input);[cite: 11]
-    color: var(--text-primary);[cite: 11]
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
 
     /* 5. ТИПОГРАФІКА */
     font-size: 0.9em;
@@ -142,14 +142,14 @@
 /* Стан фокусу для нотаток */
 .admin-notes:focus {
     outline: none;
-    border-color: var(--border-strong);[cite: 11]
-    box-shadow: 0 0 0 0.125rem var(--bg-overlay);[cite: 11]
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
 }
 
 .password-container {
     position: relative;
     display: flex;
-    align-items: center;[cite: 10]
+    align-items: center;
     /* Гарантуємо, що контейнер займає всю ширину форми */
     width: 100%;
 }
@@ -157,8 +157,8 @@
 .password-container .form-input {
     /* 40px -> 10 кроків сітки (10 * 0.25rem = 2.5rem) */
     /* Це місце для кнопки перемикання видимості пароля */
-    padding-right: calc(var(--step) * 10);[cite: 11]
-    width: 100%;[cite: 10]
+    padding-right: calc(var(--step) * 10);
+    width: 100%;
 }
 
 /* АДМІНІСТРАТИВНИЙ ЛЕЙАУТ */
