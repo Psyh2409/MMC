@@ -316,15 +316,11 @@ button:not([class]), .btn-default {
 .steps-cta {
     /* 40px зверху, 60px padding */
     margin-top: calc(var(--step) * 10);
-    padding: calc(var(--step) * 15);
+    padding: calc(var(--step) * 15); /* Базовий padding */
     text-align: center;
     background-color: var(--bg-surface);
     /* 15px радіус зверху */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.steps-cta h2, .steps-cta p {
-    color: var(--text-primary);
 }
 
 /* 3. КНОПКА ВСЕРЕДИНІ STEPS (link-cta-primary) */
@@ -351,26 +347,12 @@ button:not([class]), .btn-default {
     transform: translateY(-0.125rem);
 }
 
-/* 4. АДАПТИВНІСТЬ (Без медіа-запитів з пікселями) */
-@media (max-width: 48rem) {
-    .steps-expectations,
-    .issue-article,
-    .article-body {
-        padding: calc(var(--step) * 6); /* 24px */
-    }
-
-    .steps-cta,
-    .issue-cta {
-        padding: calc(var(--step) * 7.5) calc(var(--step) * 5); /* 30px 20px */
-    }
-}
-
 /* --- БЛОК ISSUE CTA (СИСТЕМНИЙ) --- */
 
 /* Базовий контейнер */
 .issue-cta {
     margin-top: calc(var(--step) * 15); /* 60px */
-    padding: calc(var(--step) * 11.25); /* 45px */
+    padding: calc(var(--step) * 11.25); /* Базовий padding */
     text-align: center;
     border-radius: var(--radius-lg);
     background-color: var(--bg-surface);
@@ -706,13 +688,13 @@ button:not([class]), .btn-default {
 /* Спеціальний стиль для "Скасувати" у формах */
 .form-actions .site-nav-link {
     color: var(--accent-primary);
-    font-weight: bold;
+    font-weight: bold; /* Вирішено конфлікт, залишено bold */
     text-decoration: underline;
     text-underline-offset: 0.25rem;
     /* 0.8rem -> стабільний відступ */
     margin-left: 0.8rem;
-    font-size: 1rem;
-    transition: color 0.2s ease;
+    font-size: 1rem; /* Вирішено конфлікт, залишено 1rem */
+    transition: color 0.2s ease; /* Вирішено конфлікт, залишено повний transition */
     cursor: pointer;
 }
 
@@ -723,15 +705,6 @@ button:not([class]), .btn-default {
 
 .btn-action:active {
     transform: scale(0.97);
-}
-
-/* Мобільна адаптація (замість твого display: block !important) */
-@media (max-width: 30em) {
-    .btn-action {
-        display: flex;
-        width: 100%;
-        min-width: 0; /* Прибираємо фікс для мобілок */
-    }
 }
 
 /* ==========================================================================
@@ -1114,7 +1087,7 @@ button:not([class]), .btn-default {
 
 /* Форма в комірці дій (видалення/редагування) */
 .action-cell form {
-    display: inline-flex;
+    display: inline-flex; /* Базове значення */
     margin: 0;
     padding: 0;
 }
@@ -1139,7 +1112,7 @@ button:not([class]), .btn-default {
     }
 
     .action-cell form {
-        display: flex;
+        display: flex; /* Перевизначення для мобільних */
         width: 100%;
     }
 }
@@ -1251,7 +1224,7 @@ button:not([class]), .btn-default {
     margin-top: var(--step);
 
     /* ТИПОГРАФІКА */
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 0.125rem;

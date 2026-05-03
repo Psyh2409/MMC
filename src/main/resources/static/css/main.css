@@ -16,3 +16,6 @@
 
 /* 4. СКЛАДНІ ВУЗЛИ (Components) <-- ТУТ ЙОГО МІСЦЕ */
 @import "components/components.css"; /* Чат, Коментарі, Дерево вкладеності */
+
+/* 5. УТИЛІТИ (Фінальні штрихи) — ВСТАВЛЯЙ СЮДИ */
+@import "components/utilities.css";

@@ -1,0 +1,90 @@
+/* === ВРЯТОВАНІ КЛАСИ ДЛЯ РЕФАКТОРИНГУ === */
+/* Цей файл згенеровано автоматично. Не підключай його до HTML напряму. */
+
+.footer-link-action {
+    color: var(--card-bg);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 15px;
+    background: var(--primary-color); 
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.footer-link-action:hover {
+    background: var(--primary-color);
+}
+
+.border-top-taupe {
+    border-top-color: var(--border-color);
+}
+
+.border-top-primary {
+    border-top-color: var(--accent-color);
+}
+
+.border-top-secondary {
+    border-top-color: var(--primary-color);
+}
+
+.border-top-primary {
+    border-top-color: var(--text-main);
+}
+
+.border-top-clay {
+    border-top-color: var(--primary-color);
+}
+
+.issue-border-top-primary {
+    border-top: 8px solid var(--accent-color);
+}
+
+.issue-border-top-secondary {
+    border-top: 6px solid var(--primary-color);
+}
+
+.issue-border-top-secondary {
+    border-top: 6px solid var(--text-main);
+}
+
+.btn-create-article .icon {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+.btn-action, .btn-edit, .btn-delete, .btn-edit-sm, .btn-delete-sm {
+    display: inline-flex !important; 
+    padding: 4px 10px !important;
+    font-size: 13px !important;
+    margin: 2px !important;
+    text-decoration: none;
+    border-radius: 4px;
+    color: #fff !important;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-edit, .btn-edit-sm {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-delete, .btn-delete-sm {
+    background-color: var(--primary-color) !important;
+}
+
+.form-actions .site-nav-link {
+    color: var(--accent-color) !important;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.btn-secondary, .form-actions .site-nav-link {
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
+    font-size: 1rem !important;
+    margin-left: 0.8rem !important;
+}
+

@@ -127,3 +127,16 @@
     gap: var(--space-xs);
     min-width: 10rem;
 }
+
+.uuid-cell {
+    max-width: calc(var(--space-xl) * 3);
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.uuid-cell:hover .btn-copy-uuid {
+    opacity: 1;
+}
+

@@ -1,0 +1,6 @@
+.hidden { display: none; }
+
+.border-top-accent   { border-top: calc(var(--step) / 2) solid var(--accent-primary); }
+.border-top-main     { border-top: calc(var(--step) / 2) solid var(--border-strong); }
+.border-top-muted    { border-top: calc(var(--step) / 4) solid var(--border-soft); }
+.border-top-contrast { border-top: calc(var(--step) / 2) solid var(--text-primary); }

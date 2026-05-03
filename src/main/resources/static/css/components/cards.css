@@ -1,18 +1,17 @@
+
 /* =========================================
    CARDS SYSTEM - ATOMIC EDITION (FULL)
    ========================================= */
 
 /* 1. СПІЛЬНІ БАЗОВІ ВЛАСТИВОСТІ */
-.home-service-card,
 .steps-card,
 .issue-grid-card,
 .admin-stat-card,
-.error-card,
 .profile-card,
 .article-card {
     background-color: var(--bg-canvas);
     box-sizing: border-box;
-    border-radius: var(--radius-md); /* Базовий радіус для всіх */
+    border-radius: var(--radius-md); /* Базовий радіус для всіх, крім тих, що перевизначені */
 }
 
 /* 2. ЕФЕКТИ (Тіні та Транзиції) */
@@ -29,7 +28,7 @@
 .home-service-card {
     height: 100%;
     padding: var(--space-xl);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-lg); /* Фінальний радіус для home-service-card */
     border-top: var(--space-xs) solid var(--accent-primary);
 }
 
@@ -49,7 +48,7 @@
 .error-card {
     max-width: 40rem;
     padding: var(--space-xl);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-lg); /* Фінальний радіус для error-card */
 }
 
 /* 4. КОМПОНЕНТИ СТАТЕЙ (ISSUE ELEMENTS) */

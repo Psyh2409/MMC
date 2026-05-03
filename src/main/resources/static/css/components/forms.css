@@ -83,7 +83,6 @@
     text-align: center;
     /* 25px -> 6.25 кроків (що дає рівно 25px при кроці 4px) */
     margin-top: calc(var(--step) * 6.25);
-    /* Використовуємо вторинний колір тексту для підказок */
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
@@ -264,111 +263,6 @@
     margin-top: calc(var(--step) * 2.5);
 }
 
-.admin-actions-bar {
-    /* 20px -> рівно 5 кроків сітки (5 * 0.25rem = 1.25rem) */
-    margin-bottom: calc(var(--step) * 5);
-    display: block; /* Гарантуємо видимість контейнера для кнопок */
-}
-
-/* ТЕКСТАРЕЯ ДЛЯ КОМЕНТАРІВ */
-.comment-textarea {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-
-    /* 1. ГЕОМЕТРІЯ: 15px -> 3.75 кроки сітки */
-    padding: calc(var(--step) * 3.75);
-    /* 10px -> 2.5 кроки сітки */
-    margin-bottom: calc(var(--step) * 2.5);
-
-    /* 2. МЕЖІ ТА РАДІУС: Використовуємо системні токени */
-    border: 0.0625rem solid var(--border-soft);
-    border-radius: var(--radius-md);
-
-    /* 3. КОЛЬОРИ ТЕМИ: Замість #ffffff використовуємо токен інпуту */
-    background-color: var(--bg-input);
-    color: var(--text-primary);
-
-    /* 4. ТИПОГРАФІКА */
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
-
-    /* 5. ПОВЕДІНКА */
-    resize: vertical;
-    display: block;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.comment-textarea:focus {
-    outline: none;
-    /* Використовуємо системний сильний колір межі замість хардкоду #8b7355 */
-    border-color: var(--border-strong);
-    /* Наш фірмовий квантовий Glow */
-    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
-}
-
-/* КОНТЕЙНЕРИ ТА ПОЛЯ КОМЕНТАРІВ */
-
-.comment-form-container {
-    /* 1. ГЕОМЕТРІЯ: 20px -> рівно 5 кроків сітки */
-    padding: calc(var(--step) * 5);
-
-    /* 2. КОЛЬОРОВА ПІДКЛАДКА: Замість #ede7dd використовуємо семантичну поверхню */
-    background-color: var(--bg-surface);
-
-    /* 3. РАДІУС: 12px -> системний великий токен */
-    border-radius: var(--radius-lg);
-    box-sizing: border-box;
-}
-
-.comment-form textarea,
-.comment-section textarea {
-    width: 100%;
-    box-sizing: border-box;
-    max-width: 100%;
-    display: block;
-    resize: vertical;
-
-    /* 4. ГЕОМЕТРІЯ ВНУТРІШНЯ: 12px -> 3 кроки сітки */
-    padding: calc(var(--step) * 3);
-
-    /* 5. МЕЖІ: Використовуємо системну тонку лінію */
-    border: 0.0625rem solid var(--border-soft);
-    border-radius: var(--radius-md);
-
-    /* 6. КОЛЬОРИ: Семантичний фон інпуту (завжди світліший або темніший за фон контейнера) */
-    background-color: var(--bg-input);
-    color: var(--text-primary);
-
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* ФОКУС ДЛЯ ТЕКСТАРЕА */
-.comment-form textarea:focus,
-.comment-section textarea:focus {
-    outline: none;
-    border-color: var(--border-strong);
-    box-shadow: 0 0 0 0.125rem var(--bg-overlay);
-}
-
-/* ПАНЕЛЬ ДІЙ В АДМІНЦІ */
-.admin-actions-bar {
-    /* 1. ГЕОМЕТРІЯ: 15px -> 3.75 кроки, 1.5rem -> 6 кроків */
-    gap: var(--space-lg);
-    margin-bottom: var(--space-lg);
-
-    /* 2. ЛЕЙАУТ: Використовуємо Flexbox як основний стандарт */
-    display: flex;
-    flex-wrap: wrap;
-    /* Розподіляємо елементи: кнопки зліва, пошук або фільтри справа */
-    justify-content: space-between;
-    align-items: center;
-
-    /* 3. ОЧИЩЕННЯ: Прибираємо !important, бо в окремому файлі
-       пріоритет і так буде правильним */
-}
-
 /* ФОРМИ ЧАТУ ТА ПОВІДОМЛЕНЬ */
 
 .chat-form {
@@ -435,3 +329,75 @@
     padding-top: var(--space-lg);
 }
 
+.oauth-divider {
+    position: relative;
+    margin: var(--space-sm) 0 var(--space-md);
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+
+.oauth-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: calc(var(--step) / 4) solid var(--bg-surface);
+}
+
+.oauth-divider span {
+    position: relative;
+    padding: 0 var(--space-sm);
+    background: var(--bg-canvas);
+}
+
+.oauth-disabled-note {
+    padding: var(--space-md) var(--space-md);
+    border: calc(var(--step) / 4) dashed var(--border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.oauth-disabled-note p { margin: var(--space-sm) 0 0; }
+.oauth-disabled-note code { padding: calc(var(--step) / 2) var(--space-sm); border-radius: var(--radius-sm); background: var(--bg-surface); color: var(--accent-primary); }
+
+.oauth-disabled-google { border-color: var(--bg-surface); }
+
+.logout-form, .inline-form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.comment-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-md);
+    border: calc(var(--step) / 4) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-input);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+.comment-textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 calc(var(--step) * 0.75) var(--border-strong);
+}
+
+.form-delete-account {
+    margin-top: var(--space-xs);
+    border-top: calc(var(--step) / 4) solid var(--border-soft);
+    padding-top: var(--space-sm);
+}

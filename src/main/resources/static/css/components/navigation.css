@@ -114,20 +114,7 @@
     color: var(--bg-main) !important;
 }
 
-.logout-button {
-    background-color: var(--bg-surface-alt);
-    border: 0.0625rem solid var(--border-color);
-    color: var(--primary-color);
-    padding: 0.3rem 0.8rem;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background 0.2s;
-}
 
-.logout-button:hover {
-    background-color: var(--overlay-light);
-}
 
 /* 4. МЕНЮ КОРИСТУВАЧА */
 .user-menu {

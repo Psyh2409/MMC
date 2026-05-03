@@ -165,3 +165,31 @@ h3 {
     var(--space-xl); /* 40px - системний крок */
     font-size: 2rem; /* Базовий розмір для назви статті */
 }
+
+.contact-intro-title {
+    text-align: center;
+    color: var(--accent-primary);
+    font-family: 'Georgia', serif;
+}
+
+.contact-intro-text {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: calc(var(--space-md) * 2);
+}
+
+.contact-direct-note {
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+
+.user-menu-name {
+    color: var(--bg-canvas);
+}
+
+.hero-title-light {
+    color: var(--bg-surface);
+    text-shadow: calc(var(--step) / 2) calc(var(--step) / 2) var(--space-sm) var(--bg-overlay);
+    font-size: 1.8em;
+    padding: 0 var(--space-md);
+}
