@@ -49,3 +49,26 @@
     --status-success-bg: var(--success-hover-bg);
     --status-warning: var(--warning-color);
 }
+
+/* --- 3. DARK MODE (СЕМАНТИЧНА ІНВЕРСІЯ) --- */
+/* Жодного хардкоду. Тільки зміна ролей існуючих токенів[cite: 4] */
+
+[data-mode="dark"] {
+    /* ФОНИ стають найтемнішими кольорами з палітри[cite: 3, 4] */
+    --bg-canvas: var(--text-main);     /* Підлога тепер кольору темного тексту */
+    --bg-surface: var(--accent-color); /* Картки тепер кольору акценту */
+    --bg-elevated: var(--primary-color);
+    --bg-input: var(--text-main);
+
+    /* ТЕКСТ стає найсвітлішими кольорами з палітри[cite: 3, 4] */
+    --text-primary: var(--bg-main);    /* Текст тепер кольору світлої підлоги */
+    --text-secondary: var(--card-bg);  /* Вторинний текст кольору світлих карток */
+    --text-disabled: var(--border-color);
+
+    /* МЕЖІ[cite: 4] */
+    --border-soft: var(--primary-color);
+
+    /* КНОПКИ (Акценти) теж вивертаємо, щоб їх було видно на темному фоні[cite: 3, 4] */
+    --accent-primary: var(--card-bg);
+    --text-on-accent: var(--text-main);
+}

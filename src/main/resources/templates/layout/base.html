@@ -17,9 +17,14 @@
     <div th:replace="${mainContent}"></div>
 </main>
 
+<!-- ... попередній код без змін ... -->
+
 <div th:replace="~{fragments/header-footer :: footer-fragment}"></div>
 
-<th:block th:replace="${pageScripts} ?: ~{}"></th:block>
+<!-- ГЛОБАЛЬНІ СКРИПТИ -->
+<script th:src="@{/js/theme-switcher.js}"></script>
 
+<!-- ЛОКАЛЬНІ СКРИПТИ (якщо сторінка їх передає) -->
+<th:block th:replace="${pageScripts} ?: ~{}"></th:block>
 </body>
 </html>

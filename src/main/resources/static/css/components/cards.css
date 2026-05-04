@@ -7,8 +7,7 @@
 .steps-card,
 .issue-grid-card,
 .admin-stat-card,
-.profile-card,
-.article-card {
+.profile-card {
     background-color: var(--bg-canvas);
     box-sizing: border-box;
     border-radius: var(--radius-md); /* Базовий радіус для всіх, крім тих, що перевизначені */
@@ -106,3 +105,55 @@
     border-top: 0.1875rem double var(--border-soft);
     border-bottom: 0.1875rem double var(--border-soft);
 }
+
+.article-card {
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-main);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    height: 100%;
+}
+
+.article-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    padding-bottom: var(--space-xs);
+    border-bottom: 0.0625rem solid var(--border-soft); /* Це 1px, але через rem для масштабування */
+}
+
+.article-card-title {
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.article-card-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.article-card-title a:hover {
+    color: var(--accent-primary);
+}
+
+.article-excerpt {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);[cite: 1]
+    margin-bottom: var(--space-md);[cite: 1]
+}
+
+/* Картка статті (Остаточна версія без конфліктів) */

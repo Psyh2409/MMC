@@ -1,3 +1,35 @@
 /* === ВРЯТОВАНІ КЛАСИ ДЛЯ РЕФАКТОРИНГУ === */
 /* Цей файл згенеровано автоматично. Не підключай його до HTML напряму. */
 
+.read-more-button {
+    background-color: var(--primary-color);
+    color: var(--bg-main);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.read-more-button {
+    background-color: var(--primary-color) !important;
+    color: var(--bg-main) !important;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.read-more-button {
+    background-color: var(--primary-color) !important; 
+    color: var(--bg-main) !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 1rem !important;
+    border: none !important;
+    border-radius: 0.25rem !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+

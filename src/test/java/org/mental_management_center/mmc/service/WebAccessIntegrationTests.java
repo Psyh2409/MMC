@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,10 +106,11 @@ class WebAccessIntegrationTests {
     @Test
     @WithMockUser(roles = "ADMIN")
     void mutatingEndpointsRequireCsrfToken() throws Exception {
-        mockMvc.perform(post("/requests/delete/999"))
+        UUID randomRequestId = UUID.randomUUID();
+        mockMvc.perform(post("/requests/delete/" + randomRequestId))
                 .andExpect(status().isForbidden());
 
-        mockMvc.perform(post("/requests/delete/999").with(csrf()))
+        mockMvc.perform(post("/requests/delete/" + randomRequestId).with(csrf()))
                 .andExpect(status().is3xxRedirection());
     }
 

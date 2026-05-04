@@ -184,7 +184,15 @@ h3 {
 }
 
 .user-menu-name {
-    color: var(--bg-canvas);
+    color: var(--text-primary) !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.user-menu-name:hover {
+    opacity: 0.8;
+    text-decoration: underline;
 }
 
 .hero-title-light {

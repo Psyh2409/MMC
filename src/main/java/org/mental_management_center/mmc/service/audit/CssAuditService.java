@@ -204,35 +204,38 @@ public class CssAuditService {
 
     private void performAudit() {
         StringBuilder auditReport = new StringBuilder();
-        auditReport.append("\n--- CSS/HTML Audit Summary ---\n");
+        auditReport.append("\n--- CSS/HTML Audit Summary (Grouped & Sorted) ---\n");
 
-        List<String> missingStyles = new ArrayList<>();
+        // Використовуємо TreeMap для автоматичного сортування імен файлів за алфавітом
+        Map<String, List<String>> missingByPage = new java.util.TreeMap<>();
         List<String> unusedStyles = new ArrayList<>();
         List<String> styleConflicts = new ArrayList<>();
-
         List<String> orphansForRescue = new ArrayList<>();
 
         selectorMap.forEach((selectorName, descriptor) -> {
             boolean hasCssDefinition = descriptor.getDefinitions() != null && !descriptor.getDefinitions().isEmpty();
 
-            // Знаходимо БАЗОВИЙ селектор для перевірки HTML (відкидаємо :hover, :focus, [type="text"] тощо)
+            // Знаходимо БАЗОВИЙ селектор для перевірки HTML
             String baseSelector = selectorName.replaceAll("[:\\[].*", "");
             SelectorDescriptor baseDescriptor = selectorMap.get(baseSelector);
 
             // Селектор вважається використаним, якщо його базова форма є в HTML
             boolean hasHtmlUsage = baseDescriptor != null && baseDescriptor.getHtmlUsage() != null && !baseDescriptor.getHtmlUsage().isEmpty();
 
-            // 1. Пошук відсутніх стилів (тільки для базових селекторів)
+            // 1. Пошук відсутніх стилів (групуємо за сторінками)
             if (selectorName.equals(baseSelector) && hasHtmlUsage && !hasCssDefinition) {
-                missingStyles.add(selectorName + " (used in: " + String.join(", ", descriptor.getHtmlUsage().keySet()) + ")");
-                orphansForRescue.add(selectorName); // Зберігаємо сироту для археологічної місії
+                orphansForRescue.add(selectorName);
+                descriptor.getHtmlUsage().keySet().forEach(fileName ->
+                        missingByPage.computeIfAbsent(fileName, k -> new ArrayList<>()).add(selectorName)
+                );
             }
             // 2. Пошук невикористаних стилів
             else if (hasCssDefinition && !hasHtmlUsage) {
-                unusedStyles.add(selectorName + " (defined in: " + descriptor.getDefinitions().stream().map(StyleDefinition::getSourceFile).collect(Collectors.joining(", ")) + ")");
+                unusedStyles.add(selectorName + " (defined in: " +
+                        descriptor.getDefinitions().stream().map(StyleDefinition::getSourceFile).collect(Collectors.joining(", ")) + ")");
             }
 
-            // 3. Пошук конфліктів стилів (Тепер :hover не б'ється зі звичайним станом)
+            // 3. Пошук конфліктів стилів (групування за Media Query залишаємо без змін)
             if (hasCssDefinition && descriptor.getDefinitions().size() > 1) {
                 Map<String, List<StyleDefinition>> definitionsByMediaQuery = descriptor.getDefinitions().stream()
                         .collect(Collectors.groupingBy(def -> def.getMediaQuery() != null ? def.getMediaQuery() : "no-media-query"));
@@ -261,30 +264,35 @@ public class CssAuditService {
             }
         });
 
-        if (!missingStyles.isEmpty()) {
-            auditReport.append("\n--- Missing Styles (Used in HTML but not defined in CSS) ---\n");
-            missingStyles.forEach(s -> auditReport.append("- ").append(s).append("\n"));
-        }
+        // --- ФОРМУВАННЯ СОРТОВАНОГО ЗВІТУ ---
 
+        if (!missingByPage.isEmpty()) {
+            auditReport.append("\n[!!!] MISSING STYLES BY TEMPLATE (HTML needs these):\n");
+            missingByPage.forEach((fileName, selectors) -> {
+                auditReport.append("📄 ").append(fileName.toUpperCase()).append(":\n");
+                selectors.stream().sorted().forEach(s -> auditReport.append("   - ").append(s).append("\n"));
+            });
+        }
+/*
         if (!unusedStyles.isEmpty()) {
             auditReport.append("\n--- Unused Styles (Defined in CSS but not used in HTML) ---\n");
-            unusedStyles.forEach(s -> auditReport.append("- ").append(s).append("\n"));
+            unusedStyles.stream().sorted().forEach(s -> auditReport.append("- ").append(s).append("\n"));
         }
-
+*/
         if (!styleConflicts.isEmpty()) {
-            auditReport.append("\n--- Style Conflicts (Same property defined differently for the same selector) ---\n");
-            styleConflicts.forEach(s -> auditReport.append("- ").append(s).append("\n"));
+            auditReport.append("\n--- Style Conflicts (Sorted) ---\n");
+            styleConflicts.stream().sorted().forEach(s -> auditReport.append("- ").append(s).append("\n"));
         }
 
-        if (missingStyles.isEmpty() && unusedStyles.isEmpty() && styleConflicts.isEmpty()) {
+        if (missingByPage.isEmpty() && unusedStyles.isEmpty() && styleConflicts.isEmpty()) {
             auditReport.append("\n--- No CSS/HTML audit issues found. ---\n");
         }
+
         log.warn(auditReport.toString());
 
         if (!orphansForRescue.isEmpty()) {
             runArcheologyMission(orphansForRescue);
         }
-
     }
 
     private void runArcheologyMission(List<String> orphans) {

@@ -932,7 +932,7 @@ button:not([class]), .btn-default {
 /* --- СПИСОК СТАТЕЙ ТА ПРЕВ'Ю (Articles & Previews) --- */
 
 /* 1. Посилання в заголовках та списках */
-.articles-list a,
+/*.articles-list a,
 .article-preview a {
     color: var(--accent-primary);
     text-decoration: none;
@@ -944,53 +944,27 @@ button:not([class]), .btn-default {
     color: var(--accent-hover);
     text-decoration: underline;
     text-underline-offset: 0.125rem;
-}
+}*/
 
 /* 2. Кнопка "Читати далі" (Read More) — ОСТАТОЧНА ВЕРСІЯ */
-.read-more-button,
 .read-more {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    /* ГЕОМЕТРІЯ: 10px 20px -> 2.5 та 5 кроків сітки */
-    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
-    border-radius: var(--radius-sm);
-    border: none;
-    cursor: pointer;
-
-    /* ТИПОГРАФІКА */
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
-
-    /* КОЛЬОРИ */
+    padding: var(--space-sm) var(--space-md);
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
-
-    /* ДИНАМІКА */
-    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: auto;
+    transition: filter 0.2s ease, transform 0.2s ease;
 }
 
-.read-more-button:hover,
 .read-more:hover {
-    background-color: var(--accent-hover);
-    color: var(--text-on-accent); /* Фіксуємо колір, щоб underline не виліз */
-    text-decoration: none; /* Прибираємо спадковість від звичайних посилань */
-    transform: translateY(-0.0625rem);
-    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
+    filter: brightness(1.1);
+    transform: translateY(calc(var(--step) * -0.25));
 }
-
-/* 3. АДАПТАЦІЯ: Тільки EM (30em = 480px) */
-@media (max-width: 30em) {
-    .read-more-button,
-    .read-more {
-        display: flex;
-        width: 100%;
-        padding: var(--space-lg); /* calc(var(--step) * 4) -> var(--space-lg) */
-    }
-}
-
 /* ==========================================================================
    ЛЕГКІ КНОПКИ ТА ПОСИЛАННЯ (LIGHT BUTTONS / LINKS)
    ========================================================================== */
@@ -1397,4 +1371,46 @@ button:not([class]), .btn-default {
         padding: var(--space-lg); /* calc(var(--step) * 4) -> var(--space-lg) */
         font-size: 1.1rem;
     }
+}
+
+.btn-accent-capsule {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-xs) var(--space-lg);
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-accent-capsule:hover {
+    filter: brightness(1.1);
+    transform: translateY(calc(var(--step) * -0.25));
+}
+
+/* Кнопка перемикання теми */
+.btn-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Геометрія з токенів */
+    padding: var(--space-sm);
+    margin-right: var(--space-sm);
+    border-radius: var(--radius-full); /* Ідеальне коло з твоїх змінних */
+    border: 0.0625rem solid var(--border-soft); /* Відносна одиниця замість 1px */
+
+    /* Кольори з токенів */
+    background-color: transparent;
+    color: var(--text-primary);
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-theme-toggle:hover {
+    background-color: var(--bg-surface);
+    transform: translateY(calc(var(--step) * -0.25)); /* Твоя фірмова динаміка */
 }
