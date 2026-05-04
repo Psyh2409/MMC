@@ -156,6 +156,19 @@ main {
     letter-spacing: calc(var(--step) / 4);
 }
 
+.footer-link-action {
+    display: inline-block;
+    color: var(--bg-canvas);
+    background-color: var(--accent-primary);
+    /* Падінги: 1.5 кроку вертикаль, space-lg (step * 4) горизонталь */
+    padding: calc(var(--step) * 1.5) var(--space-lg);
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
 .home-hero-return {
     padding-top: var(--space-sm);
     border-top: calc(var(--step) / 4) solid var(--accent-muted);

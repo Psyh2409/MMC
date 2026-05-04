@@ -32,11 +32,11 @@
                 </td>
                 <td class="action-cell">
                     <div class="btn-group-nowrap">
-                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit-sm">Редагувати</a>
+                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit-small">Редагувати</a>
 
                         <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
                               onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
-                            <button type="submit" class="btn-action btn-delete-sm">Видалити</button>
+                            <button type="submit" class="btn-action btn-delete-small">Видалити</button>
                         </form>
                     </div>
                 </td>

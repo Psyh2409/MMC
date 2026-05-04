@@ -401,3 +401,9 @@
     border-top: calc(var(--step) / 4) solid var(--border-soft);
     padding-top: var(--space-sm);
 }
+
+.form-actions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}

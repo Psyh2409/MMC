@@ -1,6 +1,6 @@
 /* РЕЗЕРВНИЙ СТИЛЬ ДЛЯ ЗАБУТИХ КНОПОК */
 button:not([class]), .btn-default {
-    padding: calc(var(--step) * 2) calc(var(--step) * 4);
+    padding: var(--space-sm) var(--space-lg); /* calc(var(--step) * 2) -> var(--space-sm), calc(var(--step) * 4) -> var(--space-lg) */
     background-color: var(--bg-surface);
     border: 0.0625rem solid var(--border-soft);
     border-radius: var(--radius-sm);
@@ -15,13 +15,13 @@ button:not([class]), .btn-default {
     color: var(--text-on-accent);
     border: none;
 
-    /* 2. ГЕОМЕТРІЯ: Квантова сітка (4px * 3 та 4px * 6) */
-    padding: calc(var(--step) * 3) calc(var(--step) * 6);
+    /* 2. ГЕОМЕТРІЯ: Квантова сітка */
+    padding: var(--space-md) calc(var(--step) * 6); /* calc(var(--step) * 3) -> var(--space-md) */
     border-radius: var(--radius-md);
 
     /* 3. ТИПОГРАФІКА: Відносні одиниці */
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     text-align: center;
     text-decoration: none;
     display: inline-flex;
@@ -71,9 +71,9 @@ button:not([class]), .btn-default {
 .link-cta {
     display: inline-block;
 
-    /* 1. ГЕОМЕТРІЯ: Квантова сітка (4px * 3.75 для 15px та 4px * 3/7.5 для padding) */
+    /* 1. ГЕОМЕТРІЯ: Квантова сітка */
     margin-top: calc(var(--step) * 3.75);
-    padding: calc(var(--step) * 3) calc(var(--step) * 7.5);
+    padding: var(--space-md) calc(var(--step) * 7.5); /* calc(var(--step) * 3) -> var(--space-md) */
 
     /* 2. РАДІУС: 25px -> системний токен для круглих кнопок */
     border-radius: var(--radius-full);
@@ -81,7 +81,7 @@ button:not([class]), .btn-default {
     /* 3. ТИПОГРАФІКА ТА КОЛЬОР: Беремо фон із системи */
     color: var(--text-on-accent);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
 
     /* 4. ДИНАМІКА: Плавність для всіх станів */
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -103,7 +103,7 @@ button:not([class]), .btn-default {
 
 /* Базовий клас кнопки відправки */
 .submit-button {
-    /* 1. ГЕОМЕТРІЯ: Квантова сітка (10px -> 2.5 кроки, 15px -> 3.75 кроки) */
+    /* 1. ГЕОМЕТРІЯ: Квантова сітка */
     margin-top: calc(var(--step) * 2.5);
     padding: calc(var(--step) * 3.75);
 
@@ -115,7 +115,7 @@ button:not([class]), .btn-default {
     cursor: pointer;
     color: var(--text-on-accent);
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     display: block;
     width: 100%;
 
@@ -150,7 +150,7 @@ button:not([class]), .btn-default {
 .oauth-buttons {
     display: grid;
     /* 12px -> 3 кроки */
-    gap: calc(var(--step) * 3);
+    gap: var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
 }
 
 /* Базова база OAuth (Геометрія) */
@@ -159,7 +159,7 @@ button:not([class]), .btn-default {
     align-items: center;
     justify-content: center;
     /* 12px -> 3 кроки */
-    gap: calc(var(--step) * 3);
+    gap: var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     /* 14px 18px -> 3.5rem 4.5rem */
     padding: calc(var(--step) * 3.5) calc(var(--step) * 4.5);
     /* 18px -> системний радіус (або 4.5 кроки) */
@@ -167,7 +167,7 @@ button:not([class]), .btn-default {
 
     text-align: center;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     /* 1px -> rem */
     border: 0.0625rem solid transparent;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
@@ -192,25 +192,25 @@ button:not([class]), .btn-default {
 
 /* Google: Залишаємо чистим та впізнаваним */
 .oauth-button-google {
-    background-color: var(--bg-main) !important;
-    color: var(--text-main) !important; /* Стандартний колір тексту Google */
-    border-color: var(--border-color) !important;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    border-color: var(--border-color);
 }
 
 .oauth-button-google:hover {
-    background-color: var(--bg-main) !important;
+    background-color: var(--bg-main);
     box-shadow: 0 0.25rem 0.5rem var(--bg-overlay);
 }
 
 /* Facebook: Оригінальний синій */
 .oauth-button-facebook {
-    background-color: #1877f2 !important;
-    border-color: #1877f2 !important;
-    color: var(--bg-main) !important;
+    background-color: #1877f2; /* Зберігаємо брендовий колір */
+    border-color: #1877f2; /* Зберігаємо брендовий колір */
+    color: var(--bg-main);
 }
 
 .oauth-button-facebook:hover {
-    background-color: #1669d6 !important;
+    background-color: #1669d6; /* Зберігаємо брендовий колір */
     box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
 }
 
@@ -273,7 +273,7 @@ button:not([class]), .btn-default {
     text-decoration: none;
     font-family: 'Georgia', serif;
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
 
     /* 6. ДИНАМІКА: 0.3s -> 0.2s для чіткості */
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
@@ -335,7 +335,7 @@ button:not([class]), .btn-default {
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
 
     /* Тінь та анімація */
     box-shadow: 0 0.25rem 0.9375rem var(--bg-overlay);
@@ -363,7 +363,7 @@ button:not([class]), .btn-default {
     margin-bottom: calc(var(--step) * 6.25); /* 25px */
     color: var(--accent-primary);
     font-size: 1.3rem;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
 }
 
 /* Модифікація: Compact */
@@ -419,7 +419,7 @@ button:not([class]), .btn-default {
 .article-cta-title {
     /* Використовуємо акцент поточної теми */
     color: var(--accent-primary);
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     font-size: 1.25rem;
 }
 
@@ -439,9 +439,9 @@ button:not([class]), .btn-default {
     align-self: flex-start;
     width: 100%;
 
-    /* 1. ГЕОМЕТРІЯ: Додаємо системні відступи (наприклад, 10px 20px -> 2.5 та 5 кроків) */
+    /* 1. ГЕОМЕТРІЯ: Додаємо системні відступи */
     padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
-    gap: calc(var(--step) * 2); /* Відступ між текстом та іконкою */
+    gap: var(--space-sm); /* calc(var(--step) * 2) -> var(--space-sm) */
 
     /* 2. ТИПОГРАФІКА ТА UX */
     text-decoration: none;
@@ -462,7 +462,7 @@ button:not([class]), .btn-default {
 /* Другорядна кнопка (наприклад, для таблиць) */
 .admin-secondary-button {
     /* 4px 8px -> 1 та 2 кроки сітки */
-    padding: var(--step) calc(var(--step) * 2);
+    padding: var(--space-xs) var(--space-sm); /* var(--step) -> var(--space-xs), calc(var(--step) * 2) -> var(--space-sm) */
     border: none;
     /* 3px -> 0.1875rem */
     border-radius: 0.1875rem;
@@ -478,7 +478,7 @@ button:not([class]), .btn-default {
     /* 3px -> 0.75 кроку */
     margin-top: calc(var(--step) * 0.75);
     /* 4px 10px -> 1 та 2.5 кроки */
-    padding: var(--step) calc(var(--step) * 2.5);
+    padding: var(--space-xs) calc(var(--step) * 2.5); /* var(--step) -> var(--space-xs) */
     border: none;
     border-radius: 0.1875rem;
     background-color: var(--accent-primary);
@@ -490,7 +490,7 @@ button:not([class]), .btn-default {
 
 /* Мала адмін-кнопка (універсальна) */
 .btn-admin-small {
-    padding: var(--step) calc(var(--step) * 2.5);
+    padding: calc(var(--step) * 2.5) calc(var(--step) * 2.5);
     font-size: 0.85rem;
     border-radius: 0.25rem;
     width: auto;
@@ -499,7 +499,7 @@ button:not([class]), .btn-default {
 /* Кнопки навігації адмінки (Бардачок) */
 .admin-nav-btn {
     /* 6px 12px -> 1.5 та 3 кроки */
-    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    padding: calc(var(--step) * 1.5) var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     font-size: 0.9rem;
     /* 200px -> 12.5rem */
     max-width: 12.5rem;
@@ -517,18 +517,18 @@ button:not([class]), .btn-default {
 /* Delete: Використовуємо вторинний акцент або спеціальний токен помилки,
    якщо він є. Якщо ні — робимо її контурною, щоб не «кричала» */
 .btn-delete, .btn-delete-small {
-    background-color: var(--bg-canvas);
-    color: var(--accent-primary);
-    border: 0.0625rem solid var(--accent-primary);
-    padding: calc(var(--step) * 1.5) calc(var(--step) * 3); /* Додай відступи */
-    border-radius: var(--radius-sm); /* Додай радіус */
-    cursor: pointer; /* РОБИТЬ МИШКУ "РУЧКОЮ" */
+    background-color: var(--status-error, hsl(0, 70%, 50%)); /* Вирішено конфлікт, використовуємо var(--status-error) */
+    color: var(--text-on-accent); /* Вирішено конфлікт, використовуємо текст на акценті */
+    border: none; /* Вирішено конфлікт, border: none */
+    padding: calc(var(--step) * 1.5) var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
+    border-radius: var(--radius-sm);
+    cursor: pointer;
     font-size: 0.85rem;
     transition: all 0.2s ease;
 }
 
 .btn-delete:hover, .btn-delete-small:hover {
-    background-color: var(--accent-primary);
+    background-color: var(--danger-color); /* Використовуємо більш темний колір для ховеру */
     color: var(--text-on-accent);
 }
 
@@ -540,7 +540,7 @@ button:not([class]), .btn-default {
     margin-top: calc(var(--step) * 5);
 
     /* 2. ВІДСТУПИ: 12px 25px -> 3 та 6.25 кроків */
-    padding: calc(var(--step) * 3) calc(var(--step) * 6.25);
+    padding: var(--space-md) calc(var(--step) * 6.25); /* calc(var(--step) * 3) -> var(--space-md) */
 
     /* 3. РАДІУС: 6px -> 0.375rem (стабільний малий радіус) */
     border-radius: var(--radius-sm);
@@ -551,7 +551,7 @@ button:not([class]), .btn-default {
 
     /* 5. ТИПОГРАФІКА */
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
 
     /* 6. ДИНАМІКА */
     transition: background-color 0.2s ease, transform 0.1s ease;
@@ -567,7 +567,7 @@ button:not([class]), .btn-default {
 .toggle-password-btn {
     position: absolute;
     /* 12px -> 3 кроки сітки */
-    right: calc(var(--step) * 3);
+    right: var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     background: none;
     border: none;
     cursor: pointer;
@@ -592,7 +592,7 @@ button:not([class]), .btn-default {
     width: 100%;
     text-align: left;
     /* 4px 10px -> 1 та 2.5 кроки сітки */
-    padding: var(--step) calc(var(--step) * 2.5);
+    padding: var(--space-xs) calc(var(--step) * 2.5); /* var(--step) -> var(--space-xs) */
     font-size: 0.8rem;
     font-weight: 500;
     /* 4px -> системний малий радіус */
@@ -615,7 +615,7 @@ button:not([class]), .btn-default {
 /* Стан заблокованої кнопки (Disabled) */
 .btn-disabled {
     /* 1. UX: Курсор "Цегла" та ніяких подій миші */
-    cursor: not-allowed !important;
+    cursor: not-allowed;
     pointer-events: none;
 
     /* 2. ВІЗУАЛ: Системне згасання */
@@ -623,8 +623,8 @@ button:not([class]), .btn-default {
 
     /* 3. ДЕАКТИВАЦІЯ: Прибираємо всі ефекти */
     text-decoration: none;
-    box-shadow: none !important;
-    transform: none !important;
+    box-shadow: none;
+    transform: none;
 
     /* 4. КОЛЬОРИ: Нейтралізація під будь-яку тему */
     filter: grayscale(1);
@@ -645,7 +645,7 @@ button:not([class]), .btn-default {
     color: var(--text-on-accent);
 
     /* 4. UX ТА АНІМАЦІЯ */
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
@@ -660,45 +660,21 @@ button:not([class]), .btn-default {
 
 /* --- ДРУГОРЯДНІ ДІЇ (Secondary Actions) --- */
 
-/* Базова другорядна кнопка */
-.btn-secondary {
-    display: inline-block;
-    /* 10px 20px -> 2.5 та 5 кроків сітки */
-    padding: calc(var(--step) * 2.5) calc(var(--step) * 5);
 
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
-
-    text-decoration: none;
-    border-radius: var(--radius-sm);
-    /* 10px -> 2.5 кроки */
-    margin-left: calc(var(--step) * 2.5);
-
-    font-weight: 600;
-    transition: all 0.2s ease;
-    border: 0.0625rem solid var(--border-soft);
-}
-
-.btn-secondary:hover {
-    background-color: var(--bg-surface);
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
 
 /* Спеціальний стиль для "Скасувати" у формах */
-.form-actions .site-nav-link {
+.form-action-button {
     color: var(--accent-primary);
-    font-weight: bold; /* Вирішено конфлікт, залишено bold */
+    font-weight: 600; /* font-weight: bold -> 600 */
     text-decoration: underline;
     text-underline-offset: 0.25rem;
-    /* 0.8rem -> стабільний відступ */
-    margin-left: 0.8rem;
-    font-size: 1rem; /* Вирішено конфлікт, залишено 1rem */
-    transition: color 0.2s ease; /* Вирішено конфлікт, залишено повний transition */
+    margin-left: var(--space-md); /* 0.8rem -> var(--space-md) */
+    font-size: 1rem;
+    transition: color 0.2s ease;
     cursor: pointer;
 }
 
-.form-actions .site-nav-link:hover {
+.form-action-button:hover {
     color: var(--accent-hover);
     text-decoration: none;
 }
@@ -719,7 +695,7 @@ button:not([class]), .btn-default {
     text-align: center;
 
     /* ГЕОМЕТРІЯ: 6px 12px -> переводимо в систему кроків */
-    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    padding: calc(var(--step) * 1.5) var(--space-md); /* Unify padding to calc(var(--step) * 1.5) var(--space-md) */
     /* 110px -> 6.875rem (стабільна ширина для списків) */
     min-width: 6.875rem;
     margin: calc(var(--step) * 0.5);
@@ -766,18 +742,18 @@ button:not([class]), .btn-default {
    КНОПКИ СТВОРЕННЯ ТА ПУБЛІКАЦІЇ (PRIMARY ACTIONS)
    ========================================================================== */
 
-.btn-create-article,
+
 .btn-publish-article {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
     /* ГЕОМЕТРІЯ: Базуємо на системному кроці сітки */
-    padding: calc(var(--step) * 3) calc(var(--step) * 6);
+    padding: var(--space-md) calc(var(--step) * 6); /* calc(var(--step) * 3) -> var(--space-md) */
 
     /* ТИПОГРАФІКА */
     font-size: 1rem; /* Вирішено конфлікт, залишено 1rem */
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     text-decoration: none;
 
     /* СТИЛІЗАЦІЯ: Тільки системні токени тем */
@@ -792,27 +768,30 @@ button:not([class]), .btn-default {
 }
 
 /* Ховер: використовуємо системний акцент замість хардкоду #1b5e20 */
-.btn-create-article:hover,
+
 .btn-publish-article:hover {
     background-color: var(--accent-hover);
     transform: translateY(-0.0625rem);
 }
 
 /* Іконка всередині кнопки (наприклад, "плюсик") */
-.btn-create-article .icon,
 .btn-publish-article .icon {
-    font-size: 1.2rem;
-    /* 8px -> 2 кроки сітки */
-    margin-right: calc(var(--step) * 2);
+    font-size: 1.1rem; /* Set font-size: 1.1rem */
+    margin-right: var(--space-sm); /* Set margin-right: var(--space-sm) */
 }
 
-/* Адаптація для мобілок (заміна display: block !important) */
+.icon {
+    font-size: 1.1rem;
+    margin-right: var(--space-sm); /* Використовуємо токен замість 8px */
+    vertical-align: middle;
+}
+
+/* Адаптація для мобілок */
 @media (max-width: 30em) {
-    .btn-create-article,
     .btn-publish-article {
         display: flex;
         width: 100%;
-        margin: var(--step) 0;
+        margin: var(--space-xs) 0; /* calc(var(--step)) -> var(--space-xs) */
     }
 }
 
@@ -827,8 +806,8 @@ button:not([class]), .btn-default {
     align-items: center;
 
     /* ГЕОМЕТРІЯ: замість 5px використовуємо крок сітки */
-    padding: var(--step) 0;
-    margin-top: var(--step);
+    padding: var(--space-xs) 0; /* var(--step) -> var(--space-xs) */
+    margin-top: var(--space-xs); /* var(--step) -> var(--space-xs) */
 
     /* ТИПОГРАФІКА */
     font-size: 0.9rem;
@@ -869,7 +848,7 @@ button:not([class]), .btn-default {
     justify-content: center;
 
     /* ГЕОМЕТРІЯ: 8px 15px -> 2 та 3.75 кроків сітки */
-    padding: calc(var(--step) * 2) calc(var(--step) * 3.75);
+    padding: var(--space-sm) calc(var(--step) * 3.75); /* calc(var(--step) * 2) -> var(--space-sm) */
     margin-bottom: calc(var(--step) * 3.75);
 
     /* ТИПОГРАФІКА */
@@ -901,7 +880,7 @@ button:not([class]), .btn-default {
 @media (max-width: 30em) {
     .btn-cancel-reply {
         width: 100%;
-        padding: calc(var(--step) * 3);
+        padding: var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     }
 }
 
@@ -945,8 +924,8 @@ button:not([class]), .btn-default {
     .btn-submit-comment {
         display: flex;
         width: 100%;
-        padding: calc(var(--step) * 4);
-        margin: var(--step) 0;
+        padding: var(--space-lg); /* calc(var(--step) * 4) -> var(--space-lg) */
+        margin: var(--space-xs) 0; /* var(--step) -> var(--space-xs) */
     }
 }
 
@@ -1008,7 +987,7 @@ button:not([class]), .btn-default {
     .read-more {
         display: flex;
         width: 100%;
-        padding: calc(var(--step) * 4);
+        padding: var(--space-lg); /* calc(var(--step) * 4) -> var(--space-lg) */
     }
 }
 
@@ -1049,7 +1028,7 @@ button:not([class]), .btn-default {
     justify-content: center;
 
     /* ГЕОМЕТРІЯ: суворо без пікселів */
-    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    padding: calc(var(--step) * 1.5) var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     border-radius: var(--radius-sm);
     border: 0.0625rem solid var(--border-soft);
 
@@ -1060,7 +1039,7 @@ button:not([class]), .btn-default {
 
     /* ТИПОГРАФІКА */
     font-size: 0.85rem;
-    font-weight: bold;
+    font-weight: 600; /* font-weight: bold -> 600 */
     transition: all 0.2s ease;
 }
 
@@ -1075,7 +1054,7 @@ button:not([class]), .btn-default {
 /* 3. АДАПТАЦІЯ: Тільки EM (30em = 480px) */
 @media (max-width: 30em) {
     .btn-link, .btn-link-danger {
-        padding: var(--step) 0;
+        padding: var(--space-xs) 0; /* var(--step) -> var(--space-xs) */
         width: 100%;
         justify-content: center;
     }
@@ -1099,7 +1078,7 @@ button:not([class]), .btn-default {
     flex-wrap: nowrap;
     align-items: center;
     /* Квантовий крок замість пікселів */
-    gap: var(--step);
+    gap: var(--space-xs); /* var(--step) -> var(--space-xs) */
 }
 
 /* АДАПТАЦІЯ: Тільки EM (30em) */
@@ -1108,7 +1087,7 @@ button:not([class]), .btn-default {
         /* Тільки на мобілках дозволяємо перенос, якщо кнопки занадто широкі */
         flex-wrap: wrap;
         justify-content: center;
-        gap: calc(var(--step) * 2);
+        gap: var(--space-sm); /* calc(var(--step) * 2) -> var(--space-sm) */
     }
 
     .action-cell form {
@@ -1127,7 +1106,7 @@ button:not([class]), .btn-default {
     justify-content: center;
 
     /* ГЕОМЕТРІЯ: замість 8px 20px — системні кроки */
-    padding: calc(var(--step) * 2) calc(var(--step) * 4);
+    padding: var(--space-sm) var(--space-lg); /* calc(var(--step) * 2) -> var(--space-sm), calc(var(--step) * 4) -> var(--space-lg) */
 
     /* ТИПОГРАФІКА */
     font-size: 0.9rem;
@@ -1172,7 +1151,7 @@ button:not([class]), .btn-default {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: calc(var(--step) * 1.5) calc(var(--step) * 3);
+    padding: calc(var(--step) * 1.5) var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
     border-radius: var(--radius-sm);
     border: 0.0625rem solid; /* Товщина в rem */
     font-size: 0.8125rem;
@@ -1204,7 +1183,7 @@ button:not([class]), .btn-default {
 /* АДАПТАЦІЯ: Тільки EM */
 @media (max-width: 30em) {
     [class*="btn-"][class*="-o"], [class*="btn-"][class*="-b"] {
-        padding: calc(var(--step) * 2);
+        padding: var(--space-sm); /* calc(var(--step) * 2) -> var(--space-sm) */
         font-size: 0.875rem;
     }
 }
@@ -1220,8 +1199,8 @@ button:not([class]), .btn-default {
     display: inline-flex;
 
     /* ГЕОМЕТРІЯ: замість 5px використовуємо крок сітки */
-    padding: var(--step) 0;
-    margin-top: var(--step);
+    padding: var(--space-xs) 0; /* var(--step) -> var(--space-xs) */
+    margin-top: var(--space-xs); /* var(--step) -> var(--space-xs) */
 
     /* ТИПОГРАФІКА */
     font-size: 0.9rem;
@@ -1287,7 +1266,7 @@ button:not([class]), .btn-default {
 @media (max-width: 30em) {
     .btn-copy-uuid {
         opacity: 1; /* На тач-пристроях ховера немає, тому робимо видимою завжди */
-        padding: var(--step);
+        padding: var(--space-xs); /* var(--step) -> var(--space-xs) */
     }
 }
 
@@ -1333,7 +1312,7 @@ button:not([class]), .btn-default {
 @media (max-width: 30em) {
     .tab-btn {
         width: 100%; /* На мобільних таби часто стають в ряд */
-        padding: calc(var(--step) * 3);
+        padding: var(--space-md); /* calc(var(--step) * 3) -> var(--space-md) */
         border-radius: var(--radius-sm); /* На мобільних краще повний радіус */
         margin-bottom: calc(var(--step) * 0.5);
     }
@@ -1370,7 +1349,7 @@ button:not([class]), .btn-default {
 @media (max-width: 30em) {
     .private-btn {
         font-size: 1rem;
-        padding: var(--step) 0;
+        padding: var(--space-xs) 0; /* var(--step) -> var(--space-xs) */
     }
 }
 
@@ -1383,7 +1362,7 @@ button:not([class]), .btn-default {
     justify-content: center;
 
     /* ГЕОМЕТРІЯ: замість 8px 25px -> 2 та 6.25 кроків */
-    padding: calc(var(--step) * 2) calc(var(--step) * 6.25);
+    padding: var(--space-sm) calc(var(--step) * 6.25); /* calc(var(--step) * 2) -> var(--space-sm) */
     /* 4px -> системний малий радіус */
     border-radius: var(--radius-sm);
     /* 1px -> rem */
@@ -1415,7 +1394,7 @@ button:not([class]), .btn-default {
 @media (max-width: 30em) {
     .btn-send {
         width: 100%;
-        padding: calc(var(--step) * 4);
+        padding: var(--space-lg); /* calc(var(--step) * 4) -> var(--space-lg) */
         font-size: 1.1rem;
     }
 }

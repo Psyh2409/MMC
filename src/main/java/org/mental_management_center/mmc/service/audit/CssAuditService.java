@@ -172,6 +172,7 @@ public class CssAuditService {
                     String[] selectors = selectorsRaw.split(",");
                     for (String rawSel : selectors) {
                         String fullSelector = rawSel.trim();
+
                         // Ігноруємо чисті теги (body, p) без класів/id або порожні рядки
                         if (fullSelector.isEmpty() || !fullSelector.matches(".*[.#].*")) {
                             continue;
