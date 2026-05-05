@@ -7,10 +7,10 @@
     top: 0;
     z-index: 1000;
     padding: var(--space-sm) 0;
-    background: var(--bg-main);
-    border-bottom: 0.0625rem solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-}
+    background: var(--bg-navigation);
+    border-bottom: 0.0625rem solid var(--border-soft); /* М'яка межа */
+    box-shadow: 0 0.125rem 0.25rem var(--bg-overlay);  /* Системна тінь */
+    transition: background-color 0.3s ease, border-color 0.3s ease;}
 
 .site-header-inner {
     max-width: 75rem; /* 1200px */
@@ -26,37 +26,38 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    color: var(--accent-color);
+    color: var(--text-navigation-hover);
     text-decoration: none;
     font-weight: bold;
     font-size: 1.4rem;
+    transition: color 0.2s ease;
 }
 
 .site-brand-text {
-    color: var(--primary-color);
+    color: var(--text-navigation);
 }
 
 .site-nav {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
+    gap: var(--space-lg);
 }
 
 .site-nav-label {
-    color: var(--primary-color);
+    color: var(--text-navigation);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.95rem;
     transition: color 0.2s;
     cursor: pointer;
 }
 
 .site-nav-label:hover {
-    color: var(--accent-color);
+    color: var(--text-navigation-hover);
 }
 
 .site-nav-link {
-    color: var(--primary-color);
+    color: var(--text-navigation);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
@@ -65,7 +66,7 @@
 }
 
 .site-nav-link:hover {
-    color: var(--accent-color);
+    color: var(--text-navigation-hover);
 }
 
 /* 2. DROPDOWN (Автентична логіка в REM) */
@@ -164,15 +165,19 @@
 .user-menu {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-md);
+    padding: var(--space-xs) var(--space-md);
+    border: 0.0625rem solid var(--border-soft); /* Рамка кабінету */
+    border-radius: var(--radius-md);
+    background-color: var(--bg-surface);        /* Легкий акцент фону */
 }
 
 .user-menu-greeting {
     font-size: 0.9rem;
-    color: var(--primary-color);
+    color: var(--text-navigation);
 }
 
 .user-profile-link {
     text-decoration: none;
-    color: var(--accent-color);
+    color: var(--text-navigation-hover);
 }

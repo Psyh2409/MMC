@@ -16,8 +16,8 @@ button:not([class]), .btn-default {
     border: none;
 
     /* 2. ГЕОМЕТРІЯ: Квантова сітка */
-    padding: var(--space-md) calc(var(--step) * 6); /* calc(var(--step) * 3) -> var(--space-md) */
-    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm); /* calc(var(--step) * 2) -> var(--space-xs), calc(var(--step) */
+    border-radius: var(--radius-full);
 
     /* 3. ТИПОГРАФІКА: Відносні одиниці */
     font-size: 1rem;

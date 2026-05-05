@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MMC DESIGN SYSTEM - ATOMIC TOKENS (V 1.0)
+   MMC DESIGN SYSTEM - ATOMIC TOKENS (HSL EDITION V 2.0)
    ========================================================================== */
 
 :root {
@@ -14,17 +14,43 @@
     --radius-sm: var(--space-xs);
     --radius-md: var(--space-sm);
     --radius-lg: var(--space-md);
-    /* ДОДАНО: Квантова капсула для ідеально круглих кнопок (замість пікселів) */
     --radius-full: 100vw;
 
-    /* --- 2. КОЛЬОРОВІ ТОКЕНИ: МІСТ ДО КВАНТОВОЇ ПАЛІТРИ --- */
-    /* Тепер вони беруть значення з активної теми [data-theme], а не з HEX-кодів */
+    /* --- 2. ГЛИБИНА ЯСКРАВОСТІ (LIGHTNESS) - ДЕННИЙ РЕЖИМ --- */
+    --l-bg-main: 95%;       /* Підлога (Canvas) */
+    --l-card-bg: 90%;       /* Контейнери (Surface) */
+    --l-text-main: 15%;     /* Основний текст */
+    --l-text-muted: 40%;    /* Вторинний текст */
+    --l-border: 80%;        /* Делікатні межі */
+    --l-primary: 35%;       /* Акценти та заголовки */
+    --l-accent: 25%;        /* Глибокі акценти / Кнопки */
+    --l-text-on-primary: 95%; /* Текст на кнопках */
+
+    /* --- 3. БАЗОВІ КОЛЬОРИ (Динамічна генерація з HSL) --- */
+    --bg-main: hsl(var(--theme-h), var(--theme-s), var(--l-bg-main));
+    --card-bg: hsl(var(--theme-h), var(--theme-s), var(--l-card-bg));
+
+    --text-main: hsl(var(--theme-h), var(--theme-s), var(--l-text-main));
+    --text-muted: hsl(var(--theme-h), var(--theme-s), var(--l-text-muted));
+    --text-on-primary: hsl(var(--theme-h), var(--theme-s), var(--l-text-on-primary));
+
+    --border-color: hsl(var(--theme-h), var(--theme-s), var(--l-border));
+    --primary-color: hsl(var(--theme-h), var(--theme-s), var(--l-primary));
+    --accent-color: hsl(var(--theme-h), var(--theme-s), var(--l-accent));
+
+    /* Ефекти (Тепер тіні та оверлеї теж адаптуються до кольору теми!) */
+    --shadow-main: hsla(var(--theme-h), var(--theme-s), 10%, 0.15);
+    --overlay-light: hsla(var(--theme-h), var(--theme-s), 95%, 0.5);
+
+    /* --- 4. АТОМАРНІ ТОКЕНИ (Мости до компонентів) --- */
 
     /* A. Поверхні та Шари */
     --bg-canvas: var(--bg-main);
     --bg-surface: var(--card-bg);
-    --bg-elevated: var(--card-bg);
-    --bg-input: var(--bg-main);
+    /* Картки завжди світліші за контейнер: */
+    --bg-elevated: hsl(var(--theme-h), var(--theme-s), 98%);
+    /* Інпути завжди кришталево світлі вдень (не зливаються з картками): */
+    --bg-input: hsl(var(--theme-h), var(--theme-s), 100%);
     --bg-overlay: var(--shadow-main);
 
     /* B. Типографіка */
@@ -42,33 +68,45 @@
     --accent-hover: var(--primary-color);
     --accent-muted: var(--overlay-light);
 
-    /* E. Статуси та Сигнали (беремо напряму з тем) */
+    /* E. Статуси та Сигнали (Підтягуються з themes.css) */
     --status-error: var(--danger-color);
     --status-error-bg: var(--danger-hover-bg);
     --status-success: var(--success-color);
     --status-success-bg: var(--success-hover-bg);
     --status-warning: var(--warning-color);
+
+    /* F. Навігація (Хедер і Футер) */
+    --bg-navigation: var(--bg-main);
+    --text-navigation: var(--primary-color);
+    --text-navigation-hover: var(--accent-color);
+    --border-navigation: var(--border-color);
 }
 
-/* --- 3. DARK MODE (СЕМАНТИЧНА ІНВЕРСІЯ) --- */
-/* Жодного хардкоду. Тільки зміна ролей існуючих токенів[cite: 4] */
-
+/* --- 5. DARK MODE (МАТЕМАТИЧНА ІНВЕРСІЯ) --- */
 [data-mode="dark"] {
-    /* ФОНИ стають найтемнішими кольорами з палітри[cite: 3, 4] */
-    --bg-canvas: var(--text-main);     /* Підлога тепер кольору темного тексту */
-    --bg-surface: var(--accent-color); /* Картки тепер кольору акценту */
-    --bg-elevated: var(--primary-color);
-    --bg-input: var(--text-main);
+    /* 1. Перевертаємо яскравість бази (всі 15 тем перемалюються самі) */
+    --l-bg-main: 10%;       /* Підлога найтемніша */
+    --l-card-bg: 15%;       /* Контейнери світліші */
+    --l-text-main: 90%;     /* Світлий текст */
+    --l-text-muted: 70%;    /* Приглушений текст */
+    --l-border: 28%;        /* Чіткі делікатні межі (прощавай, ефект гуаші!) */
+    --l-primary: 65%;       /* Світлі акценти */
+    --l-accent: 75%;        /* Світлі кнопки */
+    --l-text-on-primary: 10%; /* Темний текст на кнопках */
 
-    /* ТЕКСТ стає найсвітлішими кольорами з палітри[cite: 3, 4] */
-    --text-primary: var(--bg-main);    /* Текст тепер кольору світлої підлоги */
-    --text-secondary: var(--card-bg);  /* Вторинний текст кольору світлих карток */
-    --text-disabled: var(--border-color);
+    /* 2. Інвертуємо динамічні ефекти */
+    --shadow-main: hsla(var(--theme-h), var(--theme-s), 0%, 0.4);
+    --overlay-light: hsla(var(--theme-h), var(--theme-s), 20%, 0.5);
 
-    /* МЕЖІ[cite: 4] */
-    --border-soft: var(--primary-color);
+    /* 3. Жорсткі перевизначення для специфічних шарів у темряві */
+    /* Картки виринають над контейнером: */
+    --bg-elevated: hsl(var(--theme-h), var(--theme-s), 22%);
+    /* Інпути створюють ефект заглиблення (найтемніші): */
+    --bg-input: hsl(var(--theme-h), var(--theme-s), 8%);
 
-    /* КНОПКИ (Акценти) теж вивертаємо, щоб їх було видно на темному фоні[cite: 3, 4] */
-    --accent-primary: var(--card-bg);
-    --text-on-accent: var(--text-main);
+    /* Навігація вночі має зливатися з фоном для цілісності: */
+    --bg-navigation: var(--bg-main);
+    --text-navigation: var(--text-main);
+    --text-navigation-hover: var(--card-bg);
+    --border-navigation: var(--border-color);
 }

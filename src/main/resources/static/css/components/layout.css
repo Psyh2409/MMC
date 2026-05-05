@@ -7,8 +7,8 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: var(--bg-main);
-    color: var(--accent-color);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
 }
 
 .page-main {
@@ -16,6 +16,8 @@
     min-height: 0;
     overflow: auto;
     padding: 0 0 2rem; /* 32px - 8 кроків */
+    padding-top: var(--space-xl);
+    padding-bottom: calc(var(--space-xl) * 4);
 }
 
 .main-content-shell {
@@ -31,10 +33,11 @@ main {
     max-width: 43.75rem; /* 700px */
     width: 90%;
     margin: 3.75rem auto; /* 60px */
-    background: var(--bg-main);
+    background: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft); /* Додаємо межу для чіткості */
     padding: 2.5rem; /* 40px - 10 кроків */
     border-radius: var(--radius-md);
-    box-shadow: 0 0.625rem 1.875rem var(--shadow-main);
+    box-shadow: 0 0.625rem 1.875rem var(--bg-overlay);
     box-sizing: border-box;
 }
 
@@ -58,11 +61,59 @@ main {
 /* 3. ШИРОКІ КОНТЕЙНЕРИ */
 .home-services-inner,
 .content-with-sidebar,
-.admin-container,
-.standard-container-wide {
+.admin-container {
     max-width: 75rem; /* 1200px */
     margin: 0 auto;
     padding: 0 var(--space-md);
+}
+
+/* Широкий контейнер для дашбордів (Профіль) */
+.standard-container-wide {
+    max-width: 65rem; /* Значно ширший за звичайний */
+    width: 90%;
+    margin: 3.75rem auto;
+    background: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    padding: 2.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 0.625rem 1.875rem var(--bg-overlay);
+    box-sizing: border-box;
+}
+
+/* Дизайн Спектру (Повзунок) */
+.theme-spectrum-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1.5rem;
+    border-radius: var(--radius-full);
+    /* Малюємо живу веселку фоном */
+    background: linear-gradient(to right,
+        hsl(0, 75%, 50%), hsl(60, 75%, 50%),
+        hsl(120, 75%, 50%), hsl(180, 75%, 50%),
+        hsl(240, 75%, 50%), hsl(300, 75%, 50%), hsl(360, 75%, 50%)
+    );
+    outline: none;
+    cursor: pointer;
+    margin-top: var(--space-sm);
+    box-shadow: inset 0 0 0.25rem var(--bg-overlay);
+}
+
+/* Кружечок, за який тягнути */
+.theme-spectrum-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-full);
+    background: var(--bg-elevated);
+    border: 0.25rem solid var(--text-primary);
+    box-shadow: 0 0.125rem 0.5rem var(--bg-overlay);
+    transition: transform 0.1s ease;
+}
+
+.theme-spectrum-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
 }
 
 /* 4. СІТКИ ТА ГРІДИ */
@@ -118,14 +169,15 @@ main {
     height: 6vh;
     max-height: calc(var(--space-xl) + var(--space-md));
     min-height: calc(var(--space-xl) + var(--space-xs));
-    background: var(--text-primary);
-    color: var(--bg-surface);
+    background: var(--bg-navigation);
+    color: var(--text-navigation);
     font-family: 'Georgia', serif;
-    border-top: calc(var(--step) / 2) solid var(--border-strong);
+    border-top: calc(var(--step) / 2) solid var(--border-navigation);
     display: flex;
     align-items: center;
     z-index: 1000;
     flex-shrink: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .site-footer-inner {
@@ -136,6 +188,47 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* --- СТРУКТУРА ФУТЕРА (Врятовані сироти) --- */
+.footer-left,
+.footer-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.footer-left {
+    justify-content: flex-start;
+}
+
+.footer-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end; /* Притискаємо чат до правого краю */
+    align-items: center;
+}
+
+.footer-center {
+    flex: 2;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Текст всередині кнопок футера */
+.footer-action-text {
+    font-size: 0.9rem;
+    font-family: sans-serif;
+    /* Колір наслідується від батьківського .footer-link-action */
+}
+
+/* Текст бренду в футері */
+.site-brand-text-footer {
+    color: var(--text-navigation); /* Вночі стане темним, як треба */
+    opacity: 0.8;
+    font-weight: bold;
 }
 
 .site-brand-footer {
@@ -152,6 +245,7 @@ main {
 
 .footer-copy {
     font-size: 0.8em;
+    color: var(--text-navigation);
     opacity: 0.6;
     letter-spacing: calc(var(--step) / 4);
 }
@@ -159,21 +253,25 @@ main {
 .footer-link-action {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
 
     /* РЕВЕРС: Світлий фон, темний текст */
-    background-color: var(--bg-canvas);
-    color: var(--accent-primary);
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
 
     border-radius: var(--radius-full);
     font-weight: 600;
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
 }
 
 .footer-link-action:hover {
     opacity: 0.9;
+    filter: brightness(1.1);
+    transform: translateY(-0.0625rem);
+    color: var(--text-on-accent);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
 }
 
 .home-hero-return {
@@ -230,4 +328,59 @@ main {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-lg);[cite: 1]
     margin-top: var(--space-lg);[cite: 1]
+}
+
+
+/* Сітка дашборду */
+.profile-dashboard {
+    display: grid;
+    grid-template-columns: 20rem 1fr; /* Сайдбар фіксований, форми розтягуються */
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+/* Сайдбар */
+.profile-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-divider {
+    width: 100%;
+    border: 0;
+    border-top: 0.0625rem solid var(--border-soft);
+    margin: var(--space-xl) 0;
+}
+
+/* Тендітна веселка */
+.theme-switcher-grid {
+    display: flex;
+    gap: var(--space-xs); /* Мінімальний відступ */
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.theme-dot {
+    width: 1.5rem;   /* Маленький розмір */
+    height: 1.5rem;
+    border-radius: var(--radius-full);
+    border: 0.125rem solid transparent; /* Тонка рамка */
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    padding: 0;
+}
+
+.theme-dot:hover,
+.theme-dot.active-theme {
+    transform: scale(1.15);
+    border-color: var(--text-primary);
+}
+
+/* Мобільна адаптація (згортається в 1 колонку) */
+@media (max-width: 48rem) {
+    .profile-dashboard {
+        grid-template-columns: 1fr;
+    }
 }

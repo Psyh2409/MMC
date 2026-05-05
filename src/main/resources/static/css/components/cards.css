@@ -1,4 +1,3 @@
-
 /* =========================================
    CARDS SYSTEM - ATOMIC EDITION (FULL)
    ========================================= */
@@ -10,7 +9,7 @@
 .profile-card {
     background-color: var(--bg-canvas);
     box-sizing: border-box;
-    border-radius: var(--radius-md); /* Базовий радіус для всіх, крім тих, що перевизначені */
+    border-radius: var(--radius-md); 
 }
 
 /* 2. ЕФЕКТИ (Тіні та Транзиції) */
@@ -19,7 +18,7 @@
 .error-card,
 .steps-card {
     box-shadow: 0 var(--space-sm) var(--space-lg) var(--bg-overlay);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 /* 3. ДЕТАЛЬНЕ НАЛАШТУВАННЯ КАРТОК */
@@ -27,12 +26,15 @@
 .home-service-card {
     height: 100%;
     padding: var(--space-xl);
-    border-radius: var(--radius-lg); /* Фінальний радіус для home-service-card */
+    border-radius: var(--radius-lg); 
     border-top: var(--space-xs) solid var(--accent-primary);
+    border: 0.0625rem solid var(--border-soft); /* Додано контур для нічного режиму */
 }
 
 .profile-card {
-    background: var(--bg-surface);
+    /* ВИПРАВЛЕНО: Шар 2 (Elevated). Відірвемо картки від контейнера */
+    background: var(--bg-elevated); 
+    border: 0.0625rem solid var(--border-soft); /* Чіткий контур */
     border-top: var(--space-xs) solid var(--accent-primary);
     padding: var(--space-xl);
     margin-bottom: var(--space-xl);
@@ -42,12 +44,16 @@
     flex: 1;
     padding: var(--space-md);
     border-left: var(--space-xs) solid var(--accent-primary);
+    background: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft); /* Контур */
 }
 
 .error-card {
     max-width: 40rem;
     padding: var(--space-xl);
-    border-radius: var(--radius-lg); /* Фінальний радіус для error-card */
+    border-radius: var(--radius-lg); 
+    background: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
 }
 
 /* 4. КОМПОНЕНТИ СТАТЕЙ (ISSUE ELEMENTS) */
@@ -57,6 +63,7 @@
     padding: var(--space-xl);
     border-radius: var(--radius-md);
     background: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft); /* Додано контур */
 }
 
 .issue-callout p {
@@ -69,6 +76,7 @@
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
+/* ... (інші callout залишаються без змін) ... */
 .issue-callout-note {
     background: var(--bg-surface-alt);
     border-left: 0.375rem solid var(--accent-primary);
@@ -106,15 +114,25 @@
     border-bottom: 0.1875rem double var(--border-soft);
 }
 
+/* 6. КАРТКИ СТАТЕЙ (Прев'ю) */
 .article-card {
-    background-color: var(--bg-surface);
+    background-color: var(--bg-elevated);
+    /* ВИПРАВЛЕНО: Додаємо контур, який врятує нас у Dark Mode */
+    border: 0.0625rem solid var(--border-soft); 
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-main);
+    box-shadow: 0 0.25rem 0.75rem var(--bg-overlay);
     padding: var(--space-lg);
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
     height: 100%;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Ефект наведення для карток статей */
+.article-card:hover {
+    border-color: var(--border-strong); /* Підсвічуємо рамку при наведенні */
+    transform: translateY(-0.125rem);
 }
 
 .article-card-meta {
@@ -124,7 +142,7 @@
     font-size: 0.85rem;
     color: var(--text-secondary);
     padding-bottom: var(--space-xs);
-    border-bottom: 0.0625rem solid var(--border-soft); /* Це 1px, але через rem для масштабування */
+    border-bottom: 0.0625rem solid var(--border-soft); 
 }
 
 .article-card-title {
@@ -152,8 +170,6 @@
 .article-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs);[cite: 1]
-    margin-bottom: var(--space-md);[cite: 1]
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
 }
-
-/* Картка статті (Остаточна версія без конфліктів) */

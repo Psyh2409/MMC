@@ -1,3 +1,94 @@
+/*variables.css*/
+
+/* ==========================================================================
+   MMC DESIGN SYSTEM - ATOMIC TOKENS (V 1.0)
+   ========================================================================== */
+
+:root {
+    /* --- 1. КВАНТОВА СІТКА (SPACING & RADIUS) --- */
+    --step: 0.25rem;
+    --space-xs: var(--step);
+    --space-sm: calc(var(--step) * 2);
+    --space-md: calc(var(--step) * 4);
+    --space-lg: calc(var(--step) * 6);
+    --space-xl: calc(var(--step) * 10);
+
+    --radius-sm: var(--space-xs);
+    --radius-md: var(--space-sm);
+    --radius-lg: var(--space-md);
+    /* ДОДАНО: Квантова капсула для ідеально круглих кнопок (замість пікселів) */
+    --radius-full: 100vw;
+
+    /* --- 2. КОЛЬОРОВІ ТОКЕНИ: МІСТ ДО КВАНТОВОЇ ПАЛІТРИ --- */
+    /* Тепер вони беруть значення з активної теми [data-theme], а не з HEX-кодів */
+
+    /* A. Поверхні та Шари */
+    --bg-canvas: var(--bg-main);
+    --bg-surface: var(--card-bg);
+    --bg-elevated: var(--bg-main);
+    --bg-input: var(--bg-main);
+    --bg-overlay: var(--shadow-main);
+
+    /* B. Типографіка */
+    --text-primary: var(--text-main);
+    --text-secondary: var(--text-muted);
+    --text-disabled: var(--border-color);
+    --text-on-accent: var(--text-on-primary);
+
+    /* C. Межі */
+    --border-soft: var(--border-color);
+    --border-strong: var(--primary-color);
+
+    /* D. Бренд та Акценти */
+    --accent-primary: var(--accent-color);
+    --accent-hover: var(--primary-color);
+    --accent-muted: var(--overlay-light);
+
+    /* E. Статуси та Сигнали (беремо напряму з тем) */
+    --status-error: var(--danger-color);
+    --status-error-bg: var(--danger-hover-bg);
+    --status-success: var(--success-color);
+    --status-success-bg: var(--success-hover-bg);
+    --status-warning: var(--warning-color);
+
+    /* F. Навігація (Хедер) */
+        --bg-navigation: var(--bg-main);
+        --text-navigation: var(--primary-color);
+        --text-navigation-hover: var(--accent-color);
+        --border-navigation: var(--border-color);
+
+}
+
+/* --- 3. DARK MODE (МУЛЬТИТЕМНА ІНВЕРСІЯ) --- */
+/* Жодного хардкоду! Підлаштовується під будь-яку з 15 тем */
+
+[data-mode="dark"] {
+    /* 1. ФОНИ (Беремо найтемніші кольори теми) */
+    --bg-canvas: var(--text-main);      /* Для Blue це буде #061a40, для Brown - #3e2723 */
+    --bg-surface: var(--accent-color);  /* Картки трохи світліші за підлогу */
+    --bg-elevated: var(--primary-color);
+    --bg-input: var(--text-main);       /* Інпути зливаються з підлогою для глибини */
+
+    /* 2. ТЕКСТ (Беремо найсвітліші кольори теми) */
+    --text-primary: var(--bg-main);     /* Текст стає сліпучо світлим для контрасту */
+    --text-secondary: var(--card-bg);   /* Другорядний текст - трохи темніший */
+    --text-disabled: var(--border-color);
+
+    /* 3. МЕЖІ */
+    --border-soft: var(--card-bg);
+
+    /* 4. КНОПКИ ТА АКЦЕНТИ (Реверс контрасту) */
+    --accent-primary: var(--card-bg);   /* Кнопки стають світлими */
+    --accent-hover: var(--bg-main);
+    --text-on-accent: var(--text-main); /* Текст на кнопках стає темним */
+
+    /* 5. НАВІГАЦІЯ (Хедер та Футер) */
+    --bg-navigation: var(--text-main);
+    --text-navigation: var(--bg-main);
+    --text-navigation-hover: var(--card-bg);
+    --border-navigation: var(--primary-color);
+}
+
 /* =========================================
    КВАНТОВА ПАЛІТРА 2.0 - ПОВНА АРХІТЕКТУРА (15 СТАНІВ)
    ========================================= */

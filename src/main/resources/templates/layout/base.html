@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent, pageScripts)">
 <head>
+    <!-- Пам'ять кольорової теми сайту -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('app-theme') || 'brown';
+            const customHue = localStorage.getItem('custom-hue');
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            if (savedTheme === 'custom' && customHue) {
+                // Якщо користувач вибрав спектр, відновлюємо його унікальний колір
+                document.documentElement.style.setProperty('--theme-h', customHue);
+                document.documentElement.style.setProperty('--theme-s', '75%');
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:replace="${title}">Психотерапія | Шлях до себе</title>
