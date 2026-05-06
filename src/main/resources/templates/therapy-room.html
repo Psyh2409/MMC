@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
+<head>
+    <title>Сесія | MMC Room</title>
+
+        /* Локальні стилі для стабілізації Jitsi всередині вашої сітки */
+        .standard-container-wide {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            min-height: calc(100vh - var(--space-xl) * 2); /* Враховуємо хедер */
+            padding: var(--space-md);
+            background-color: var(--bg-canvas);
+        }
+
+        .video-main-frame {
+            flex: none;
+            height: 55vh; /* Фіксована висота для стабільності iFrame */
+            background-color: #000; /* Чорний фон до завантаження відео */
+            border-radius: var(--radius-lg);
+            box-shadow: 0 var(--step) calc(var(--step) * 3) var(--shadow-main);
+            overflow: hidden;
+            position: relative;
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #jitsi-container {
+            width: 100%;
+            height: 100%;
+            flex-grow: 1;
+        }
+
+        .notes-bottom-panel {
+            flex: 1;
+            background-color: var(--bg-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-section-title {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: calc(var(--step) * 4.5);
+        }
+
+        .status-text-muted {
+            font-size: calc(var(--step) * 3.5);
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .therapy-textarea {
+            width: 100%;
+            flex-grow: 1;
+            min-height: calc(var(--step) * 40);
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            font-family: inherit;
+            line-height: 1.6;
+            resize: none;
+            font-size: 1rem;
+        }
+
+        .therapy-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        @media (max-width: 48rem) {
+            .video-main-frame { height: 40vh; }
+            .standard-container-wide { padding: var(--space-sm); gap: var(--space-sm); }
+        }
+
+</head>
+<body>
+
+<section class="standard-container-wide">
+    <div class="video-main-frame">
+        <div id="jitsi-container"></div>
+    </div>
+
+    <div th:if="${isAdmin}" class="notes-bottom-panel">
+        <header class="notes-header">
+            <div class="client-meta">
+                <h4 class="profile-section-title" th:text="'Робочі нотатки: ' + ${client.name}">Клієнт</h4>
+                <span id="save-status" class="status-text-muted">Дані синхронізовано</span>
+            </div>
+            <a th:href="@{/admin/users}" class="btn-link-muted" style="color: var(--accent-primary)">До списку</a>
+        </header>
+
+        <textarea id="session-notes"
+                  class="therapy-textarea"
+                  placeholder="Ваші професійні спостереження тут..."
+                  th:text="${lastNoteContent}"></textarea>
+    </div>
+</section>
+
+<th:block th:fragment="page-scripts">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const roomName = /*[[${roomName}]]*/ 'default-room';
+            const userName = /*[[${currentUser.name}]]*/ 'Користувач';
+            const clientUuid = /*[[${client.id}]]*/ '';
+
+            // 1. Ініціалізація Jitsi
+            const initJitsi = () => {
+                const container = document.querySelector('#jitsi-container');
+                const options = {
+                    roomName: roomName,
+                    width: '100%',
+                    height: '100%',
+                    parentNode: container,
+                    userInfo: { displayName: userName },
+                    configOverwrite: {
+                        prejoinPageEnabled: false,
+                        disableDeepLinking: true,
+                        startWithAudioMuted: false,
+                        startWithVideoMuted: false
+                    },
+                    interfaceConfigOverwrite: {
+                        TILE_VIEW_MAX_COLUMNS: 2,
+                        SHOW_JITSI_WATERMARK: false
+                    }
+                };
+                const api = new JitsiMeetExternalAPI('meet.jit.si', options);
+
+                // Авто-ввімкнення плитки (Tile View)
+                api.addEventListener('videoConferenceJoined', () => {
+                    api.executeCommand('toggleTileView');
+                });
+            };
+
+            initJitsi();
+
+            // 2. Логіка автозбереження нотаток (якщо є поле)
+            const notesArea = document.getElementById('session-notes');
+            if (notesArea) {
+                const statusLabel = document.getElementById('save-status');
+                const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+                let saveTimeout = null;
+
+                notesArea.addEventListener('input', () => {
+                    statusLabel.innerText = "Зберігаю...";
+                    statusLabel.style.color = "var(--text-secondary)";
+
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(async () => {
+                        try {
+                            const response = await fetch(`/therapy/notes/save/${clientUuid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'text/plain;charset=UTF-8',
+                                    [csrfHeader]: csrfToken
+                                },
+                                body: notesArea.value
+                            });
+
+                            if (response.ok) {
+                                statusLabel.innerText = "Дані синхронізовано";
+                                statusLabel.style.color = "var(--status-success)";
+                            } else {
+                                throw new Error();
+                            }
+                        } catch (e) {
+                            statusLabel.innerText = "Помилка збереження";
+                            statusLabel.style.color = "var(--status-error)";
+                        }
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>

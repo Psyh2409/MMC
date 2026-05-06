@@ -27,7 +27,7 @@
                     <input type="range" id="theme-slider" class="theme-spectrum-slider" min="0" max="360" value="15">
                 </div>
                 <div class="ptsr-mode-container">
-                    <a href="#" id="ptsr-link" class="btn-primary">режим птср (сірий)</a>
+                    <a href="#" id="ptsr-link" class="btn-primary">Монохромна тема</a>
                 </div>
             </div>
 
@@ -66,10 +66,15 @@
 
         <!-- ПРАВА КОЛОНКА (Особистий простір) -->
         <main class="profile-content-area">
-            <div class="profile-empty-state">
-                <svg class="icon-large" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                <h3 class="profile-section-title">Ваш особистий простір</h3>
-                <p class="status-text-muted">Тут буде місце для вашої історії, нотаток та спільної роботи.<br>Цей простір очікує на наповнення.</p>
+            <!-- Блок доступу до відеосесії (Показується тільки Клієнтам) -->
+            <div th:if="${user.isClient()}" class="profile-card" style="border: var(--border-width) solid var(--success-color);">
+                <h3 class="profile-section-title">Ваш терапевтичний простір</h3>
+                <p class="status-text-muted" style="margin-bottom: var(--space-md);">Тут відбувається захищений відеозв'язок з вашим терапевтом. Натисніть кнопку під час запланованої сесії.</p>
+
+                <!-- Кнопка веде на кімнату, підставляючи UUID клієнта -->
+                <a th:href="@{/therapy/room/{id}(id=${user.id})}" class="btn-primary" style="display: inline-block; text-align: center; width: 100%;">
+                    Приєднатися до відеосесії
+                </a>
             </div>
         </main>
 

@@ -271,4 +271,8 @@ public class UserService {
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
     }
+
+    public User findById(UUID id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }

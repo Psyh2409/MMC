@@ -57,7 +57,7 @@
             <th>E-mail</th>
             <th>Роль</th>
             <th>Дата реєстрації</th>
-            <th>Нотатки терапевта (конфіденційно)</th>
+            <th>Нотатки терапевта</th>
             <th>Дії</th>
         </tr>
         </thead>
@@ -75,9 +75,14 @@
             <td th:text="${u.name}"></td>
             <td th:text="${u.email}"></td>
 
+            <!-- Знаходимо стовпець "Роль" у твоїй таблиці -->
             <td>
+                <!-- Відображення текстової ролі -->
                 <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
 
+                <!-- ЛОГІКА ПЕРЕМИКАННЯ КНОПОК -->
+
+                <!-- ВАРІАНТ А: Користувач ще не клієнт (Читач) — показуємо кнопку підвищення -->
                 <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
                       th:action="@{/admin/promote/{id}(id=${u.id})}"
                       method="post"
@@ -85,6 +90,14 @@
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
                 </form>
+
+                <!-- ВАРІАНТ Б: Користувач вже КЛІЄНТ — на тому ж місці з'являється кнопка Відеоконнекту -->
+                <div th:if="${u.isClient()}" class="admin-action-form-inline">
+                    <a th:href="@{/therapy/room/{id}(id=${u.id})}"
+                       class="btn-primary"
+                       target="_blank"
+                       onclick="return handleVideoStart(this);">Відеоконнект</a>
+                </div>
             </td>
 
             <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
