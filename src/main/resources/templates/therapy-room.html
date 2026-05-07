@@ -3,34 +3,49 @@
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
     <title>Сесія | MMC Room</title>
-
-        /* Локальні стилі для стабілізації Jitsi всередині вашої сітки */
+    <style>
         .standard-container-wide {
             display: flex;
             flex-direction: column;
             gap: var(--space-md);
-            min-height: calc(100vh - var(--space-xl) * 2); /* Враховуємо хедер */
+            min-height: calc(100vh - var(--space-xl) * 2);
             padding: var(--space-md);
             background-color: var(--bg-canvas);
         }
 
         .video-main-frame {
             flex: none;
-            height: 55vh; /* Фіксована висота для стабільності iFrame */
-            background-color: #000; /* Чорний фон до завантаження відео */
+            height: 50vh;
+            background-color: #000;
             border-radius: var(--radius-lg);
             box-shadow: 0 var(--step) calc(var(--step) * 3) var(--shadow-main);
             overflow: hidden;
             position: relative;
             border: calc(var(--step) * 0.25) solid var(--border-soft);
-            display: flex;
-            flex-direction: column;
         }
 
-        #jitsi-container {
-            width: 100%;
-            height: 100%;
-            flex-grow: 1;
+        #jitsi-container { width: 100%; height: 100%; }
+
+        /* Таймер та статус (тільки для адміна) */
+        .session-info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            color: var(--text-secondary);
+        }
+
+        .status-icon.active {
+            display: inline-block;
+            width: var(--step);
+            height: var(--step);
+            background: var(--status-success);
+            border-radius: 50%;
+            margin-right: var(--space-xs);
+            box-shadow: 0 0 var(--space-sm) var(--status-success);
         }
 
         .notes-bottom-panel {
@@ -44,69 +59,52 @@
             gap: var(--space-sm);
         }
 
-        .notes-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .profile-section-title {
-            color: var(--text-primary);
-            margin: 0;
-            font-size: calc(var(--step) * 4.5);
-        }
-
-        .status-text-muted {
-            font-size: calc(var(--step) * 3.5);
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-        }
-
         .therapy-textarea {
             width: 100%;
             flex-grow: 1;
-            min-height: calc(var(--step) * 40);
+            min-height: calc(var(--step) * 30);
             background-color: var(--bg-input);
             color: var(--text-primary);
-            border: calc(var(--step) * 0.25) solid var(--border-soft);
             border-radius: var(--radius-md);
             padding: var(--space-sm);
-            font-family: inherit;
-            line-height: 1.6;
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
             resize: none;
-            font-size: 1rem;
         }
 
-        .therapy-textarea:focus {
-            outline: none;
-            border-color: var(--accent-primary);
+        .btn-reconnect {
+            background: var(--accent-primary);
+            color: var(--text-on-accent);
+            border: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
         }
-
-        @media (max-width: 48rem) {
-            .video-main-frame { height: 40vh; }
-            .standard-container-wide { padding: var(--space-sm); gap: var(--space-sm); }
-        }
-
+    </style>
 </head>
 <body>
 
 <section class="standard-container-wide">
+
     <div class="video-main-frame">
         <div id="jitsi-container"></div>
     </div>
 
+    <div th:if="${isAdmin}" class="session-info-bar">
+        <div class="timer-container">
+            <span class="status-icon active"></span>
+            Час сесії: <span id="session-timer">00:00:00</span>
+        </div>
+        <div id="save-status" class="status-text-muted">Дані синхронізовано</div>
+    </div>
+
     <div th:if="${isAdmin}" class="notes-bottom-panel">
         <header class="notes-header">
-            <div class="client-meta">
-                <h4 class="profile-section-title" th:text="'Робочі нотатки: ' + ${client.name}">Клієнт</h4>
-                <span id="save-status" class="status-text-muted">Дані синхронізовано</span>
-            </div>
-            <a th:href="@{/admin/users}" class="btn-link-muted" style="color: var(--accent-primary)">До списку</a>
+            <h4 class="profile-section-title" th:text="'Нотатки: ' + ${client.name}">Клієнт</h4>
         </header>
 
         <textarea id="session-notes"
                   class="therapy-textarea"
-                  placeholder="Ваші професійні спостереження тут..."
                   th:text="${lastNoteContent}"></textarea>
     </div>
 </section>
@@ -115,18 +113,33 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <script src="https://meet.jit.si/external_api.js"></script>
+    <script src="https://8x8.vc/external_api.js"></script>
+
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
+            // Отримуємо змінні з бекенду (Thymeleaf)
             const roomName = /*[[${roomName}]]*/ 'default-room';
             const userName = /*[[${currentUser.name}]]*/ 'Користувач';
             const clientUuid = /*[[${client.id}]]*/ '';
+            const jitsiJwt = /*[[${jitsiJwt}]]*/ null;
 
-            // 1. Ініціалізація Jitsi
+            // Ваш унікальний App ID зі скріншоту
+            const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
+
+            let jitsiApi = null;
+
+// --- 1. Ініціалізація Jitsi (Виправлена версія без дублікатів) ---
             const initJitsi = () => {
                 const container = document.querySelector('#jitsi-container');
+                if (!container) {
+                    console.error("Помилка: Контейнер для відео не знайдено.");
+                    return;
+                }
+
+                // Створюємо ОДИН об'єкт з налаштуваннями
                 const options = {
-                    roomName: roomName,
+                    roomName: `${appId}/${roomName}`,
+                    jwt: jitsiJwt, // Тут ваш токен з бекенду
                     width: '100%',
                     height: '100%',
                     parentNode: container,
@@ -138,21 +151,43 @@
                         startWithVideoMuted: false
                     },
                     interfaceConfigOverwrite: {
+                        SHOW_JITSI_WATERMARK: false,
+                        SHOW_BRAND_WATERMARK: false,
                         TILE_VIEW_MAX_COLUMNS: 2,
-                        SHOW_JITSI_WATERMARK: false
+                        DEFAULT_REMOTE_DISPLAY_NAME: 'Клієнт'
                     }
                 };
-                const api = new JitsiMeetExternalAPI('meet.jit.si', options);
 
-                // Авто-ввімкнення плитки (Tile View)
-                api.addEventListener('videoConferenceJoined', () => {
-                    api.executeCommand('toggleTileView');
+                const domain = "8x8.vc";
+
+                // Створюємо зв'язок. Використовуємо глобальну змінну jitsiApi
+                jitsiApi = new JitsiMeetExternalAPI(domain, options);
+
+                // Додаємо слухача подій для автоматичної "плитки"
+                jitsiApi.addEventListener('videoConferenceJoined', () => {
+                    jitsiApi.executeCommand('toggleTileView');
+                    console.log("Сесію розпочато.");
                 });
             };
 
+            // Запускаємо функцію
             initJitsi();
 
-            // 2. Логіка автозбереження нотаток (якщо є поле)
+            // ТУТ ВАШ КОД ЗАКІНЧУЄТЬСЯ І ПОЧИНАЄТЬСЯ ТАЙМЕР
+            // --- 2. Логіка Таймера (Тільки якщо є елемент на сторінці) ---
+            const timerElement = document.getElementById('session-timer');
+            if (timerElement) {
+                let seconds = 0;
+                setInterval(() => {
+                    seconds++;
+                    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+                    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+                    const secs = String(seconds % 60).padStart(2, '0');
+                    timerElement.innerText = `${hrs}:${mins}:${secs}`;
+                }, 1000);
+            }
+
+            // --- 3. Автозбереження нотаток (Тільки для ADMIN) ---
             const notesArea = document.getElementById('session-notes');
             if (notesArea) {
                 const statusLabel = document.getElementById('save-status');
@@ -162,10 +197,13 @@
                 let saveTimeout = null;
 
                 notesArea.addEventListener('input', () => {
+                    // Показуємо статус, що процес пішов
                     statusLabel.innerText = "Зберігаю...";
                     statusLabel.style.color = "var(--text-secondary)";
 
                     clearTimeout(saveTimeout);
+
+                    // Відкладаємо збереження на 2 секунди після останнього символу
                     saveTimeout = setTimeout(async () => {
                         try {
                             const response = await fetch(`/therapy/notes/save/${clientUuid}`, {
@@ -181,9 +219,10 @@
                                 statusLabel.innerText = "Дані синхронізовано";
                                 statusLabel.style.color = "var(--status-success)";
                             } else {
-                                throw new Error();
+                                throw new Error('Server error');
                             }
                         } catch (e) {
+                            console.error("Autosave error:", e);
                             statusLabel.innerText = "Помилка збереження";
                             statusLabel.style.color = "var(--status-error)";
                         }
