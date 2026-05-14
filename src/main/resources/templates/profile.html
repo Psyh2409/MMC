@@ -65,19 +65,65 @@
         </aside>
 
         <!-- ПРАВА КОЛОНКА (Особистий простір) -->
-        <main class="profile-content-area">
-            <!-- Блок доступу до відеосесії (Показується тільки Клієнтам) -->
-            <div th:if="${user.isClient()}" class="profile-card" style="border: var(--border-width) solid var(--success-color);">
-                <h3 class="profile-section-title">Ваш терапевтичний простір</h3>
-                <p class="status-text-muted" style="margin-bottom: var(--space-md);">Тут відбувається захищений відеозв'язок з вашим терапевтом. Натисніть кнопку під час запланованої сесії.</p>
+        <main class="profile-main-content">
 
-                <!-- Кнопка веде на кімнату, підставляючи UUID клієнта -->
-                <a th:href="@{/therapy/room/{id}(id=${user.id})}" class="btn-primary" style="display: inline-block; text-align: center; width: 100%;">
-                    Приєднатися до відеосесії
-                </a>
+            <div th:if="${professionalNotes != null}" class="journal-section">
+                <div class="journal-header">
+                    <h3 class="notes-section-title">Клінічний журнал (Тільки для фахівця)</h3>
+                </div>
+                <div class="journal-wall">
+                    <div th:each="note : ${professionalNotes}" class="journal-entry">
+                        <div class="note-header">
+                            <span class="note-date" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                            <span class="note-person" th:text="${note.client.name}">Клієнт</span>
+                        </div>
+                        <p class="note-content" th:text="${note.content}">Зміст...</p>
+                    </div>
+                </div>
             </div>
-        </main>
+            <div th:if="${hasInvitation}" class="session-invitation-card">
+                <div class="invitation-text">
+                    <h3>Сесія активна</h3>
+                    <p>Ваш терапевт чекає на вас у кабінеті.</p>
+                </div>
+                <a th:href="${therapyRoomUrl}" class="btn-join-session">Увійти в кабінет</a>
+            </div>
 
+            <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="notes-container">
+                <h3 class="notes-section-title">Мій журнал</h3>
+
+                <div class="notes-list">
+                    <div th:each="note : ${myNotes}" class="note-card">
+                        <div class="note-header">
+                            <span class="note-date" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                            <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
+                        </div>
+                        <p class="note-content" th:text="${note.content}">Зміст нотатки...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${myNotes == null or myNotes.isEmpty()}" class="profile-empty-state">
+                <div class="icon-large">📝</div>
+                <p>У вас поки немає збережених записів.</p>
+            </div>
+            <div th:if="${personalJournal != null}" class="journal-section">
+                <div class="journal-header">
+                    <h3 class="notes-section-title">Мій простір рефлексії</h3>
+                    <button class="btn-primary">Новий запис</button>
+                </div>
+                <div class="journal-wall">
+                    <div th:each="entry : ${personalJournal}" class="journal-entry">
+                        <div class="note-header">
+                            <span class="note-date" th:text="${#temporals.format(entry.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                        </div>
+                        <p class="note-content" th:text="${entry.content}">Мої думки...</p>
+                        <div class="media-placeholder">Медіа-контент буде доступний у v2.0</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 </section>
 

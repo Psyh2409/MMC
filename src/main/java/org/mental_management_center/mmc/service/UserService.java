@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 
@@ -274,5 +275,16 @@ public class UserService {
 
     public User findById(UUID id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public User findAdmin() {
+        return userRepository.findAll().stream()
+                .filter(User::isAdmin)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Адміністратора не знайдено"));
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

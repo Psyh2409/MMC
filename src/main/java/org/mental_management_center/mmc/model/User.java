@@ -122,4 +122,8 @@ public class User {
         }
         return authorities;
     }
+
+    public User orElseThrow() {
+        return this;
+    }
 }

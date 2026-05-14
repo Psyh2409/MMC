@@ -2,9 +2,12 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.service.TherapyNoteService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +40,23 @@ public class TherapyRoomController {
     @GetMapping("/room/{clientUuid}")
     public String getTherapyRoom(@PathVariable UUID clientUuid, Principal principal, Model model) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        User roomOwner = userService.findById(clientUuid);
+        // Якщо у вас тут раніше було просто = userService.findById, залиште як було у вас
+        User roomOwner = userService.findById(clientUuid).orElseThrow();
 
-        if (roomOwner == null) return "error/404";
         if (!currentUser.isAdmin() && !currentUser.getId().equals(clientUuid)) return "error/403";
 
-        String roomName = "therapy-room-" + clientUuid;
-        String lastNote = therapyNoteService.getLastNoteContent(clientUuid, currentUser.getId());
+        // ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ
+        User therapist;
+        if (currentUser.isAdmin()) {
+            therapist = currentUser;
+        } else {
+            therapist = userService.findAdmin();
+        }
 
-        // Генерируємо токен для Jitsi
+        String roomName = "therapy-room-" + clientUuid;
+        // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
+        String lastNote = therapyNoteService.getLastNoteContent(roomOwner.getId(), therapist.getId(), currentUser.getId());
+
         String jitsiJwt = generateJitsiJwt(currentUser, roomName);
 
         model.addAttribute("client", roomOwner);
@@ -53,7 +64,7 @@ public class TherapyRoomController {
         model.addAttribute("lastNoteContent", lastNote);
         model.addAttribute("roomName", roomName);
         model.addAttribute("isAdmin", currentUser.isAdmin());
-        model.addAttribute("jitsiJwt", jitsiJwt); // Відправляємо токен у фронтенд
+        model.addAttribute("jitsiJwt", jitsiJwt);
 
         return "therapy-room";
     }
@@ -108,5 +119,69 @@ public class TherapyRoomController {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(keySpec);
+    }
+
+
+
+    @PostMapping("/notes/save/{clientUuid}")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> saveNote(
+            @PathVariable UUID clientUuid,
+            @RequestParam(required = false) UUID noteId, // Отримуємо ID, якщо він уже є у фронтенда
+            @RequestBody String content,
+            Principal principal) {
+
+        try {
+            User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+            User client = userService.findById(clientUuid).orElseThrow();
+            // Терапевт — або адмін, або поточний юзер
+            User therapist = currentUser.isAdmin() ? currentUser : userService.findAdmin();
+
+            if (noteId == null) {
+                // Це перше збереження за сесію — створюємо новий запис
+                TherapyNote newNote = therapyNoteService.saveNewNote(therapist, client, currentUser, content);
+                // Повертаємо ID нової нотатки фронтенду
+                return ResponseEntity.ok(Map.of("noteId", newNote.getId().toString()));
+            } else {
+                // У нас вже є ID, значить просто оновлюємо існуючу нотатку
+                therapyNoteService.updateNote(noteId, content);
+                return ResponseEntity.ok().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/notes/get-recent/{clientUuid}")
+    @ResponseBody
+    public String getRecentNote(@PathVariable UUID clientUuid, Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        User client = userService.findById(clientUuid).orElseThrow();
+        User therapist = currentUser.isAdmin() ? currentUser : userService.findAdmin();
+
+        return therapyNoteService.getLastNoteContent(client.getId(), therapist.getId(), currentUser.getId());
+    }
+
+    @GetMapping("/notes/history/{clientUuid}")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getHistory(@PathVariable UUID clientUuid, Principal principal) {
+        try {
+            User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+            // Отримуємо всі нотатки, де автором є поточний користувач, а клієнтом — цей UUID
+            List<TherapyNote> notes = therapyNoteService.getHistoryForClient(clientUuid, currentUser.getId());
+
+            // Перетворюємо список об'єктів у простий формат для JSON
+            List<Map<String, Object>> response = notes.stream().map(note -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("content", note.getContent());
+                map.put("createdAt", note.getCreatedAt());
+                return map;
+            }).toList();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

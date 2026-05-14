@@ -321,14 +321,14 @@ main {
 /* Шар: Components / Об'єкти */
 .articles-list {
     padding-top: var(--space-xl); /* Відступ від хедера */
-    padding-bottom: var(--space-xl);[cite: 1]
+    padding-bottom: var(--space-xl);''
 }
 
 .articles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-lg);[cite: 1]
-    margin-top: var(--space-lg);[cite: 1]
+    gap: var(--space-lg);''
+    margin-top: var(--space-lg);''
 }
 
 
@@ -459,7 +459,7 @@ main {
         .video-main-frame {
             flex: none;
             height: 55vh; /* Фіксована висота для стабільності iFrame */
-            background-color: #000; /* Чорний фон до завантаження відео */
+            background-color: var(--bg-input);
             border-radius: var(--radius-lg);
             box-shadow: 0 var(--step) calc(var(--step) * 3) var(--shadow-main);
             overflow: hidden;
@@ -550,3 +550,286 @@ main {
     margin-right: var(--space-xs);
     box-shadow: 0 0 calc(var(--step) * 2) var(--status-success);
 }
+
+/* =========================================
+   ПРОФАЙЛ: ГОЛОВНА ЗОНА ТА НОТАТКИ
+   ========================================= */
+
+.profile-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    padding-left: var(--space-xl);
+}
+
+.notes-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.notes-section-title {
+    color: var(--accent-primary);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    padding-bottom: var(--space-xs);
+    font-size: 1.25rem;
+}
+
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.note-card {
+    background-color: var(--bg-surface);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--border-soft);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
+}
+
+.note-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.note-person {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.note-content {
+    color: var(--text-main);
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap; /* Зберігає переноси рядків з textarea */
+}
+
+/* --- СТИЛІ ДЛЯ ЖУРНАЛУ ТА МЕДІА-СТІНИ --- */
+.journal-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.journal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.0625rem solid var(--border-soft);
+    padding-bottom: var(--space-sm);
+}
+
+.journal-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
+    gap: var(--space-md);
+}
+
+.journal-entry {
+    background-color: var(--bg-surface);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--border-soft);
+    transition: transform 0.2s ease;
+}
+
+.journal-entry:hover {
+    transform: translateY(calc(var(--step) * -1));
+    border-color: var(--accent-primary);
+}
+
+.media-placeholder {
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: var(--space-sm);
+}
+
+/* --- КАРТКА ЗАПРОШЕННЯ В СЕСІЮ --- */
+.session-invitation-card {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    box-shadow: 0 var(--step) var(--space-md) var(--shadow-main);
+    animation: pulse-border 2s infinite;
+}
+
+.invitation-text h3 {
+    color: var(--text-on-accent);
+    margin: 0 0 var(--space-xs) 0;
+    font-size: 1.25rem;
+}
+
+.invitation-text p {
+    color: var(--text-on-accent);
+    opacity: 0.9;
+    margin: 0;
+}
+
+.btn-join-session {
+    background-color: var(--bg-surface);
+    color: var(--accent-primary);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+
+.btn-join-session:hover {
+    transform: scale(1.05);
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 rgba(var(--theme-h), var(--theme-s), var(--l-primary), 0.4); }
+    70% { box-shadow: 0 0 0 var(--space-sm) rgba(var(--theme-h), var(--theme-s), var(--l-primary), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--theme-h), var(--theme-s), var(--l-primary), 0); }
+}
+
+/* Основні стилі контейнерів */
+        .standard-container-wide {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            min-height: calc(100vh - var(--space-xl) * 2);
+            padding: var(--space-md);
+            background-color: var(--bg-canvas);
+        }
+
+        .video-main-frame {
+            flex: none;
+            height: 50vh;
+            background-color: #000;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 var(--step) calc(var(--step) * 3) var(--shadow-main);
+            overflow: hidden;
+            position: relative;
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+        }
+
+        #jitsi-container { width: 100%; height: 100%; }
+
+        /* Блок нотаток */
+        .notes-bottom-panel {
+            flex: 1;
+            background-color: var(--bg-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .notes-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+
+        .therapy-textarea {
+            width: 100%;
+            flex-grow: 1;
+            min-height: calc(var(--step) * 15);
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            border: calc(var(--step) * 0.25) solid var(--border-soft);
+            resize: vertical; /* Дозволяє трохи розтягувати по вертикалі */
+        }
+
+        /* --- СТИЛІ МОДАЛЬНОГО ВІКНА ІСТОРІЇ --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
+    display: none !important; /* Гарантована скритість */
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal, 2000);
+}
+
+.modal-overlay.is-visible {
+    display: flex !important;
+}
+
+.modal-content {
+    background-color: var(--bg-surface);
+    width: 85vw; /* Беремо 85% від ширини екрану клієнта */
+    max-width: 80rem; /* Надійний обмежувач для дуже широких моніторів (без пікселів) */
+    height: 85vh; /* 85% від висоти екрану */
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    overflow-y: auto;
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    box-shadow: 0 calc(var(--step) * 5) calc(var(--step) * 10) hsla(var(--theme-h), var(--theme-s), 5%, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовок модалки: фіксує кнопку закриття праворуч */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: var(--space-sm);
+    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
+}
+
+.modal-title {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.history-item {
+    padding: var(--space-md) 0;
+    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
+}
+
+.history-date {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.history-text {
+    color: var(--text-primary);
+    white-space: pre-wrap; /* Зберігає переноси рядків без інлайнів */
+    line-height: var(--line-height-base, 1.5);
+}
+
+.status-loading {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+}
+
+        /* Індикатор збереження */
+        .sync-indicator {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+        }

@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import org.mental_management_center.mmc.service.TherapyNoteService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.web.form.PasswordChangeForm;
 import org.mental_management_center.mmc.web.form.ProfileUpdateForm;
@@ -16,9 +17,11 @@ import java.security.Principal;
 public class UserProfileController {
 
     private final UserService userService;
+    private final TherapyNoteService therapyNoteService;
 
-    public UserProfileController(UserService userService) {
+    public UserProfileController(UserService userService, TherapyNoteService therapyNoteService) {
         this.userService = userService;
+        this.therapyNoteService = therapyNoteService;
     }
 
     @GetMapping("/profile")
@@ -27,16 +30,27 @@ public class UserProfileController {
 
         userService.findByEmail(principal.getName()).ifPresent(user -> {
             model.addAttribute("user", user);
+
+            // 1. Отримуємо нотатки, де цей користувач є автором
+            model.addAttribute("myNotes", therapyNoteService.getNotesByAuthor(user.getId()));
+
+            // 2. Логіка запрошення (сповіщення)
+            if (user.isClient()) {
+                // Клієнт бачить кнопку переходу у свій кабінет
+                model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
+                model.addAttribute("hasInvitation", true);
+            }
+
             if (!model.containsAttribute("profileUpdateForm")) {
                 ProfileUpdateForm profileUpdateForm = new ProfileUpdateForm();
                 profileUpdateForm.setName(user.getName());
                 model.addAttribute("profileUpdateForm", profileUpdateForm);
             }
         });
+
         if (!model.containsAttribute("passwordChangeForm")) {
             model.addAttribute("passwordChangeForm", new PasswordChangeForm());
         }
-
         return "profile";
     }
 
@@ -76,18 +90,22 @@ public class UserProfileController {
                                 BindingResult result,
                                 Principal principal,
                                 Model model) {
-        if (principal == null) {
-            return "redirect:/login";
-        }
+        if (principal == null) return "redirect:/login";
 
-        userService.findByEmail(principal.getName()).ifPresent(user -> model.addAttribute("user", user));
+        userService.findByEmail(principal.getName()).ifPresent(user -> {
+            model.addAttribute("user", user);
+            model.addAttribute("myNotes", therapyNoteService.getNotesByAuthor(user.getId()));
+            if (user.isClient()) {
+                model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
+                model.addAttribute("hasInvitation", true);
+            }
+        });
+
         if (!model.containsAttribute("passwordChangeForm")) {
             model.addAttribute("passwordChangeForm", new PasswordChangeForm());
         }
 
-        if (result.hasErrors()) {
-            return "profile";
-        }
+        if (result.hasErrors()) return "profile";
 
         try {
             userService.updateProfileName(principal.getName(), profileUpdateForm.getName());

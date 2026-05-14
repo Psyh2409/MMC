@@ -94,6 +94,7 @@ public class EmailService {
 
     private String baseUrl() {
         return publicBaseUrl == null || publicBaseUrl.isBlank()
+//                ? "https://corridor-uninsured-fang.ngrok-free.dev"
                 ? "http://localhost:8080"
                 : publicBaseUrl.replaceAll("/+$", "");
     }

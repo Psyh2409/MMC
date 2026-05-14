@@ -4,6 +4,7 @@
 <head>
     <title>Сесія | MMC Room</title>
     <style>
+        /* Основні стилі контейнерів */
         .standard-container-wide {
             display: flex;
             flex-direction: column;
@@ -26,28 +27,7 @@
 
         #jitsi-container { width: 100%; height: 100%; }
 
-        /* Таймер та статус (тільки для адміна) */
-        .session-info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-sm) var(--space-md);
-            background: var(--bg-surface);
-            border-radius: var(--radius-md);
-            border: calc(var(--step) * 0.25) solid var(--border-soft);
-            color: var(--text-secondary);
-        }
-
-        .status-icon.active {
-            display: inline-block;
-            width: var(--step);
-            height: var(--step);
-            background: var(--status-success);
-            border-radius: 50%;
-            margin-right: var(--space-xs);
-            box-shadow: 0 0 var(--space-sm) var(--status-success);
-        }
-
+        /* Блок нотаток */
         .notes-bottom-panel {
             flex: 1;
             background-color: var(--bg-surface);
@@ -59,26 +39,99 @@
             gap: var(--space-sm);
         }
 
+        .notes-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+
         .therapy-textarea {
             width: 100%;
             flex-grow: 1;
-            min-height: calc(var(--step) * 30);
+            min-height: calc(var(--step) * 15);
             background-color: var(--bg-input);
             color: var(--text-primary);
             border-radius: var(--radius-md);
             padding: var(--space-sm);
             border: calc(var(--step) * 0.25) solid var(--border-soft);
-            resize: none;
+            resize: vertical; /* Дозволяє трохи розтягувати по вертикалі */
         }
 
-        .btn-reconnect {
-            background: var(--accent-primary);
-            color: var(--text-on-accent);
-            border: none;
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 0.8rem;
+        /* --- СТИЛІ МОДАЛЬНОГО ВІКНА ІСТОРІЇ --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
+    display: none !important; /* Гарантована скритість */
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal, 2000);
+}
+
+.modal-overlay.is-visible {
+    display: flex !important;
+}
+
+.modal-content {
+    background: var(--bg-surface);
+    width: 90%;
+    max-width: calc(var(--step) * 45);
+    max-height: 85vh;
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    overflow-y: auto;
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* Заголовок модалки: фіксує кнопку закриття праворуч */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: var(--space-sm);
+    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
+}
+
+.modal-title {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.history-item {
+    padding: var(--space-md) 0;
+    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
+}
+
+.history-date {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.history-text {
+    color: var(--text-primary);
+    white-space: pre-wrap; /* Зберігає переноси рядків без інлайнів */
+    line-height: var(--line-height-base, 1.5);
+}
+
+.status-loading {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+}
+
+        /* Індикатор збереження */
+        .sync-indicator {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -90,23 +143,34 @@
         <div id="jitsi-container"></div>
     </div>
 
-    <div th:if="${isAdmin}" class="session-info-bar">
-        <div class="timer-container">
-            <span class="status-icon active"></span>
-            Час сесії: <span id="session-timer">00:00:00</span>
-        </div>
-        <div id="save-status" class="status-text-muted">Дані синхронізовано</div>
-    </div>
-
-    <div th:if="${isAdmin}" class="notes-bottom-panel">
-        <header class="notes-header">
+    <div class="notes-bottom-panel">
+        <div class="notes-header-row">
             <h4 class="profile-section-title" th:text="'Нотатки: ' + ${client.name}">Клієнт</h4>
-        </header>
+            <button type="button" id="btn-show-history" class="btn-primary">
+                Історія нотаток
+            </button>
+        </div>
 
         <textarea id="session-notes"
                   class="therapy-textarea"
-                  th:text="${lastNoteContent}"></textarea>
+                  placeholder="Нова сесія. Почніть писати тут..."></textarea>
+
+        <div style="text-align: right; margin-top: var(--space-xs);">
+            <span id="sync-status" class="sync-indicator">Очікування...</span>
+        </div>
     </div>
+
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Історія записів</h3>
+                <button type="button" id="close-modal" class="btn-primary">Закрити</button>
+            </div>
+            <div id="history-list">
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <th:block th:fragment="page-scripts">
@@ -117,96 +181,64 @@
 
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
-            // Отримуємо змінні з бекенду (Thymeleaf)
+
+            // --- ГЛОБАЛЬНІ ЗМІННІ (Thymeleaf -> JS) ---
             const roomName = /*[[${roomName}]]*/ 'default-room';
             const userName = /*[[${currentUser.name}]]*/ 'Користувач';
             const clientUuid = /*[[${client.id}]]*/ '';
             const jitsiJwt = /*[[${jitsiJwt}]]*/ null;
-
-            // Ваш унікальний App ID зі скріншоту
             const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
 
-            let jitsiApi = null;
+            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-// --- 1. Ініціалізація Jitsi (Виправлена версія без дублікатів) ---
+            // --- БЛОК 1: ІНІЦІАЛІЗАЦІЯ ВІДЕО JITSI ---
+            let jitsiApi = null;
             const initJitsi = () => {
                 const container = document.querySelector('#jitsi-container');
-                if (!container) {
-                    console.error("Помилка: Контейнер для відео не знайдено.");
-                    return;
-                }
+                if (!container) return;
 
-                // Створюємо ОДИН об'єкт з налаштуваннями
                 const options = {
                     roomName: `${appId}/${roomName}`,
-                    jwt: jitsiJwt, // Тут ваш токен з бекенду
+                    jwt: jitsiJwt,
                     width: '100%',
                     height: '100%',
                     parentNode: container,
                     userInfo: { displayName: userName },
-                    configOverwrite: {
-                        prejoinPageEnabled: false,
-                        disableDeepLinking: true,
-                        startWithAudioMuted: false,
-                        startWithVideoMuted: false
-                    },
-                    interfaceConfigOverwrite: {
-                        SHOW_JITSI_WATERMARK: false,
-                        SHOW_BRAND_WATERMARK: false,
-                        TILE_VIEW_MAX_COLUMNS: 2,
-                        DEFAULT_REMOTE_DISPLAY_NAME: 'Клієнт'
-                    }
+                    configOverwrite: { prejoinPageEnabled: false },
+                    interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false, TILE_VIEW_MAX_COLUMNS: 2 }
                 };
 
-                const domain = "8x8.vc";
-
-                // Створюємо зв'язок. Використовуємо глобальну змінну jitsiApi
-                jitsiApi = new JitsiMeetExternalAPI(domain, options);
-
-                // Додаємо слухача подій для автоматичної "плитки"
+                jitsiApi = new JitsiMeetExternalAPI("8x8.vc", options);
                 jitsiApi.addEventListener('videoConferenceJoined', () => {
                     jitsiApi.executeCommand('toggleTileView');
-                    console.log("Сесію розпочато.");
                 });
             };
-
-            // Запускаємо функцію
             initJitsi();
 
-            // ТУТ ВАШ КОД ЗАКІНЧУЄТЬСЯ І ПОЧИНАЄТЬСЯ ТАЙМЕР
-            // --- 2. Логіка Таймера (Тільки якщо є елемент на сторінці) ---
-            const timerElement = document.getElementById('session-timer');
-            if (timerElement) {
-                let seconds = 0;
-                setInterval(() => {
-                    seconds++;
-                    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-                    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-                    const secs = String(seconds % 60).padStart(2, '0');
-                    timerElement.innerText = `${hrs}:${mins}:${secs}`;
-                }, 1000);
-            }
-
-            // --- 3. Автозбереження нотаток (Тільки для ADMIN) ---
+            // --- БЛОК 2: АВТОЗБЕРЕЖЕННЯ (Stateless / Чистий аркуш) ---
             const notesArea = document.getElementById('session-notes');
-            if (notesArea) {
-                const statusLabel = document.getElementById('save-status');
-                const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+            const statusLabel = document.getElementById('sync-status');
 
-                let saveTimeout = null;
+            let saveTimeout = null;
+            let currentNoteId = null; // Запам'ятовує ID нотатки для поточної сторінки
 
+            if (notesArea && statusLabel) {
                 notesArea.addEventListener('input', () => {
-                    // Показуємо статус, що процес пішов
-                    statusLabel.innerText = "Зберігаю...";
+                    statusLabel.innerText = "Збереження...";
                     statusLabel.style.color = "var(--text-secondary)";
 
                     clearTimeout(saveTimeout);
-
-                    // Відкладаємо збереження на 2 секунди після останнього символу
                     saveTimeout = setTimeout(async () => {
                         try {
-                            const response = await fetch(`/therapy/notes/save/${clientUuid}`, {
+                            // Формуємо URL: Якщо це перше збереження, ID немає.
+                            // Якщо друге - передаємо параметр ?noteId=... для оновлення.
+                            let url = `/therapy/notes/save/${clientUuid}`;
+                            if (currentNoteId) {
+                                url += `?noteId=${currentNoteId}`;
+                            }
+
+                            const response = await fetch(url, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'text/plain;charset=UTF-8',
@@ -216,19 +248,86 @@
                             });
 
                             if (response.ok) {
-                                statusLabel.innerText = "Дані синхронізовано";
+                                // Сервер має повернути JSON: { "noteId": "uuid-сюди" }
+                                const textRes = await response.text();
+                                if (textRes) {
+                                    try {
+                                        const data = JSON.parse(textRes);
+                                        if (data && data.noteId) currentNoteId = data.noteId;
+                                    } catch(e) {} // Ігноруємо помилку парсингу, якщо повернуто просто 200 OK
+                                }
+
+                                statusLabel.innerText = "Дані збережено";
                                 statusLabel.style.color = "var(--status-success)";
+
+                                // Приховуємо напис через 3 секунди
+                                setTimeout(() => {
+                                    if(statusLabel.innerText === "Дані збережено") statusLabel.innerText = "";
+                                }, 3000);
                             } else {
-                                throw new Error('Server error');
+                                throw new Error('Помилка сервера');
                             }
                         } catch (e) {
-                            console.error("Autosave error:", e);
-                            statusLabel.innerText = "Помилка збереження";
+                            console.error("Помилка автозбереження:", e);
+                            statusLabel.innerText = "Помилка зв'язку";
                             statusLabel.style.color = "var(--status-error)";
                         }
-                    }, 2000);
+                    }, 2000); // Відправляє дані через 2 секунди після того, як ти перестав друкувати
                 });
             }
+
+            // --- ЛОГІКА МОДАЛЬНОГО ВІКНА (TOGGLE) ---
+const modal = document.getElementById('history-modal');
+const historyList = document.getElementById('history-list');
+const btnShowHistory = document.getElementById('btn-show-history');
+const btnCloseModal = document.getElementById('close-modal');
+
+if (btnShowHistory && modal) {
+
+    const toggleHistory = async () => {
+        const isVisible = modal.classList.contains('is-visible');
+
+        if (isVisible) {
+            modal.classList.remove('is-visible');
+        } else {
+            modal.classList.add('is-visible');
+            historyList.innerHTML = '<span class="status-loading">Синхронізація з архівом...</span>';
+
+            try {
+                const response = await fetch(`/therapy/notes/history/${clientUuid}`);
+                if (response.ok) {
+                    const notes = await response.json();
+                    if (notes.length === 0) {
+                        historyList.innerHTML = '<p class="status-loading">Записів за історію не знайдено.</p>';
+                    } else {
+                        // Рендеримо за допомогою класів, а не інлайнів
+                        historyList.innerHTML = notes.map(n => `
+                            <div class="history-item">
+                                <span class="history-date">${new Date(n.createdAt).toLocaleString('uk-UA')}</span>
+                                <div class="history-text">${n.content}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (e) {
+                historyList.innerHTML = '<p class="status-error">Помилка завантаження історії.</p>';
+            }
+        }
+    };
+
+    // Одна кнопка на відкриття та закриття
+    btnShowHistory.addEventListener('click', toggleHistory);
+
+    btnCloseModal.addEventListener('click', () => {
+        modal.classList.remove('is-visible');
+    });
+
+    // Закриття по кліку на оверлей
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('is-visible');
+    });
+}
+
         });
     </script>
 </th:block>

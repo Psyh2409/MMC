@@ -18,6 +18,11 @@ public class TherapyNote {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // Додати в TherapyNote.java
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     private User client;

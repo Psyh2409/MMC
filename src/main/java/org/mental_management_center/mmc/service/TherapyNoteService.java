@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,29 +20,40 @@ public class TherapyNoteService {
     }
 
     @Transactional
-    public void saveOrUpdateNote(User therapist, User client, String content) {
-        // Шукаємо останню нотатку. Якщо вона створена менше ніж 12 годин тому — оновлюємо її.
-        // Якщо ні — створюємо нову сесію (запис).
-        repository.findTopByClientIdAndTherapistIdOrderByCreatedAtDesc(client.getId(), therapist.getId())
-                .filter(note -> note.getCreatedAt().isAfter(LocalDateTime.now().minusHours(12)))
-                .ifPresentOrElse(
-                        existingNote -> {
-                            existingNote.setContent(content);
-                            repository.save(existingNote);
-                        },
-                        () -> {
-                            TherapyNote newNote = new TherapyNote();
-                            newNote.setTherapist(therapist);
-                            newNote.setClient(client);
-                            newNote.setContent(content);
-                            repository.save(newNote);
-                        }
-                );
+    public TherapyNote saveNewNote(User therapist, User client, User author, String content) {
+        TherapyNote note = new TherapyNote();
+        note.setTherapist(therapist);
+        note.setClient(client);
+        note.setAuthor(author);
+        note.setContent(content);
+        return repository.save(note);
     }
 
-    public String getLastNoteContent(UUID clientId, UUID therapistId) {
-        return repository.findTopByClientIdAndTherapistIdOrderByCreatedAtDesc(clientId, therapistId)
+    @Transactional
+    public void updateNote(UUID noteId, String content) {
+        repository.findById(noteId).ifPresent(note -> {
+            note.setContent(content);
+            // Репозиторій сам оновить запис
+        });
+    }
+
+    public List<TherapyNote> getHistoryForClient(UUID clientUuid, UUID authorId) {
+        // Використовуємо твій наявний репозиторій, але можна додати фільтр за клієнтом
+        return repository.findByAuthorIdOrderByCreatedAtDesc(authorId).stream()
+                .filter(n -> n.getClient().getId().equals(clientUuid))
+                .toList();
+    }
+
+    public String getLastNoteContent(UUID clientId, UUID therapistId, UUID authorId) {
+        return repository.findTopByClientIdAndTherapistIdAndAuthorIdOrderByCreatedAtDesc(
+                        clientId, therapistId, authorId)
+                .filter(note -> note.getCreatedAt().isAfter(LocalDateTime.now().minusHours(1)))
                 .map(TherapyNote::getContent)
                 .orElse("");
+    }
+
+    // Для UserProfileController
+    public List<TherapyNote> getNotesByAuthor(UUID authorId) {
+        return repository.findByAuthorIdOrderByCreatedAtDesc(authorId);
     }
 }
