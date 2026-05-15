@@ -143,24 +143,6 @@
     /* Тепер ховер завжди контрастний, бо ми міняємо фон на Primary колір теми */
 }
 
-/* 3. КНОПКИ (Адмінка та Вихід) */
-.admin-link {
-    color: var(--accent-color);
-    border: 0.0625rem solid var(--accent-color);
-    padding: 0.3125rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-
-.admin-link:hover {
-    background-color: var(--accent-color);
-    color: var(--bg-main);
-}
-
-
-
 /* 4. МЕНЮ КОРИСТУВАЧА */
 .user-menu {
     display: flex;

@@ -32,6 +32,9 @@ spring:
           timeout: 5000
           writetimeout: 5000
 server:
+  servlet:
+    session:
+      persistent: false
   forward-headers-strategy: framework
   error:
     whitelabel:

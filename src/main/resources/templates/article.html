@@ -29,7 +29,7 @@
 
         <div th:if="${#authorization.expression('isAuthenticated()')}" id="main-comment-form-box" class="comment-form-box">
 
-            <button type="button" id="cancel-reply-btn" style="display: none; margin-bottom: 10px;" onclick="resetReplyForm()" class="btn-cancel-reply">
+            <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-cancel-reply">
                 ✖ Скасувати відповідь (написати новий коментар)
             </button>
 
