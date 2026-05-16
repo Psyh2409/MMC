@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.service.TherapyRoomService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.service.TherapyNoteService;
 import org.springframework.http.HttpStatus;
@@ -26,34 +27,54 @@ public class TherapyRoomController {
 
     private final UserService userService;
     private final TherapyNoteService therapyNoteService;
+    private final TherapyRoomService therapyRoomService;
+
 
     // Дані з вашої панелі JaaS (краще винести в application.properties)
     private final String APP_ID = "vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6";
     private final String API_KEY_ID = "vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6/bef9f5"; // Замініть на Key ID з панелі
     private final String PRIVATE_KEY_PATH = "C:\\Users\\ASUS\\MyMMCv1\\JaaS_security\\MMC_JaaS.pk"; // Шлях до вашого файлу .pk
 
-    public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService) {
+    public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
+        this.therapyRoomService = therapyRoomService;
     }
 
     @GetMapping("/room/{clientUuid}")
     public String getTherapyRoom(@PathVariable UUID clientUuid, Principal principal, Model model) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        // Якщо у вас тут раніше було просто = userService.findById, залиште як було у вас
         User roomOwner = userService.findById(clientUuid).orElseThrow();
 
-        if (!currentUser.isAdmin() && !currentUser.getId().equals(clientUuid)) return "error/403";
+        // 1. ПЕРЕВІРКА РОЛЕЙ: Чи є поточний юзер фахівцем (Адмін для v1.0 або Терапевт для v2.0)
+        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
 
-        // ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ
+        // TODO v2.0: Додати перевірку, чи цей Терапевт дійсно закріплений за цим Клієнтом
+        // if (currentUser.isTherapist() && !roomOwner.getTherapistId().equals(currentUser.getId())) return "error/403";
+
+        // 2. ПЕРЕВІРКА ДОСТУПУ: В кімнату може зайти або фахівець, або сам власник кімнати (клієнт)
+        if (!isAuthorizedProfessional && !currentUser.getId().equals(clientUuid)) {
+            return "error/403";
+        }
+
+        // 3. === НАШ ВИМИКАЧ КНОПКИ ===
+        // Якщо зайшов фахівець — запалюємо кнопку в профілі клієнта
+        if (isAuthorizedProfessional) {
+            therapyRoomService.activateRoom(clientUuid);
+        }
+
+        // 4. ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ (для завантаження нотаток)
         User therapist;
-        if (currentUser.isAdmin()) {
-            therapist = currentUser;
+        if (isAuthorizedProfessional) {
+            therapist = currentUser; // Фахівець сам веде сесію
         } else {
+            // Якщо зайшов клієнт, нам треба знати, хто його терапевт.
+            // Для v1.0 це завжди Admin. У v2.0 тут буде щось на кшталт roomOwner.getAssignedTherapist()
             therapist = userService.findAdmin();
         }
 
         String roomName = "therapy-room-" + clientUuid;
+
         // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
         String lastNote = therapyNoteService.getLastNoteContent(roomOwner.getId(), therapist.getId(), currentUser.getId());
 
@@ -64,6 +85,7 @@ public class TherapyRoomController {
         model.addAttribute("lastNoteContent", lastNote);
         model.addAttribute("roomName", roomName);
         model.addAttribute("isAdmin", currentUser.isAdmin());
+        model.addAttribute("isTherapist", currentUser.isTherapist()); // Передаємо у в'юху для можливих UI-рішень
         model.addAttribute("jitsiJwt", jitsiJwt);
 
         return "therapy-room";
@@ -184,4 +206,21 @@ public class TherapyRoomController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/room/{clientUuid}/leave")
+    @ResponseBody
+    public ResponseEntity<Void> leaveTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
+        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
+
+        // Якщо це вийшов фахівець — гасимо світло (ховаємо кнопку)
+        if (isAuthorizedProfessional) {
+            therapyRoomService.deactivateRoom(clientUuid);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 }

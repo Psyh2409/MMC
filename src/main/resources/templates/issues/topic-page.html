@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.articles-list}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.standard-container-wide},
+      ~{}
+      )}">
 <head>
     <title th:text="${topicTitle} + ' | Психотерапія та самопізнання'">Назва розділу</title>
 </head>
 <body>
-<section class="standard-container standard-container-wide articles-list">
+<section class="standard-container standard-container-wide layout-stack">
     <header class="section-header">
         <h1 class="page-title-accent" th:text="${allCategoriesMap[topic] ?: topicTitle}">Заголовок розділу</h1>
-        <p class="section-subtitle">Матеріали, присвячені цій темі</p>
+        <p class="heading-lg">Матеріали, присвячені цій темі</p>
     </header>
 
     <div class="articles-grid">
@@ -29,7 +33,7 @@
 
             <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
 
-            <a th:href="@{/articles/{id}(id=${article.id})}" class="read-more">Читати далі →</a>
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="nav-link">Читати далі →</a>
         </div>
     </div>
 

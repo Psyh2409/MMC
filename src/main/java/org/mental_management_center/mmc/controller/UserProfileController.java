@@ -1,27 +1,37 @@
 package org.mental_management_center.mmc.controller;
 
+import org.mental_management_center.mmc.model.TherapyNote;
+import org.mental_management_center.mmc.repository.TherapyNoteRepository;
 import org.mental_management_center.mmc.service.TherapyNoteService;
+import org.mental_management_center.mmc.service.TherapyRoomService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.web.form.PasswordChangeForm;
 import org.mental_management_center.mmc.web.form.ProfileUpdateForm;
 import jakarta.validation.Valid;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 public class UserProfileController {
 
     private final UserService userService;
     private final TherapyNoteService therapyNoteService;
+    private final TherapyNoteRepository therapyNoteRepository;
+    private final TherapyRoomService therapyRoomService;
 
-    public UserProfileController(UserService userService, TherapyNoteService therapyNoteService) {
+
+
+    public UserProfileController(UserService userService, TherapyNoteService therapyNoteService, TherapyNoteRepository therapyNoteRepository, TherapyRoomService therapyRoomService) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
+        this.therapyNoteRepository = therapyNoteRepository;
+        this.therapyRoomService = therapyRoomService;
     }
 
     @GetMapping("/profile")
@@ -38,7 +48,10 @@ public class UserProfileController {
             if (user.isClient()) {
                 // Клієнт бачить кнопку переходу у свій кабінет
                 model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
-                model.addAttribute("hasInvitation", true);
+                // ПИТАЄМО БЕКЕНД: Терапевт уже відкрив сесію для цього клієнта?
+                boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
+
+                model.addAttribute("hasInvitation", isSessionActive);
             }
 
             if (!model.containsAttribute("profileUpdateForm")) {
@@ -97,9 +110,11 @@ public class UserProfileController {
             model.addAttribute("myNotes", therapyNoteService.getNotesByAuthor(user.getId()));
             if (user.isClient()) {
                 model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
-                model.addAttribute("hasInvitation", true);
+                boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
+
+                model.addAttribute("hasInvitation", isSessionActive);
             }
-        });
+            });
 
         if (!model.containsAttribute("passwordChangeForm")) {
             model.addAttribute("passwordChangeForm", new PasswordChangeForm());
@@ -121,5 +136,23 @@ public class UserProfileController {
             model.addAttribute("profileError", e.getMessage());
             return "profile";
         }
+    }
+
+    @PostMapping("/profile/notes/{id}/edit")
+    public String editTherapyNote(@PathVariable("id") UUID noteId,
+                                  @RequestParam("content") String newContent) {
+
+        // 1. Знаходимо нотатку в базі за її ID
+        TherapyNote note = therapyNoteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("Нотатку не знайдено"));
+
+        // 2. Оновлюємо текст нотатки
+        note.setContent(newContent);
+
+        // 3. Зберігаємо оновлену нотатку назад у базу
+        therapyNoteRepository.save(note);
+
+        // 4. Повертаємо користувача назад на сторінку профілю
+        return "redirect:/profile";
     }
 }

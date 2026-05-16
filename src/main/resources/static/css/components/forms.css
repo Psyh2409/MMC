@@ -2,7 +2,7 @@
    MMC FORMS SYSTEM - CLEANED & ATOMIC
    ========================================================================== */
 
-/* БАЗОВІ ФОРМИ ТА ЛЕЙАУТ */
+/* --- БАЗОВІ ФОРМИ ТА ЛЕЙАУТ --- */
 .stack-form {
     display: flex;
     flex-direction: column;
@@ -11,6 +11,13 @@
 
 .stack-form-sans {
     font-family: sans-serif;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
 }
 
 .form-field {
@@ -27,16 +34,14 @@
     margin-bottom: var(--space-sm);
 }
 
-/* ІНПУТИ ТА ТЕКСТАРЕЇ — СИСТЕМНА СТЕРИЛІЗАЦІЯ */
+/* --- ІНПУТИ ТА ТЕКСТАРЕЇ (ЄДИНИЙ СТАНДАРТ) --- */
 .form-input,
-.form-textarea,
-.form-control,
-.form-control-textarea {
+.form-textarea {
     width: 100%;
     padding: calc(var(--step) * 3);
     border-radius: var(--radius-sm);
-    border: calc(var(--step) * 0.25) solid var(--border-soft);
-    background-color: var(--bg-canvas); /* Уніфіковано фон */
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-input); /* Використовуємо правильний токен шару */
     color: var(--text-primary);
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -44,23 +49,20 @@
     font-size: 1rem;
 }
 
-.form-textarea,
-.form-control-textarea {
+.form-textarea {
     resize: vertical;
     min-height: calc(var(--step) * 20);
 }
 
 /* СТАН ФОКУСУ */
 .form-input:focus,
-.form-textarea:focus,
-.form-control:focus,
-.form-control-textarea:focus {
+.form-textarea:focus {
     outline: none;
     border-color: var(--border-strong);
     box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
 }
 
-/* ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК */
+/* --- ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК --- */
 .form-error-text,
 .error-text {
     color: var(--status-error);
@@ -90,19 +92,120 @@
     text-decoration: none;
 }
 
+/* --- OAUTH ТА БЛОКИ АВТОРИЗАЦІЇ --- */
 .oauth-login-block {
     margin-top: calc(var(--step) * 4.5);
     width: 100%;
 }
 
-/* АДМІНІСТРАТИВНІ МІКРО-ФОРМИ */
+/* --- КНОПКИ АВТОРИЗАЦІЇ (OAuth) --- */
+.oauth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.oauth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.oauth-button:hover {
+    background-color: var(--bg-elevated);
+    transform: translateY(calc(var(--step) * -0.5));
+}
+
+.oauth-button-icon {
+    width: calc(var(--step) * 5);
+    height: calc(var(--step) * 5);
+}
+
+.oauth-divider {
+    position: relative;
+    margin: var(--space-sm) 0 var(--space-md);
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+
+.oauth-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: calc(var(--step) * 0.25) solid var(--bg-surface);
+}
+
+.oauth-divider span {
+    position: relative;
+    padding: 0 var(--space-sm);
+    background-color: var(--bg-canvas);
+}
+
+.oauth-disabled-facebook {
+    border-color: hsl(224, 76%, 84%);
+    background-color: hsl(224, 100%, 98%);
+    color: hsl(222, 51%, 38%);
+}
+
+.oauth-disabled-google {
+    border-color: var(--bg-surface);
+}
+
+.oauth-disabled-note {
+    padding: var(--space-md);
+    border: calc(var(--step) * 0.25) dashed var(--border-soft);
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.oauth-disabled-note p {
+    margin: var(--space-sm) 0 0;
+}
+
+.oauth-disabled-note code {
+    padding: calc(var(--step) * 0.5) var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-surface);
+    color: var(--accent-primary);
+}
+
+/* --- АДМІНІСТРАТИВНІ МІКРО-ФОРМИ ТА ЛЕЙАУТ --- */
 .admin-action-form-inline {
     margin-top: calc(var(--step) * 1.25);
 }
 
+.admin-actions {
+    margin-bottom: calc(var(--step) * 7.5);
+}
+
+.admin-form {
+    background-color: var(--bg-canvas);
+    padding: calc(var(--step) * 7.5);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--space-xs) var(--space-sm) var(--bg-overlay);
+}
+
 .admin-notes {
-    width: calc(var(--step) * 45); /* 11.25rem */
-    height: calc(var(--step) * 12.5); /* 3.125rem */
+    width: calc(var(--step) * 45);
+    height: calc(var(--step) * 12.5);
     padding: calc(var(--step) * 1.25);
     border-radius: var(--radius-sm);
     border: calc(var(--step) * 0.25) solid var(--border-soft);
@@ -120,6 +223,7 @@
     box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
 }
 
+/* --- КОНТЕЙНЕРИ ПАРОЛІВ --- */
 .password-container {
     position: relative;
     display: flex;
@@ -127,41 +231,23 @@
     width: 100%;
 }
 
-.password-container .form-input,
-.password-container .form-control {
+.password-container .form-input {
     padding-right: calc(var(--step) * 10);
     width: 100%;
 }
 
-/* АДМІНІСТРАТИВНИЙ ЛЕЙАУТ */
-.admin-actions {
-    margin-bottom: calc(var(--step) * 7.5);
-}
-
-.admin-form {
-    background-color: var(--bg-canvas);
-    padding: calc(var(--step) * 7.5);
-    border: calc(var(--step) * 0.25) solid var(--border-soft);
-    border-radius: var(--radius-md);
-    box-shadow: 0 var(--space-xs) var(--space-sm) var(--bg-overlay);
-}
-
-.form-group {
-    margin-bottom: var(--space-md);
-}
-
-/* ПІДКАЗКИ ТА ДИНАМІЧНІ ПОЛЯ */
+/* --- ПІДКАЗКИ ТА ДИНАМІЧНІ ПОЛЯ --- */
 .new-category-input,
-.hidden-category-field {
-    display: none;
-    margin-top: calc(var(--step) * 2.5);
-}
-
+.hidden-category-field,
 .category-input-hidden {
     display: none;
 }
+.new-category-input,
+.hidden-category-field {
+    margin-top: calc(var(--step) * 2.5);
+}
 
-/* ФОРМИ ЧАТУ ТА ПОВІДОМЛЕНЬ */
+/* --- ФОРМИ ЧАТУ ТА ПОВІДОМЛЕНЬ --- */
 .chat-form {
     display: flex;
     gap: calc(var(--step) * 2.5);
@@ -199,66 +285,11 @@
     box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
 }
 
-/* OAUTH ТА СПЕЦІАЛЬНІ БЛОКИ */
-.oauth-disabled-facebook {
-    /* Конвертовано з HEX у HSL для підтримки тем */
-    border-color: hsl(224, 76%, 84%);
-    background-color: hsl(224, 100%, 98%);
-    color: hsl(222, 51%, 38%);
-}
-
+/* --- ДОДАТКОВІ ФОРМ-ЕЛЕМЕНТИ --- */
 .contact-direct {
     margin-top: var(--space-xl);
     border-top: calc(var(--step) * 0.25) solid var(--border-soft);
     padding-top: var(--space-lg);
-}
-
-.oauth-divider {
-    position: relative;
-    margin: var(--space-sm) 0 var(--space-md);
-    text-align: center;
-    color: var(--text-primary);
-    font-size: 0.9em;
-}
-
-.oauth-divider::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    border-top: calc(var(--step) * 0.25) solid var(--bg-surface);
-}
-
-.oauth-divider span {
-    position: relative;
-    padding: 0 var(--space-sm);
-    background-color: var(--bg-canvas);
-}
-
-.oauth-disabled-note {
-    padding: var(--space-md);
-    border: calc(var(--step) * 0.25) dashed var(--border-soft);
-    border-radius: var(--radius-lg);
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
-    font-size: 0.95em;
-    line-height: 1.5;
-}
-
-.oauth-disabled-note p {
-    margin: var(--space-sm) 0 0;
-}
-
-.oauth-disabled-note code {
-    padding: calc(var(--step) * 0.5) var(--space-sm);
-    border-radius: var(--radius-sm);
-    background-color: var(--bg-surface);
-    color: var(--accent-primary);
-}
-
-.oauth-disabled-google {
-    border-color: var(--bg-surface);
 }
 
 .logout-form,
@@ -278,4 +309,39 @@
     display: flex;
     gap: var(--space-md);
     margin-top: var(--space-lg);
+}
+
+/* --- ТВОЇ РІДНІ КЛАСИ ДЛЯ ОКА ПАРОЛЯ --- */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Відступ справа, щоб текст не заліз під око */
+.password-container .form-input {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+/* Твоя кнопка */
+.toggle-password-btn {
+    position: absolute;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
 }

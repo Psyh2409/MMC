@@ -1,9 +1,9 @@
-/* =========================================
+/* ==========================================================================
    LAYOUT SYSTEM - АТОМАРНА ВЕРСІЯ (CLEANED)
    Фокус: Тільки сітки, оболонки та контейнери.
-   ========================================= */
+   ========================================================================== */
 
-/* 1. ГЛОБАЛЬНІ ОБОЛОНКИ */
+/* --- 1. ГЛОБАЛЬНІ ОБОЛОНКИ --- */
 .page-shell {
     display: flex;
     flex-direction: column;
@@ -29,9 +29,40 @@ main {
     padding-bottom: 8vh;
 }
 
-/* 2. СИСТЕМНІ КОНТЕЙНЕРИ */
+/* --- 2. НОВІ СИСТЕМНІ СТАНДАРТИ (Замінять старі контейнери) --- */
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.layout-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.content-section {
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.action-group {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* --- 3. СТАРІ СИСТЕМНІ КОНТЕЙНЕРИ (Тимчасово залишаємо) --- */
 .standard-container {
-    max-width: calc(var(--step) * 175); /* 700px */
+    max-width: calc(var(--step) * 175);
     width: 90%;
     margin: calc(var(--step) * 15) auto;
     background-color: var(--bg-surface);
@@ -43,38 +74,37 @@ main {
 }
 
 .standard-container-narrow {
-    max-width: calc(var(--step) * 150); /* 600px */
+    max-width: calc(var(--step) * 150);
     padding: var(--space-lg);
 }
 
 .standard-container-compact {
-    max-width: calc(var(--step) * 112); /* 450px */
+    max-width: calc(var(--step) * 112);
     padding: calc(var(--step) * 7.5);
     border-radius: var(--radius-sm);
     box-shadow: 0 var(--space-xs) var(--space-sm) var(--shadow-main);
 }
 
 .standard-container-login {
-    max-width: calc(var(--step) * 100); /* 400px */
+    max-width: calc(var(--step) * 100);
     margin: calc(var(--step) * 20) auto;
 }
 
-/* 3. ШИРОКІ КОНТЕЙНЕРИ ТА ДАШБОРДИ */
+/* --- 4. ШИРОКІ КОНТЕЙНЕРИ ТА ДАШБОРДИ --- */
 .home-services-inner,
 .content-with-sidebar,
 .admin-container {
-    max-width: calc(var(--step) * 300); /* 1200px */
+    max-width: calc(var(--step) * 300);
     margin: 0 auto;
     padding: 0 var(--space-md);
 }
 
-/* УНІФІКОВАНИЙ ШИРОКИЙ КОНТЕЙНЕР (Вирішено 3 конфлікти) */
 .standard-container-wide {
-    max-width: calc(var(--step) * 260); /* ~1040px */
+    max-width: calc(var(--step) * 260);
     width: 90%;
     margin: calc(var(--step) * 15) auto;
     padding: var(--space-xl);
-    background-color: var(--bg-canvas); /* Для Jitsi краще canvas */
+    background-color: var(--bg-canvas);
     border: calc(var(--step) * 0.25) solid var(--border-soft);
     border-radius: var(--radius-md);
     box-shadow: 0 calc(var(--step) * 2.5) calc(var(--step) * 7.5) var(--bg-overlay);
@@ -85,7 +115,7 @@ main {
     min-height: calc(100vh - var(--space-xl) * 2);
 }
 
-/* 4. СІТКИ ТА ГРІДИ */
+/* --- 5. СІТКИ ТА ГРІДИ --- */
 .home-services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(calc(var(--step) * 88), 1fr));
@@ -99,7 +129,7 @@ main {
     margin-top: var(--space-xl);
 }
 
-/* 5. HERO СЕКЦІЇ */
+/* --- 6. HERO СЕКЦІЇ --- */
 .home-hero, .steps-hero {
     min-height: calc(var(--step) * 112);
     padding: calc(var(--step) * 30) var(--space-lg);
@@ -129,7 +159,7 @@ main {
     color: var(--overlay-light);
 }
 
-/* 6. ФУТЕР */
+/* --- 7. ФУТЕР --- */
 .site-footer {
     position: fixed;
     bottom: 0;
@@ -159,24 +189,12 @@ main {
     align-items: center;
 }
 
-.footer-left, .footer-right {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
+.footer-left, .footer-right { flex: 1; display: flex; align-items: center; }
 .footer-left { justify-content: flex-start; }
 .footer-right { justify-content: flex-end; }
+.footer-center { flex: 2; text-align: center; display: flex; justify-content: center; align-items: center; }
 
-.footer-center {
-    flex: 2;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 7. ПРОФІЛЬ ТА ДАШБОРД (Тільки сітки) */
+/* --- 8. ПРОФІЛЬ ТА ДАШБОРД --- */
 .profile-dashboard {
     display: grid;
     grid-template-columns: calc(var(--step) * 80) 1fr;
@@ -184,18 +202,8 @@ main {
     align-items: start;
 }
 
-.profile-user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.profile-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-}
+.profile-user-info { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.profile-sidebar { display: flex; flex-direction: column; gap: var(--space-lg); }
 
 .profile-main-content {
     flex: 1;
@@ -217,7 +225,7 @@ main {
     .profile-main-content { padding-left: 0; }
 }
 
-/* 8. JITSI ТА ВІДЕО СЕСІЇ (Вирішено конфлікти) */
+/* --- 9. JITSI ТА ВІДЕО СЕСІЇ --- */
 .video-main-frame {
     flex: none;
     width: 100%;
@@ -232,11 +240,7 @@ main {
     flex-direction: column;
 }
 
-#jitsi-container {
-    width: 100%;
-    height: 100%;
-    flex-grow: 1;
-}
+#jitsi-container { width: 100%; height: 100%; flex-grow: 1; }
 
 .notes-bottom-panel {
     flex: 1;
@@ -264,10 +268,7 @@ main {
     font-size: 1rem;
 }
 
-.therapy-textarea:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-}
+.therapy-textarea:focus { outline: none; border-color: var(--accent-primary); }
 
 .session-info-bar {
     display: flex;
@@ -281,13 +282,10 @@ main {
     color: var(--text-secondary);
 }
 
-/* 9. МОДАЛЬНІ ВІКНА (Оболонки) */
+/* --- 10. МОДАЛЬНІ ВІКНА --- */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background-color: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
     display: none !important;
     justify-content: center;
@@ -295,9 +293,7 @@ main {
     z-index: var(--z-modal, 2000);
 }
 
-.modal-overlay.is-visible {
-    display: flex !important;
-}
+.modal-overlay.is-visible { display: flex !important; }
 
 .modal-content {
     background-color: var(--bg-surface);

@@ -187,9 +187,13 @@ function showMessage(message, targetId) {
     const messageElement = document.createElement('div');
     messageElement.id = 'msg-' + message.id;
 
-    // Оновлена логіка перевірки "Це я"
     const isMe = message.senderId === currentUser;
     messageElement.className = isMe ? 'message-box my-message' : 'message-box other-message';
+
+    // === Логіка Аватарки та Імені ===
+    const senderName = message.senderName || 'Користувач';
+    const displayName = isMe ? 'Ви' : senderName;
+    const firstLetter = senderName.charAt(0).toUpperCase();
 
     let quoteHtml = '';
     if (message.parentId) {
@@ -198,10 +202,9 @@ function showMessage(message, targetId) {
         let authorToQuote = "Хтось";
 
         if (parentElem) {
-            // Витягуємо текст повідомлення
             textToQuote = parentElem.querySelector('.message-text').innerText;
-            // Витягуємо ім'я автора з блоку meta
-            authorToQuote = parentElem.querySelector('.message-meta strong').innerText;        }
+            authorToQuote = parentElem.querySelector('.message-meta strong').innerText;
+        }
 
         const shortText = textToQuote.length > 50 ? textToQuote.substring(0, 50) + '...' : textToQuote;
         quoteHtml = `
@@ -211,21 +214,27 @@ function showMessage(message, targetId) {
             </div>`;
     }
 
+    // Формуємо HTML повідомлення з Аватаром та правильними кнопками
     messageElement.innerHTML = `
         ${quoteHtml}
-        <div class="message-meta">
-            <strong>${isMe ? 'Ви' : (message.senderName || 'Користувач')}</strong>
+
+        <div class="message-header" style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+            <div class="avatar-circle">${firstLetter}</div>
+            <div class="message-meta">
+                <strong>${displayName}</strong>
+            </div>
         </div>
+
         <div class="message-text">${message.content}</div>
 
-        <div class="message-actions">
-            <button type="button" class="reply-btn" onclick="prepareReply('${message.id}', '${message.senderName || 'Користувач'}', 'public')">
+        <div class="message-actions" style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap;">
+            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'public')">
                 Відповісти публічно
             </button>
 
             ${!isMe ? `
-            <button type="button" class="reply-btn private-btn"
-                onclick="prepareReply('${message.id}', '${message.senderName || 'Користувач'}', 'private', '${message.senderId}')">
+            <button type="button" class="btn-outline btn-sm"
+                onclick="prepareReply('${message.id}', '${senderName}', 'private', '${message.senderId}')">
                 Написати приватно
             </button>
             ` : ''}
@@ -233,20 +242,11 @@ function showMessage(message, targetId) {
     `;
 
     chatArea.appendChild(messageElement);
-    // Прокручуємо тільки тоді, коли повідомлення падає у ВІДКРИТУ прямо зараз вкладку
+
     if (targetId === (activeTab === 'public' ? 'chat-messages' : 'private-messages')) {
         scrollToBottom(targetId);
     }
 }
-
-document.addEventListener('DOMContentLoaded', connect);
-document.getElementById('messageForm').addEventListener('submit', sendMessage);
-document.getElementById('messageInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        document.getElementById('messageForm').dispatchEvent(new Event('submit'));
-    }
-});
 
 //'use strict';
 //

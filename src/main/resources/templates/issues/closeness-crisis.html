@@ -5,7 +5,7 @@
     <title th:text="${topicTitle}">Стосунки та кризи близькості</title>
 </head>
 <body>
-<div class="issue-content">
+<div class="content-section">
     <main class="issue-shell">
         <article class="issue-article">
             <h1 class="issue-title" th:text="${topicTitle}">Стосунки та кризи близькості</h1>
@@ -27,7 +27,7 @@
             <h2 class="issue-section-title">10 кроків до відновлення близькості</h2>
             <p class="issue-text issue-text-spaced">Коли ви відчуваєте, що між вами виросла стіна, спробуйте пройти цей шлях разом:</p>
 
-            <div class="issue-steps">
+            <div class="layout-container">
                 <div th:each="i : ${#numbers.sequence(1, 10)}" class="issue-step">
                     <div class="issue-step-number" th:text="${i}">1</div>
 

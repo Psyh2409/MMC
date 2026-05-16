@@ -8,12 +8,13 @@
     z-index: 1000;
     padding: var(--space-sm) 0;
     background: var(--bg-navigation);
-    border-bottom: 0.0625rem solid var(--border-soft); /* М'яка межа */
-    box-shadow: 0 0.125rem 0.25rem var(--bg-overlay);  /* Системна тінь */
-    transition: background-color 0.3s ease, border-color 0.3s ease;}
+    border-bottom: 0.0625rem solid var(--border-soft);
+    box-shadow: 0 0.125rem 0.25rem var(--bg-overlay);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
 
 .site-header-inner {
-    max-width: 75rem; /* 1200px */
+    max-width: 75rem;
     margin: 0 auto;
     padding: 0 var(--space-md);
     display: flex;
@@ -21,7 +22,7 @@
     align-items: center;
 }
 
-/* 1. БРЕНДИНГ ТА ПОСИЛАННЯ */
+/* --- 1. БРЕНДИНГ ТА ПОСИЛАННЯ --- */
 .site-brand {
     display: flex;
     align-items: center;
@@ -48,7 +49,7 @@
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: color 0.2s;
+    transition: color 0.2;
     cursor: pointer;
 }
 
@@ -69,9 +70,7 @@
     color: var(--text-navigation-hover);
 }
 
-/* 2. DROPDOWN (Автентична логіка в REM) */
-/* --- Dropdown Component (Refactored to Atomic Tokens V 1.0) --- */
-
+/* --- 2. DROPDOWN (Автентична логіка в REM) --- */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -83,26 +82,17 @@
     left: 0;
     z-index: 100;
     min-width: 15rem;
-
-    /* Використовуємо системні токени для поверхонь та тіней */
     background-color: var(--accent-primary);
     box-shadow: var(--bg-overlay);
     border-radius: var(--radius-sm);
     margin-top: var(--space-xs);
-
-    /* Стан спокою для анімації */
     opacity: 0;
     visibility: hidden;
     transform: translateY(var(--step));
-
-    transition:
-        opacity 0.3s ease,
-        visibility 0.3s ease,
-        transform 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     transition-delay: 0.2s;
 }
 
-/* "Місток" між хедером та меню (невидимий для ока, але активний для мишки) */
 .dropdown-content::before {
     content: "";
     position: absolute;
@@ -125,10 +115,8 @@
     padding: var(--space-sm) var(--space-md);
     font-size: 0.9rem;
     text-decoration: none;
-
-    /* Текст беремо з токена для акцентних поверхонь */
     color: var(--text-on-accent);
-    border-bottom: 1px solid var(--accent-muted);
+    border-bottom: calc(var(--step) * 0.25) solid var(--accent-muted);
     transition: background-color 0.2s ease;
 }
 
@@ -136,22 +124,20 @@
     border-bottom: none;
 }
 
-/* СИСТЕМНИЙ ХОВЕР: використовуємо токен акцентного стану */
 .dropdown-content a:hover {
     background-color: var(--accent-hover);
     color: var(--text-on-accent);
-    /* Тепер ховер завжди контрастний, бо ми міняємо фон на Primary колір теми */
 }
 
-/* 4. МЕНЮ КОРИСТУВАЧА */
+/* --- 3. МЕНЮ КОРИСТУВАЧА --- */
 .user-menu {
     display: flex;
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-xs) var(--space-md);
-    border: 0.0625rem solid var(--border-soft); /* Рамка кабінету */
+    border: 0.0625rem solid var(--border-soft);
     border-radius: var(--radius-md);
-    background-color: var(--bg-surface);        /* Легкий акцент фону */
+    background-color: var(--bg-surface);
 }
 
 .user-menu-greeting {
@@ -162,4 +148,31 @@
 .user-profile-link {
     text-decoration: none;
     color: var(--text-navigation-hover);
+}
+
+.user-profile-link:hover {
+    color: var(--text-navigation);
+}
+
+/* --- 4. НОВІ АТОМАРНІ СТАНДАРТИ НАВІГАЦІЇ --- */
+
+/* Універсальне системне посилання (для футерів, карток тощо) */
+.nav-link {
+    color: var(--text-navigation);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--text-navigation-hover);
+}
+
+/* Вертикальне меню (сайдбар або вкладки чату) */
+.nav-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
 }

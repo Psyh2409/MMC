@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.article-form-section}, ~{::script})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.standard-container-wide},
+      ~{::script}
+      )}">
 <head>
     <title>Конструктор статті | MMC</title>
 </head>
 <body>
 
-<section class="standard-container standard-container-wide article-form-section">
+<section class="standard-container standard-container-wide form-group">
     <header class="section-header">
         <h1 class="page-title-accent">Створення матеріалу</h1>
-        <p class="section-subtitle">Заповніть поля для публікації в базу знань</p>
+        <p class="heading-lg">Заповніть поля для публікації в базу знань</p>
     </header>
 
     <div class="article-card">
@@ -19,18 +23,18 @@
 
             <div class="form-group">
                 <label for="title">Назва статті:</label>
-                <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Заголовок...">
+                <input type="text" id="title" th:field="*{title}" class="form-input" placeholder="Заголовок...">
                 <p class="error-text" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
             </div>
 
             <div class="form-group">
                 <label for="description">Короткий опис (анонс):</label>
-                <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
+                <textarea id="description" th:field="*{description}" class="form-input" rows="3"></textarea>
             </div>
 
             <div class="form-group">
                 <label>Тематичний розділ:</label>
-                <select id="categorySelector" class="form-control" onchange="syncCategory(this)">
+                <select id="categorySelector" class="form-input" onchange="syncCategory(this)">
                     <option value="">-- Оберіть існуючий --</option>
                     <option value="inner-calm">Тривога та панічні стани</option>
                     <option value="restore-resource">Відновлення ресурсу</option>
@@ -43,30 +47,30 @@
                 </select>
 
                 <input type="text" id="finalCategory" th:field="*{category}"
-                       class="form-control hidden-category-field"
+                       class="form-input hidden-category-field"
                        placeholder="URL англійською (напр: burnout)">
                 <p class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
 
                 <input type="text" id="finalCategoryNameUa" th:field="*{categoryNameUa}"
-                       class="form-control hidden-category-field"
+                       class="form-input hidden-category-field"
                        placeholder="Назва на сайті (напр: Емоційне вигорання)">
                 <p class="error-text" th:if="${#fields.hasErrors('categoryNameUa')}" th:errors="*{categoryNameUa}"></p>
             </div>
 
             <div class="form-group">
                 <label for="tags">Теги (через кому):</label>
-                <input type="text" id="tags" th:field="*{tags}" class="form-control" placeholder="стрес, ресурс, дихання">
+                <input type="text" id="tags" th:field="*{tags}" class="form-input" placeholder="стрес, ресурс, дихання">
             </div>
 
             <div class="form-group">
                 <label for="content">Основний текст статті:</label>
-                <textarea id="content" th:field="*{content}" class="form-control" rows="15"></textarea>
+                <textarea id="content" th:field="*{content}" class="form-input" rows="15"></textarea>
                 <p class="error-text" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn-primary">Опублікувати</button>
-                <a th:href="@{/admin/articles}" class="btn-link">Скасувати</a>
+                <a th:href="@{/admin/articles}" class="btn-outline">Скасувати</a>
             </div>
         </form>
     </div>

@@ -140,3 +140,32 @@
     opacity: 1;
 }
 
+/*=================================================================================================================*/
+/* Чистий семантичний стандарт для таблиць в адмінці */
+.table-main {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.table-main th {
+    background-color: var(--bg-canvas);
+    color: var(--text-secondary);
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.table-main td {
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-primary);
+    border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.table-main tr:hover td {
+    background-color: var(--bg-elevated); /* Рядок підсвічується твоїм токеном */
+}

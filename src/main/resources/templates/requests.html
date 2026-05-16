@@ -44,14 +44,14 @@
             </td>
 
             <td>
-                <div class="contact-actions">
+                <div class="action-group">
                     <a th:if="${req.smsContact != null}"
                        th:href="'sms:' + ${req.smsContact}"
-                       class="btn-action-sms" title="Написати СМС">✉️ СМС</a>
+                       class="btn-primary" title="Написати СМС">✉️ СМС</a>
 
                     <a th:if="${req.emailContact != null}"
                        th:href="'mailto:' + ${req.emailContact}"
-                       class="btn-action-email" title="Надіслати лист">📧 Email</a>
+                       class="btn-primary" title="Надіслати лист">📧 Email</a>
                 </div>
             </td>
 
@@ -62,7 +62,7 @@
             <td>
                 <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="btn-delete-small">Видалити</button>
+                    <button type="submit" class="btn-primary btn-danger">Видалити</button>
                 </form>
             </td>
         </tr>

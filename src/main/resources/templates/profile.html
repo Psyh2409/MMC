@@ -18,7 +18,7 @@
                     <span th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1) : 'U'}">С</span>
                 </div>
                 <h3 class="profile-header-title" th:text="${user.name}">Ім'я</h3>
-                <p class="status-text-muted">Технічні налаштування</p>
+                <p class="text-muted">Технічні налаштування</p>
 
                 <hr class="profile-divider">
 
@@ -69,55 +69,74 @@
 
             <div th:if="${professionalNotes != null}" class="journal-section">
                 <div class="journal-header">
-                    <h3 class="notes-section-title">Клінічний журнал (Тільки для фахівця)</h3>
+                    <h3 class="heading-lg">Клінічний журнал (Тільки для фахівця)</h3>
                 </div>
                 <div class="journal-wall">
                     <div th:each="note : ${professionalNotes}" class="journal-entry">
                         <div class="note-header">
-                            <span class="note-date" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                            <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
                             <span class="note-person" th:text="${note.client.name}">Клієнт</span>
                         </div>
-                        <p class="note-content" th:text="${note.content}">Зміст...</p>
+                        <p class="content-section" th:text="${note.content}">Зміст...</p>
                     </div>
                 </div>
             </div>
-            <div th:if="${hasInvitation}" class="session-invitation-card">
+            <div th:if="${hasInvitation}" class="card-primary">
                 <div class="invitation-text">
                     <h3>Сесія активна</h3>
                     <p>Ваш терапевт чекає на вас у кабінеті.</p>
                 </div>
-                <a th:href="${therapyRoomUrl}" class="btn-join-session">Увійти в кабінет</a>
+                <a th:href="${therapyRoomUrl}" class="btn-primary">Увійти в кабінет</a>
             </div>
 
-            <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="notes-container">
-                <h3 class="notes-section-title">Мій журнал</h3>
+            <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="layout-container">
+                <h3 class="heading-lg">Мій журнал</h3>
 
-                <div class="notes-list">
-                    <div th:each="note : ${myNotes}" class="note-card">
-                        <div class="note-header">
-                            <span class="note-date" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
-                            <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
-                        </div>
-                        <p class="note-content" th:text="${note.content}">Зміст нотатки...</p>
+                <div class="layout-stack">
+                    <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
+                        <details class="journal-details">
+
+                            <summary class="journal-summary">
+                                <div class="note-header">
+                                    <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                    <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
+                                </div>
+                                <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
+                            </summary>
+
+                            <div class="journal-expand-box">
+                                <form th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
+
+        <textarea name="content" class="comment-textarea" rows="4"
+                  th:text="${note.content}"
+                  placeholder="Напишіть ваші думки..."></textarea>
+
+                                    <div class="button-row">
+                                        <button type="submit" class="btn-primary">Зберегти зміни</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </details>
                     </div>
                 </div>
             </div>
 
             <div th:if="${myNotes == null or myNotes.isEmpty()}" class="profile-empty-state">
-                <div class="icon-large">📝</div>
+                <div class="icon">📝</div>
                 <p>У вас поки немає збережених записів.</p>
             </div>
             <div th:if="${personalJournal != null}" class="journal-section">
                 <div class="journal-header">
-                    <h3 class="notes-section-title">Мій простір рефлексії</h3>
+                    <h3 class="heading-lg">Мій простір рефлексії</h3>
                     <button class="btn-primary">Новий запис</button>
                 </div>
                 <div class="journal-wall">
                     <div th:each="entry : ${personalJournal}" class="journal-entry">
                         <div class="note-header">
-                            <span class="note-date" th:text="${#temporals.format(entry.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                            <span class="text-muted" th:text="${#temporals.format(entry.createdAt, 'dd.MM.yyyy')}">Дата</span>
                         </div>
-                        <p class="note-content" th:text="${entry.content}">Мої думки...</p>
+                        <p class="content-section" th:text="${entry.content}">Мої думки...</p>
                         <div class="media-placeholder">Медіа-контент буде доступний у v2.0</div>
                     </div>
                 </div>

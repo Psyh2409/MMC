@@ -12,9 +12,9 @@
             <h2 class="contact-intro-title">Центр керування користувачами</h2>
             <p class="contact-intro-text">Керуйте ролями, доступами та внутрішніми нотатками в єдиному робочому просторі.</p>
         </div>
-        <div class="dashboard-actions" style="display: flex; gap: 10px;">
-            <a th:href="@{/admin/articles}" class="btn-primary dashboard-cta">📝 Керувати статтями</a>
-            <a th:href="@{/requests}" class="btn-primary dashboard-cta">📂 Відкрити бардачок</a>
+        <div class="action-group" style="display: flex; gap: 10px;">
+            <a th:href="@{/admin/articles}" class="btn-primary card-elevated">📝 Керувати статтями</a>
+            <a th:href="@{/requests}" class="btn-primary card-elevated">📂 Відкрити бардачок</a>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="filter-buttons">
+    <div class="action-group">
         <button onclick="filterTable('ALL')" class="btn-primary" type="button">Всі</button>
         <button onclick="filterTable('ADMIN')" class="btn-primary" type="button">Адмін</button>
         <button onclick="filterTable('THERAPIST')" class="btn-primary" type="button">Колеги</button>
@@ -66,7 +66,7 @@
             <td class="uuid-cell">
                 <th:block th:if="${u != null and u.id != null}">
                     <span class="uuid-text" th:text="${u.id}">ID</span>
-                    <button type="button" class="btn-copy-uuid"
+                    <button type="button" class="btn-outline"
                             th:attr="onclick=|copyToClipboard('${u.id}')|">
                         📋
                     </button>
@@ -88,7 +88,7 @@
                       method="post"
                       class="admin-action-form-inline">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="admin-secondary-button">Зробити клієнтом</button>
+                    <button type="submit" class="btn-outline">Зробити клієнтом</button>
                 </form>
 
                 <!-- ВАРІАНТ Б: Користувач вже КЛІЄНТ — на тому ж місці з'являється кнопка Відеоконнекту -->
@@ -110,7 +110,7 @@
                               placeholder="Додайте коментар..."
                               class="admin-notes"></textarea>
                     <br>
-                    <button type="submit" class="admin-save-button">Зберегти</button>
+                    <button type="submit" class="btn-primary">Зберегти</button>
                 </form>
             </td>
 
@@ -118,13 +118,13 @@
                 <div class="admin-controls-wrapper" th:if="${!u.isAdmin()}">
 
                     <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
-                        <button type="submit" th:class="${u.enabled} ? 'btn-toggle btn-site-ok' : 'btn-toggle btn-site-ban'">
+                        <button type="submit" th:class="${u.enabled} ? 'btn-toggle btn-site-ok' : 'btn-toggle btn-danger'">
                             <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
-                        <button type="submit" th:class="${u.chatEnabled} ? 'btn-toggle btn-chat-ok' : 'btn-toggle btn-chat-ban'">
+                        <button type="submit" th:class="${u.chatEnabled} ? 'btn-toggle btn-chat-ok' : 'btn-toggle btn-danger'">
                             <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
                         </button>
                     </form>
@@ -137,7 +137,7 @@
 
                     <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
                           class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
-                        <button type="submit" class="btn-delete-small">Видалити акаунт</button>
+                        <button type="submit" class="btn-primary btn-danger">Видалити акаунт</button>
                     </form>
                 </div>
 

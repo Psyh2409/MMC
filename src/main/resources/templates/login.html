@@ -40,18 +40,18 @@
                 <input type="email" name="username" required placeholder="example@mail.com" class="form-input">
             </div>
 
-            <div class="form-field">
-                <label class="form-label">Пароль</label>
+            <div class="form-group">
+                <label>Пароль</label>
                 <div class="password-container">
-                    <input type="password" name="password" id="password" required placeholder="••••••••"
-                        class="form-input">
-                    <button type="button" id="togglePassword" class="toggle-password-btn" tabindex="-1">
+                    <input type="password" id="password" class="form-input" name="password" required>
+
+                    <button type="button" class="btn-toggle-password" onclick="togglePassword('password')">
                         👁️
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="submit-button submit-button-primary">
+            <button type="submit" class="btn-primary">
                 Увійти
             </button>
         </form>

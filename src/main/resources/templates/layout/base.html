@@ -33,20 +33,16 @@
 </head>
 <body class="page-shell">
 
-<div th:replace="~{fragments/header-footer :: header-fragment}"></div>
+<div th:replace="~{fragments/header :: header-fragment}"></div>
 
 <main class="page-main">
     <div th:replace="${mainContent}"></div>
 </main>
 
-<!-- ... попередній код без змін ... -->
+<div th:replace="~{fragments/footer :: footer-fragment}"></div>
 
-<div th:replace="~{fragments/header-footer :: footer-fragment}"></div>
-
-<!-- ГЛОБАЛЬНІ СКРИПТИ -->
 <script th:src="@{/js/theme-switcher.js}"></script>
 
-<!-- ЛОКАЛЬНІ СКРИПТИ (якщо сторінка їх передає) -->
 <th:block th:replace="${pageScripts} ?: ~{}"></th:block>
 </body>
 </html>

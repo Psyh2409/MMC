@@ -9,7 +9,7 @@
     <header class="section-header">
         <h1 class="page-title-accent">Всі публікації</h1>
         <div class="admin-actions-bar">
-            <a th:href="@{/admin/articles/create}" class="btn-publish-article">
+            <a th:href="@{/admin/articles/create}" class="btn-primary">
                 <span class="icon">+</span> Створити нову статтю
             </a>
         </div>
@@ -31,12 +31,12 @@
                     <span class="category-badge" th:text="${allCategoriesMap[article.category] ?: '⚠️ НЕМАЄ ПЕРЕКЛАДУ'}">Категорія</span>
                 </td>
                 <td class="action-cell">
-                    <div class="btn-group-nowrap">
-                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-action btn-edit-small">Редагувати</a>
+                    <div class="action-group">
+                        <a th:href="@{/admin/articles/edit/{id}(id=${article.id})}" class="btn-primary btn-outline">Редагувати</a>
 
                         <form th:action="@{/admin/articles/delete/{id}(id=${article.id})}" method="post"
                               onsubmit="return confirm('Видалити статтю безповоротно?');" class="inline-form">
-                            <button type="submit" class="btn-action btn-delete-small">Видалити</button>
+                            <button type="submit" class="btn-primary btn-danger">Видалити</button>
                         </form>
                     </div>
                 </td>

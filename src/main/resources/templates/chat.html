@@ -14,18 +14,17 @@
     <div class="standard-container">
         <h2 class="section-title">Спільний простір MMC</h2>
 
-        <div id="chat-panel" class="chat-wrapper">
+        <div id="chat-panel" class="layout-container">
 
-            <div class="chat-tabs">
-                <button type="button" id="tab-public" class="tab-btn active" onclick="switchChat('public')">
+            <div class="button-row" style="justify-content: center; margin-bottom: var(--space-md);">
+                <button type="button" id="tab-public" class="btn-primary" onclick="switchChat('public')">
                     🌐 Спільнота
                 </button>
-                <button type="button" id="tab-private" class="tab-btn" onclick="switchChat('private')">
+                <button type="button" id="tab-private" class="btn-outline" onclick="switchChat('private')">
                     🔒 Приватні
                     <span id="private-badge" class="badge hidden">0</span>
                 </button>
             </div>
-
             <div id="chat-messages" class="chat-window">
             </div>
 
@@ -34,12 +33,12 @@
 
             <div id="reply-preview" class="reply-preview-bar hidden">
                 <span id="reply-to-text"></span>
-                <button type="button" onclick="cancelReply()" class="btn-cancel-reply">✕</button>
+                <button type="button" onclick="cancelReply()" class="btn-outline">✕</button>
             </div>
 
             <form id="messageForm" class="chat-form-vertical">
                 <textarea id="messageInput" class="chat-textarea" placeholder="Напишіть повідомлення..." rows="3" required></textarea>
-                <button type="submit" class="btn-send">
+                <button type="submit" class="btn-primary">
                     <span>Надіслати</span>
                 </button>
             </form>

@@ -170,7 +170,7 @@
 .issue-callout-right { border-right: calc(var(--step) * 1.25) solid var(--border-strong); border-radius: var(--radius-md) 0 0 var(--radius-md); }
 .issue-callout-bordered { border: calc(var(--step) * 0.25) solid var(--bg-canvas); color: var(--text-primary); }
 
-/* --- Dashboard & Admin (ОНОВЛЕНО ЗА СИГНАЛОМ ЛІНТЕРА) --- */
+/* --- Dashboard & Admin --- */
 .dashboard-hero {
     display: flex;
     flex-direction: column;
@@ -196,12 +196,10 @@
     justify-content: flex-start;
 }
 
-/* --- Вторинні посилання статей --- */
 .issue-link-secondary {
     color: var(--accent-primary);
 }
 
-/* --- Система коментарів --- */
 .replies-container {
     margin-top: calc(var(--step) * 3.75);
     margin-left: calc(var(--step) * 6.25);
@@ -209,9 +207,7 @@
     border-left: calc(var(--step) * 0.5) solid var(--border-soft);
 }
 
-/* =========================================
-   PROFILE COMPONENTS (HEADER, THEMES, TYPOGRAPHY)
-   ========================================= */
+/* --- 5. КОМПОНЕНТИ ПРОФІЛЮ ТА СЛАЙДЕР ТЕМ --- */
 
 .profile-section-title {
     font-size: calc(var(--step) * 4.5);
@@ -239,18 +235,11 @@
     color: var(--text-primary);
 }
 
-
-
 .theme-switcher-desc {
     color: var(--text-secondary);
     margin: 0 0 var(--space-md) 0;
     font-size: calc(var(--step) * 3.5);
 }
-
-/* ==========================================================================
-   ПОВЕРНЕННЯ ВЕСЕЛКИ (СПЕКТР ТЕМ)
-   ========================================================================== */
-
 
 .theme-switcher-grid {
     display: flex;
@@ -277,9 +266,7 @@
     border-color: var(--text-primary);
 }
 
-/*
-   МАПІНГ КОЛЬОРІВ ДЛЯ ПАЛІТРИ
-*/
+/* Мапінг статичної палітри спектру */
 .theme-dot[data-theme-value="brown"]      { background-color: hsl(15, 25%, 50%); }
 .theme-dot[data-theme-value="red"]        { background-color: hsl(0, 65%, 50%); }
 .theme-dot[data-theme-value="red-orange"] { background-color: hsl(14, 100%, 50%); }
@@ -296,9 +283,8 @@
 .theme-dot[data-theme-value="pink"]       { background-color: hsl(338, 78%, 50%); }
 .theme-dot[data-theme-value="gray"]       { background-color: hsl(200, 18%, 50%); }
 
+/* --- 6. ОБДОНКИ ДАШБОРДІВ ТА АВАТАРИ --- */
 
-
-/* --- DASHBOARD SHELL --- */
 .admin-shell, .requests-shell, .error-shell {
     max-width: 80rem;
     margin: var(--space-xl) auto;
@@ -315,7 +301,7 @@
 }
 
 .avatar-circle {
-    width: calc(var(--step) * 20); /* 80px */
+    width: calc(var(--step) * 20);
     height: calc(var(--step) * 20);
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
@@ -329,141 +315,19 @@
     box-shadow: var(--shadow-main);
 }
 
-/* Обгортка для центрування аватара */
+/* ОБ'ЄДНАНО: Уніфікована логіка аватара профілю */
+.profile-avatar-container,
 .profile-avatar-wrapper {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    margin-bottom: var(--space-md);
-    width: 100%;
-}
-
-/* Сам аватар за правилами квантової сітки */
-.profile-avatar {
-    width: calc(var(--step) * 30); /* 120px */
-    height: calc(var(--step) * 30); /* 120px */
-    border-radius: var(--radius-full);
-    border: 0.125rem solid var(--accent-primary);
-    object-fit: cover;
-    box-shadow: var(--shadow-main);
-}
-
-/* ==========================================================================
-   THEME SPECTRUM SYSTEM (PROFILE.HTML)
-   ========================================================================== */
-
-/* 1. КОНТЕЙНЕР: Центрування спектру та кнопки під ним */
-.theme-spectrum-container {
-    margin-top: var(--space-md);
-    padding: var(--space-xs) var(--space-md); /* Вузькі вертикальні поля */
-    background: var(--bg-surface);
-    border-radius: var(--radius-lg);
-    border: 0.0625rem solid var(--border-soft);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
-}
-
-/* 2. СЛАЙДЕР: Базова лінія спектру */
-.theme-spectrum-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: calc(var(--step) * 5); /* 20px - акуратна лінія */
-    background: linear-gradient(to right,
-        hsl(0, 75%, 50%), hsl(60, 75%, 50%),
-        hsl(120, 75%, 50%), hsl(180, 75%, 50%),
-        hsl(240, 75%, 50%), hsl(300, 75%, 50%), hsl(360, 75%, 50%)
-    );
-    border-radius: var(--radius-full);
-    outline: none;
-    cursor: pointer;
-    border: none;
-}
-
-/* 3. БІГУНОК (THUMB): Підтримка Chrome, Safari, Edge */
-.theme-spectrum-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: calc(var(--step) * 7);
-    height: calc(var(--step) * 7);
-    border-radius: var(--radius-full);
-    /* Використовуємо динамічний колір теми для бігунка */
-    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
-    border: 0.125rem solid var(--bg-surface);
-    box-shadow: var(--shadow-main);
-    cursor: grab;
-    transition: transform 0.1s ease;
-}
-
-/* 4. БІГУНОК (THUMB): Підтримка Firefox */
-.theme-spectrum-slider::-moz-range-thumb {
-    width: calc(var(--step) * 7);
-    height: calc(var(--step) * 7);
-    border-radius: var(--radius-full);
-    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
-    border: 0.125rem solid var(--bg-surface);
-    box-shadow: var(--shadow-main);
-    cursor: grab;
-    transition: transform 0.1s ease;
-    border: none;
-}
-
-/* 5. ІНТЕРАКТИВ: Стан при натисканні */
-.theme-spectrum-slider:active::-webkit-slider-thumb,
-.theme-spectrum-slider:active::-moz-range-thumb {
-    cursor: grabbing;
-    transform: scale(1.2);
-}
-
-/* --- ARTICLE VIEW COMPONENTS --- */
-.article-header {
     margin-bottom: var(--space-lg);
-}
-
-.article-meta {
-    display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-sm);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.article-category {
-    font-weight: bold;
-    color: var(--accent-primary);
-}
-
-.article-divider {
-    border: none;
-    border-top: 0.0625rem solid var(--border-soft);
-    margin: var(--space-lg) 0;
-}
-
-.article-footer {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 0.0625rem solid var(--border-soft);
-}
-
-.share-block {
-    margin-bottom: var(--space-md);
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-/* --- ПРОФІЛЬ: ЦЕНТРУВАННЯ АВАТАРА --- */
-.profile-avatar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 100%;
-    margin-bottom: var(--space-lg);
 }
 
 .profile-avatar {
-    width: calc(var(--step) * 30); /* 120px */
+    width: calc(var(--step) * 30);
     height: calc(var(--step) * 30);
     border-radius: var(--radius-full);
     border: 0.125rem solid var(--accent-primary);
@@ -477,4 +341,255 @@
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+/* --- 7. ИНТЕРЕКТИВНИЙ СЛАЙДЕР СПЕКТРУ ТЕМ --- */
+
+.theme-spectrum-container {
+margin-top: var(--space-md);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 0.0625rem solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+
+    /* ФІКС: Розтягуємо весь блок спектру від краю до краю картки профілю */
+    width: 100%;
+    box-sizing: border-box;
+    align-self: stretch;
+}
+
+.theme-spectrum-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: calc(var(--step) * 5);
+    background: linear-gradient(to right,
+        hsl(0, 75%, 50%), hsl(60, 75%, 50%),
+        hsl(120, 75%, 50%), hsl(180, 75%, 50%),
+        hsl(240, 75%, 50%), hsl(300, 75%, 50%), hsl(360, 75%, 50%)
+    );
+    border-radius: var(--radius-full);
+    outline: none;
+    cursor: pointer;
+    border: none;
+}
+
+.theme-spectrum-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: calc(var(--step) * 7);
+    height: calc(var(--step) * 7);
+    border-radius: var(--radius-full);
+    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
+    border: 0.125rem solid var(--bg-surface);
+    box-shadow: var(--shadow-main);
+    cursor: grab;
+    transition: transform 0.1s ease;
+}
+
+.theme-spectrum-slider::-moz-range-thumb {
+    width: calc(var(--step) * 7);
+    height: calc(var(--step) * 7);
+    border-radius: var(--radius-full);
+    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
+    border: 0.125rem solid var(--bg-surface);
+    box-shadow: var(--shadow-main);
+    cursor: grab;
+    transition: transform 0.1s ease;
+    border: none;
+}
+
+.theme-spectrum-slider:active::-webkit-slider-thumb,
+.theme-spectrum-slider:active::-moz-range-thumb {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+/* --- 8. КОМПОНЕНТИ ПЕРЕГЛЯДУ СТАТТІ --- */
+
+.article-header { margin-bottom: var(--space-lg); }
+.article-meta { display: flex; gap: var(--space-md); margin-bottom: var(--space-sm); color: var(--text-secondary); font-size: 0.9rem; }
+.article-category { font-weight: bold; color: var(--accent-primary); }
+.article-divider { border: none; border-top: 0.0625rem solid var(--border-soft); margin: var(--space-lg) 0; }
+.article-footer { margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 0.0625rem solid var(--border-soft); }
+.share-block { margin-bottom: var(--space-md); color: var(--text-muted); font-style: italic; }
+
+
+/* ==========================================================================
+   ДОДАНО: СИСТЕМА ЖУРНАЛУ ТА НОТАТОК (ЗА КВЕСТОМ PROFILE.HTML)
+   ========================================================================== */
+
+/* Базові системні іконки */
+.icon {
+    display: inline-block;
+    width: var(--space-md);
+    height: var(--space-md);
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+/* Стіна журналу профілю */
+.journal-wall {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+}
+
+.journal-section {
+    margin-top: var(--space-lg);
+}
+
+.journal-header {
+    padding-bottom: var(--space-xs);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    margin-bottom: var(--space-md);
+}
+
+.journal-entry {
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Специфічні блоки внутрішніх нотаток терапії */
+.note-person {
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+/* Текст запрошень та плейсхолдери */
+.invitation-text {
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.media-placeholder {
+    background-color: var(--bg-canvas);
+    border: 0.0625rem dashed var(--border-soft);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    color: var(--text-secondary);
+}
+
+/* --- КВАНТОВИЙ ЛЕЙАУТ КАРТКИ ПРОФІЛЮ --- */
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* Центрує блоки (аватар, заголовки) по горизонталі */
+    text-align: center;    /* Центрує звичайний текст всередині тегів */
+    width: 100%;
+}
+
+/* Фікс розділювача всередині Flex-контейнера, щоб він не стискався */
+.profile-divider {
+    display: block;
+    width: 100%;
+    align-self: stretch;   /* Змушує лінію лягти від краю до краю картки */
+    border: none;
+    border-top: 0.0625rem solid var(--border-soft);
+    margin: var(--space-lg) 0;
+}
+
+/* --- ІНТЕРАКТИВНІ РОЗГОРТАНІ КАРТКИ ЖУРНАЛУ --- */
+
+.note-interactive-card {
+    padding: 0; /* Скидаємо внутрішні поля картки, щоб клікабельною була абсолютно вся площа */
+    overflow: hidden;
+}
+
+.journal-summary {
+    list-style: none; /* Прибираємо стандартну стрілку браузера */
+    outline: none;
+    cursor: pointer;
+    padding: var(--space-md); /* Переносимо падінги сюди, щоб клік працював чітко */
+}
+
+/* Прибираємо дефолтну стрілку для браузерів Safari */
+.journal-summary::-webkit-details-marker {
+    display: none;
+}
+
+.journal-hint-bar {
+    margin-top: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Внутрішнє віконце форми, яке відкривається знизу */
+.journal-expand-box {
+    padding: 0 var(--space-md) var(--space-md) var(--space-md);
+    background-color: var(--bg-canvas);
+    border-top: 0.0625rem solid var(--border-soft);
+
+    /* Додаємо плавний ефект появи форми */
+    animation: slideDownFade 0.25s ease;
+}
+
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(calc(var(--step) * -2));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- КОНТЕЙНЕР ДЛЯ ПАРОЛЯ З ОКОМ --- */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Робимо відступ справа, щоб текст пароля не залазив під іконку ока */
+.password-container .form-input {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+/* Сама кнопка "око" */
+.btn-toggle-password {
+    position: absolute;
+    right: 0.5rem; /* Відступ від правого краю інпута */
+    background: transparent; /* Вбиваємо білий фон */
+    border: none;
+    color: var(--text-muted); /* Тьмяний колір, як у плейсхолдера */
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Легка підсвітка при наведенні */
+.btn-toggle-password:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
 }

@@ -8,7 +8,7 @@
 <section class="standard-container standard-container-wide article-view">
     <header class="article-header">
         <div class="article-meta">
-            <span class="article-date" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
+            <span class="text-muted" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
             <span class="article-category"
                   th:text="${allCategoriesMap[article.category] ?: article.category}">
                     Категорія
@@ -19,25 +19,26 @@
 
     <hr class="article-divider">
 
-    <article class="article-content">
+    <article class="content-section">
         <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
     </article>
     <hr class="article-divider">
 
-    <section class="comments-section">
-        <h3 class="comments-title">Обговорення</h3>
+    <section class="layout-container">
+        <h3 class="heading-lg">Обговорення</h3>
 
-        <div th:if="${#authorization.expression('isAuthenticated()')}" id="main-comment-form-box" class="comment-form-box">
-
-            <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-cancel-reply">
-                ✖ Скасувати відповідь (написати новий коментар)
-            </button>
+        <div th:if="${#authorization.expression('isAuthenticated()')}" id="main-comment-form-box" class="form-group">
 
             <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post">
                 <input type="hidden" name="parentId" id="parentIdInput" value="">
 
                 <textarea name="content" class="comment-textarea" rows="3" required placeholder="Поділіться своїми думками..."></textarea>
-                <button type="submit" class="btn-submit-comment">Відправити</button>
+                <button type="submit" class="btn-primary">
+                    Відправити
+                </button>
+                <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-outline">
+                    Скасувати
+                </button>
             </form>
         </div>
 
@@ -45,7 +46,7 @@
             <p><a th:href="@{/login}">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
         </div>
 
-        <div class="comments-list" id="comments-container">
+        <div class="layout-stack" id="comments-container">
             <div th:if="${#lists.isEmpty(comments)}" class="no-comments">
                 <p>Поки немає коментарів. Будьте першим!</p>
             </div>
@@ -61,7 +62,7 @@
         <div class="share-block">
             <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
         </div>
-        <div class="profile-actions">
+        <div class="action-group">
             <a href="/articles" class="btn-primary">← До всіх статей</a>
             <a href="/contact" class="btn-primary">Обговорити запит</a>
         </div>

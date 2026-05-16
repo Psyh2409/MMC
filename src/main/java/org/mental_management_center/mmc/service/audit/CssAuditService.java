@@ -47,6 +47,8 @@ public class CssAuditService {
             scanHtmlTemplates();
             scanCssFiles();
             performAudit();
+            refactorAllHtmlComponents();
+            log.info("CSS/HTML audit finished.");
         } catch (IOException e) {
             log.error("Error during CSS/HTML audit", e);
         }
@@ -351,5 +353,179 @@ public class CssAuditService {
         } catch (IOException e) {
             log.error("Помилка під час археологічної місії", e);
         }
+    }
+
+    /**
+     * Спеціальний аудит для підготовки до уніфікації кнопок.
+     * Виводить список усіх класів кнопок чисто в консоль без логер-сміття.
+     */
+    private void printButtonClassesAudit() {
+        System.out.println("\n=======================================================");
+        System.out.println("=== АУДИТ КНОПОК (ПІДГОТОВКА ДО btn-primary) ===");
+        System.out.println("=======================================================");
+
+        // Використовуємо TreeSet для автоматичного сортування за алфавітом
+        java.util.Set<String> buttonClasses = new java.util.TreeSet<>();
+
+        // Проходимо по всіх знайдених селекторах у системі
+        for (SelectorDescriptor descriptor : selectorMap.values()) {
+            // Беремо тільки ті, що реально знайдені в HTML шаблонах
+            if (descriptor.getHtmlUsage() != null && !descriptor.getHtmlUsage().isEmpty()) {
+                String selector = descriptor.getSelectorName();
+
+                // Фільтруємо: шукаємо .btn або .button
+                if (selector.toLowerCase().contains("btn") || selector.toLowerCase().contains("button")) {
+                    buttonClasses.add(selector);
+                }
+            }
+        }
+
+        System.out.println("Знайдено унікальних класів кнопок у HTML: " + buttonClasses.size());
+        for (String btnClass : buttonClasses) {
+            System.out.println(" - " + btnClass);
+        }
+        System.out.println("=======================================================\n");
+    }
+
+    /**
+     * Глобальний авторефакторинг HTML: підпорядкування всього сайту атомарним токенам MMC.
+     */
+    private void refactorAllHtmlComponents() {
+        System.out.println("\n=======================================================");
+        System.out.println("=== СТАРТ ГЛОБАЛЬНОЇ СТАНДАРТИЗАЦІЇ MMC (10 ФАЙЛІВ) ===");
+        System.out.println("=======================================================");
+
+        java.util.Map<String, String> classMap = new java.util.HashMap<>();
+
+        // 1. PILLAR: BUTTONS (Зафіксовано)
+        String[][] buttonRules = {
+                {"submit-button", "btn-primary"}, {"submit-button-primary", "btn-primary"},
+                {"btn-publish-article", "btn-primary"}, {"btn-action", "btn-primary"},
+                {"btn-action-email", "btn-primary"}, {"btn-action-sms", "btn-primary"},
+                {"admin-save-button", "btn-primary"}, {"manifesto-button", "btn-primary"},
+                {"btn-dashboard-link", "btn-primary"}, {"admin-secondary-button", "btn-outline"},
+                {"btn-cancel-reply", "btn-outline"}, {"btn-reply", "btn-outline"},
+                {"submit-button-soft", "btn-outline"}, {"btn-link", "btn-outline"},
+                {"btn-comm-ban", "btn-primary btn-danger"}, {"btn-chat-ban", "btn-primary btn-danger"},
+                {"btn-delete-small", "btn-primary btn-danger"}, {"btn-chat-ok", "btn-primary btn-success"},
+                {"btn-comm-ok", "btn-primary btn-success"}, {"btn-site-ok", "btn-primary btn-success"}
+        };
+        for (String[] r : buttonRules) classMap.put(r[0], r[1]);
+
+        // --- 2. PILLAR: CARDS & SURFACES (РОЗДІЛЕНО НА ДВА СТАНДАРТИ) ---
+
+        // А. Базові картки сайту -> отримують .card-primary (Тло: bg-surface)
+        String[] primaryCards = {"note-card", "comment-form-box", "article-callout"};
+        for (String c : primaryCards) classMap.put(c, "card-primary");
+
+        // Б. Акцентовані блоки та CTA -> отримують .card-elevated (Тло: bg-elevated)
+        // Вони мають виринати над контентом одразу, навіть без ховеру
+        String[] elevatedCards = {"session-invitation-card", "cta-panel", "cta-panel-light"};
+        for (String c : elevatedCards) classMap.put(c, "card-elevated");
+
+        // 3. PILLAR: FORMS (Поля вводу та контейнери)
+        String[] formGroups = {"article-form-section", "reply-form-container", "comment-form-box"};
+        for (String f : formGroups) classMap.put(f, "form-group");
+
+        // 4. PILLAR: TYPOGRAPHY (Заголовки та підписи)
+        String[] headingsLg = {"section-subtitle", "comments-title", "sidebar-heading", "manifesto-title", "notes-section-title", "article-section-title"};
+        for (String h : headingsLg) classMap.put(h, "heading-lg");
+
+        String[] textMuted = {"article-date", "note-date", "status-text-muted", "footer-copy"};
+        for (String t : textMuted) classMap.put(t, "text-muted");
+
+        // 5. PILLAR: LAYOUT & NAVIGATION (Обгортки дій)
+        String[] actionGroups = {"dashboard-actions", "contact-actions", "profile-actions", "manifesto-actions", "filter-buttons"};
+        for (String a : actionGroups) classMap.put(a, "action-group");
+
+        // --- 6. PILLAR: NAVIGATION (Хедери, футери, сайдбари) ---
+        // Замість мільйону унікальних посилань у футері — один стандарт навігаційного лінка
+        String[] navLinks = {"footer-link-action", "footer-action-text", "home-service-link", "steps-cta-link", "read-more"};
+        for (String n : navLinks) classMap.put(n, "nav-link");
+
+        // Уніфікуємо вертикальне меню (наприклад, у сайдбарі профілю чи адмінки)
+        String[] navVerticals = {"sidebar-nav", "chat-tabs"};
+        for (String nv : navVerticals) classMap.put(nv, "nav-vertical");
+
+
+        // --- 7. PILLAR: LAYOUT & CONTAINERS (Глобальна квантова сітка) ---
+        // Зводимо всі унікальні обгортки контенту до єдиного системного контейнера
+        String[] layouts = {"chat-wrapper", "notes-container", "manifesto-container", "comments-section", "article-section-spaced", "issue-steps"};
+        for (String l : layouts) classMap.put(l, "layout-container");
+
+
+        // --- 8. PILLAR: TABLES & LISTS (Адмін-панелі та списки запитів) ---
+        // Замість специфічних класів для таблиць робимо загальносистемний table-main
+        String[] tables = {"row-priority-client", "articles-list", "comments-list", "notes-list"};
+        for (String t : tables) classMap.put(t, "layout-stack");
+
+        // --- 9. PILLAR: CONTENT SECTIONS (Забутий блок) ---
+        // Усі унікальні обгортки тексту зводимо до єдиного стандарту
+        String[] contents = {"article-content", "article-body", "issue-content", "steps-content", "note-content", "manifesto-content"};
+        for (String c : contents) classMap.put(c, "content-section");
+
+        // --- 10. ДОДАТКОВІ КНОПКИ ТА ГРУПИ ---
+        classMap.put("btn-edit-small", "btn-outline");
+        classMap.put("btn-copy-uuid", "btn-outline");
+        classMap.put("btn-group-nowrap", "action-group");
+        classMap.put("dashboard-cta", "card-elevated");
+
+        // --- 11. ІКОНКИ ---
+        classMap.put("icon-large", "icon");
+
+        // --- 12. ФОРМИ: ЗНИЩЕННЯ ДУБЛІКАТІВ ---
+        classMap.put("form-control", "form-input");
+        classMap.put("form-control-textarea", "form-textarea");
+
+        java.util.regex.Pattern classPattern = java.util.regex.Pattern.compile("class=\"([^\"]+)\"");
+
+        try {
+            java.nio.file.Files.walk(templatesPath)
+                    .filter(path -> path.toString().endsWith(".html"))
+                    .forEach(path -> {
+                        try {
+                            String content = java.nio.file.Files.readString(path, java.nio.charset.StandardCharsets.UTF_8);
+                            java.util.regex.Matcher matcher = classPattern.matcher(content);
+                            StringBuilder updatedContent = new StringBuilder();
+                            boolean fileChanged = false;
+
+                            while (matcher.find()) {
+                                String originalClasses = matcher.group(1);
+                                String[] individualClasses = originalClasses.split("\\s+");
+                                java.util.Set<String> newClassesList = new java.util.LinkedHashSet<>();
+                                boolean attributeChanged = false;
+
+                                for (String cssClass : individualClasses) {
+                                    if (classMap.containsKey(cssClass)) {
+                                        newClassesList.addAll(java.util.Arrays.asList(classMap.get(cssClass).split("\\s+")));
+                                        attributeChanged = true;
+                                    } else {
+                                        newClassesList.add(cssClass);
+                                    }
+                                }
+
+                                if (attributeChanged) {
+                                    fileChanged = true;
+                                    String replacement = "class=\"" + String.join(" ", newClassesList) + "\"";
+                                    matcher.appendReplacement(updatedContent, java.util.regex.Matcher.quoteReplacement(replacement));
+                                } else {
+                                    matcher.appendReplacement(updatedContent, java.util.regex.Matcher.quoteReplacement(matcher.group(0)));
+                                }
+                            }
+                            matcher.appendTail(updatedContent);
+
+                            if (fileChanged) {
+                                java.nio.file.Files.writeString(path, updatedContent.toString(), java.nio.charset.StandardCharsets.UTF_8);
+                                System.out.println("✅ СТАНДАРТИЗОВАНО: " + path.getFileName());
+                            }
+
+                        } catch (java.io.IOException e) {
+                            System.out.println("❌ Помилка файлу: " + path.getFileName());
+                        }
+                    });
+        } catch (java.io.IOException e) {
+            System.out.println("Помилка доступу до папки шаблонів");
+        }
+        System.out.println("=== ГЛОБАЛЬНА СТАНДАРТИЗОВАНА СИСТЕМА ПРИЙНЯТА ===");
     }
 }

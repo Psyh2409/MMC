@@ -17,8 +17,7 @@
             <p class="home-hero-subtitle">і цей — найкоротший.</p>
 
             <div th:if="${userName == null}">
-                <a href="/register" class="home-hero-cta">Почати свій шлях</a>
-            </div>
+                <a th:href="@{/register}" class="btn-primary">Почати свій шлях</a>            </div>
 
             <div th:if="${userName != null}">
                 <p class="home-hero-return">Радий твоему поверненню до роботи над собою.</p>
@@ -30,42 +29,42 @@
                 <h2 class="home-section-title">З чим ми працюємо</h2>
 
                 <div class="home-services-grid">
-                    <a href="/issues/inner-calm" class="home-service-link">
+                    <a href="/issues/inner-calm" class="nav-link">
                         <div class="home-service-card">
                             <h3>Тривога та панічні стани</h3>
                             <p>Повернення внутрішньої опори, робота з панічними атаками та хронічним напруженням.</p>
                         </div>
                     </a>
 
-                    <a href="/issues/restore-resource" class="home-service-link">
+                    <a href="/issues/restore-resource" class="nav-link">
                         <div class="home-service-card border-top-main">
                             <h3>Вигорання та ресурс</h3>
                             <p>Коли "батарейка" на нулі. Пошук джерел енергії та вихід із емоційного виснаження.</p>
                         </div>
                     </a>
 
-                    <a href="/issues/closeness-crisis" class="home-service-link">
+                    <a href="/issues/closeness-crisis" class="nav-link">
                         <div class="home-service-card border-top-accent">
                             <h3>Кризи близькості</h3>
                             <p>Стосунки, що зайшли у глухий кут. Робота з самотністю вдвох та відновленням зв'язку.</p>
                         </div>
                     </a>
 
-                    <a href="/issues/new-meanings" class="home-service-link">
+                    <a href="/issues/new-meanings" class="nav-link">
                         <div class="home-service-card border-top-muted">
                             <h3>Депресія та сенси</h3>
                             <p>Там, де зникли барви. Трансформація депресивних станів у нову глибину розуміння себе.</p>
                         </div>
                     </a>
 
-                    <a href="/issues/freedom-choice" class="home-service-link">
+                    <a href="/issues/freedom-choice" class="nav-link">
                         <div class="home-service-card border-top-accent">
                             <h3>Залежна поведінка</h3>
                             <p>Робота з механізмами втечі від реальності. Повернення права на вільний вибір.</p>
                         </div>
                     </a>
 
-                    <a href="/issues/exit-nearby" class="home-service-link">
+                    <a href="/issues/exit-nearby" class="nav-link">
                         <div class="home-service-card border-top-muted">
                             <h3>Коли здається, що виходу нема</h3>
                             <p>Тупик як початок нового шляху. Пошук дверей там, де раніше бачилася лише стіна.</p>

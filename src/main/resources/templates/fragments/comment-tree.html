@@ -6,10 +6,10 @@
 
     <p th:text="${comment.content}" class="comment-text">Текст коментаря</p>
 
-    <div th:id="'reply-form-container-' + ${comment.id}" class="reply-form-container"></div>
+    <div th:id="'reply-form-container-' + ${comment.id}" class="form-group"></div>
 
     <button type="button"
-            class="btn-reply"
+            class="btn-outline"
             th:onclick="moveReplyForm([[${comment.id}]])">
         Відповісти
     </button>

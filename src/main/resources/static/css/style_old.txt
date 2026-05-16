@@ -689,7 +689,7 @@ html, body {
     margin: 0;
 }
 
-.logout-button {
+.btn-outline {
     background: var(--primary-color);
     color: var(--bg-main);
     border: none;
@@ -2310,7 +2310,7 @@ h1, h2, h3 {
         font-size: 0.9rem;
         text-decoration: underline;
 }
-    .btn-cancel-reply {
+    .btn-outline {
         background: none;
         border: none;
         color: var(--accent-color);
@@ -2406,7 +2406,7 @@ h1, h2, h3 {
 }
 
 /* Кнопка відправки */
-.btn-submit-comment {
+.btn-primary {
     background-color: #8b7355;
     color: var(--bg-main);
     padding: 10px 25px;
@@ -2417,7 +2417,7 @@ h1, h2, h3 {
     transition: background-color 0.3s ease;
 }
 
-.btn-submit-comment:hover {
+.btn-primary:hover {
     background-color: #6f5c44;
 }
 
@@ -2440,7 +2440,7 @@ h1, h2, h3 {
 }
 
 /* Кнопка скасування відповіді (та сама червона строка) */
-.btn-cancel-reply {
+.btn-outline {
     background-color: #f8d7da;
     color: #842029;
     border: 1px solid #f5c2c7;
@@ -2901,10 +2901,10 @@ h1, h2, h3 {
 
 /* Колірні схеми для статусів */
 .btn-site-ok  { background-color: #e6fffa; color: #234e52; border-color: #b2f5ea; }
-.btn-site-ban { background-color: var(--bg-main); color: #822727; border-color: #feb2b2; }
+.btn-danger { background-color: var(--bg-main); color: #822727; border-color: #feb2b2; }
 
 .btn-chat-ok  { background-color: #ebf8ff; color: #2a4365; border-color: #bee3f8; }
-.btn-chat-ban { background-color: var(--bg-main); color: #7b341e; border-color: #feebc8; }
+.btn-danger { background-color: var(--bg-main); color: #7b341e; border-color: #feebc8; }
 
 .btn-comm-ok  { background-color: #f0fff4; color: #22543d; border-color: #c6f6d5; }
 .btn-comm-ban { background-color: #f7fafc; color: #2d3748; border-color: #e2e8f0; }
@@ -3168,7 +3168,7 @@ h1, h2, h3 {
 }
 
 /* Кнопка відправки */
-.btn-send {
+.btn-primary {
     align-self: flex-end;
     background-color: var(--accent-color); /* Глибокий шоколадний */
     color: var(--border-color); /* Молочна пінка */
@@ -3180,7 +3180,7 @@ h1, h2, h3 {
     transition: background 0.3s;
 }
 
-.btn-send:hover {
+.btn-primary:hover {
     background-color: var(--text-main); /* Темний шоколад */
 }
 
