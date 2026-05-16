@@ -593,3 +593,77 @@ margin-top: var(--space-md);
     color: var(--text-primary);
     transform: scale(1.1);
 }
+
+/* --- КОМПАКТНІ АВАТАРИ ДЛЯ ЧАТУ --- */
+.chat-window .avatar-circle,
+#private-messages .avatar-circle {
+    width: 2rem;       /* Ідеальний розмір для рядка повідомлення */
+    height: 2rem;
+    min-width: 2rem;   /* Захист: флекс-контейнер не стисне коло в овал */
+    font-size: 0.85rem; /* Компактна літера всередині */
+}
+
+/* --- СИСТЕМНЕ ЗМЕНШЕННЯ АВАТАРІВ ЧЕРЕЗ ЧИСТИЙ КАСКАД --- */
+/* --- ОСТАТОЧНЕ СИСТЕМНЕ ЗМЕНШЕННЯ АВАТАРІВ (ЧИСТИЙ КАСКАД) --- */
+
+/* 1. Мікро-аватари в дереві коментарів статті */
+.comment-header .avatar-circle {
+    width: 1.75rem;
+    height: 1.75rem;
+    min-width: 1.75rem;
+    font-size: 0.75rem;
+    border-radius: var(--radius-full);
+}
+
+/* 2. Ультра-компактні аватари в стрічці чату */
+.chat-window .message-header .avatar-circle {
+    width: 1.35rem;
+    height: 1.35rem;
+    min-width: 1.35rem;
+    font-size: 0.65rem;
+    border-radius: var(--radius-full);
+}
+
+/* --- КОМПОНЕНТ: СТОРІНКА ПОМИЛКИ (ERROR CARD) --- */
+
+/* Контейнер-обгортка для вертикального та горизонтального центрування на екрані */
+.error-page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55vh; /* М'яке центрування по висоті екрана */
+    padding: var(--space-xl) 0;
+}
+
+/* Сама картка помилки */
+.error-card {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    max-width: 35rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* Заголовок всередині картки */
+.error-card .section-title {
+    margin: 0;
+}
+
+/* Текст опису помилки */
+.error-card .error-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Центрування кнопок всередині картки */
+.error-card .button-row {
+    justify-content: center;
+    margin-top: var(--space-sm);
+}

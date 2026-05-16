@@ -1,7 +1,14 @@
 <div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
     <div class="comment-header">
-        <strong th:if="${comment.author != null}" th:text="${comment.author.name ?: comment.author.email}">Автор</strong>
-        <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+        <div class="avatar-circle avatar-sm"
+             th:text="${comment.author != null ? #strings.substring(comment.author.name, 0, 1).toUpperCase() : '❓'}">
+            А
+        </div>
+
+        <div class="comment-meta">
+            <strong th:text="${comment.author != null ? (comment.author.name ?: comment.author.email) : 'Анонім'}">Автор</strong>
+            <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+        </div>
     </div>
 
     <p th:text="${comment.content}" class="comment-text">Текст коментаря</p>
