@@ -300,41 +300,7 @@
     padding-bottom: var(--space-sm);
 }
 
-.avatar-circle {
-    width: calc(var(--step) * 20);
-    height: calc(var(--step) * 20);
-    background-color: var(--accent-primary);
-    color: var(--text-on-accent);
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-main);
-}
 
-/* ОБ'ЄДНАНО: Уніфікована логіка аватара профілю */
-.profile-avatar-container,
-.profile-avatar-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-lg);
-    width: 100%;
-}
-
-.profile-avatar {
-    width: calc(var(--step) * 30);
-    height: calc(var(--step) * 30);
-    border-radius: var(--radius-full);
-    border: 0.125rem solid var(--accent-primary);
-    object-fit: cover;
-    box-shadow: var(--shadow-main);
-    margin-bottom: var(--space-sm);
-}
 
 .ptsr-mode-container {
     margin-top: var(--space-md);
@@ -594,34 +560,88 @@ margin-top: var(--space-md);
     transform: scale(1.1);
 }
 
-/* --- КОМПАКТНІ АВАТАРИ ДЛЯ ЧАТУ --- */
-.chat-window .avatar-circle,
-#private-messages .avatar-circle {
-    width: 2rem;       /* Ідеальний розмір для рядка повідомлення */
-    height: 2rem;
-    min-width: 2rem;   /* Захист: флекс-контейнер не стисне коло в овал */
-    font-size: 0.85rem; /* Компактна літера всередині */
-}
+/* ==========================================================================
+   КОМПОНЕНТ: УНІВЕРСАЛЬНА СИСТЕМА АВАТАРІВ (AVATAR SYSTEM)
+   ========================================================================== */
 
-/* --- СИСТЕМНЕ ЗМЕНШЕННЯ АВАТАРІВ ЧЕРЕЗ ЧИСТИЙ КАСКАД --- */
-/* --- ОСТАТОЧНЕ СИСТЕМНЕ ЗМЕНШЕННЯ АВАТАРІВ (ЧИСТИЙ КАСКАД) --- */
-
-/* 1. Мікро-аватари в дереві коментарів статті */
-.comment-header .avatar-circle {
-    width: 1.75rem;
-    height: 1.75rem;
-    min-width: 1.75rem;
-    font-size: 0.75rem;
+/* Базовий круглий каркас (за замовчуванням масштабований під великий розмір профілю) */
+.avatar-circle {
+    width: calc(var(--step) * 20);
+    height: calc(var(--step) * 20);
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
     border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: bold;
+    box-shadow: var(--shadow-main);
+    flex-shrink: 0;   /* Захист: флекс-контейнери ніколи не стиснуть коло в овал */
+    overflow: hidden; /* Захист для майбутніх фотографій */
+
+    /* МАРЖИН ВИДАЛЕНО! Базовий компонент не повинен штовхати сусідні елементи в чатах */
 }
 
-/* 2. Ультра-компактні аватари в стрічці чату */
-.chat-window .message-header .avatar-circle {
+/* Підтримка імедж-тегів (для реальних фотографій користувачів у майбутньому) */
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* АТОМНІ МОДИФІКАТОРИ РОЗМІРІВ */
+
+/* XS — Для стрічки повідомлень чату (і публічного, і приватного) */
+.avatar-xs {
     width: 1.35rem;
     height: 1.35rem;
     min-width: 1.35rem;
     font-size: 0.65rem;
+}
+
+/* SM — Для дерева коментарів під статтями (comment-tree.html вже використовує його) */
+.avatar-sm {
+    width: 1.75rem;
+    height: 1.75rem;
+    min-width: 1.75rem;
+    font-size: 0.75rem;
+}
+
+/* СЕМАНТИЧНІ СТИЛІ ДЛЯ СТРУКТУРИ LAYOUT */
+
+/* Контекстний відступ для аватара виключно всередині картки профілю (profile.html) */
+.profile-sidebar .avatar-circle {
+    margin-bottom: var(--space-md);
+}
+
+/* Шапка повідомлення в чаті: чисті відступи без інлайнів у JS */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+/* ОБ'ЄДНАНО: Уніфікована логіка аватара профілю */
+.profile-avatar-container,
+.profile-avatar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+    width: 100%;
+}
+
+.profile-avatar {
+    width: calc(var(--step) * 30);
+    height: calc(var(--step) * 30);
     border-radius: var(--radius-full);
+    border: 0.125rem solid var(--accent-primary);
+    object-fit: cover;
+    box-shadow: var(--shadow-main);
+    margin-bottom: var(--space-sm);
 }
 
 /* --- КОМПОНЕНТ: СТОРІНКА ПОМИЛКИ (ERROR CARD) --- */

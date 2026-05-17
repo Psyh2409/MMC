@@ -227,31 +227,28 @@ function showMessage(message, targetId) {
     const displayName = isMe ? 'Ви' : senderName;
     const firstLetter = senderName.charAt(0).toUpperCase();
 
-    messageElement.innerHTML = `
-        ${quoteHtml}
-
-        <div class="message-header" style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-            <div class="avatar-circle">${firstLetter}</div>
-            <div class="message-meta">
-                <strong>${displayName}</strong>
+    // Абсолютно семантичний шаблон: нуль інлайн-стилів, робота через класи
+        messageElement.innerHTML = `
+            <div class="message-header">
+                <div class="avatar-circle avatar-xs">${firstLetter}</div>
+                <div class="message-meta">
+                    <strong>${displayName}</strong>
+                </div>
             </div>
-        </div>
 
-        <div class="message-text">${message.content}</div>
+            <div class="message-text">${message.content}</div>
 
-        <div class="message-actions" style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap;">
-            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'public')">
-                Відповісти публічно
-            </button>
-
-            ${!isMe ? `
-            <button type="button" class="btn-outline btn-sm"
-                onclick="prepareReply('${message.id}', '${senderName}', 'private', '${message.senderId}')">
-                Написати приватно
-            </button>
-            ` : ''}
-        </div>
-    `;
+            <div class="message-actions" style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap;">
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'public')">
+                    Відповісти публічно
+                </button>
+                ${!isMe ? `
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'private', '${message.senderId}')">
+                    Написати приватно
+                </button>
+                ` : ''}
+            </div>
+        `;
 
     chatArea.appendChild(messageElement);
 
