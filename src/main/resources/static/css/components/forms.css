@@ -345,3 +345,116 @@
     color: var(--text-primary);
     transform: scale(1.1);
 }
+
+.helper-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Контейнер для списку завантажених файлів */
+.media-queue {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    width: 100%;
+}
+
+/* Рядок завантаженого медіаелемента */
+.media-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-canvas, hsl(var(--theme-h) var(--theme-s) var(--l-bg-main)));
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--border-color, hsl(var(--theme-h) var(--theme-s) var(--l-border)));
+    gap: var(--space-md);
+}
+
+/* Назва оригінального файлу */
+.media-item-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Поле з кодом, яке зручно копіювати */
+.media-item-input {
+    font-family: monospace;
+    font-size: 0.85rem;
+    flex: 1;
+    background-color: var(--bg-main);
+    cursor: pointer;
+}
+
+/* Компактна та охайна Drop Zone */
+.file-drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-lg); /* Зменшили падінги, щоб зона не була роздутою */
+    width: 100%;
+    box-sizing: border-box; /* Захищає від роздування через внутрішні відступи */
+    border: 0.125rem dashed var(--border-color, hsl(var(--theme-h) var(--theme-s) var(--l-border)));
+    border-radius: var(--radius-md);
+    background-color: var(--bg-canvas, hsl(var(--theme-h) var(--theme-s) var(--l-bg-main)));
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    text-align: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+/* Стан наведення */
+.file-drop-zone.drag-over,
+.file-drop-zone:hover {
+    border-color: var(--accent-primary);
+    background-color: hsla(var(--theme-h), var(--theme-s), var(--l-primary), 0.04);
+}
+
+/* Ізольована іконка папки: тепер вона слухається лише цих правил */
+.drop-zone-icon {
+    display: block;
+    font-size: 1.5rem; /* Охайний відносний розмір */
+    line-height: 1;
+    margin-bottom: var(--space-xs); /* Жорстко відштовхує текст вниз, унеможливлюючи наїзд */
+}
+
+.file-drop-zone p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.file-drop-zone-trigger {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+/* Додатковий фікс для тексту обмежень під описом */
+.file-drop-zone .helper-text {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Абсолютно чистий від пікселів токен приховування інпуту у forms.css */
+.visually-hidden-input {
+    position: absolute;
+    width: 0.0625rem;
+    height: 0.0625rem;
+    padding: 0;
+    margin: -0.0625rem;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}

@@ -61,6 +61,10 @@ public class Article {
     @Transient
     private String content;
 
+    // Усередині класу Article.java додаємо поле для відносного шляху медіа
+    @Column(name = "image_path", length = 512)
+    private String imagePath;
+
     // Сеттер для автоматичного стиснення при встановленні тексту
     public void setContent(String content) {
         this.content = content;

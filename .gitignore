@@ -34,7 +34,8 @@ build/
 run.ps1
 .env
 #**/DataInitializer.java
-
+# Динамічні завантаження користувачів (Media runtime)
+uploads/
 
 ###Get-ChildItem -Include *.css, *.java -Recurse | ForEach-Object {
    #>>     Write-Host "`n--- FILE: $($_.FullName) ---" -ForegroundColor Cyan

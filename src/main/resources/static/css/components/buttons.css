@@ -9,14 +9,14 @@
     justify-content: center;
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
     border: none;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
-    radius: 100%Ж
+    line-height: 1;
 
 }
 .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
@@ -29,12 +29,13 @@
     background: transparent;
     border: 0.0625rem solid var(--accent-primary);
     color: var(--accent-primary);
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.2s ease;
+    line-height: 1;
 }
 .btn-outline:hover { background-color: var(--bg-surface); }
 
@@ -42,22 +43,24 @@
 .btn-danger {
     background-color: var(--status-error);
     color: var(--text-on-accent);
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
     border: none;
     font-weight: 600;
     cursor: pointer;
+    line-height: 1;
 }
 
 /* 4. САКСЕС: Дія схвалення (Дозволити) */
 .btn-success {
     background-color: var(--status-success);
     color: var(--text-on-accent);
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
     border: none;
     font-weight: 600;
     cursor: pointer;
+    line-height: 1;
 }
 
 /* Надійна зміна кольору тексту за рахунок специфічності ID (1-0-0) */
@@ -74,7 +77,7 @@
 }
 
 /* Контурна кнопка скасування */
-.btn-outline {
+/*.btn-outline {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -88,7 +91,7 @@
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
+}*/
 
 .btn-outline:hover {
     background-color: var(--accent-primary);
@@ -120,13 +123,6 @@
 .btn-theme-toggle:hover {
     transform: scale(1.1); /* Легке збільшення при наведенні */
     background-color: var(--bg-elevated); /* Легка підсвітка фону на ховері */
-}
-
-/* --- КОМПАКТНІ КНОПКИ (ДЛЯ ЧАТУ ТА КОМЕНТАРІВ) --- */
-.btn-sm {
-    padding: calc(var(--space-xs) * 0.5) var(--space-sm);
-    font-size: 0.8rem;
-    border-radius: var(--radius-sm);
 }
 
 /* --- Компактні кнопки для чату/коментарів --- */

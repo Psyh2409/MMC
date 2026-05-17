@@ -110,15 +110,28 @@
     transition: background-color 0.2s ease;
 }
 
+/* 1. Забираємо flex з комірки, повертаємо їй природну поведінку таблиці */
 .action-cell,
 .actions-column {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-xs);
     min-width: 7rem;
     text-align: right;
     vertical-align: middle;
+}
+
+/* 2. Робимо флекс-контейнером внутрішній div.
+      Кнопки стануть в ряд (row) з ідеальними відступами */
+.action-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Притискаємо кнопки вправо */
+    gap: var(--space-sm);
+}
+
+/* 3. Гасимо дефолтні відступи форми, щоб вона не розпирала рядок */
+.inline-form {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
 }
 
 .admin-controls-wrapper {

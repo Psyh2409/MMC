@@ -33,33 +33,35 @@
             </div>
 
             <div class="form-group">
-                <label>Тематичний розділ:</label>
+                <label for="categorySelector">Тематичний розділ:</label>
                 <select id="categorySelector" class="form-input" onchange="syncCategory(this)">
-                    <option value="">-- Оберіть існуючий --</option>
-                    <option value="inner-calm">Тривога та панічні стани</option>
-                    <option value="restore-resource">Відновлення ресурсу</option>
-                    <option value="closeness-crisis">Кризи близькості</option>
-                    <option value="new-meanings">Депресивні стани та сенси</option>
-                    <option value="freedom-choice">Залежні форми поведінки</option>
-                    <option value="dialogue">Конфлікти та медіація</option>
-                    <option value="exit-nearby">Ілюзія, що виходу нема</option>
-                    <option value="NEW">+ Додати нову категорію</option>
+                    <option value="">-- Оберіть існуючий розділ --</option>
+
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.categorySlug}"
+                            th:text="${cat.displayName}">Назва розділу</option>
+
+                    <option value="NEW">+ Додати новий тематичний розділ...</option>
                 </select>
-
-                <input type="text" id="finalCategory" th:field="*{category}"
-                       class="form-input hidden-category-field"
-                       placeholder="URL англійською (напр: burnout)">
-                <p class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
-
-                <input type="text" id="finalCategoryNameUa" th:field="*{categoryNameUa}"
-                       class="form-input hidden-category-field"
-                       placeholder="Назва на сайті (напр: Емоційне вигорання)">
-                <p class="error-text" th:if="${#fields.hasErrors('categoryNameUa')}" th:errors="*{categoryNameUa}"></p>
             </div>
 
             <div class="form-group">
                 <label for="tags">Теги (через кому):</label>
                 <input type="text" id="tags" th:field="*{tags}" class="form-input" placeholder="стрес, ресурс, дихання">
+            </div>
+
+            <div class="form-group">
+                <label>Додати ілюстрації, карти або графіки для цієї статті:</label>
+
+                <div id="dropZone" class="file-drop-zone">
+                    <span class="drop-zone-icon">📁</span>
+                    <p>Перетягніть ілюстрації сюди або <span class="file-drop-zone-trigger">клікніть для вибору</span></p>
+                    <span class="helper-text">Дозволені формати: зображення (карти, схеми) або відео. До 10 МБ.</span>
+
+                    <input type="file" id="asyncMediaFile" class="visually-hidden-input" accept="image/*,video/*" multiple>
+                </div>
+
+                <div id="mediaUploadQueue" class="media-queue"></div>
             </div>
 
             <div class="form-group">
@@ -77,6 +79,7 @@
 </section>
 
 <script>
+    // 1. СИНХРОНІЗАЦІЯ КАТЕГОРІЙ (Твій базовий інструмент)
     function syncCategory(select) {
         const slugInput = document.getElementById('finalCategory');
         const nameInput = document.getElementById('finalCategoryNameUa');
@@ -84,21 +87,18 @@
         if (!slugInput || !nameInput) return;
 
         if (select.value === 'NEW') {
-            // Вибрали нову: показуємо обидва поля (прибираючи клас)
             slugInput.classList.remove('hidden-category-field');
             nameInput.classList.remove('hidden-category-field');
             slugInput.value = '';
             nameInput.value = '';
             slugInput.focus();
         } else if (select.value !== "") {
-            // Вибрали існуючу: ховаємо поля, але копіюємо в них дані
             slugInput.classList.add('hidden-category-field');
             nameInput.classList.add('hidden-category-field');
 
             slugInput.value = select.value;
             nameInput.value = select.options[select.selectedIndex].text;
         } else {
-            // Скинули вибір
             slugInput.classList.add('hidden-category-field');
             nameInput.classList.add('hidden-category-field');
             slugInput.value = '';
@@ -106,9 +106,134 @@
         }
     }
 
+    // 2. ГОЛОВНИЙ ОБРОБНИК СТОРІНКИ ПІСЛЯ ЗАВАНТАЖЕННЯ
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Частина А: Авто-підтягування тематичного розділу при редагуванні
         const selector = document.getElementById('categorySelector');
-        if (selector) syncCategory(selector);
+        const slugInput = document.getElementById('finalCategory');
+
+        if (selector && slugInput && slugInput.value) {
+            selector.value = slugInput.value;
+
+            if (selector.value !== slugInput.value && slugInput.value !== '') {
+                selector.value = 'NEW';
+                syncCategory(selector);
+            }
+        }
+
+        // Частина Б: Асинхронне завантаження медіафайлів та Drag-and-Drop
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('asyncMediaFile');
+        const uploadQueue = document.getElementById('mediaUploadQueue');
+        const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+
+        if (dropZone && fileInput && uploadQueue) {
+
+            // Клік по зоні активує вибір файлів через провідник
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            // Візуальні ефекти при наведенні файлу мишкою над зону
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drag-over');
+                }, false);
+            });
+
+            // Обробка події, коли файли просто кинули мишкою в зону
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const dt = e.dataTransfer;
+                if (dt && dt.files.length > 0) {
+                    handleFilesUpload(dt.files);
+                }
+            });
+
+            // Обробка події класичного вибору файлів через вікно
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    handleFilesUpload(fileInput.files);
+                }
+            });
+
+            // Головна функція завантаження черги файлів
+            function handleFilesUpload(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // Створюємо рядок статусу
+                    const progressRow = document.createElement('div');
+                    progressRow.className = 'media-item-row';
+                    progressRow.innerHTML = `<span>Завантаження ${file.name}...</span>`;
+                    uploadQueue.appendChild(progressRow);
+
+                    fetch('/api/media/upload', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Помилка сервера');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const imgTag = `<img src="${data.url}" class="article-illustration" alt="${file.name}">`;
+
+                        // Генеруємо чисту розмітку без брудних інлайн-скриптів onclick
+                        progressRow.innerHTML = `
+                            <span class="media-item-name">${file.name}</span>
+                            <input type="text" class="form-input media-item-input" value='${imgTag}' readonly>
+                            <button type="button" class="btn-primary btn-sm copy-btn">Копіювати код</button>
+                        `;
+
+                        // Знаходимо наші свіжостворені елементи в DOM
+                        const inputEl = progressRow.querySelector('.media-item-input');
+                        const btnEl = progressRow.querySelector('.copy-btn');
+
+                        // При кліку на інпут — виділяємо весь текст
+                        if (inputEl) {
+                            inputEl.addEventListener('click', () => inputEl.select());
+                        }
+
+                        // Безпечний, залізобетонний клік на кнопку через Clipboard API
+                        if (btnEl) {
+                            btnEl.addEventListener('click', () => {
+                                navigator.clipboard.writeText(imgTag).then(() => {
+                                    // Елегантний UX: міняємо текст і додаємо твій клас успіху
+                                    const originalText = btnEl.textContent;
+                                    btnEl.textContent = 'Скопійовано! ✓';
+                                    btnEl.classList.add('btn-success');
+
+                                    // Через 2 секунди повертаємо кнопку в початковий стан
+                                    setTimeout(() => {
+                                        btnEl.textContent = originalText;
+                                        btnEl.classList.remove('btn-success');
+                                    }, 2000);
+                                }).catch(err => {
+                                    console.error('Помилка кліпборду: ', err);
+                                });
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        progressRow.innerHTML = `<span class="error-text">Помилка завантаження ${file.name}: ${error.message}</span>`;
+                    });
+                }
+                // Очищаємо інпут
+                fileInput.value = '';
+            }
+        }
     });
 </script>
 

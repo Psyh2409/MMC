@@ -16,6 +16,13 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  servlet:
+    multipart:
+      max-file-size: 10MB      # Максимальний розмір одного файлу
+      max-request-size: 10MB   # Максимальний розмір усього запиту
+    session:
+      persistent: false
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -42,6 +49,7 @@ server:
 
 app:
   public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  upload-dir: ${APP_UPLOAD_DIR:./uploads/articles} # 2. ДОДАЄМО ШЛЯХ ДО ЗАХИЩЕНОЇ ПАПКИ МЕДІА
   oauth2:
     google:
       client-id: ${OAUTH2_GOOGLE_CLIENT_ID:dummy}

@@ -47,16 +47,16 @@ public class ArticleService {
     }
 
     @Transactional
-    public void saveFromForm(ArticleForm form, User author) {
+    public void saveFromForm(ArticleForm form, User author, String imagePath) {
         String slug = form.getCategory();
         String nameUa = form.getCategoryNameUa();
 
-        // 1. ОНОВЛЕННЯ СЛОВНИКА (тепер ми і створюємо, і ОНОВЛЮЄМО назву)
+        // 1. ОНОВЛЕННЯ СЛОВНИКА КАТЕГОРІЙ
         if (slug != null && !slug.isBlank() && nameUa != null && !nameUa.isBlank()) {
             CategoryTranslation translation = categoryTranslationRepository.findById(slug)
-                    .orElse(new CategoryTranslation(slug, nameUa)); // Знайти або створити новий
+                    .orElse(new CategoryTranslation(slug, nameUa));
 
-            translation.setDisplayName(nameUa); // Оновити назву в будь-якому випадку
+            translation.setDisplayName(nameUa);
             categoryTranslationRepository.save(translation);
         }
 
@@ -64,28 +64,36 @@ public class ArticleService {
 
         // 2. ЛОГІКА UPSERT (Update or Insert)
         if (form.getId() != null) {
-            // РЕДАГУВАННЯ
+            // РЕДАГУВАННЯ НАЯВНОЇ СТАТТІ
             article = articleRepository.findById(form.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Статтю не знайдено"));
 
             article.setTitle(form.getTitle());
             article.setDescription(form.getDescription());
             article.setCategory(slug);
+
+            // ЗОЛОТЕ ПРАВИЛО: Оновлюємо картинку ТІЛЬКИ якщо завантажено НОВИЙ файл!
+            // Якщо інтернет-сторінка відправила порожній файл, старий шлях залишається недоторканим.
+            if (imagePath != null) {
+                article.setImagePath(imagePath);
+            }
+
             // Дату та автора НЕ чіпаємо при редагуванні
         } else {
-            // СТВОРЕННЯ
+            // СТВОРЕННЯ НОВОЇ СТАТТІ
             article = Article.builder()
                     .title(form.getTitle())
                     .description(form.getDescription())
                     .category(slug)
                     .publishedAt(LocalDateTime.now())
                     .author(author)
+                    .imagePath(imagePath) // Тут записуємо як є (шлях або null, якщо картини немає)
                     .build();
         }
 
         article.setContent(form.getContent());
 
-        // ТЕГИ (якщо порожньо - чистимо)
+        // 3. РОБОТА З ТЕГАМИ
         if (form.getTags() != null && !form.getTags().isBlank()) {
             Set<String> tagSet = Arrays.stream(form.getTags().split(","))
                     .map(String::trim)
