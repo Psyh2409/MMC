@@ -34,6 +34,9 @@ public class ChatMessage {
     @Column(name = "sender_name")
     private String senderName;
 
+    @Column(name = "sender_avatar")
+    private String senderAvatar; // UUID аватарки відправника для чату
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 

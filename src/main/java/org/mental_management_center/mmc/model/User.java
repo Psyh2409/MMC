@@ -65,6 +65,9 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "avatar_file_name")
+    private String avatarFileName; // Сюди писатиметься унікальний UUID файлу
+
     // Твій конструктор (тепер він не заважає Hibernate завдяки @NoArgsConstructor)
     public User(String name, String email, String password, RoleBit initialRole) {
         this.name = name;

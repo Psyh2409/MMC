@@ -287,4 +287,12 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    @Transactional
+    public void updateAvatar(String email, String avatarFileName) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            user.setAvatarFileName(avatarFileName);
+            userRepository.save(user); // ЗАФІКСУВАЛИ В БАЗУ ДАНИХ
+        });
+    }
 }

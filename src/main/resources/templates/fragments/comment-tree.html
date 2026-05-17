@@ -1,8 +1,12 @@
 <div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
     <div class="comment-header">
-        <div class="avatar-circle avatar-sm"
-             th:text="${comment.author != null ? #strings.substring(comment.author.name, 0, 1).toUpperCase() : '❓'}">
-            А
+        <div class="avatar-circle avatar-sm">
+            <img th:if="${comment.author != null and comment.author.avatarFileName != null}"
+                 th:src="@{/api/media/{name}(name=${comment.author.avatarFileName})}"
+                 alt="Avatar">
+
+            <span th:unless="${comment.author != null and comment.author.avatarFileName != null}"
+                  th:text="${comment.author != null ? #strings.substring(comment.author.name, 0, 1).toUpperCase() : '❓'}">А</span>
         </div>
 
         <div class="comment-meta">

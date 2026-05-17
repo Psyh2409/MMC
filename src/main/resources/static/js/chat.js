@@ -224,13 +224,18 @@ function showMessage(message, targetId) {
     }
 
     const senderName = message.senderName || 'Користувач';
-    const displayName = isMe ? 'Ви' : senderName;
-    const firstLetter = senderName.charAt(0).toUpperCase();
+    const displayName = message.senderName || 'Анонім';
+        const firstLetter = displayName.charAt(0).toUpperCase();
 
-    // Абсолютно семантичний шаблон: нуль інлайн-стилів, робота через класи
+        // ДИНАМІЧНИЙ АВАТАР: якщо бекенд прислав назву файлу — малюємо тег img, якщо ні — літеру
+        const avatarHtml = message.senderAvatar
+            ? `<img src="/api/media/${message.senderAvatar}" alt="Avatar">`
+            : `<span>${firstLetter}</span>`;
+        console.log("RAW MESSAGE ДЛЯ АВАТАРА:", message);
+        // Абсолютно чистий шаблон без інлайн-стилів
         messageElement.innerHTML = `
             <div class="message-header">
-                <div class="avatar-circle avatar-xs">${firstLetter}</div>
+                <div class="avatar-circle avatar-xs">${avatarHtml}</div>
                 <div class="message-meta">
                     <strong>${displayName}</strong>
                 </div>

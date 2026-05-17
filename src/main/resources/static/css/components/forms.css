@@ -458,3 +458,14 @@
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
+.profile-avatar-clickable {
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    position: relative;
+}
+
+.profile-avatar-clickable:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+}

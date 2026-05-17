@@ -14,9 +14,20 @@
         <aside class="profile-sidebar">
 
             <div class="profile-card">
-                <div class="avatar-circle">
-                    <span th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1) : 'U'}">С</span>
+                <div id="avatarContainer" class="avatar-circle avatar-md profile-avatar-clickable">
+
+                    <img th:if="${user.avatarFileName != null}"
+                         th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
+                         id="avatarImage"
+                         alt="User Avatar">
+
+                    <span th:unless="${user.avatarFileName != null}"
+                          id="avatarLetter"
+                          th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1).toUpperCase() : 'U'}">С</span>
+
+                    <input type="file" id="avatarFileInput" class="visually-hidden-input" accept="image/*">
                 </div>
+
                 <h3 class="profile-header-title" th:text="${user.name}">Ім'я</h3>
                 <p class="text-muted">Технічні налаштування</p>
 
@@ -27,7 +38,7 @@
                     <input type="range" id="theme-slider" class="theme-spectrum-slider" min="0" max="360" value="15">
                 </div>
                 <div class="ptsr-mode-container">
-                    <a href="#" id="ptsr-link" class="btn-primary">Монохромна тема</a>
+                    <a href="#" id="ptsr-link" class="ptsr-mode-link">Режим ПТСР</a>
                 </div>
             </div>
 
@@ -189,6 +200,64 @@
                 updateTheme(210, '5%', 'custom');
                 slider.value = 210; // Повзунок автоматично стрибає
             });
+
+            // 5. АСИНХРОННЕ ЗАВАНТАЖЕННЯ ФОТО АВАТАРА
+            const avatarContainer = document.getElementById('avatarContainer');
+            const avatarFileInput = document.getElementById('avatarFileInput');
+            const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+
+            if (avatarContainer && avatarFileInput) {
+                // Клік по всьому колу програмно тригрить вибір файлу
+                avatarContainer.addEventListener('click', () => avatarFileInput.click());
+
+                avatarFileInput.addEventListener('change', function() {
+                    const file = avatarFileInput.files[0];
+                    if (!file) return;
+
+                    const formData = new FormData();
+                    formData.append('avatar', file);
+
+                    // Робимо коло напівпрозорим на час завантаження (ефект лоадера)
+                    avatarContainer.style.opacity = '0.5';
+
+                    fetch('/api/profile/avatar', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Помилка сервера');
+                        return response.json();
+                    })
+                    .then(data => {
+                        avatarContainer.style.opacity = '1';
+
+                        let img = document.getElementById('avatarImage');
+                        const letterSpan = document.getElementById('avatarLetter');
+
+                        // Якщо картинки в колі ще не було — динамічно створюємо її
+                        if (!img) {
+                            img = document.createElement('img');
+                            img.id = 'avatarImage';
+                            img.alt = 'User Avatar';
+                            avatarContainer.insertBefore(img, avatarContainer.firstChild);
+                        }
+
+                        // Оновлюємо джерело зображення на отриманий UUID шлях
+                        img.src = data.url;
+
+                        // Назавжди видаляємо літеру-заглушку, бо тепер є круте фото
+                        if (letterSpan) {
+                            letterSpan.remove();
+                        }
+                    })
+                    .catch(error => {
+                        avatarContainer.style.opacity = '1';
+                        alert('Не вдалося оновити фото: ' + error.message);
+                    });
+                });
+            }
+
         });
     </script>
 </th:block>
