@@ -68,6 +68,10 @@ public class User {
     @Column(name = "avatar_file_name")
     private String avatarFileName; // Сюди писатиметься унікальний UUID файлу
 
+    // Додай це поле до інших текстових полів у User.java
+    @Column(name = "phone", length = 20)
+    private String phone;
+
     // Твій конструктор (тепер він не заважає Hibernate завдяки @NoArgsConstructor)
     public User(String name, String email, String password, RoleBit initialRole) {
         this.name = name;

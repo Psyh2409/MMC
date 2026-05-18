@@ -10,12 +10,10 @@
     <h2 class="contact-intro-title">Особистий кабінет</h2>
     <div class="profile-dashboard">
 
-        <!-- ЛІВА КОЛОНКА -->
         <aside class="profile-sidebar">
 
             <div class="profile-card">
                 <div id="avatarContainer" class="avatar-circle avatar-md profile-avatar-clickable">
-
                     <img th:if="${user.avatarFileName != null}"
                          th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
                          id="avatarImage"
@@ -34,11 +32,11 @@
                 <hr class="profile-divider">
 
                 <h4 class="profile-section-title">Кольорова тема</h4>
-                <div class="theme-spectrum-container">
+                <div class="theme-spectrum-container mb-sm">
                     <input type="range" id="theme-slider" class="theme-spectrum-slider" min="0" max="360" value="15">
                 </div>
                 <div class="ptsr-mode-container">
-                    <a href="#" id="ptsr-link" class="ptsr-mode-link">Режим ПТСР</a>
+                    <button type="button" id="ptsr-link" class="btn-primary">Монохромна тема</button>
                 </div>
             </div>
 
@@ -48,9 +46,22 @@
 
                 <form th:action="@{/profile}" th:object="${profileUpdateForm}" method="post" class="stack-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
                     <div class="form-field">
-                        <input type="text" th:field="*{name}" class="form-input" placeholder="Ім'я для відображення">
+                        <label class="form-input-label">Email (Логін)</label>
+                        <input type="email" th:value="${user.email}" class="form-input" readonly disabled>
                     </div>
+
+                    <div class="form-field">
+                        <label class="form-input-label">Ім'я для відображення</label>
+                        <input type="text" th:field="*{name}" class="form-input" placeholder="Ім'я">
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-input-label">Телефон</label>
+                        <input type="text" th:field="*{phone}" class="form-input" placeholder="+380...">
+                    </div>
+
                     <button type="submit" class="btn-primary">Зберегти</button>
                 </form>
 
@@ -62,93 +73,131 @@
                 <form th:action="@{/profile/password}" th:object="${passwordChangeForm}" method="post" class="stack-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <div class="form-field">
-                        <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Поточний пароль">
+                        <div class="password-container">
+                            <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Поточний пароль">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
                     </div>
                     <div class="form-field">
-                        <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Новий пароль">
+                        <div class="password-container">
+                            <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Новий пароль">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
                     </div>
                     <div class="form-field">
-                        <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Підтвердіть новий">
+                        <div class="password-container">
+                            <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Підтвердіть новий">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn-primary">Оновити</button>
                 </form>
+
+                <hr class="profile-divider">
+
+                <div class="danger-zone">
+                    <button type="button" class="btn-primary" id="toggleDeactivationBtn">⚙️ Видалення акаунта</button>
+
+                    <div id="deactivationVault" class="tab-pane">
+                        <p class="text-muted text-sm mt-sm">
+                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої коментарі та повідомлення на платформі.
+                        </p>
+                        <button type="button" id="submitDeactivateBtn" class="btn-primary mt-sm w-100">Запросити деактивацію</button>
+                    </div>
+                </div>
             </div>
         </aside>
 
-        <!-- ПРАВА КОЛОНКА (Особистий простір) -->
         <main class="profile-main-content">
 
-            <div th:if="${professionalNotes != null}" class="journal-section">
-                <div class="journal-header">
-                    <h3 class="heading-lg">Клінічний журнал (Тільки для фахівця)</h3>
-                </div>
-                <div class="journal-wall">
-                    <div th:each="note : ${professionalNotes}" class="journal-entry">
-                        <div class="note-header">
-                            <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
-                            <span class="note-person" th:text="${note.client.name}">Клієнт</span>
-                        </div>
-                        <p class="content-section" th:text="${note.content}">Зміст...</p>
+            <nav class="tabs-navigation">
+                <button type="button" class="tab-button active" data-target="therapy-tab">Терапевтичний простір</button>
+                <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
+            </nav>
+
+            <div id="therapy-tab" class="tab-pane active">
+
+                <div th:if="${hasInvitation}" class="card-elevated mb-md">
+                    <div class="invitation-text">
+                        <h3>Сесія активна</h3>
+                        <p>Ваш терапевт чекає на вас у кабінеті.</p>
                     </div>
+                    <a th:href="${therapyRoomUrl}" class="btn-primary">Увійти в кабінет</a>
                 </div>
-            </div>
-            <div th:if="${hasInvitation}" class="card-primary">
-                <div class="invitation-text">
-                    <h3>Сесія активна</h3>
-                    <p>Ваш терапевт чекає на вас у кабінеті.</p>
-                </div>
-                <a th:href="${therapyRoomUrl}" class="btn-primary">Увійти в кабінет</a>
-            </div>
 
-            <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="layout-container">
-                <h3 class="heading-lg">Мій журнал</h3>
-
-                <div class="layout-stack">
-                    <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
-                        <details class="journal-details">
-
-                            <summary class="journal-summary">
-                                <div class="note-header">
-                                    <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
-                                    <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
-                                </div>
-                                <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
-                            </summary>
-
-                            <div class="journal-expand-box">
-                                <form th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
-
-        <textarea name="content" class="comment-textarea" rows="4"
-                  th:text="${note.content}"
-                  placeholder="Напишіть ваші думки..."></textarea>
-
-                                    <div class="button-row">
-                                        <button type="submit" class="btn-primary">Зберегти зміни</button>
-                                    </div>
-                                </form>
+                <div th:if="${professionalNotes != null}" class="journal-section mb-md">
+                    <div class="journal-header">
+                        <h3 class="heading-lg">Клінічний журнал (Тільки для фахівця)</h3>
+                    </div>
+                    <div class="journal-wall">
+                        <div th:each="note : ${professionalNotes}" class="journal-entry">
+                            <div class="note-header">
+                                <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                                <span class="note-person" th:text="${note.client.name}">Клієнт</span>
                             </div>
-
-                        </details>
+                            <p class="content-section" th:text="${note.content}">Зміст...</p>
+                        </div>
                     </div>
                 </div>
+
+                <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="layout-container">
+                    <h3 class="heading-lg">Мій журнал (Нотатки з терапії)</h3>
+
+                    <div class="layout-stack">
+                        <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
+                            <details class="journal-details">
+                                <summary class="journal-summary">
+                                    <div class="note-header">
+                                        <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                        <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
+                                    </div>
+                                    <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
+                                </summary>
+
+                                <div class="journal-expand-box">
+                                    <form th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
+                                        <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
+                                        <div class="button-row">
+                                            <button type="submit" class="btn-primary">Зберегти зміни</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${myNotes == null or myNotes.isEmpty()}" class="profile-empty-state">
+                    <div class="icon">📝</div>
+                    <p>У вас поки немає збережених записів.</p>
+                </div>
             </div>
 
-            <div th:if="${myNotes == null or myNotes.isEmpty()}" class="profile-empty-state">
-                <div class="icon">📝</div>
-                <p>У вас поки немає збережених записів.</p>
-            </div>
-            <div th:if="${personalJournal != null}" class="journal-section">
-                <div class="journal-header">
-                    <h3 class="heading-lg">Мій простір рефлексії</h3>
-                    <button class="btn-primary">Новий запис</button>
-                </div>
-                <div class="journal-wall">
-                    <div th:each="entry : ${personalJournal}" class="journal-entry">
-                        <div class="note-header">
-                            <span class="text-muted" th:text="${#temporals.format(entry.createdAt, 'dd.MM.yyyy')}">Дата</span>
-                        </div>
-                        <p class="content-section" th:text="${entry.content}">Мої думки...</p>
-                        <div class="media-placeholder">Медіа-контент буде доступний у v2.0</div>
+            <div id="journal-tab" class="tab-pane">
+                <div class="journal-section">
+                    <div class="journal-header">
+                        <h3 class="heading-lg">Мій простір рефлексії</h3>
+                        <p class="text-sm text-muted">🔒 AES-256 та GZIP стиснення</p>
+                    </div>
+
+                    <div class="card-primary mb-md">
+                        <form id="journalForm" method="POST" action="#" class="stack-form" enctype="multipart/form-data">
+                            <div class="form-field">
+                                <textarea id="journalContent" name="content" rows="4" class="form-input" placeholder="Що у вас на душі?"></textarea>
+                            </div>
+                            <div class="button-row">
+                                <div>
+                                    <label for="journalMedia" class="btn-primary">📎 Медіафайл</label>
+                                    <input type="file" id="journalMedia" name="media" accept="image/*,video/*" class="visually-hidden-input">
+                                    <span id="fileNameDisplay" class="text-sm text-muted"></span>
+                                </div>
+                                <button type="submit" class="btn-primary">Опублікувати</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="journalFeed" class="journal-wall">
+                        <p class="text-center text-muted">Завантаження стрічки щоденника...</p>
                     </div>
                 </div>
             </div>
@@ -157,57 +206,53 @@
     </div>
 </section>
 
-<!-- МАГІЯ ЛОГІКИ: Збереження та ініціалізація -->
 <th:block th:fragment="page-scripts">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            /* =========================================
+               1. СИСТЕМНІ ТЕМИ ТА МОНОХРОМ
+               ========================================= */
             const slider = document.getElementById('theme-slider');
             const ptsrLink = document.getElementById('ptsr-link');
             const root = document.documentElement;
 
-            // 1. При завантаженні сторінки ставимо повзунок
             const savedTheme = localStorage.getItem('app-theme') || 'brown';
             const savedHue = localStorage.getItem('custom-hue');
 
             if (savedTheme === 'custom' && savedHue) {
                 slider.value = savedHue;
             } else {
-                slider.value = 15; // Дефолтний коричневий
+                slider.value = 15;
             }
 
-            // 2. Універсальна функція оновлення теми
             const updateTheme = (hue, sat = '75%', themeName = 'custom') => {
                 root.setAttribute('data-theme', themeName);
                 root.style.setProperty('--theme-h', hue);
                 root.style.setProperty('--theme-s', sat);
-
-                // Зберігаємо ВСЕ в локальну пам'ять, щоб base.html підхопив
                 localStorage.setItem('app-theme', themeName);
                 localStorage.setItem('custom-hue', hue);
                 localStorage.setItem('custom-sat', sat);
             };
 
-            // 3. Користувач тягне повзунок
             slider.addEventListener('input', (e) => {
-                // Відновлюємо яскравість до 75%, якщо користувач тягне повзунок
                 updateTheme(e.target.value, '75%', 'custom');
             });
 
-            // 4. Користувач тисне "режим птср"
             ptsrLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Зберігаємо як 'custom', але задаємо блідість 5%
                 updateTheme(210, '5%', 'custom');
-                slider.value = 210; // Повзунок автоматично стрибає
+                slider.value = 210;
             });
 
-            // 5. АСИНХРОННЕ ЗАВАНТАЖЕННЯ ФОТО АВАТАРА
+            /* =========================================
+               2. АСИНХРОННЕ ЗАВАНТАЖЕННЯ АВАТАРА
+               ========================================= */
             const avatarContainer = document.getElementById('avatarContainer');
             const avatarFileInput = document.getElementById('avatarFileInput');
             const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
 
             if (avatarContainer && avatarFileInput) {
-                // Клік по всьому колу програмно тригрить вибір файлу
                 avatarContainer.addEventListener('click', () => avatarFileInput.click());
 
                 avatarFileInput.addEventListener('change', function() {
@@ -217,7 +262,6 @@
                     const formData = new FormData();
                     formData.append('avatar', file);
 
-                    // Робимо коло напівпрозорим на час завантаження (ефект лоадера)
                     avatarContainer.style.opacity = '0.5';
 
                     fetch('/api/profile/avatar', {
@@ -231,25 +275,17 @@
                     })
                     .then(data => {
                         avatarContainer.style.opacity = '1';
-
                         let img = document.getElementById('avatarImage');
                         const letterSpan = document.getElementById('avatarLetter');
 
-                        // Якщо картинки в колі ще не було — динамічно створюємо її
                         if (!img) {
                             img = document.createElement('img');
                             img.id = 'avatarImage';
                             img.alt = 'User Avatar';
                             avatarContainer.insertBefore(img, avatarContainer.firstChild);
                         }
-
-                        // Оновлюємо джерело зображення на отриманий UUID шлях
                         img.src = data.url;
-
-                        // Назавжди видаляємо літеру-заглушку, бо тепер є круте фото
-                        if (letterSpan) {
-                            letterSpan.remove();
-                        }
+                        if (letterSpan) letterSpan.remove();
                     })
                     .catch(error => {
                         avatarContainer.style.opacity = '1';
@@ -258,6 +294,169 @@
                 });
             }
 
+            /* =========================================
+               3. УПРАВЛІННЯ ВКЛАДКАМИ (TABS)
+               ========================================= */
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === targetId) {
+                            pane.classList.add('active');
+                            if (targetId === 'journal-tab') {
+                                loadJournalFeed(); // Підвантажуємо стрічку при переході
+                            }
+                        } else {
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            /* =========================================
+               4. ДИНАМІКА ЩОДЕННИКА (AJAX РОБОТА)
+               ========================================= */
+            const journalForm = document.getElementById('journalForm');
+            const journalFeed = document.getElementById('journalFeed');
+            const journalMedia = document.getElementById('journalMedia');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+            if (journalMedia && fileNameDisplay) {
+                journalMedia.addEventListener('change', (e) => {
+                    fileNameDisplay.textContent = e.target.files[0] ? e.target.files[0].name : '';
+                });
+            }
+
+// Завантаження зашифрованої стрічки
+async function loadJournalFeed() {
+    if (!journalFeed) return;
+    try {
+        const response = await fetch('/api/journal/feed');
+        if (!response.ok) throw new Error('Помилка завантаження');
+        const posts = await response.json();
+
+        journalFeed.innerHTML = '';
+        if (posts.length === 0) {
+            journalFeed.innerHTML = '<p class="text-center text-muted italic">Ваш щоденник порожній.</p>';
+            return;
+        }
+
+        posts.forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'journal-post-card'; // Твій системний клас картки
+
+            const postDate = new Date(post.createdAt).toLocaleString('uk-UA', {
+                day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+// Рендеринг медіафайлу, якщо він є в базі даних
+            let mediaHtml = '';
+            if (post.mediaFileName) {
+                const isVideo = post.mediaFileName.match(/\.(mp4|webm|ogg)$/i);
+                if (isVideo) {
+                    mediaHtml = `
+                        <div class="journal-post-media-box">
+                            <video class="journal-post-video" controls>
+                                <source src="/api/journal/media/${post.mediaFileName}" type="video/mp4">
+                            </video>
+                        </div>`;
+                } else {
+                    mediaHtml = `
+                        <div class="journal-post-media-box">
+                            <img class="journal-post-img" src="/api/journal/media/${post.mediaFileName}" alt="Journal media">
+                        </div>`;
+                }
+            }
+
+            card.innerHTML = `
+                <div class="journal-post-header">
+                    <span class="text-muted">${postDate}</span>
+                    <span class="crypto-badge">🔒 AES-256</span>
+                </div>
+                <div class="journal-post-text">${post.content}</div>
+                ${mediaHtml}
+            `;
+            journalFeed.appendChild(card);
+        });
+    } catch (err) {
+        journalFeed.innerHTML = '<p class="text-center text-muted">Не вдалося завантажити стрічку щоденника.</p>';
+    }
+}
+
+            // Відправка нового зашифрованого поста
+            if (journalForm) {
+                journalForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); // Захист від перезавантаження та GET-витоків!
+
+                    const textarea = document.getElementById('journalContent');
+                    const formData = new FormData();
+                    formData.append('content', textarea.value.trim());
+                    if (journalMedia.files[0]) {
+                        formData.append('media', journalMedia.files[0]);
+                    }
+
+                    try {
+                        const response = await fetch('/api/journal/create', {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': csrfToken },
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            textarea.value = '';
+                            journalMedia.value = '';
+                            if (fileNameDisplay) fileNameDisplay.textContent = '';
+                            await loadJournalFeed(); // Миттєво перерисовуємо стрічку
+                        } else {
+                            alert('Помилка сервера при збереженні запису.');
+                        }
+                    } catch (err) {
+                        alert('Критична помилка мережі.');
+                    }
+                });
+            }
+
+            /* =========================================
+               5. ТЕРАПЕВТИЧНИЙ БАР'ЄР ДЕАКТИВАЦІЇ
+               ========================================= */
+            const toggleBtn = document.getElementById('toggleDeactivationBtn');
+            const vault = document.getElementById('deactivationVault');
+            const submitDeactivateBtn = document.getElementById('submitDeactivateBtn');
+
+            if (toggleBtn && vault) {
+                toggleBtn.addEventListener('click', () => {
+                    vault.classList.toggle('active');
+                });
+            }
+
+            if (submitDeactivateBtn) {
+                submitDeactivateBtn.addEventListener('click', () => {
+                    alert('Запит заблоковано системою. Видаліть усі свої коментарі на платформі перед деактивацією.');
+                });
+            }
+
+            /* =========================================
+               6. ПЕРЕМИКАЧ ВИДИМОСТІ ПАРОЛЯ
+               ========================================= */
+            document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.textContent = '🔒';
+                    } else {
+                        input.type = 'password';
+                        this.textContent = '👁️';
+                    }
+                });
+            });
         });
     </script>
 </th:block>

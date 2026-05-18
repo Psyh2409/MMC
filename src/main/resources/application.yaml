@@ -49,6 +49,8 @@ server:
 
 app:
   public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  crypto:
+    secret-key: ${MMC_CRYPTO_KEY}
   upload-dir: ${APP_UPLOAD_DIR:./uploads/articles} # 2. ДОДАЄМО ШЛЯХ ДО ЗАХИЩЕНОЇ ПАПКИ МЕДІА
   oauth2:
     google:

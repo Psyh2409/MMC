@@ -131,3 +131,39 @@
     font-size: 0.85rem;
     border-radius: var(--radius-sm);
 }
+
+/* ==========================================================================
+   PROFILE ACCOUNT DEACTIVATION BUTTONS (Pixel-free)
+   ========================================================================== */
+.btn-link-muted {
+    background: transparent;
+    border: none;
+    color: hsl(var(--text-muted-hsl, 0 0% 40%));
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+
+.btn-link-muted:hover {
+    color: hsl(var(--error-hsl, 0 85% 60%));
+}
+
+.btn-deactivate-submit {
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    background-color: transparent;
+    border: 0.0625rem solid hsl(var(--error-hsl, 0 85% 60%) / 0.4);
+    color: hsl(var(--error-hsl, 0 85% 60%));
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: var(--space-xs);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-deactivate-submit:hover {
+    background-color: hsl(var(--error-hsl, 0 85% 60%));
+    color: hsl(0 0% 100%);
+}

@@ -81,22 +81,6 @@ public class Article {
         }
     }
 
-//    @Transient // Це поле не йде в базу, воно лише для Thymeleaf
-//    public String getDisplayCategory() {
-//        if (this.category == null) return "Матеріали";
-//
-//        return switch (this.category) {
-//            case "inner-calm" -> "Тривога та панічні стани";
-//            case "restore-resource" -> "Відновлення ресурсу";
-//            case "closeness-crisis" -> "Кризи близькості";
-//            case "new-meanings" -> "Депресивні стани та сенси";
-//            case "freedom-choice" -> "Залежні форми поведінки";
-//            case "dialogue" -> "Конфлікти та медіація";
-//            case "exit-nearby" -> "Ілюзія, що виходу нема";
-//            default -> this.category;
-//        };
-//    }
-
     private byte[] compress(String str) {
         if (str == null || str.isEmpty()) return null;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -118,66 +102,4 @@ public class Article {
         }
     }
 }
-//    @Column(name = "title_bytes", nullable = false)
-//    private byte[] titleBytes;
-//
-//    @Column(name = "description_bytes")
-//    private byte[] descriptionBytes;
-//
-//    @Column(name = "content_bytes", nullable = false)
-//    private byte[] contentBytes;
-//
-//    @Column(name = "published_at", nullable = false, updatable = false)
-//    private LocalDateTime publishedAt;
-//
-//    @Transient
-//    private String title;
-//
-//    @Transient
-//    private String description;
-//
-//    @Transient
-//    private String content;
-//
-//    // --- РУЧНІ СЕТТЕРИ ДЛЯ ГАРАНТОВАНОЇ КОНВЕРТАЦІЇ ---
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//        if (title != null) {
-//            this.titleBytes = title.getBytes(StandardCharsets.UTF_8);
-//        }
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//        if (description != null) {
-//            this.descriptionBytes = description.getBytes(StandardCharsets.UTF_8);
-//        }
-//    }
-//
-//    public void setContent(String content) {
-//        this.content = content;
-//        if (content != null) {
-//            this.contentBytes = compress(content);
-//        }
-//    }
-//
-//    @PrePersist
-//    protected void onCreate() {
-//        if (this.publishedAt == null) {
-//            this.publishedAt = LocalDateTime.now();
-//        }
-//    }
-//
-//    @PostLoad
-//    protected void fillTransientFields() {
-//        if (titleBytes != null) {
-//            this.title = new String(titleBytes, StandardCharsets.UTF_8);
-//        }
-//        if (descriptionBytes != null) {
-//            this.description = new String(descriptionBytes, StandardCharsets.UTF_8);
-//        }
-//        if (contentBytes != null) {
-//            this.content = decompress(contentBytes);
-//        }
-//    }
+

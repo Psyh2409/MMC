@@ -63,6 +63,7 @@ public class UserProfileController {
             if (!model.containsAttribute("profileUpdateForm")) {
                 ProfileUpdateForm profileUpdateForm = new ProfileUpdateForm();
                 profileUpdateForm.setName(user.getName());
+                profileUpdateForm.setPhone(user.getPhone());
                 model.addAttribute("profileUpdateForm", profileUpdateForm);
             }
         });
@@ -129,11 +130,13 @@ public class UserProfileController {
         if (result.hasErrors()) return "profile";
 
         try {
-            userService.updateProfileName(principal.getName(), profileUpdateForm.getName());
+            userService.updateProfileDetails(principal.getName(), profileUpdateForm.getName(), profileUpdateForm.getPhone());
+
             userService.findByEmail(principal.getName()).ifPresent(user -> {
                 model.addAttribute("user", user);
                 ProfileUpdateForm refreshedForm = new ProfileUpdateForm();
                 refreshedForm.setName(user.getName());
+                refreshedForm.setPhone(user.getPhone());
                 model.addAttribute("profileUpdateForm", refreshedForm);
             });
             model.addAttribute("profileSuccess", "Профіль успішно оновлено.");

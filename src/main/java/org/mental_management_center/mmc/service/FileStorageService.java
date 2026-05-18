@@ -18,18 +18,63 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private final Path fileStorageLocation;
+    private final Path publicStorageLocation;
+    private final Path privateStorageLocation; // НОВА ПАПКА ДЛЯ ЩОДЕННИКА
 
-    // Зчитуємо шлях із нашого application.yaml. Якщо порожньо — беремо дефолт
-    public FileStorageService(@Value("${app.upload-dir:./uploads/articles}") String uploadDir) {
-        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
+    // Додаємо новий шлях (через app.journal-upload-dir або дефолтний)
+    public FileStorageService(
+            @Value("${app.upload-dir:./uploads/articles}") String publicDir,
+            @Value("${app.journal-upload-dir:./uploads/journal_private}") String privateDir) {
+
+        this.publicStorageLocation = Paths.get(publicDir).toAbsolutePath().normalize();
+        this.privateStorageLocation = Paths.get(privateDir).toAbsolutePath().normalize();
+
+        try {
+            Files.createDirectories(this.publicStorageLocation);
+            Files.createDirectories(this.privateStorageLocation); // Створюємо захищену папку
+        } catch (Exception ex) {
+            throw new RuntimeException("Не вдалося створити директорії для завантаження.", ex);
+        }
+    }
+
+    // Твій існуючий метод storeFile() залишається БЕЗ ЗМІН (він використовує publicStorageLocation)
+    // ...
+
+    // 1. НОВИЙ МЕТОД: Збереження ТІЛЬКИ в приватну папку
+    public String storePrivateFile(MultipartFile file) {
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        try {
+            if (originalFileName.contains("..") || file.isEmpty()) {
+                throw new IllegalArgumentException("Некоректний файл.");
+            }
+            String fileExtension = "";
+            int extensionIndex = originalFileName.lastIndexOf(".");
+            if (extensionIndex >= 0) fileExtension = originalFileName.substring(extensionIndex);
+
+            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+
+            // УВАГА: Зберігаємо в privateStorageLocation
+            Path targetLocation = this.privateStorageLocation.resolve(uniqueFileName);
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            }
+            return uniqueFileName;
+        } catch (IOException ex) {
+            throw new RuntimeException("Не вдалося зберегти приватний файл", ex);
+        }
+    }
+
+    // 2. НОВИЙ МЕТОД: Читання з приватної папки
+    public Path loadPrivateFileAsPath(String fileName) {
+        return this.privateStorageLocation.resolve(fileName).normalize();
     }
 
     @PostConstruct
     public void init() {
         try {
             // Автоматично створюємо папку на диску сервера, якщо її ще немає
-            Files.createDirectories(this.fileStorageLocation);
+            Files.createDirectories(this.publicStorageLocation);
         } catch (IOException ex) {
             throw new RuntimeException("Не вдалося створити директорію для завантажених файлів.", ex);
         }
@@ -69,7 +114,7 @@ public class FileStorageService {
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
 
             // Формуємо фінальний шлях на диску
-            Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
+            Path targetLocation = this.publicStorageLocation.resolve(uniqueFileName);
 
             // Безпечно копіюємо байти файлу в цільову папку
             try (InputStream inputStream = file.getInputStream()) {
@@ -89,6 +134,6 @@ public class FileStorageService {
      * Повертає повний Path до файлу на диску для подальшого стрімінгу користувачу
      */
     public Path loadFileAsPath(String fileName) {
-        return this.fileStorageLocation.resolve(fileName).normalize();
+        return this.publicStorageLocation.resolve(fileName).normalize();
     }
 }

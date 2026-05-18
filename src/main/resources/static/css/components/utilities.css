@@ -29,3 +29,11 @@
 .issue-border-top-muted {
     border-top: 0.375rem solid var(--accent-secondary);
 }
+
+.hidden-element {
+    display: none !important;
+}
+
+.tab-pane.active {
+    display: block;
+}

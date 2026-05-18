@@ -181,10 +181,10 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProfileName(String email, String name) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
-        user.setName(name == null ? "" : name.trim());
+    public void updateProfileDetails(String email, String newName, String newPhone) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        user.setName(newName);
+        user.setPhone(newPhone); // 🎯 Зберігаємо телефон
         userRepository.save(user);
     }
 

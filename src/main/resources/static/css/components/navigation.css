@@ -176,3 +176,49 @@
     list-style: none;
     padding: 0;
 }
+
+/* ==========================================================================
+   PROFILE TABS NAVIGATION (Pixel-free)
+   ========================================================================== */
+/* ==========================================================================
+   SPECTRUM TABS NAVIGATION (Zero-pixel / Pure HSL)
+   ========================================================================== */
+/* ==========================================================================
+   TABS NAVIGATION (Терапевтичний простір / Щоденник)
+   ========================================================================== */
+.tabs-navigation {
+    display: flex;
+    gap: var(--space-md);
+    border-bottom: 0.125rem solid var(--border-color); /* Чітка лінія під вкладками */
+    margin-bottom: var(--space-md);
+}
+
+.tab-button {
+    background: transparent; /* Ніякого фону, щоб не зливалося */
+    border: none;
+    color: var(--text-muted); /* Тьмяний текст для неактивних */
+    padding: var(--space-sm) 0; /* Відступи тільки зверху/знизу */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 0.1875rem solid transparent; /* Місце під активну лінію */
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-main);
+}
+
+.tab-button.active {
+    color: var(--primary-color); /* Яскравий акцентний колір теми */
+    border-bottom-color: var(--primary-color); /* Підкреслення кольором теми */
+    background: transparent;
+}
+/* Керування станом вкладок через каскад */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
