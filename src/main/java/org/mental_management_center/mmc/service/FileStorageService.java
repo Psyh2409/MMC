@@ -1,6 +1,8 @@
 package org.mental_management_center.mmc.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,16 +14,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-import java.util.UUID;
 
+@Slf4j
 @Service
 public class FileStorageService {
 
+    // Оголошуємо два чітких фінальних поля для розділення сховищ
     private final Path publicStorageLocation;
-    private final Path privateStorageLocation; // НОВА ПАПКА ДЛЯ ЩОДЕННИКА
+    private final Path privateStorageLocation;
 
-    // Додаємо новий шлях (через app.journal-upload-dir або дефолтний)
     public FileStorageService(
             @Value("${app.upload-dir:./uploads/articles}") String publicDir,
             @Value("${app.journal-upload-dir:./uploads/journal_private}") String privateDir) {
@@ -31,109 +35,100 @@ public class FileStorageService {
 
         try {
             Files.createDirectories(this.publicStorageLocation);
-            Files.createDirectories(this.privateStorageLocation); // Створюємо захищену папку
+            Files.createDirectories(this.privateStorageLocation);
         } catch (Exception ex) {
             throw new RuntimeException("Не вдалося створити директорії для завантаження.", ex);
         }
     }
 
-    // Твій існуючий метод storeFile() залишається БЕЗ ЗМІН (він використовує publicStorageLocation)
-    // ...
-
-    // 1. НОВИЙ МЕТОД: Збереження ТІЛЬКИ в приватну папку
-    public String storePrivateFile(MultipartFile file) {
-        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        try {
-            if (originalFileName.contains("..") || file.isEmpty()) {
-                throw new IllegalArgumentException("Некоректний файл.");
-            }
-            String fileExtension = "";
-            int extensionIndex = originalFileName.lastIndexOf(".");
-            if (extensionIndex >= 0) fileExtension = originalFileName.substring(extensionIndex);
-
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
-
-            // УВАГА: Зберігаємо в privateStorageLocation
-            Path targetLocation = this.privateStorageLocation.resolve(uniqueFileName);
-
-            try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            }
-            return uniqueFileName;
-        } catch (IOException ex) {
-            throw new RuntimeException("Не вдалося зберегти приватний файл", ex);
-        }
-    }
-
-    // 2. НОВИЙ МЕТОД: Читання з приватної папки
-    public Path loadPrivateFileAsPath(String fileName) {
-        return this.privateStorageLocation.resolve(fileName).normalize();
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            // Автоматично створюємо папку на диску сервера, якщо її ще немає
-            Files.createDirectories(this.publicStorageLocation);
-        } catch (IOException ex) {
-            throw new RuntimeException("Не вдалося створити директорію для завантажених файлів.", ex);
-        }
+    /**
+     * ПУБЛІЧНЕ СХОВИЩЕ (Статті, Аватари) - Версія 2.0 з SHA-256 дедуплікацією
+     */
+    public String storeFile(MultipartFile file) {
+        return saveFileWithHash(file, this.publicStorageLocation, "Публічний (Статті)");
     }
 
     /**
-     * Зберігає файл на диск і повертає його унікальне ім'я для запису в БД.
+     * ПРИВАТНЕ СХОВИЩЕ (🔒 Щоденник рефлексії) - Версія 2.0 з SHA-256 дедуплікацією
      */
-    public String storeFile(MultipartFile file) {
-        // Очищаємо ім'я файлу від можливих зайвих символів шляху
+    public String storePrivateFile(MultipartFile file) {
+        return saveFileWithHash(file, this.privateStorageLocation, "Приватний (Щоденник)");
+    }
+
+    /**
+     * Перенесений приватний утилітний метод, щоб не дублювати логіку хешування в коді
+     */
+    private String saveFileWithHash(MultipartFile file, Path targetFolder, String storageType) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Не вдалося зберегти порожній файл.");
+        }
+
         String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        if (originalFileName.contains("..")) {
+            throw new IllegalArgumentException("Помилка! Ім'я файлу містить недозволений шлях: " + originalFileName);
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.startsWith("image/") && !contentType.startsWith("video/"))) {
+            throw new IllegalArgumentException("Недозволений тип файлу! Дозволено лише зображення та відео.");
+        }
 
         try {
-            // Безпека: перевіряємо, чи ім'я файлу не містить хакерських спроб виходу з папки (напр., ../../)
-            if (originalFileName.contains("..")) {
-                throw new IllegalArgumentException("Помилка! Ім'я файлу містить недозволений шлях: " + originalFileName);
+            // 1. Обчислюємо SHA-256 хеш
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (InputStream is = file.getInputStream()) {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    digest.update(buffer, 0, bytesRead);
+                }
             }
+            byte[] hashBytes = digest.digest();
 
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("Не вдалося зберегти порожній файл: " + originalFileName);
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
             }
+            String fileHash = hexString.toString();
 
-            // Валідація типів: дозволяємо ТІЛЬКИ зображення або відео
-            String contentType = file.getContentType();
-            if (contentType == null || (!contentType.startsWith("image/") && !contentType.startsWith("video/"))) {
-                throw new IllegalArgumentException("Недозволений тип файлу! Дозволено лише зображення та відео.");
-            }
-
-            // Витягуємо оригінальне розширення файлу (наприклад, .png або .mp4)
+            // 2. Виділяємо розширення
             String fileExtension = "";
             int extensionIndex = originalFileName.lastIndexOf(".");
             if (extensionIndex >= 0) {
                 fileExtension = originalFileName.substring(extensionIndex);
             }
 
-            // Генеруємо абсолютно унікальне ім'я файлу через UUID
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+            String uniqueHashFileName = fileHash + fileExtension;
+            Path targetLocation = targetFolder.resolve(uniqueHashFileName);
 
-            // Формуємо фінальний шлях на диску
-            Path targetLocation = this.publicStorageLocation.resolve(uniqueFileName);
+            // 3. Перевірка на дублікат на диску
+            if (Files.exists(targetLocation)) {
+                log.info("ℹ️ Дедуплікація [{}]: Файл з хешем {} вже існує на диску. Пропускаємо копіювання.", storageType, fileHash);
+                return uniqueHashFileName;
+            }
 
-            // Безпечно копіюємо байти файлу в цільову папку
+            // 4. Копіюємо контент
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            // Повертаємо суто унікальне ім'я файлу (наприклад: "a1b2c3d4-....png")
-            // Саме це ім'я ми запишемо в колонку image_path таблиці статей
-            return uniqueFileName;
+            log.info("✅ [{}] Збережено новий унікальний файл: {}", storageType, uniqueHashFileName);
+            return uniqueHashFileName;
 
+        } catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException("Помилка ініціалізації SHA-256", ex);
         } catch (IOException ex) {
-            throw new RuntimeException("Не вдалося зберегти файл " + originalFileName + ". Спробуйте ще раз!", ex);
+            throw new RuntimeException("Не вдалося зберегти файл " + originalFileName, ex);
         }
     }
 
-    /**
-     * Повертає повний Path до файлу на диску для подальшого стрімінгу користувачу
-     */
     public Path loadFileAsPath(String fileName) {
         return this.publicStorageLocation.resolve(fileName).normalize();
+    }
+
+    public Path loadPrivateFileAsPath(String fileName) {
+        return this.privateStorageLocation.resolve(fileName).normalize();
     }
 }

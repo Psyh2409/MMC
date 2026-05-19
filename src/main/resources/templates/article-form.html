@@ -36,13 +36,16 @@
                 <label for="categorySelector">Тематичний розділ:</label>
                 <select id="categorySelector" class="form-input" onchange="syncCategory(this)">
                     <option value="">-- Оберіть існуючий розділ --</option>
-
                     <option th:each="cat : ${categories}"
                             th:value="${cat.categorySlug}"
-                            th:text="${cat.displayName}">Назва розділу</option>
-
+                            th:text="${cat.displayName}">Назва</option>
                     <option value="NEW">+ Додати новий тематичний розділ...</option>
                 </select>
+
+                <input type="text" id="category" th:field="*{category}" class="form-input hidden-category-field" placeholder="Slug (англ)">
+                <input type="text" id="categoryNameUa" th:field="*{categoryNameUa}" class="form-input hidden-category-field" placeholder="Назва (укр)">
+
+                <p class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
             </div>
 
             <div class="form-group">
@@ -81,28 +84,22 @@
 <script>
     // 1. СИНХРОНІЗАЦІЯ КАТЕГОРІЙ (Твій базовий інструмент)
     function syncCategory(select) {
-        const slugInput = document.getElementById('finalCategory');
-        const nameInput = document.getElementById('finalCategoryNameUa');
-
-        if (!slugInput || !nameInput) return;
+        const slugInput = document.getElementById('category');
+        const nameInput = document.getElementById('categoryNameUa');
 
         if (select.value === 'NEW') {
             slugInput.classList.remove('hidden-category-field');
             nameInput.classList.remove('hidden-category-field');
             slugInput.value = '';
             nameInput.value = '';
-            slugInput.focus();
         } else if (select.value !== "") {
             slugInput.classList.add('hidden-category-field');
             nameInput.classList.add('hidden-category-field');
 
+            // ВАЖЛИВО: Заповнюємо обидва поля, щоб валідатор не лаявся
             slugInput.value = select.value;
-            nameInput.value = select.options[select.selectedIndex].text;
-        } else {
-            slugInput.classList.add('hidden-category-field');
-            nameInput.classList.add('hidden-category-field');
-            slugInput.value = '';
-            nameInput.value = '';
+            nameInput.value = select.options[select.selectedIndex].text; // Беремо текст з option
+            console.log("Синхронізація: Slug=" + slugInput.value + ", Name=" + nameInput.value);
         }
     }
 
@@ -111,7 +108,7 @@
 
         // Частина А: Авто-підтягування тематичного розділу при редагуванні
         const selector = document.getElementById('categorySelector');
-        const slugInput = document.getElementById('finalCategory');
+        const slugInput = document.getElementById('category');
 
         if (selector && slugInput && slugInput.value) {
             selector.value = slugInput.value;
@@ -188,12 +185,18 @@
                         return response.json();
                     })
                     .then(data => {
-                        const imgTag = `<img src="${data.url}" class="article-illustration" alt="${file.name}">`;
+                        // Розумне визначення тегу: якщо файл відео — генеруємо <video>, якщо ні — <img>
+                        let generatedTag = '';
+                        if (file.type.startsWith('video/')) {
+                            generatedTag = `<video src="${data.url}" class="article-illustration" controls preload="metadata"></video>`;
+                        } else {
+                            generatedTag = `<img src="${data.url}" class="article-illustration" alt="${file.name}">`;
+                        }
 
-                        // Генеруємо чисту розмітку без брудних інлайн-скриптів onclick
+                        // Генеруємо рядок з готовим кодом для вставки
                         progressRow.innerHTML = `
                             <span class="media-item-name">${file.name}</span>
-                            <input type="text" class="form-input media-item-input" value='${imgTag}' readonly>
+                            <input type="text" class="form-input media-item-input" value='${generatedTag}' readonly>
                             <button type="button" class="btn-primary btn-sm copy-btn">Копіювати код</button>
                         `;
 
@@ -206,16 +209,14 @@
                             inputEl.addEventListener('click', () => inputEl.select());
                         }
 
-                        // Безпечний, залізобетонний клік на кнопку через Clipboard API
+                        // Клік на кнопку через Clipboard API
                         if (btnEl) {
                             btnEl.addEventListener('click', () => {
-                                navigator.clipboard.writeText(imgTag).then(() => {
-                                    // Елегантний UX: міняємо текст і додаємо твій клас успіху
+                                navigator.clipboard.writeText(generatedTag).then(() => {
                                     const originalText = btnEl.textContent;
                                     btnEl.textContent = 'Скопійовано! ✓';
                                     btnEl.classList.add('btn-success');
 
-                                    // Через 2 секунди повертаємо кнопку в початковий стан
                                     setTimeout(() => {
                                         btnEl.textContent = originalText;
                                         btnEl.classList.remove('btn-success');

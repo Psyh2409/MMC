@@ -760,3 +760,14 @@ margin-top: var(--space-md);
     white-space: nowrap;
     margin-left: var(--space-sm);
 }
+
+.article-illustration {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    /* 2rem зверху/знизу створюють буфер, щоб текст не налізав, auto — центрує */
+    margin: 2rem auto;
+    border-radius: 0.5rem;
+    /* М'яка тінь на основі HSL, без брудних rgba */
+    box-shadow: 0 0.25rem 0.75rem hsl(var(--theme-h) var(--theme-s) 10% / 0.05);
+}

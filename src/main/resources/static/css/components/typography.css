@@ -216,3 +216,13 @@ h3 {
     color: var(--text-secondary); /* Твої 40% яскравості вдень / 70% вночі */
     font-size: 0.875rem;
 }
+
+.content-section {
+    text-align: justify;
+    line-height: 1.6;
+}
+
+/* Отступ для абзацев через rem, чтобы текст дышал */
+.content-section p {
+    margin-bottom: 1.25rem;
+}
