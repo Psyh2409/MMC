@@ -124,11 +124,45 @@ public class FileStorageService {
         }
     }
 
-    public Path loadFileAsPath(String fileName) {
+    // Для щоденника (завжди бере з приватної)
+    public Path loadFromPrivate(String fileName) {
+        Path path = this.privateStorageLocation.resolve(fileName).normalize();
+        log.info("DEBUG: Контролер шукає файл за шляхом: {}", path.toAbsolutePath());
+        return path;
+    }
+
+    // Для статей/аватарів (завжди бере з публічної)
+    public Path loadFromPublic(String fileName) {
         return this.publicStorageLocation.resolve(fileName).normalize();
     }
 
-    public Path loadPrivateFileAsPath(String fileName) {
-        return this.privateStorageLocation.resolve(fileName).normalize();
+    public Path findExistingFile(String fileName) {
+        Path privatePath = privateStorageLocation.resolve(fileName);
+        if (Files.exists(privatePath)) {
+            return privatePath;
+        }
+
+        Path publicPath = publicStorageLocation.resolve(fileName);
+        if (Files.exists(publicPath)) {
+            return publicPath;
+        }
+
+        return null; // Файл не знайдено ніде
+    }
+
+    public Path findFileAnywhere(String fileName) {
+        // 1. Спробуй знайти в приватній папці
+        Path privatePath = privateStorageLocation.resolve(fileName).normalize();
+        if (Files.exists(privatePath)) {
+            return privatePath;
+        }
+
+        // 2. Якщо там немає, шукай у публічній
+        Path publicPath = publicStorageLocation.resolve(fileName).normalize();
+        if (Files.exists(publicPath)) {
+            return publicPath;
+        }
+
+        return null; // Файлу немає ніде
     }
 }

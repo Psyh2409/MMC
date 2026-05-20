@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
@@ -18,10 +19,14 @@ public class MediaEndpointController {
     private final FileStorageService fileStorageService;
 
     @GetMapping("/api/media/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException {
+        // ... (твій код)
         try {
             // Отримуємо безпечний шлях до файлу на диску через наш сервіс
-            Path file = fileStorageService.loadFileAsPath(filename);
+            Path file = fileStorageService.loadFromPublic(filename);
+            if (file == null) {
+                return ResponseEntity.notFound().build();
+            }
             Resource resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {

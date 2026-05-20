@@ -1,15 +1,18 @@
 package org.mental_management_center.mmc.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-@ControllerAdvice(annotations = Controller.class)
+@Slf4j
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
@@ -55,5 +58,18 @@ public class GlobalExceptionHandler {
             case BAD_REQUEST -> "Запит виглядає некоректним. Спробуйте повторити дію ще раз.";
             default -> "Виникла внутрішня помилка. Спробуйте оновити сторінку або повернутися пізніше.";
         };
+    }
+
+    // Видаляємо обидва методи (handleMediaDisconnects та handleClientAbort)
+    // і вставляємо один цей:
+
+    @ExceptionHandler({
+            java.io.IOException.class,
+            AsyncRequestNotUsableException.class
+    })
+    @ResponseBody
+    public void handleMediaDisconnects(Exception ex) {
+        // Логуємо лише на рівні DEBUG або WARN, щоб не "засмічувати" консоль
+        log.warn("Штатний обрив медіа-потоку (користувач закрив вкладку або пауза): {}", ex.getMessage());
     }
 }

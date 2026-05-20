@@ -8,6 +8,7 @@ import org.mental_management_center.mmc.service.OAuth2Principal;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ControllerAdvice(annotations = Controller.class)
+@ControllerAdvice
 public class GlobalModelAttributes {
 
     private final UserService userService;

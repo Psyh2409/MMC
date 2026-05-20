@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -118,36 +119,37 @@ public class JournalController {
         return ResponseEntity.ok(decryptedPosts);
     }
 
-    @GetMapping("/media/{fileName:.+}")
-    public ResponseEntity<Resource> getPrivateMedia(@PathVariable("fileName") String fileName, Principal principal) {
-        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
+    @GetMapping(value = "/media/{fileName:.+}")
+    public ResponseEntity<Resource> getPrivateMedia(@PathVariable String fileName, Principal principal) {
+        // 1. Перевірка доступу (залишаємо як є)
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         boolean isOwner = journalPostRepository.existsByUserIdAndMediaFileName(user.getId(), fileName);
 
-        if (!isOwner) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        if (!isOwner) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
+        // 2. Читання файлу
         try {
-            Path filePath = fileStorageService.loadPrivateFileAsPath(fileName);
-            // ДІАГНОСТИКА: Виводимо абсолютний шлях у консоль
-            log.info("Щоденник: спроба прочитати файл за шляхом -> {}", filePath.toAbsolutePath());
-
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (resource.exists() || resource.isReadable()) {
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
-            } else {
-                // ДІАГНОСТИКА: Файлу там фізично немає
-                log.warn("Щоденник: файл ФІЗИЧНО НЕ ЗНАЙДЕНО на диску -> {}", filePath.toAbsolutePath());
+            Path path = fileStorageService.loadFromPrivate(fileName);
+            if (path == null) {
                 return ResponseEntity.notFound().build();
             }
+            Resource resource = new UrlResource(path.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // 3. БЕЗ ResourceRegion. Просто віддаємо файл цілком.
+            // Це гарантовано працює в будь-якому браузері.
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("video/mp4"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .body(resource);
+
         } catch (Exception e) {
-            log.error("Помилка читання файлу щоденника", e);
+            log.error("Помилка при читанні відео: {}", fileName, e);
             return ResponseEntity.internalServerError().build();
         }
     }
+
 }
