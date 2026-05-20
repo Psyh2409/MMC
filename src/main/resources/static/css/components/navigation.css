@@ -54,7 +54,7 @@
 }
 
 .site-nav-label:hover {
-    color: var(--text-navigation-hover);
+    color: var(--primary-color);
 }
 
 .site-nav-link {

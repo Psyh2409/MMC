@@ -126,9 +126,7 @@ public class FileStorageService {
 
     // Для щоденника (завжди бере з приватної)
     public Path loadFromPrivate(String fileName) {
-        Path path = this.privateStorageLocation.resolve(fileName).normalize();
-        log.info("DEBUG: Контролер шукає файл за шляхом: {}", path.toAbsolutePath());
-        return path;
+        return this.privateStorageLocation.resolve(fileName).normalize();
     }
 
     // Для статей/аватарів (завжди бере з публічної)
