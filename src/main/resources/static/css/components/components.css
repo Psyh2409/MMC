@@ -730,6 +730,9 @@ margin-top: var(--space-md);
     line-height: 1.5;
     color: var(--text-main); /* Основний колір тексту теми */
     white-space: pre-wrap;
+    word-break: break-all; /* Або break-word */
+    overflow-wrap: break-word; /* Це сучасний стандарт для перенесення довгих слів */
+    hyphens: auto;
 }
 
 .journal-post-media-box {
