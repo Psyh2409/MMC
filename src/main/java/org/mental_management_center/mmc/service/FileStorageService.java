@@ -163,4 +163,24 @@ public class FileStorageService {
 
         return null; // Файлу немає ніде
     }
+
+    // Видаляємо тільки з приватного сховища (для щоденника)
+    public void deletePrivateFile(String fileName) {
+        try {
+            Files.deleteIfExists(privateStorageLocation.resolve(fileName));
+            log.info("🗑️ Приватний файл видалено: {}", fileName);
+        } catch (IOException e) {
+            log.error("Помилка видалення приватного файлу: {}", fileName, e);
+        }
+    }
+
+    // Видаляємо тільки з публічного (для статей)
+    public void deletePublicFile(String fileName) {
+        try {
+            Files.deleteIfExists(publicStorageLocation.resolve(fileName));
+            log.info("🗑️ Публічний файл видалено: {}", fileName);
+        } catch (IOException e) {
+            log.error("Помилка видалення публічного файлу: {}", fileName, e);
+        }
+    }
 }

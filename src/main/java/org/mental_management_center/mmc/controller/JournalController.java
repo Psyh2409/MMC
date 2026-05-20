@@ -8,6 +8,7 @@ import org.mental_management_center.mmc.repository.JournalPostRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.FileStorageService;
 import org.mental_management_center.mmc.service.JournalCryptoService;
+import org.mental_management_center.mmc.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,7 @@ public class JournalController {
     private final JournalPostRepository journalPostRepository;
     private final UserRepository userRepository;
     private final JournalCryptoService cryptoService;
+    private final UserService userService;
     private final FileStorageService fileStorageService;
     // Припускаємо, що твій сервіс збереження медіа називається саме так
     // private final FileStorageService fileStorageService;
@@ -152,4 +154,41 @@ public class JournalController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> deletePost(@PathVariable UUID id, Principal principal) {
+        // 1. Знаходимо пост
+        JournalPost post = journalPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пост не знайдено"));
+
+        // 2. Перевірка власника
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        if (!post.getUserId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // 3. Зберігаємо ім'я файлу (якщо є), щоб видалити його ПІСЛЯ видалення поста
+        String fileName = post.getMediaFileName();
+
+        // 4. Видаляємо пост з бази
+        journalPostRepository.delete(post);
+
+        // 5. Логіка видалення медіа
+        if (fileName != null) {
+            // Перевіряємо, чи залишились ще посилання на цей файл в інших постах
+            long usageCount = journalPostRepository.countUsage(fileName);
+
+            if (usageCount == 0) {
+                // Якщо 0 — файл "сирота", видаляємо фізично
+                // Тут ми маємо бути впевнені, з якої папки видаляти.
+                // Якщо ми не знаємо, з якої саме, можна спробувати видалити з обох.
+                fileStorageService.deletePrivateFile(fileName);
+                log.info("🗑️ Файл {} видалено фізично, бо посилань більше немає.", fileName);
+            }
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }

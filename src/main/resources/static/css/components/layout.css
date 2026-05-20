@@ -362,3 +362,11 @@ main {
 .tab-pane.active {
     display: block; /* Показуємо тільки ту, яка має клас active */
 }
+
+.journal-wall {
+    display: grid;
+    /* замість 300px -> 18rem (приблизно 288px) */
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--spacing-md);
+    width: 100%;
+}

@@ -774,3 +774,34 @@ margin-top: var(--space-md);
     /* М'яка тінь на основі HSL, без брудних rgba */
     box-shadow: 0 0.25rem 0.75rem hsl(var(--theme-h) var(--theme-s) 10% / 0.05);
 }
+
+.journal-post-card {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    /* Використовуємо word-break для довгих посилань, щоб не розносило картку */
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+/* Кнопка видалення */
+.btn-delete-small {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Адаптивний розмір */
+    padding: var(--spacing-xs);
+    transition: opacity 0.2s;
+}
+
+.btn-delete-small:hover {
+    opacity: 1; /* або колір */
+}
+
+/* Контейнер для кнопок в хедері */
+.post-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}

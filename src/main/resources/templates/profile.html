@@ -120,7 +120,7 @@
 
             <div id="therapy-tab" class="tab-pane active">
 
-                <div th:if="${hasInvitation}" class="card-elevated mb-md">
+                <div th:if="${hasInvitation}" class="card-primary mb-md">
                     <div class="invitation-text">
                         <h3>Сесія активна</h3>
                         <p>Ваш терапевт чекає на вас у кабінеті.</p>
@@ -379,13 +379,18 @@ async function loadJournalFeed() {
             }
 
             card.innerHTML = `
-                <div class="journal-post-header">
-                    <span class="text-muted">${postDate}</span>
-                    <span class="crypto-badge">🔒 AES-256</span>
-                </div>
-                <div class="journal-post-text">${post.content}</div>
-                ${mediaHtml}
-            `;
+    <div class="journal-post-header">
+        <span class="text-muted">${postDate}</span>
+        <div class="post-actions">
+            <span class="crypto-badge">🔒 AES-256</span>
+            <button class="btn-primary btn-danger" onclick="deletePost('${post.id}')" title="Видалити пост">
+                🗑️
+            </button>
+        </div>
+    </div>
+    <div class="journal-post-text">${post.content}</div>
+    ${mediaHtml}
+`;
             journalFeed.appendChild(card);
         });
     } catch (err) {
@@ -425,6 +430,27 @@ async function loadJournalFeed() {
                     }
                 });
             }
+
+            // Видалення поста
+window.deletePost = async function(postId) {
+    if (!confirm('Ви впевнені, що хочете видалити цей запис?')) return;
+
+    try {
+        const response = await fetch(`/api/journal/${postId}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        });
+
+        if (response.ok) {
+            await loadJournalFeed();
+        } else {
+            alert('Помилка при видаленні поста.');
+        }
+    } catch (err) {
+        console.error('Помилка мережі:', err);
+        alert('Критична помилка видалення.');
+    }
+};
 
             /* =========================================
                5. ТЕРАПЕВТИЧНИЙ БАР'ЄР ДЕАКТИВАЦІЇ

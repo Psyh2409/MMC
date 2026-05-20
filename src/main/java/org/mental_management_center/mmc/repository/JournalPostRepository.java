@@ -2,6 +2,8 @@ package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.JournalPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +16,8 @@ public interface JournalPostRepository extends JpaRepository<JournalPost, UUID> 
     List<JournalPost> findByUserIdOrderByCreatedAtDesc(UUID userId);
 
     boolean existsByUserIdAndMediaFileName(UUID userId, String mediaFileName);
+
+    // SQL-запит: "Порахуй, скільки рядків у таблиці мають таке ім'я файлу"
+    @Query("SELECT COUNT(jp) FROM JournalPost jp WHERE jp.mediaFileName = :fileName")
+    long countUsage(@Param("fileName") String fileName);
 }
