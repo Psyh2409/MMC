@@ -805,3 +805,27 @@ margin-top: var(--space-md);
     gap: var(--spacing-sm);
     align-items: center;
 }
+
+.media-wrapper {
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+.journal-post-video,
+.journal-post-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-md);
+}
+
+/* Відступ для назви поточного файлу */
+.current-media-label {
+    margin-left: var(--space-md, 1rem);
+}
+
+/* Якщо базовий клас btn-outline не має внутрішніх відступів, додаємо їх через спеціальний клас */
+.btn-cancel-inline {
+    padding: var(--space-sm, 0.5rem) var(--space-md, 1rem);
+    border-radius: var(--radius-md, 0.375rem);
+}

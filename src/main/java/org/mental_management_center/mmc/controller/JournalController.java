@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -92,33 +93,27 @@ public class JournalController {
     }
 
     // 2. ОТРИМАННЯ СТРІЧКИ ЩОДЕННИКА (Дешифрування при читанні)
-    @Transactional
+    // 1. Повернення готового HTML-фрагменту всієї стрічки
+    @Transactional(readOnly = true)
     @GetMapping("/feed")
-    public ResponseEntity<List<JournalPost>> getFeed(Principal principal) {
-        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-        User user = userRepository.findByEmail(principal.getName())
+    public ModelAndView getFeed(Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-        // Витягуємо сирі зашифровані пости з бази
-        List<JournalPost> rawPosts = journalPostRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+        List<JournalPost> posts = journalPostRepository.findByUserIdOrderByCreatedAtDesc(currentUser.getId());
 
-        // Проганяємо кожен пост через дешифратор і заповнюємо @Transient поле 'content'
-        // Проганяємо кожен пост через дешифратор
-        List<JournalPost> decryptedPosts = rawPosts.stream().map(post -> {
-            String decryptedText = cryptoService.decryptAndDecompress(post.getEncryptedContent());
+        // Дешифруємо контент кожного запису перед рендерингом фрагмента
+        posts.forEach(post -> {
+            String decrypted = cryptoService.decryptAndDecompress(post.getEncryptedContent());
+            post.setContent(decrypted);
+        });
 
-            // Якщо це наш системний маркер порожнечі — віддаємо фронтенду чисту пустоту
-            if ("[MEDIA_ONLY]".equals(decryptedText)) {
-                post.setContent("");
-            } else {
-                post.setContent(decryptedText);
-            }
+        ModelAndView mav = new ModelAndView("fragments/journal-form :: journalFeed");
+        mav.addObject("posts", posts);
 
-            return post;
-        }).collect(Collectors.toList());
+        posts.forEach(p -> log.info("POST ID: {}, MEDIA: {}", p.getId(), p.getMediaFileName()));
 
-        return ResponseEntity.ok(decryptedPosts);
+        return mav;
     }
 
     @GetMapping(value = "/media/{fileName:.+}")
@@ -191,4 +186,76 @@ public class JournalController {
 
         return ResponseEntity.ok().build();
     }
+
+    // 2. Повернення готового HTML-фрагменту форми для конкретного поста
+    @Transactional(readOnly = true)
+    @GetMapping("/fragment/edit-form/{id}")
+    public ModelAndView getEditFormFragment(@PathVariable UUID id, Principal principal) {
+        JournalPost post = journalPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пост не знайдено"));
+
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        if (!post.getUserId().equals(currentUser.getId())) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.FORBIDDEN, "Доступ заборонено");
+        }
+
+        String decryptedContent = cryptoService.decryptAndDecompress(post.getEncryptedContent());
+
+        ModelAndView mav = new ModelAndView("fragments/journal-form :: journalForm");
+        mav.addObject("isEdit", true);
+        mav.addObject("postId", id);
+        mav.addObject("content", decryptedContent);
+        return mav;
+    }
+
+    // 3. Збереження оновленого поста (MultipartForm для підтримки нових файлів)
+    @PostMapping("/{id}/update")
+    @Transactional
+    public ResponseEntity<Void> updatePost(@PathVariable UUID id,
+                                           @RequestParam("content") String newContent,
+                                           @RequestParam(value = "media", required = false) MultipartFile file,
+                                           Principal principal) {
+        JournalPost post = journalPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пост не знайдено"));
+
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        if (!post.getUserId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        String trimmedContent = newContent.trim();
+        if (trimmedContent.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        byte[] encryptedAndCompressedData = cryptoService.encryptAndCompress(trimmedContent);
+        post.setEncryptedContent(encryptedAndCompressedData);
+
+        if (file != null && !file.isEmpty()) {
+            String oldFileName = post.getMediaFileName();
+            try {
+                String newFileName = fileStorageService.storePrivateFile(file);
+                post.setMediaFileName(newFileName);
+
+                if (oldFileName != null) {
+                    long usageCount = journalPostRepository.countUsage(oldFileName);
+                    if (usageCount <= 1) {
+                        fileStorageService.deletePrivateFile(oldFileName);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Помилка оновлення медіафайлу для поста {}", id, e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
+
+        journalPostRepository.save(post);
+        log.info("📝 Пост {} успішно оновлено через стабільний SSR-інтерфейс", id);
+        return ResponseEntity.ok().build();
+    }
+
 }
