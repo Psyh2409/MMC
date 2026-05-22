@@ -469,3 +469,20 @@
     opacity: 0.85;
     transform: scale(1.02);
 }
+
+:root {
+    --border-width: 0.0625rem; /* Твоя "золота" міра замість 1px */
+}
+
+.edit-form-container {
+    border-top: var(--border-width) solid var(--l-border);
+    padding: var(--space-md);
+}
+
+.form-textarea {
+    width: 100%;
+    border: var(--border-width) solid var(--l-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    background: var(--l-card-bg);
+}

@@ -11,64 +11,164 @@
                       rows="4"
                       class="form-input"
                       th:placeholder="${isEdit} ? 'Коригуйте ваш простір рефлексії...' : 'Що у вас на душі?'"
-                      th:text="${content}"></textarea>
+                      th:text="${content != null and content != '[MEDIA_ONLY]' ? content : ''}"></textarea>
+        </div>
+
+        <div class="media-preview-area">
+            <div th:if="${isEdit and post != null and post.mediaFileName != null}" class="current-media-display">
+                <div th:if="${post.mediaFileName.toLowerCase().matches('.*\.(mp4|webm|ogg)$')}">
+                    <video controls class="preview-video">
+                        <source th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" type="video/mp4">
+                    </video>
+                </div>
+                <div th:unless="${post.mediaFileName.toLowerCase().matches('.*\.(mp4|webm|ogg)$')}">
+                    <img th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" alt="Media" class="preview-img">
+                </div>
+                <span class="text-sm text-muted current-media-label">
+                    📎 Файл у базі: <strong th:text="${post.mediaFileName}"></strong>
+                </span>
+            </div>
+
+            <div class="edit-media-preview"></div>
+            <span th:id="${isEdit} ? null : 'fileNameDisplay'" class="text-sm text-muted file-name-display"></span>
         </div>
 
         <div class="button-row">
-            <div>
-                <label th:for="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'" class="btn-primary">📎 Медіафайл</label>
-                <input type="file"
-                       th:id="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'"
-                       name="media"
-                       accept="image/*,video/*"
-                       class="visually-hidden-input journal-media-input">
-                <span th:if="${isEdit and post != null and post.mediaFileName != null}" class="text-sm text-muted current-media-label">
-                      📎 Поточний файл: <strong th:text="${post.mediaFileName}"></strong>
-                </span>
-                <span th:id="${isEdit} ? null : 'fileNameDisplay'" class="text-sm text-muted file-name-display"></span>
+            <div class="left-actions">
+                <label th:for="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'" class="btn-outline">📎 Медіафайл</label>
+                <input type="file" th:id="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'" name="media" accept="image/*,video/*" class="visually-hidden-input journal-media-input">
             </div>
 
-            <div class="post-actions">
-                <button type="submit" class="btn-primary" th:text="${isEdit} ? 'Зберегти' : 'Опублікувати'"></button>
-
-                <button type="button" th:if="${isEdit}" class="btn-outline btn-cancel-inline">Скасувати</button>
-                <button type="reset" th:if="${!isEdit}" id="btnResetMainForm" class="btn-outline hidden">Скасувати</button>
+            <div class="right-actions form-actions">
+                <button type="submit" class="btn-primary" th:text="${isEdit} ? 'Зберегти' : 'Опублікувати'">Опублікувати</button>
+                <button th:if="${!isEdit}" type="button" id="btnResetMainForm" class="btn-outline hidden">Скасувати</button>
+                <button th:if="${isEdit}" type="button" class="btn-outline" onclick="window.cancelEditPost(this)">Скасувати</button>
             </div>
         </div>
     </form>
 </div>
-
 <div th:fragment="journalFeed" th:remove="tag">
     <div th:if="${posts == null or posts.isEmpty()}" class="text-center text-muted italic">
         Ваш щоденник порожній.
     </div>
 
     <div th:each="post : ${posts}" class="journal-post-card" th:data-id="${post.id}">
-        <div class="journal-post-header">
-            <span class="text-muted" th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy, HH:mm')}">Дата</span>
-            <div class="post-actions">
-                <span class="crypto-badge">🔒 AES-256</span>
-                <button class="btn-outline"
-                        th:data-id="${post.id}"
-                        onclick="window.prepareEditPost(this.getAttribute('data-id'), this)"
-                        title="Редагувати">✏️</button>
-                <button class="btn-primary btn-danger"
-                        th:data-id="${post.id}"
-                        onclick="window.deletePost(this.getAttribute('data-id'))"
-                        title="Видалити пост">🗑️</button>
-            </div>
-        </div>
-        <div class="journal-post-text" th:text="${post.content}">Контент</div>
+        <details class="journal-details">
+            <summary class="journal-summary">
+                <div class="note-header">
+                    <span class="text-muted" th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
 
-        <div th:if="${post.mediaFileName != null}" class="journal-post-media-box">
-            <div th:if="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">
-                <video controls class="journal-post-video">
-                    <source th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" type="video/mp4">
-                </video>
+                    <div class="journal-actions">
+                        <button type="button" class="btn-icon"
+                                th:data-id="${post.id}"
+                                onclick="window.prepareEditPost(this.getAttribute('data-id'), this)"
+                                title="Редагувати">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button type="button" class="btn-icon btn-danger"
+                                th:data-id="${post.id}"
+                                onclick="window.deletePost(this.getAttribute('data-id'))"
+                                title="Видалити">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </div>
+            </summary>
+
+            <div class="journal-content-expanded">
+                <div th:if="${post.content != null and post.content != '[MEDIA_ONLY]'}"
+                     class="journal-post-text"
+                     th:text="${post.content}">
+                    Контент
+                </div>
+                <div th:if="${post.mediaFileName != null}" class="journal-post-media-box">
+                    <div th:if="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">
+                        <video controls class="journal-post-video">
+                            <source th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" type="video/mp4">
+                        </video>
+                    </div>
+                    <div th:unless="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">
+                        <img th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" alt="Media" class="journal-post-img">
+                    </div>
+                </div>
             </div>
-            <div th:unless="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">
-                <img th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" alt="Media" class="journal-post-img">
-            </div>
-        </div>
+        </details>
+
+        <div class="edit-form-container hidden" th:data-id="${post.id}"></div>
     </div>
 </div>
+
+<!--<div th:fragment="journalForm(isEdit, postId, content)"-->
+<!--     th:class="${isEdit} ? 'journal-edit-container' : 'card-primary mb-md'">-->
+
+<!--    <form th:id="${isEdit} ? 'journalEditForm-' + ${postId} : 'journalForm'"-->
+<!--          th:data-id="${postId}"-->
+<!--          method="POST" action="#" class="stack-form" enctype="multipart/form-data">-->
+
+<!--        <div class="form-field">-->
+<!--            <textarea th:id="${isEdit} ? null : 'journalContent'"-->
+<!--                      name="content"-->
+<!--                      rows="4"-->
+<!--                      class="form-input"-->
+<!--                      th:placeholder="${isEdit} ? 'Коригуйте ваш простір рефлексії...' : 'Що у вас на душі?'"-->
+<!--                      th:text="${content}"></textarea>-->
+<!--        </div>-->
+
+<!--        <div class="button-row">-->
+<!--            <div>-->
+<!--                <label th:for="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'" class="btn-primary">📎 Медіафайл</label>-->
+<!--                <input type="file"-->
+<!--                       th:id="${isEdit} ? 'journalMedia-' + ${postId} : 'journalMedia'"-->
+<!--                       name="media"-->
+<!--                       accept="image/*,video/*"-->
+<!--                       class="visually-hidden-input journal-media-input">-->
+<!--                <span th:if="${isEdit and post != null and post.mediaFileName != null}" class="text-sm text-muted current-media-label">-->
+<!--                      📎 Поточний файл: <strong th:text="${post.mediaFileName}"></strong>-->
+<!--                </span>-->
+<!--                <span th:id="${isEdit} ? null : 'fileNameDisplay'" class="text-sm text-muted file-name-display"></span>-->
+<!--            </div>-->
+
+<!--            <div class="post-actions">-->
+<!--                <button type="submit" class="btn-primary" th:text="${isEdit} ? 'Зберегти' : 'Опублікувати'"></button>-->
+
+<!--                <button type="button" th:if="${isEdit}" class="btn-outline btn-cancel-inline">Скасувати</button>-->
+<!--                <button type="reset" th:if="${!isEdit}" id="btnResetMainForm" class="btn-outline hidden">Скасувати</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<div th:fragment="journalFeed" th:remove="tag">-->
+<!--    <div th:if="${posts == null or posts.isEmpty()}" class="text-center text-muted italic">-->
+<!--        Ваш щоденник порожній.-->
+<!--    </div>-->
+
+<!--    <div th:each="post : ${posts}" class="journal-post-card" th:data-id="${post.id}">-->
+<!--        <div class="journal-post-header">-->
+<!--            <span class="text-muted" th:text="${#temporals.format(post.createdAt, 'dd MMMM yyyy, HH:mm')}">Дата</span>-->
+<!--            <div class="post-actions">-->
+<!--                <span class="crypto-badge">🔒 AES-256</span>-->
+<!--                <button class="btn-outline"-->
+<!--                        th:data-id="${post.id}"-->
+<!--                        onclick="window.prepareEditPost(this.getAttribute('data-id'), this)"-->
+<!--                        title="Редагувати">✏️</button>-->
+<!--                <button class="btn-primary btn-danger"-->
+<!--                        th:data-id="${post.id}"-->
+<!--                        onclick="window.deletePost(this.getAttribute('data-id'))"-->
+<!--                        title="Видалити пост">🗑️</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="journal-post-text" th:text="${post.content}">Контент</div>-->
+
+<!--        <div th:if="${post.mediaFileName != null}" class="journal-post-media-box">-->
+<!--            <div th:if="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">-->
+<!--                <video controls class="journal-post-video">-->
+<!--                    <source th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" type="video/mp4">-->
+<!--                </video>-->
+<!--            </div>-->
+<!--            <div th:unless="${post.mediaFileName.toLowerCase().matches('.*\\.(mp4|webm|ogg)$')}" class="media-wrapper">-->
+<!--                <img th:src="@{/api/journal/media/{name}(name=${post.mediaFileName})}" alt="Media" class="journal-post-img">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->

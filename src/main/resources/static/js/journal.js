@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (slider) {
-        slider.addEventListener('input', (e) => {
-            updateTheme(e.target.value, '75%', 'custom');
-        });
+        slider.addEventListener('input', (e) => updateTheme(e.target.value, '75%', 'custom'));
     }
 
     if (ptsrLink) {
@@ -49,26 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (avatarContainer && avatarFileInput) {
         avatarContainer.addEventListener('click', () => avatarFileInput.click());
 
-        avatarFileInput.addEventListener('change', function() {
+        avatarFileInput.addEventListener('change', async function() {
             const file = avatarFileInput.files[0];
             if (!file) return;
 
             const formData = new FormData();
             formData.append('avatar', file);
 
-            avatarContainer.style.opacity = '0.5';
+            // Використовуємо CSS клас замість style.opacity
+            avatarContainer.classList.add('loading-state');
 
-            fetch('/api/profile/avatar', {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': csrfToken },
-                body: formData
-            })
-            .then(response => {
+            try {
+                const response = await fetch('/api/profile/avatar', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrfToken },
+                    body: formData
+                });
+
                 if (!response.ok) throw new Error('Помилка сервера');
-                return response.json();
-            })
-            .then(data => {
-                avatarContainer.style.opacity = '1';
+                const data = await response.json();
+
                 let img = document.getElementById('avatarImage');
                 const letterSpan = document.getElementById('avatarLetter');
 
@@ -80,20 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 img.src = data.url;
                 if (letterSpan) letterSpan.remove();
-            })
-            .catch(error => {
-                avatarContainer.style.opacity = '1';
+            } catch (error) {
                 alert('Не вдалося оновити фото: ' + error.message);
-            });
+            } finally {
+                avatarContainer.classList.remove('loading-state');
+            }
         });
     }
 
     /* =========================================
-       3. УПРАВЛІННЯ ВКЛАДКАМИ (TABS)
+       3. УПРАВЛІННЯ ВКЛАДКАМИ ТА ОНОВЛЕННЯ СТРІЧКИ
        ========================================= */
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabPanes = document.querySelectorAll('.tab-pane');
+    const journalTab = document.getElementById('journal-tab');
+    let isJournalLoaded = false;
 
+    // Стандартне перемикання кнопок
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             const targetId = btn.getAttribute('data-target');
@@ -101,25 +102,178 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
 
             tabPanes.forEach(pane => {
-                if (pane.id === targetId) {
-                    pane.classList.add('active');
-                    if (targetId === 'journal-tab') loadJournalFeed();
-                } else {
-                    pane.classList.remove('active');
-                }
+                pane.classList.toggle('active', pane.id === targetId);
             });
         });
     });
 
+    // Надійний тригер через MutationObserver (якщо клас active додається глобальним скриптом)
+    if (journalTab) {
+        const triggerJournalLoad = () => {
+            if (!isJournalLoaded) {
+                window.loadJournalFeed();
+                isJournalLoaded = true;
+            }
+        };
+
+        if (journalTab.classList.contains('active')) triggerJournalLoad();
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(() => {
+                if (journalTab.classList.contains('active')) triggerJournalLoad();
+            });
+        });
+        observer.observe(journalTab, { attributes: true, attributeFilter: ['class'] });
+    }
+
     /* =========================================
-       4. ДИНАМІКА ЩОДЕННИКА
+       4. ВІДНОВЛЕНІ БЛОКИ (З ТВОГО СТАРОГО ФАЙЛУ)
        ========================================= */
-    const journalForm = document.getElementById('journalForm');
-    const journalFeed = document.getElementById('journalFeed');
-    const journalMedia = document.getElementById('journalMedia');
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    // --- 5. БАР'ЄР ДЕАКТИВАЦІЇ ---
+    const toggleBtn = document.getElementById('toggleDeactivationBtn');
+    const vault = document.getElementById('deactivationVault');
+    if (toggleBtn && vault) {
+        toggleBtn.addEventListener('click', () => vault.classList.toggle('active'));
+    }
+
+    // --- 6. ПЕРЕМИКАЧ ПАРОЛЯ ---
+    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            input.type = input.type === 'password' ? 'text' : 'password';
+            this.textContent = input.type === 'password' ? '👁️' : '🔒';
+        });
+    });
+
+    /* =========================================
+       5. ДИНАМІКА ЩОДЕННИКА (ДЕЛЕГУВАННЯ ПОДІЙ)
+       ========================================= */
+
+    // А) Перехоплення подій SUBMIT для всіх форм (Запобігає 403 та 400)
+        document.addEventListener('submit', async (e) => {
+            const form = e.target;
+
+            // --- Обробка базової форми створення ---
+            if (form.id === 'journalForm') {
+                e.preventDefault();
+                const formData = new FormData(form);
+
+                // Валідація: підстановка [MEDIA_ONLY], якщо текст порожній, але є файл
+                const textContent = formData.get('content')?.toString().trim();
+                const fileContent = formData.get('media');
+
+                if (!textContent) {
+                    if (fileContent && fileContent.size > 0) {
+                        formData.set('content', '[MEDIA_ONLY]');
+                    } else {
+                        alert('Запис не може бути порожнім.');
+                        return;
+                    }
+                }
+
+                try {
+                    const response = await fetch('/api/journal/create', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken },
+                        body: formData
+                    });
+                    if (response.ok) {
+                        form.reset();
+                        document.getElementById('fileNameDisplay').textContent = '';
+                        document.getElementById('btnResetMainForm')?.classList.add('hidden');
+                        const preview = form.querySelector('.edit-media-preview');
+                        if (preview) preview.innerHTML = '';
+                        await window.loadJournalFeed();
+                    } else {
+                        throw new Error('Помилка сервера');
+                    }
+                } catch (err) { alert('Помилка збереження запису.'); }
+            }
+
+            // --- Обробка інжектованих форм редагування ---
+            if (form.matches('form[id^="journalEditForm-"]')) {
+                e.preventDefault();
+                const postId = form.getAttribute('data-id');
+                const formData = new FormData(form);
+
+                // Валідація для форми редагування
+                const textContent = formData.get('content')?.toString().trim();
+                const fileContent = formData.get('media');
+                // Перевіряємо, чи є вже існуюче медіа, яке користувач не видалив
+                const hasExistingMedia = form.querySelector('.current-media-display:not(.hidden)') !== null;
+
+                if (!textContent) {
+                    if ((fileContent && fileContent.size > 0) || hasExistingMedia) {
+                        formData.set('content', '[MEDIA_ONLY]');
+                    } else {
+                        alert('Запис не може бути порожнім.');
+                        return;
+                    }
+                }
+
+                try {
+                    const response = await fetch(`/api/journal/${postId}/update`, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken },
+                        body: formData
+                    });
+
+                    if (response.status === 400) throw new Error('Некоректні дані (Bad Request)');
+                    if (!response.ok) throw new Error('Помилка збереження змін');
+
+                    await window.loadJournalFeed();
+                } catch (err) {
+                    alert('Не вдалося оновити пост: ' + err.message);
+                }
+            }
+        });
+
+    // Б) Перехоплення подій CHANGE для медіа-прев'ю (через FileReader)
+    document.addEventListener('change', (e) => {
+        if (e.target.matches('.journal-media-input')) {
+            const file = e.target.files[0];
+            const container = e.target.closest('form') || e.target.closest('.button-row');
+            const previewContainer = container.querySelector('.edit-media-preview');
+            const fileNameDisplay = container.querySelector('.file-name-display') || document.getElementById('fileNameDisplay');
+            const currentMediaDisplay = container.querySelector('.current-media-display');
+
+            if (fileNameDisplay) {
+                fileNameDisplay.textContent = file ? file.name : '';
+            }
+
+            if (currentMediaDisplay) {
+                currentMediaDisplay.classList.toggle('hidden', !!file);
+            }
+
+            if (!previewContainer) return;
+            previewContainer.innerHTML = '';
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    if (file.type.startsWith('video/')) {
+                        const video = document.createElement('video');
+                        video.src = event.target.result;
+                        video.controls = true;
+                        video.classList.add('preview-video');
+                        previewContainer.appendChild(video);
+                    } else if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.classList.add('preview-img');
+                        previewContainer.appendChild(img);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    // В) Керування видимістю кнопки скидання основної форми
     const mainTextarea = document.getElementById('journalContent');
     const btnResetMain = document.getElementById('btnResetMainForm');
+    const journalMedia = document.getElementById('journalMedia');
 
     if (mainTextarea && btnResetMain) {
         const toggleResetVisibility = () => {
@@ -130,107 +284,89 @@ document.addEventListener('DOMContentLoaded', () => {
         mainTextarea.addEventListener('input', toggleResetVisibility);
         if (journalMedia) journalMedia.addEventListener('change', toggleResetVisibility);
         btnResetMain.addEventListener('click', () => {
-            if (journalForm) journalForm.reset();
-            if (fileNameDisplay) fileNameDisplay.textContent = '';
+            document.getElementById('journalForm')?.reset();
+            document.getElementById('fileNameDisplay').textContent = '';
+            document.querySelector('#journalForm .edit-media-preview').innerHTML = '';
             btnResetMain.classList.add('hidden');
         });
     }
 
-    if (journalMedia && fileNameDisplay) {
-        journalMedia.addEventListener('change', (e) => {
-            fileNameDisplay.textContent = e.target.files[0] ? e.target.files[0].name : '';
-        });
-    }
-
-    if (journalForm) {
-        journalForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(journalForm);
-            try {
-                const response = await fetch('/api/journal/create', {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': csrfToken },
-                    body: formData
-                });
-                if (response.ok) {
-                    journalForm.reset();
-                    if (fileNameDisplay) fileNameDisplay.textContent = '';
-                    if (btnResetMain) btnResetMain.classList.add('hidden');
-                    await loadJournalFeed();
-                }
-            } catch (err) { alert('Помилка мережі.'); }
-        });
-    }
-
-    /* =========================================
-       5. БАР'ЄР ДЕАКТИВАЦІЇ
-       ========================================= */
-    const toggleBtn = document.getElementById('toggleDeactivationBtn');
-    const vault = document.getElementById('deactivationVault');
-    if (toggleBtn && vault) {
-        toggleBtn.addEventListener('click', () => vault.classList.toggle('active'));
-    }
-
-    /* =========================================
-       6. ПЕРЕМИКАЧ ПАРОЛЯ
-       ========================================= */
-    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const input = this.previousElementSibling;
-            input.type = input.type === 'password' ? 'text' : 'password';
-            this.textContent = input.type === 'password' ? '👁️' : '🔒';
-        });
-    });
 });
 
 /* =========================================
-   ГЛОБАЛЬНІ ФУНКЦІЇ (ВИХІД ЗА DOMContentLoaded)
+   ГЛОБАЛЬНІ ФУНКЦІЇ ДЛЯ ВИКЛИКУ З HTML
    ========================================= */
-async function loadJournalFeed() {
-    const journalFeed = document.getElementById('journalFeed');
-    if (!journalFeed) return;
+
+window.loadJournalFeed = async function() {
+    const feedContainer = document.getElementById('journalFeed');
+    if (!feedContainer) return;
+
     try {
         const response = await fetch('/api/journal/feed');
-        journalFeed.innerHTML = await response.text();
-    } catch (err) { journalFeed.innerHTML = '<p>Помилка завантаження.</p>'; }
-};
+        if (!response.ok) throw new Error('Network response was not ok');
 
-async function prepareEditPost(postId, button) {
-    const card = button.closest('.journal-post-card');
-    const originalHtml = card.innerHTML;
-    try {
-        const response = await fetch(`/api/journal/fragment/edit-form/${postId}`);
-        card.innerHTML = await response.text();
-        card.querySelector('.btn-cancel-inline').addEventListener('click', () => card.innerHTML = originalHtml);
-        card.querySelector('form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await fetch(`/api/journal/${postId}/update`, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]')?.value }, body: new FormData(e.target) });
-            await window.loadJournalFeed();
-        });
-    } catch (err) { alert('Помилка редагування.');
+        feedContainer.innerHTML = await response.text();
+        window.initJournalBehavior();
+    } catch (err) {
+        feedContainer.innerHTML = '<p class="text-center text-muted">Помилка завантаження стрічки.</p>';
     }
 };
 
-window.deletePost = async function(postId) {
-    if (!confirm('Ви впевнені, що хочете видалити цей запис?')) {
+window.initJournalBehavior = function() {
+    const allPosts = document.querySelectorAll('#journalFeed .journal-details');
+    allPosts.forEach((post, index) => {
+        if (index < 5) {
+            post.setAttribute('open', 'true');
+        }
+    });
+};
+
+window.prepareEditPost = async function(postId, button) {
+    const card = button.closest('.journal-post-card');
+    // Використовуємо спеціальний контейнер замість заміни всієї картки
+    const container = card.querySelector('.edit-form-container');
+
+    if (!container) return;
+
+    if (!container.classList.contains('hidden')) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
         return;
     }
 
     try {
+        const response = await fetch(`/api/journal/fragment/edit-form/${postId}`);
+        if (!response.ok) throw new Error('Не вдалося завантажити форму');
+
+        container.innerHTML = await response.text();
+        container.classList.remove('hidden');
+    } catch (err) {
+        alert('Помилка: ' + err.message);
+    }
+};
+
+window.cancelEditPost = function(button) {
+    const container = button.closest('.edit-form-container');
+    if (container) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+    }
+};
+
+window.deletePost = async function(postId) {
+    if (!confirm('Ви впевнені, що хочете видалити цей запис?')) return;
+
+    try {
         const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-        // Зазвичай у Spring Boot видалення робиться через DELETE-запит
-        // або POST-запит на url з /delete. Підстав свій мапінг з контролера, якщо він інший.
         const response = await fetch(`/api/journal/${postId}`, {
-            method: 'DELETE', // Зміни на 'DELETE', якщо в контролері @DeleteMapping
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
         });
 
         if (response.ok) {
-            await window.loadJournalFeed(); // Оновлюємо стрічку після видалення
+            await window.loadJournalFeed();
         } else {
-            alert('Не вдалося видалити пост. Перевірте консоль сервера.');
+            alert('Не вдалося видалити пост.');
         }
     } catch (err) {
         alert('Помилка мережі: ' + err.message);

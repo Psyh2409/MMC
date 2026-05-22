@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -207,6 +208,8 @@ public class JournalController {
         mav.addObject("isEdit", true);
         mav.addObject("postId", id);
         mav.addObject("content", decryptedContent);
+        // ВАЖЛИВО: додаємо об'єкт post, щоб шаблон бачив назву медіафайлу
+        mav.addObject("post", post);
         return mav;
     }
 
@@ -257,5 +260,6 @@ public class JournalController {
         log.info("📝 Пост {} успішно оновлено через стабільний SSR-інтерфейс", id);
         return ResponseEntity.ok().build();
     }
+
 
 }
