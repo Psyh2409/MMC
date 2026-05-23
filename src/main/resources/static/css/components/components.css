@@ -67,6 +67,7 @@
     resize: vertical;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: var(--space-sm);
+    margin-top: var(--space-sm);
     color: var(--text-primary);
 }
 
@@ -505,12 +506,18 @@ margin-top: var(--space-md);
 
 /* Внутрішнє віконце форми, яке відкривається знизу */
 .journal-expand-box {
-    padding: 0 var(--space-md) var(--space-md) var(--space-md);
+    padding: 0 var(--space-md) var(--space-sm) var(--space-md);
     background-color: var(--bg-canvas);
     border-top: 0.0625rem solid var(--border-soft);
 
     /* Додаємо плавний ефект появи форми */
     animation: slideDownFade 0.25s ease;
+}
+
+.journal-expand-box .button-row {
+    margin-top: var(--space-xs);     /* Мінімальний простір між textarea та кнопками */
+    margin-bottom: 0;                /* Повністю прибираємо порожнечу знизу кнопок */
+    gap: var(--space-sm);            /* Крок між кнопками "Зберегти" та "Видалити" */
 }
 
 @keyframes slideDownFade {

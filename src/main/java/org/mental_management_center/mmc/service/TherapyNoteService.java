@@ -3,6 +3,8 @@ package org.mental_management_center.mmc.service;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.TherapyNoteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,16 @@ public class TherapyNoteService {
     }
 
     // Для UserProfileController
-    public List<TherapyNote> getNotesByAuthor(UUID authorId) {
-        return repository.findByAuthorIdOrderByCreatedAtDesc(authorId);
+    public Page<TherapyNote> getNotesByAuthor(UUID authorId, Pageable pageable) {
+        return repository.findByAuthorId(authorId, pageable);
+    }
+
+    // Метод для видалення нотатки за її унікальним UUID
+    public void deleteNote(UUID noteId) {
+        if (repository.existsById(noteId)) {
+            repository.deleteById(noteId);
+        } else {
+            throw new IllegalArgumentException("Нотатку з ID " + noteId + " не знайдено");
+        }
     }
 }

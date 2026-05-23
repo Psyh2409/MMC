@@ -28,7 +28,7 @@
                 <a th:href="@{/first-steps}" class="site-nav-link">Перші кроки</a>
             </div>
             <div sec:authorize="isAnonymous()">
-                <a th:href="@{/login}" class="btn-primary">Увійти</a>
+                <a th:href="@{/login}" id="navLoginBtn" class="btn-primary site-nav-link">Увійти</a>
             </div>
 
             <div sec:authorize="isAuthenticated()" class="user-menu">

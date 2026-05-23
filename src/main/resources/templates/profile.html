@@ -149,26 +149,42 @@
                 <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="layout-container">
                     <h3 class="heading-lg">Мій журнал (Нотатки з терапії)</h3>
 
-                    <div class="layout-stack">
-                        <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
-                            <details class="journal-details">
-                                <summary class="journal-summary">
-                                    <div class="note-header">
-                                        <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
-                                        <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
-                                    </div>
-                                    <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
-                                </summary>
-
-                                <div class="journal-expand-box">
-                                    <form th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
-                                        <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
-                                        <div class="button-row">
-                                            <button type="submit" class="btn-primary">Зберегти зміни</button>
+                    <div id="notesContainer" th:fragment="notesList">
+                        <div class="layout-stack">
+                            <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
+                                <details class="journal-details">
+                                    <summary class="journal-summary">
+                                        <div class="note-header">
+                                            <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                            <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
                                         </div>
-                                    </form>
-                                </div>
-                            </details>
+                                        <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
+                                    </summary>
+
+                                    <div class="journal-expand-box">
+                                        <form th:id="'editForm-' + ${note.id}" th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
+                                            <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
+                                            <div class="button-row">
+                                                <button type="submit" class="btn-primary">Зберегти зміни</button>
+                                                <button type="submit" th:form="'deleteForm-' + ${note.id}" class="btn-outline btn-danger">Видалити нотатку</button>
+                                            </div>
+                                        </form>
+                                        <form th:id="'deleteForm-' + ${note.id}" th:action="@{/profile/notes/delete/{id}(id=${note.id})}" method="post" onsubmit="return confirm('Ви впевнені?');" class="hidden-element"></form>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+
+                        <div th:if="${totalNotesPages > 1}" class="button-row" style="justify-content: center; margin-top: var(--space-md); gap: var(--space-sm);">
+                            <button th:disabled="${currentNotesPage == 0}"
+                                    th:onclick="'window.loadNotesPage(' + (${currentNotesPage} - 1) + ')'"
+                                    class="btn-outline btn-sm">Попередня</button>
+
+                            <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentNotesPage} + 1) + ' з ' + ${totalNotesPages}">Сторінка 1</span>
+
+                            <button th:disabled="${!hasMoreNotes}"
+                                    th:onclick="'window.loadNotesPage(' + (${currentNotesPage} + 1) + ')'"
+                                    class="btn-outline btn-sm">Наступна</button>
                         </div>
                     </div>
                 </div>

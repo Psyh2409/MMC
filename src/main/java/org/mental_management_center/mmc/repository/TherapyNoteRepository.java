@@ -2,6 +2,8 @@ package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,8 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
     // Для профайлу: дістати всі нотатки, які написав КОНКРЕТНИЙ АВТОР
     @EntityGraph(attributePaths = {"client", "therapist"})
     List<TherapyNote> findByAuthorIdOrderByCreatedAtDesc(UUID authorId);
+
+    // Наш новий метод репозиторію, який очікує пагінацію
+    @EntityGraph(attributePaths = {"therapist", "client"})
+    Page<TherapyNote> findByAuthorId(UUID authorId, Pageable pageable);
 }

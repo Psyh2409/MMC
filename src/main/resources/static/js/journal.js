@@ -413,3 +413,23 @@ window.loadFeedPage = async function(page = 0, size = 5) {
         console.error('Помилка навігації щоденника:', err);
     }
 };
+
+/**
+ * Асинхронне перемикання сторінок терапевтичних нотаток
+ * @param {number} page - Індекс сторінки
+ * @param {number} size - Кількість елементів
+ */
+window.loadNotesPage = async function(page = 0, size = 10) {
+    try {
+        const response = await fetch(`/profile/notes/fragment?page=${page}&size=${size}`);
+        if (!response.ok) throw new Error('Помилка завантаження порції нотаток');
+
+        const htmlFragment = await response.text();
+        const container = document.getElementById('notesContainer');
+        if (container) {
+            container.innerHTML = htmlFragment;
+        }
+    } catch (err) {
+        console.error('Невдалося оновити сторінку нотаток:', err);
+    }
+};

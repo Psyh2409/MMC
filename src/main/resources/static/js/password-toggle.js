@@ -22,4 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Запускаємо для обох полів
     setupToggle('togglePassword', 'password');
     setupToggle('toggleConfirmPassword', 'confirmPassword');
+
+    // 2. ІНЖЕНЕРНИЙ ФІКС: Пряме перемикання кнопки хедера без дурних пошуків
+        // Якщо у тебе в HTML-шаблоні хедера для цієї кнопки прописано ID або унікальний клас,
+        // ми б'ємо точно в ціль. Наприклад, використовуємо ID 'navLoginBtn' або твій клас:
+        const loginBtn = document.getElementById('navLoginBtn') || document.querySelector('.btn-login-header');
+
+        if (loginBtn) {
+            loginBtn.textContent = 'Зареєструватися';
+            loginBtn.href = '/register'; // Твій URL сторінки реєстрації
+        }
+
 });
