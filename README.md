@@ -1,89 +1,100 @@
-# MMC
+# 🧠 Mental Management Center (MMC) — Version 1.0
 
-## OAuth2 Providers
+**Mental Management Center** — це сучасний, безпечний вебдодаток для надання психологічної підтримки, глибокої рефлексії, ведення особистих щоденників та безпечної взаємодії між терапевтами та клієнтами. Проєкт розробляється з дотриманням безкомпромісних стандартів архітектурної дисципліни, приватності та інженерної чистоти коду.
 
-У проєкті вже підключений `spring-boot-starter-oauth2-client`. Для появи кнопок входу треба задати змінні середовища для конкретного провайдера.
+---
+
+## 🛠️ 1. Технологічний стек та Інфраструктура (Версія 1.0)
+
+* **Backend Core:** Java 17, Spring Boot 3.x
+* **Безпека:** Spring Security, OAuth2 Client, кастомна рольова модель на бітових масках (`RoleBit`).
+* **База даних:** PostgreSQL
+* **Міграції схеми БД:** Liquibase
+* **Frontend:** Thymeleaf (Server-Side Rendering), Vanilla JavaScript (AJAX, DOM manipulations).
+* **Мережа та Real-time:** Spring WebSockets, STOMP.
+* **Інфраструктура:** Docker Compose (для БД та сервісів), локальні тунелі Ngrok.
+* **Утиліти:** Lombok, Apache HTTP Components.
+
+---
+
+## 🏗️ 2. Архітектура та Модулі (Project Tree Blueprint)
+
+Проєкт розділений на чіткі MVC-шари та сервіси. Нижче наведено зріз ключових компонентів системи:
+
+### 🔒 Ядро безпеки та Авторизація (`config`, `auth`)
+* `SecurityConfig`, `OAuth2ClientConfig`, `PasswordConfig` — налаштування ланцюгів безпеки та хешування (`BCrypt`).
+* `AuthController` — керування реєстрацією, логіном, скиданням паролів та валідацією токенів електронної пошти.
+* Інтеграція `CustomOAuth2UserService` та `CustomOidcUserService` для входу через Google/Meta.
+
+### 📝 Терапія та Особистий Щоденник (`journal`, `therapy`)
+* `JournalController` & `JournalCryptoService` — створення постів рефлексії. **Усі тексти шифруються через AES-256 та стискаються GZIP** перед записом у БД.
+* `TherapyRoomController` & `TherapyRoomService` — інтеграція з `8x8 Jitsi as a Service` через JWT-токени для захищених відеосесій.
+* `TherapyNoteService` — ведення та безпечне керування нотатками терапевтів із підтримкою пагінації (по 10 записів) та оптимізованим `Lazy/Eager` завантаженням.
+
+### 💬 Спілкування та Соціальні функції (`chat`, `articles`)
+* `ChatController` & `WebSocketConfig` — реалізація системи обміну повідомленнями в реальному часі.
+* `ArticleController` & `ContentController` — публікація терапевтичних статей та гайдів.
+* `RequestController` — обробка вхідних звернень від клієнтів та гостей платформи.
+
+### 🛡️ Адміністрування та Аудит системи (`admin`, `audit`)
+* `AdminUserController` — керування статусами користувачів (блокування, підвищення до клієнта/терапевта).
+* `CssAuditService` — унікальний внутрішній "бульдозер" проєкту. Автоматично сканує `HTML` та `CSS` файли для виявлення "осиротілих" класів та гарантування дотримання стандартів верстки.
+* `FileStorageService` & `MediaEndpointController` — жорстке розділення завантажених медіафайлів на Public (загальнодоступні) та Private (захищені, тільки для власників).
+
+---
+
+## 📐 3. Суворі інженерні стандарти (System Constraints)
+
+Проєкт MMC керується жорсткими правилами, порушення яких не допускається на рівні CI/CD та рев'ю:
+
+1. **UUID замість Long:** Усі унікальні ідентифікатори сутностей (Користувачі, Пости, Нотатки, Статті) використовують виключно `UUID`. Це робить систему стійкою до ID-перебору (IDOR атак).
+2. **Квантова сітка та дизайн-токени (Quantum Grid):** * **Жодних інлайн-стилів:** Атрибут `style=""` в HTML категорично заборонений.
+    * **Смерть пікселям:** Використання жорстких вимірів (`px`) заборонено. Уся сітка, відступи та шрифти керуються відносними одиницями (`rem`, `em`) та CSS-змінними (`--space-md`, `--space-sm`, `--space-xs`), описаними в `variables.css`.
+3. **Адаптивна HSL-тематизація:** Дизайн-система спирається на 15 базових HSL-токенів. Перемикання світлої, темної та кастомних тем відбувається миттєво без перезавантаження через підміну значень змінних на рівні `:root`.
+
+---
+
+## 💻 4. Локальне розгортання та OAuth2 (Local Dev Guide)
+
+Додаток використовує `spring-boot-starter-oauth2-client`. Кнопки швидкого входу (Google/Facebook) на сторінці `/login` активуються автоматично лише після виявлення відповідних змінних середовища.
+
+### Запуск через PowerShell (Ngrok Dev Mode)
+Для тестування локальної розробки із зовнішніми API OAuth2 створено автоматичний скрипт:
 
 ```powershell
-$env:APP_PUBLIC_BASE_URL="https://your-public-domain.ngrok-free.dev"
-$env:OAUTH2_GOOGLE_CLIENT_ID="your-google-client-id"
-$env:OAUTH2_GOOGLE_CLIENT_SECRET="your-google-client-secret"
-$env:OAUTH2_FACEBOOK_CLIENT_ID="your-facebook-client-id"
-$env:OAUTH2_FACEBOOK_CLIENT_SECRET="your-facebook-client-secret"
-.\mvnw.cmd spring-boot:run
+.\scripts\start-ngrok-oauth.ps1 -PublicBaseUrl "[https://your-current-ngrok-domain.ngrok-free.dev](https://your-current-ngrok-domain.ngrok-free.dev)"
 ```
 
-Альтернатива для IntelliJ IDEA:
+**Що робить скрипт:**
+1. Встановлює змінну `$env:APP_PUBLIC_BASE_URL`.
+2. Виводить у консоль точні redirect URI для копіювання в кабінети Google/Meta.
+3. Автоматично запускає збірку через `.\mvnw.cmd spring-boot:run`.
 
-1. Відкрий `Run/Debug Configuration`.
-2. Додай потрібні `OAUTH2_*` змінні в `Environment variables`.
-3. Перезапусти застосунок.
+*Примітка: Якщо застосунок запускається через тунель, змінна `APP_PUBLIC_BASE_URL` є критично важливою, інакше Spring Security побудує невірний Redirect URI (на базу `localhost:8080`), що призведе до помилки `redirect_uri_mismatch`.*
 
-Якщо застосунок відкривається не напряму, а через `ngrok` або інший проксі, задай ще:
+### Налаштування OAuth-провайдерів
+* **Google Cloud Console:** Створіть клієнт `Web application`.
+    * **Локальний URI:** `http://localhost:8080/login/oauth2/code/google`
+    * **Ngrok URI:** `https://your-domain.ngrok-free.dev/login/oauth2/code/google`
+* **Meta for Developers (Facebook):** *[Інтеграція тимчасово призупинена]* 🛑
+    * Фіча заморожена через політику Meta щодо блокування доступу для десктоп-пристроїв непідтверджених бізнес-акаунтів.
 
-```powershell
-$env:APP_PUBLIC_BASE_URL="https://your-public-domain.ngrok-free.dev"
-```
+---
 
-Тоді OAuth redirect URI буде будуватися саме від цього публічного домену, а не від локального `localhost`.
+## 🗺️ 5. Беклог та Вектор розвитку (MMC 2.0 Roadmap)
 
-## Ngrok Dev Mode
+Ми маємо чіткий план технологічної міграції та розширення функціоналу:
 
-Для тимчасового стабільного тестування через `ngrok` у проєкті є скрипт:
+1. **Архітектурна еволюція (Version 2.0):**
+    * Відмова від серверного рендерингу (Thymeleaf).
+    * Перехід до **Decoupled Architecture**: Spring Boot стає чистим Stateless REST API сервером, а фронтенд мігрує на сучасний фреймворк **Angular**.
+2. **Модернізація Щоденника (Journal V2):**
+    * Впровадження безкінечної стрічки (Infinite Scroll) із кнопкою "Завантажити ще" замість класичної посторінкової навігації.
+    * Додавання селектора порцій екрану (5 / 10 / Усі записи).
+    * Підтримка завантаження багатьох медіафайлів до одного поста (Grid-галереї).
+    * Точкове керування медіа: можливість видалити лише файл з поста, залишивши його текстову частину недоторканою.
+3. **Розширення системи сповіщень:**
+    * Інтеграція статусів повідомлень (`MessageStatus`) у реальному часі (Доставлено/Прочитано) через існуючі канали WebSockets.
 
-```powershell
-.\scripts\start-ngrok-oauth.ps1 -PublicBaseUrl "https://your-current-ngrok-domain.ngrok-free.dev"
-```
-
-Що він робить:
-
-1. Встановлює `APP_PUBLIC_BASE_URL`.
-2. Показує точні redirect URI для Google і Facebook.
-3. Запускає застосунок через `.\mvnw.cmd spring-boot:run`.
-
-Для Google треба додати в Google Cloud Console саме той URI, який виведе скрипт:
-
-```text
-https://your-current-ngrok-domain.ngrok-free.dev/login/oauth2/code/google
-```
-
-Важливо: код не може зробити випадковий `ngrok` домен стабільним. Стабільним його робить лише:
-
-1. `reserved/static domain` в `ngrok`.
-2. Або власний публічний домен.
-
-Скрипт лише прибирає помилки синхронізації між поточним `ngrok` URL і тим, що використовує застосунок для OAuth redirect.
-
-### Google
-
-Для Google Cloud Console потрібен OAuth Client типу `Web application`.
-
-Redirect URI:
-
-```text
-http://localhost:8080/login/oauth2/code/google
-```
-
-Для `ngrok`:
-
-```text
-https://your-current-ngrok-domain.ngrok-free.dev/login/oauth2/code/google
-```
-
-### Facebook
-
-Для Meta for Developers потрібен `Facebook Login` застосунок.
-
-Valid OAuth Redirect URI:
-
-```text
-http://localhost:8080/login/oauth2/code/facebook
-```
-
-Для `ngrok`:
-
-```text
-https://your-current-ngrok-domain.ngrok-free.dev/login/oauth2/code/facebook
-```
-
-Після цього на сторінці `/login` з'являться кнопки доступних провайдерів.
+---
+*Документ згенеровано та оновлено на етапі стабілізації версії 1.0. Усі інженерні конвенції є обов'язковими до виконання.*
