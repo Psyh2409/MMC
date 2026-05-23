@@ -179,13 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: formData
                     });
                     if (response.ok) {
-                        form.reset();
-                        document.getElementById('fileNameDisplay').textContent = '';
-                        document.getElementById('btnResetMainForm')?.classList.add('hidden');
-                        const preview = form.querySelector('.edit-media-preview');
-                        if (preview) preview.innerHTML = '';
-                        await window.loadJournalFeed();
-                    } else {
+                                        form.reset();
+                                        document.getElementById('fileNameDisplay').textContent = '';
+                                        document.getElementById('btnResetMainForm')?.classList.add('hidden');
+                                        // Додано примусове приховування кнопки Опублікувати:
+                                        document.getElementById('btnSubmitMainForm')?.classList.add('hidden');
+
+                                        const preview = form.querySelector('.edit-media-preview');
+                                        if (preview) preview.innerHTML = '';
+                                        await window.loadJournalFeed();
+                                    } else {
                         throw new Error('Помилка сервера');
                     }
                 } catch (err) { alert('Помилка збереження запису.'); }
@@ -270,26 +273,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // В) Керування видимістю кнопки скидання основної форми
-    const mainTextarea = document.getElementById('journalContent');
-    const btnResetMain = document.getElementById('btnResetMainForm');
-    const journalMedia = document.getElementById('journalMedia');
+    // В) Керування видимістю кнопок основної форми (Скасувати / Опублікувати)
+        const mainTextarea = document.getElementById('journalContent');
+        const btnResetMain = document.getElementById('btnResetMainForm');
+        const btnSubmitMain = document.getElementById('btnSubmitMainForm'); // Додали Опублікувати
+        const journalMedia = document.getElementById('journalMedia');
 
-    if (mainTextarea && btnResetMain) {
-        const toggleResetVisibility = () => {
-            const hasText = mainTextarea.value.trim().length > 0;
-            const hasFile = journalMedia && journalMedia.files.length > 0;
-            btnResetMain.classList.toggle('hidden', !(hasText || hasFile));
-        };
-        mainTextarea.addEventListener('input', toggleResetVisibility);
-        if (journalMedia) journalMedia.addEventListener('change', toggleResetVisibility);
-        btnResetMain.addEventListener('click', () => {
-            document.getElementById('journalForm')?.reset();
-            document.getElementById('fileNameDisplay').textContent = '';
-            document.querySelector('#journalForm .edit-media-preview').innerHTML = '';
-            btnResetMain.classList.add('hidden');
-        });
-    }
+        if (mainTextarea && btnResetMain && btnSubmitMain) {
+            const toggleActionsVisibility = () => {
+                const hasText = mainTextarea.value.trim().length > 0;
+                const hasFile = journalMedia && journalMedia.files.length > 0;
+                const shouldShow = hasText || hasFile;
+
+                // Тоглимо обидві кнопки одночасно
+                btnResetMain.classList.toggle('hidden', !shouldShow);
+                btnSubmitMain.classList.toggle('hidden', !shouldShow);
+            };
+
+            mainTextarea.addEventListener('input', toggleActionsVisibility);
+            if (journalMedia) journalMedia.addEventListener('change', toggleActionsVisibility);
+
+            btnResetMain.addEventListener('click', () => {
+                document.getElementById('journalForm')?.reset();
+                document.getElementById('fileNameDisplay').textContent = '';
+                document.querySelector('#journalForm .edit-media-preview').innerHTML = '';
+
+                // Ховаємо обидві кнопки при скасуванні
+                btnResetMain.classList.add('hidden');
+                btnSubmitMain.classList.add('hidden');
+            });
+        }
 
 });
 
@@ -299,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.loadJournalFeed = async function() {
     const feedContainer = document.getElementById('journalFeed');
+
     if (!feedContainer) return;
 
     try {
@@ -322,7 +336,9 @@ window.initJournalBehavior = function() {
 };
 
 window.prepareEditPost = async function(postId, button) {
+    // Шукаємо правильний контейнер
     const card = button.closest('.journal-post-card');
+    // Якщо в HTML клас інакший, перевірте, чи це точно .journal-post-card
     // Використовуємо спеціальний контейнер замість заміни всієї картки
     const container = card.querySelector('.edit-form-container');
 

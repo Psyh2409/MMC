@@ -37,3 +37,9 @@
 .tab-pane.active {
     display: block;
 }
+
+/* Додаємо правило для примусового переносу довгих рядків без пробілів */
+.text-break {
+    word-break: break-all;      /* Розбиває слово, якщо воно не вміщується */
+    overflow-wrap: break-word; /* Сучасний аналог word-wrap для коректної обробки */
+}

@@ -237,3 +237,29 @@
     margin-top: var(--space-md);
     align-items: start;
 }
+
+.journal-post-card {
+    background-color: hsl(var(--theme-h), var(--theme-s), 98%);
+    border-radius: 1rem; /* Відновлює заокруглення */
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 90%);
+    box-shadow: 0 0.25rem 0.5rem hsla(var(--theme-h), var(--theme-s), 10%, 0.05);
+}
+
+.journal-post-card {
+    background-color: hsl(var(--theme-h), var(--theme-s), 98%);
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 90%);
+    box-shadow: 0 0.25rem 0.5rem hsla(var(--theme-h), var(--theme-s), 10%, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+.journal-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+}

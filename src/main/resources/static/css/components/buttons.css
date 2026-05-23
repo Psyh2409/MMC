@@ -167,3 +167,39 @@
     background-color: hsl(var(--error-hsl, 0 85% 60%));
     color: hsl(0 0% 100%);
 }
+
+/* Кнопки-іконки для дій над постом (Редагувати / Видалити) */
+.post-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Кнопка-іконка (✏️, ❌), яка адаптується під колір поточної теми */
+.btn-icon {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    color: hsl(var(--theme-h), var(--theme-s), 40%); /* Колір поточної теми */
+}
+
+.btn-icon:hover {
+    background-color: hsl(var(--theme-h), var(--theme-s), 90%);
+}
+
+/* Делікатна зміна кольору при наведенні на видалення */
+.btn-icon.delete-icon:hover {
+    color: hsl(0, 70%, 50%);
+    background-color: hsl(0, 70%, 95%);
+}
+
+/* Ніжна кнопка видалення замість кричущо-червоної */
+.btn-icon.delete-icon:hover {
+    background-color: hsl(0, 70%, 95%);
+    color: hsl(0, 60%, 50%);
+}

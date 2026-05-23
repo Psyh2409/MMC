@@ -486,3 +486,22 @@
     padding: var(--space-sm);
     background: var(--l-card-bg);
 }
+
+.media-preview-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Обмеження розміру картинок/відео суворо у полі форми перед відправкою */
+.edit-media-preview .preview-img,
+.edit-media-preview .preview-video,
+.current-media-display .preview-img,
+.current-media-display .preview-video {
+    max-width: 12rem;
+    max-height: 12rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 80%);
+}

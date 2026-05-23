@@ -370,3 +370,16 @@ main {
     gap: var(--spacing-md);
     width: 100%;
 }
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.right-actions.form-actions {
+    display: flex;
+    gap: 0.5rem;
+}

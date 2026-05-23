@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.model.JournalPost;
@@ -11,10 +12,9 @@ import org.mental_management_center.mmc.service.JournalCryptoService;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.*;
+import org.springframework.security.web.access.AuthorizationManagerWebInvocationPrivilegeEvaluator;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -117,38 +118,6 @@ public class JournalController {
         return mav;
     }
 
-    @GetMapping(value = "/media/{fileName:.+}")
-    public ResponseEntity<Resource> getPrivateMedia(@PathVariable String fileName, Principal principal) {
-        // 1. Перевірка доступу (залишаємо як є)
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
-        boolean isOwner = journalPostRepository.existsByUserIdAndMediaFileName(user.getId(), fileName);
-
-        if (!isOwner) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-        // 2. Читання файлу
-        try {
-            Path path = fileStorageService.loadFromPrivate(fileName);
-            if (path == null) {
-                return ResponseEntity.notFound().build();
-            }
-            Resource resource = new UrlResource(path.toUri());
-
-            if (!resource.exists() || !resource.isReadable()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // 3. БЕЗ ResourceRegion. Просто віддаємо файл цілком.
-            // Це гарантовано працює в будь-якому браузері.
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("video/mp4"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
-                    .body(resource);
-
-        } catch (Exception e) {
-            log.error("Помилка при читанні відео: {}", fileName, e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 
     @DeleteMapping("/{id}")
     @Transactional
@@ -261,5 +230,27 @@ public class JournalController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/media/{filename:.+}")
+    public ResponseEntity<Resource> getMedia(@PathVariable String filename) {
+        Path filePath = fileStorageService.findFileAnywhere(filename);
+
+        if (filePath == null || !Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Resource resource = new UrlResource(filePath.toUri());
+            // Визначаємо тип контенту через стандартний Java-метод
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) contentType = "application/octet-stream";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 }
