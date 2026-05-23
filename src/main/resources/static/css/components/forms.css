@@ -6,7 +6,7 @@
 .stack-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
 }
 
 .stack-form-sans {
@@ -487,11 +487,12 @@
     background: var(--l-card-bg);
 }
 
+/* Оптимізація зони прев'ю медіафайлу */
 .media-preview-area {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: var(--space-xs);
+    min-height: 0; /* Запобігає утримуванню порожнього простору */
 }
 
 /* Обмеження розміру картинок/відео суворо у полі форми перед відправкою */
@@ -504,4 +505,18 @@
     object-fit: cover;
     border-radius: 0.5rem;
     border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 80%);
+}
+
+/* КАТЕГОРИЧНЕ РІШЕННЯ ДЛЯ СМУЖОК:
+   Якщо контейнер прев'ю порожній, він повністю виключається з рендерингу */
+.edit-media-preview:empty {
+    display: none;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+/* Якщо текстове поле з ім'ям файлу порожнє — ховаємо його */
+.file-name-display:empty {
+    display: none;
 }

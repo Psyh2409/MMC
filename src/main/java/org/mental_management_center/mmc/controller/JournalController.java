@@ -13,6 +13,9 @@ import org.mental_management_center.mmc.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.web.access.AuthorizationManagerWebInvocationPrivilegeEvaluator;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,22 +101,41 @@ public class JournalController {
     // 1. Повернення готового HTML-фрагменту всієї стрічки
     @Transactional(readOnly = true)
     @GetMapping("/feed")
-    public ModelAndView getFeed(Principal principal) {
-        User currentUser = userService.findByEmail(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+    public ModelAndView getFeed(
+            @RequestParam(defaultValue = "0") int page,   // Номер сторінки (починається з 0)
+            @RequestParam(defaultValue = "5") int size,   // Кількість постів на сторінці (дефолт 5)
+            Principal principal) {
+        // 1. Отримуємо email поточного авторизованого користувача
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        List<JournalPost> posts = journalPostRepository.findByUserIdOrderByCreatedAtDesc(currentUser.getId());
+        // 2. Створюємо об'єкт пагінації (запитувана сторінка та її розмір)
+        Pageable pageable = PageRequest.of(page, size);
 
-        // Дешифруємо контент кожного запису перед рендерингом фрагмента
+        // 3. Витягуємо з БД ТІЛЬКИ порцію постів (наприклад, перші 5)
+        Page<JournalPost> postPage = journalPostRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), pageable);
+
+        // Отримуємо чистий список постів з цієї сторінки
+        List<JournalPost> posts = postPage.getContent();
+
+        // Дешифрування тексту
         posts.forEach(post -> {
             String decrypted = cryptoService.decryptAndDecompress(post.getEncryptedContent());
             post.setContent(decrypted);
         });
 
+        // 4. Створюємо ModelAndView, який повертає Thymeleaf-фрагмент стрічки
         ModelAndView mav = new ModelAndView("fragments/journal-form :: journalFeed");
+
+        // Передаємо у Thymeleaf чистий список постів для ітерації (getContent())
         mav.addObject("posts", posts);
 
-        posts.forEach(p -> log.info("POST ID: {}, MEDIA: {}", p.getId(), p.getMediaFileName()));
+        // Передаємо метадані пагінації, які знадобляться фронтенду для побудови кнопок і меню розміру сторінки
+        mav.addObject("currentPage", postPage.getNumber());
+        mav.addObject("totalPages", postPage.getTotalPages());
+        mav.addObject("pageSize", size);
+        mav.addObject("hasMore", postPage.hasNext()); // Чи є ще пости далі
 
         return mav;
     }

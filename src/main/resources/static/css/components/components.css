@@ -696,24 +696,6 @@ margin-top: var(--space-md);
     gap: var(--space-md);
 }
 
-.journal-post-card {
-    background-color: var(--card-bg); /* Підтягує фон поверхні з variables.css */
-    border: 0.0625rem solid var(--border-color); /* Підтягує делікатні межі */
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    box-shadow: var(--shadow-main); /* Використовуємо глобальну тінь додатка */
-}
-
-.journal-post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.875rem; /* Переведено в rem */
-}
-
 .crypto-badge {
     /* Використовуємо success токени, якщо вони є, або жорстку генерацію з HSL як резерв */
     color: var(--status-success, hsl(140, 50%, 45%));
@@ -723,16 +705,6 @@ margin-top: var(--space-md);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-}
-
-.journal-post-text {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--text-main); /* Основний колір тексту теми */
-    white-space: pre-wrap;
-    word-break: break-all; /* Або break-word */
-    overflow-wrap: break-word; /* Це сучасний стандарт для перенесення довгих слів */
-    hyphens: auto;
 }
 
 .journal-post-media-box {
@@ -773,16 +745,6 @@ margin-top: var(--space-md);
     border-radius: 0.5rem;
     /* М'яка тінь на основі HSL, без брудних rgba */
     box-shadow: 0 0.25rem 0.75rem hsl(var(--theme-h) var(--theme-s) 10% / 0.05);
-}
-
-.journal-post-card {
-    padding: var(--spacing-md);
-    border-radius: var(--radius-sm);
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    /* Використовуємо word-break для довгих посилань, щоб не розносило картку */
-    overflow-wrap: break-word;
-    word-break: break-all;
 }
 
 /* Кнопка видалення */

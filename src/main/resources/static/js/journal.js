@@ -388,3 +388,28 @@ window.deletePost = async function(postId) {
         alert('Помилка мережі: ' + err.message);
     }
 };
+
+/**
+ * Глобальна функція для асинхронного перемикання сторінок стрічки щоденника.
+ * @param {number} page - Індекс сторінки (починається з 0)
+ * @param {number} size - Кількість постів на сторінку
+ */
+window.loadFeedPage = async function(page = 0, size = 5) {
+    try {
+        // Робимо асинхронний запит до вашого оновленого контролера
+        const response = await fetch(`/api/journal/feed?page=${page}&size=${size}`);
+        if (!response.ok) throw new Error('Не вдалося завантажити сторінку стрічки');
+
+        // Отримуємо чистий HTML-фрагмент сторінки
+        const htmlFragment = await response.text();
+
+        // Знаходимо головний контейнер стрічки, визначений у вашому profile.html
+        const feedContainer = document.getElementById('journalFeed');
+        if (feedContainer) {
+            // Замінюємо вміст контейнера на нову порцію постів з кнопками навігації
+            feedContainer.innerHTML = htmlFragment;
+        }
+    } catch (err) {
+        console.error('Помилка навігації щоденника:', err);
+    }
+};
