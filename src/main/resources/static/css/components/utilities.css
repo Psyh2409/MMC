@@ -31,7 +31,7 @@
 }
 
 .hidden-element {
-    display: none !important;
+    display: none;
 }
 
 .tab-pane.active {
@@ -42,4 +42,11 @@
 .text-break {
     word-break: break-all;      /* Розбиває слово, якщо воно не вміщується */
     overflow-wrap: break-word; /* Сучасний аналог word-wrap для коректної обробки */
+}
+
+/* --- СТАНИ (STATES) --- */
+/* Приховування елементів через природну специфічність */
+.is-hidden,
+tr.is-hidden {
+    display: none;
 }

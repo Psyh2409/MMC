@@ -184,7 +184,7 @@ h3 {
 }
 
 .user-menu-name {
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
     font-weight: 600;
     text-decoration: none;
     transition: opacity 0.2s;

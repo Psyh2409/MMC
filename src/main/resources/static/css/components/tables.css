@@ -182,3 +182,13 @@
 .table-main tr:hover td {
     background-color: var(--bg-elevated); /* Рядок підсвічується твоїм токеном */
 }
+
+/* Модифікатор інтерактивного рядка (Бардачок) */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+    background-color: var(--bg-elevated); /* Використовуємо твою змінну фону */
+}

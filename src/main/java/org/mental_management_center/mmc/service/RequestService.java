@@ -1,6 +1,9 @@
 package org.mental_management_center.mmc.service;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.mental_management_center.mmc.model.Request;
+import org.mental_management_center.mmc.model.RequestStatus;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.RequestRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
@@ -58,5 +61,20 @@ public class RequestService {
      public void deleteById(UUID id) {
          repository.deleteById(id);
      }
+
+    // Додати в RequestService.java
+    @Transactional(readOnly = true)
+    public Request findById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Звернення не знайдено"));
+    }
+
+    @Transactional
+    public void saveAdminReply(UUID id, String replyMessage) {
+        Request request = findById(id);
+        request.setAdminReply(replyMessage);
+        request.setStatus(RequestStatus.ANSWERED);
+        repository.save(request); // Звичайний save з JpaRepository (а не твій кастомний)
+    }
 }
 

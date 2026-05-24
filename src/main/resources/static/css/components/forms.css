@@ -35,8 +35,7 @@
 }
 
 /* --- ІНПУТИ ТА ТЕКСТАРЕЇ (ЄДИНИЙ СТАНДАРТ) --- */
-.form-input,
-.form-textarea {
+.form-input{
     width: 100%;
     padding: calc(var(--step) * 3);
     border-radius: var(--radius-sm);
@@ -47,11 +46,6 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     font-family: inherit;
     font-size: 1rem;
-}
-
-.form-textarea {
-    resize: vertical;
-    min-height: calc(var(--step) * 20);
 }
 
 /* СТАН ФОКУСУ */
@@ -484,7 +478,8 @@
     border: var(--border-width) solid var(--l-border);
     border-radius: var(--radius-sm);
     padding: var(--space-sm);
-    background: var(--l-card-bg);
+    background: var(--bg-input);
+    radius: var(--radius-md);
 }
 
 /* Оптимізація зони прев'ю медіафайлу */

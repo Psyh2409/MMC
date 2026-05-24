@@ -28,51 +28,81 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="req : ${requests}"
-            th:classappend="${req.clientRequest} ? 'row-priority-client' : ''">
+        <th:block th:each="req : ${requests}">
 
-            <td>
-                <span class="badge"
-                      th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
-                      th:text="${req.roleLabel}">
+            <tr th:classappend="${req.status != null and req.status.name() == 'ANSWERED'} ? 'clickable-row' : ''"
+                th:data-target="${req.status != null and req.status.name() == 'ANSWERED'} ? 'reply-' + ${req.id} : ''"
+                onclick="toggleReply(this)">
+
+                <td>
+            <span class="badge"
+                  th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
+                  th:text="${req.roleLabel}">
+            </span>
+                    <br>
+                    <span th:if="${req.status != null and req.status.name() == 'ANSWERED'}" class="badge">✅ Оброблено</span>
+                    <span th:unless="${req.status != null and req.status.name() == 'ANSWERED'}" class="badge btn-danger">🔥 Нове</span>
+                </td>
+
+                <td>
+                    <span th:text="${req.senderName}"></span>
+                </td>
+
+                <td>
+                    <div class="action-group">
+                        <a th:if="${req.status == null or req.status.name() != 'ANSWERED'}"
+                           th:href="@{/requests/{id}/reply(id=${req.id})}"
+                           class="btn-primary">✍ Відповісти</a>
+
+                        <span th:unless="${req.status == null or req.status.name() != 'ANSWERED'}" class="text-muted text-sm">
+                    👀 Клікніть для перегляду
                 </span>
-            </td>
+                    </div>
+                </td>
 
-            <td>
-                <span th:text="${req.senderName}"
-                      th:style="${req.user != null} ? 'font-weight: bold;' : 'font-style: italic;'"></span>
-            </td>
+                <td th:text="${req.message}" class="data-table-message"></td>
 
-            <td>
-                <div class="action-group">
-                    <a th:if="${req.smsContact != null}"
-                       th:href="'sms:' + ${req.smsContact}"
-                       class="btn-primary" title="Написати СМС">✉️ СМС</a>
+                <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
 
-                    <a th:if="${req.emailContact != null}"
-                       th:href="'mailto:' + ${req.emailContact}"
-                       class="btn-primary" title="Надіслати лист">📧 Email</a>
-                </div>
-            </td>
+                <td>
+                    <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-primary btn-danger">Видалити</button>
+                    </form>
+                </td>
+            </tr>
 
-            <td th:text="${req.message}" class="data-table-message"></td>
+            <tr th:if="${req.status != null and req.status.name() == 'ANSWERED'}"
+                th:id="'reply-' + ${req.id}"
+                class="is-hidden">
+                <td colspan="6">
+                    <div class="reply-expanded-box">
+                        <span class="reply-box-title">Ваша відповідь користувачу:</span>
+                        <p class="reply-box-text" th:text="${req.adminReply}"></p>
+                    </div>
+                </td>
+            </tr>
 
-            <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
-
-            <td>
-                <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="btn-primary btn-danger">Видалити</button>
-                </form>
-            </td>
-        </tr>
-
-        <tr th:if="${#lists.isEmpty(requests)}">
-            <td colspan="6" class="empty-state">У бардачку поки порожньо. Спокійний день!</td>
-        </tr>
+        </th:block>
         </tbody>
     </table>
-    </div>
-</section>
-</body>
+    </div> <script>
+    function toggleReply(element) {
+        // element — це той самий тег <tr>, на який ти клікнув мишкою
+        // .closest('tr') гарантує, що ми схопимо рядок, навіть якщо клік був по тексту всередині
+        const row = element.closest('tr');
+
+        // Витягуємо значення data-target (наприклад, "reply-uuid-123")
+        const targetId = row.getAttribute('data-target');
+        if (!targetId) return; // Якщо атрибута немає (рядок "Нове") — зупиняємо роботу
+
+        // Шукаємо під таблицею прихований рядок з таким ID
+        const replyRow = document.getElementById(targetId);
+        if (replyRow) {
+            // Перемикаємо стан: якщо клас is-hidden є — прибираємо (показуємо текст), якщо немає — додаємо (ховаємо)
+            replyRow.classList.toggle('is-hidden');
+        }
+    }
+</script>
+</section> </body>
 </html>

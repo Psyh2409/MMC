@@ -834,3 +834,25 @@ margin-top: var(--space-md);
     gap: 0.5rem;
     align-items: flex-start;
 }
+
+/* --- БЛОК РОЗГОРНУТОЇ ВІДПОВІДІ (Бардачок) --- */
+.reply-expanded-box {
+    padding: var(--space-md);
+    background-color: var(--bg-main);
+    border-left: calc(var(--step) * 2) solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.reply-box-title {
+    display: block;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--space-xs);
+}
+
+.reply-box-text {
+    color: var(--text-muted);
+    white-space: pre-wrap; /* Зберігає твої абзаци при виводі з бази */
+}

@@ -61,9 +61,7 @@
 ### Запуск через PowerShell (Ngrok Dev Mode)
 Для тестування локальної розробки із зовнішніми API OAuth2 створено автоматичний скрипт:
 
-```powershell
-.\scripts\start-ngrok-oauth.ps1 -PublicBaseUrl "[https://your-current-ngrok-domain.ngrok-free.dev](https://your-current-ngrok-domain.ngrok-free.dev)"
-```
+ngrokOAuth.ps1 (скрипт)
 
 **Що робить скрипт:**
 1. Встановлює змінну `$env:APP_PUBLIC_BASE_URL`.

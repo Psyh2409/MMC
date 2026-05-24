@@ -143,7 +143,7 @@
 /* --- 3. КОМПОНЕНТИ СТАТЕЙ ТА ВИНОСКИ --- */
 
 .issue-callout {
-    margin: var(--space-xl) 0;
+    margin: var(--space-xs) 0;
     padding: var(--space-xl);
     border-radius: var(--radius-md);
     background-color: var(--bg-surface);

@@ -33,6 +33,13 @@ public class Request {
     // Роль того, хто надіслав запит на момент відправки
     private int rolesMask;
 
+    // У класі Request.java
+    @Column(columnDefinition = "TEXT")
+    private String adminReply; // Тут зберігатиметься твій текст
+
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status = RequestStatus.NEW; // NEW, ANSWERED, CLOSED
+
     @PrePersist
     private void prePersist(){
         createdAt = LocalDateTime.now();

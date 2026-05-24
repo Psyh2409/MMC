@@ -98,4 +98,38 @@ public class EmailService {
                 ? "http://localhost:8080"
                 : publicBaseUrl.replaceAll("/+$", "");
     }
+
+    public void sendSupportReply(String to, String userName, String originalMessage, String replyMessage) {
+        try {
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo(to);
+            email.setSubject("Відповідь на ваше звернення — Mental Management Center");
+
+            // Формуємо чітку структуру: Спочатку цитата, потім твоя відповідь
+            String body = String.format(
+                    "Вітаємо, %s!\n\n" +
+                            "Ви залишали звернення на платформі Mental Management Center.\n\n" +
+                            "--- ВАШЕ ЗАПИТАННЯ ---\n" +
+                            "\"%s\"\n" +
+                            "------------------------\n\n" +
+                            "--- ВІДПОВІДЬ ФАХІВЦЯ ---\n" +
+                            "%s\n" +
+                            "-------------------------\n\n" +
+                            "З повагою,\n" +
+                            "Команда Mental Management Center",
+                    userName != null ? userName : "користувачу",
+                    originalMessage,
+                    replyMessage
+            );
+
+            email.setText(body);
+            email.setFrom("mental.m.center@gmail.com");
+
+            mailSender.send(email);
+            logger.info("Відповідь із цитатою успішно надіслана на пошту: {}", to);
+        } catch (MailException e) {
+            logger.error("Не вдалося відправити лист: {}", e.getMessage());
+            throw new RuntimeException("Помилка відправки SMTP: " + e.getMessage(), e);
+        }
+    }
 }
