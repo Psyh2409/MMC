@@ -56,7 +56,7 @@
 
 ## 💻 4. Локальне розгортання та OAuth2 (Local Dev Guide)
 
-Додаток використовує `spring-boot-starter-oauth2-client`. Кнопки швидкого входу (Google/Facebook) на сторінці `/login` активуються автоматично лише після виявлення відповідних змінних середовища.
+Додаток використовує `spring-boot-starter-oauth2-client`. Кнопки швидкого входу (Google) на сторінці `/login` активуються автоматично лише після виявлення відповідних змінних середовища.
 
 ### Запуск через PowerShell (Ngrok Dev Mode)
 Для тестування локальної розробки із зовнішніми API OAuth2 створено автоматичний скрипт:
@@ -74,9 +74,6 @@ ngrokOAuth.ps1 (скрипт)
 * **Google Cloud Console:** Створіть клієнт `Web application`.
     * **Локальний URI:** `http://localhost:8080/login/oauth2/code/google`
     * **Ngrok URI:** `https://your-domain.ngrok-free.dev/login/oauth2/code/google`
-* **Meta for Developers (Facebook):** *[Інтеграція тимчасово призупинена]* 🛑
-    * Фіча заморожена через політику Meta щодо блокування доступу для десктоп-пристроїв непідтверджених бізнес-акаунтів.
-
 ---
 
 ## 🗺️ 5. Беклог та Вектор розвитку (MMC 2.0 Roadmap)

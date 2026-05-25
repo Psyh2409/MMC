@@ -101,7 +101,6 @@ public class AuthController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("googleOAuthEnabled", isProviderEnabled("google"));
-        model.addAttribute("facebookOAuthEnabled", isProviderEnabled("facebook"));
         return "login";
     }
 

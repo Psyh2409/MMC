@@ -81,10 +81,7 @@ public class SecurityConfig {
     private boolean isGoogleOAuthEnabled() {
         String clientId = environment.getProperty("app.oauth2.google.client-id");
         String clientSecret = environment.getProperty("app.oauth2.google.client-secret");
-        String facebookClientId = environment.getProperty("app.oauth2.facebook.client-id");
-        String facebookClientSecret = environment.getProperty("app.oauth2.facebook.client-secret");
-        return (hasText(clientId) && hasText(clientSecret))
-                || (hasText(facebookClientId) && hasText(facebookClientSecret));
+        return (hasText(clientId) && hasText(clientSecret));
     }
 
     private boolean hasText(String value) {

@@ -1,9 +1,11 @@
 package org.mental_management_center.mmc.service;
 
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +17,13 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final String publicBaseUrl;
+    private final String adminMail;
 
     public EmailService(JavaMailSender mailSender,
                         @Value("${app.public-base-url:http://localhost:8080}") String publicBaseUrl) {
         this.mailSender = mailSender;
         this.publicBaseUrl = publicBaseUrl;
+        this.adminMail = "mental.m.center@gmail.com";
         logger.info("EmailService initialized with publicBaseUrl: {}", publicBaseUrl);
         logger.info("JavaMailSender: {}", mailSender != null ? "initialized" : "null");
         
@@ -67,10 +71,10 @@ public class EmailService {
             email.setTo(to);
             email.setSubject(subject);
             email.setText(message);
-            email.setFrom("mental.m.center@gmail.com"); // Явно вказуємо відправника
+            email.setFrom(adminMail); // Явно вказуємо відправника
 
             logger.info("Sending password reset email to: {}", to);
-            logger.info("From: mental.m.center@gmail.com");
+            logger.info("From: "+ adminMail);
             
             mailSender.send(email);
             
@@ -123,13 +127,43 @@ public class EmailService {
             );
 
             email.setText(body);
-            email.setFrom("mental.m.center@gmail.com");
+            email.setFrom(adminMail);
 
             mailSender.send(email);
             logger.info("Відповідь із цитатою успішно надіслана на пошту: {}", to);
         } catch (MailException e) {
             logger.error("Не вдалося відправити лист: {}", e.getMessage());
             throw new RuntimeException("Помилка відправки SMTP: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Автоматичний лист-підтвердження для клієнта, що його запит успішно отримано
+     */
+    public void sendAutoAcknowledgement(String clientEmail, String clientName) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(adminMail); // Твоя системна пошта MMC
+            helper.setTo(clientEmail);
+            helper.setSubject("🌿 Mental Management Center — Ваше звернення отримано");
+
+            // Формуємо чистий, спокійний текст листа без жодного HTML-сміття
+            String text = String.format(
+                    "Вітаємо, %s!\n\n" +
+                            "Цей лист підтверджує, що ваше повідомлення успішно доставлено до Mental Management Center.\n" +
+                            "Ми розуміємо важливість вашого звернення. Наш спеціаліст опрацює його та надасть відповідь найближчим часом.\n\n" +
+                            "Будь ласка, не відповідайте на цей лист, він згенерований автоматично.\n\n" +
+                            "З повагою,\nКоманда Mental Management Center 🌿",
+                    clientName
+            );
+
+            helper.setText(text, false); // false означає чистий plain text без кривих стилів
+            mailSender.send(message);
+        } catch (Exception e) {
+            // Логуємо помилку, але не ламаємо відправку самої форми, якщо впав поштовий сервер
+            logger.error("Не вдалося надіслати автопідтвердження клієнту: {}", e.getMessage());
         }
     }
 }

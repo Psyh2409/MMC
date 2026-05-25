@@ -19,7 +19,7 @@
     line-height: 1;
 
 }
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-0.0625rem); }
 
 /* 2. АУТЛАЙН: Другорядна дія (Скасувати, Назад) */
 .btn-outline {

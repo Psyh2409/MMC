@@ -56,6 +56,4 @@ app:
     google:
       client-id: ${OAUTH2_GOOGLE_CLIENT_ID:dummy}
       client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET:dummy}
-    facebook:
-      client-id: ${OAUTH2_FACEBOOK_CLIENT_ID:dummy}
-      client-secret: ${OAUTH2_FACEBOOK_CLIENT_SECRET:dummy}
+

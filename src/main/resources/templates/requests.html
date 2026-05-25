@@ -54,9 +54,14 @@
                            th:href="@{/requests/{id}/reply(id=${req.id})}"
                            class="btn-primary">✍ Відповісти</a>
 
-                        <span th:unless="${req.status == null or req.status.name() != 'ANSWERED'}" class="text-muted text-sm">
-                    👀 Клікніть для перегляду
-                </span>
+                        <span th:unless="${req.status == null or req.status.name() != 'ANSWERED'}" class="text-navigation text-sm">
+                            <th:block th:if="${req.emailContact != null}">
+                                📧 <span th:text="${req.emailContact}"></span>
+                            </th:block>
+                            <th:block th:if="${req.emailContact == null and req.smsContact != null}">
+                                📱 <span th:text="${req.smsContact}"></span>
+                            </th:block>
+                        </span>
                     </div>
                 </td>
 

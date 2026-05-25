@@ -26,12 +26,27 @@ public class RequestController {
     @GetMapping("/contact")
     public String showForm(Model model) {
         // Форма тепер чиста, success ми обробляємо через параметри в HTML
+        model.addAttribute("request", new Request());
         return "contact";
     }
 
     @PostMapping("/contact")
     public String submitForm(@ModelAttribute Request request, Principal principal) {
+        String email = request.getEmailContact();
+
+        // Регулярний вираз для валідації структури email
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+        // Якщо поле порожнє або не відповідає формату емейлу — не приймаємо форму
+        if (email == null || !email.matches(emailRegex)) {
+            // Повертаємо користувача назад з прапорцем помилки в URL
+            return "redirect:/contact?error=invalid_email";
+        }
+
+        // Якщо перевірка пройшла — зберігаємо в БД та шлемо автовідповідь
         requestService.save(request, principal);
+        emailService.sendAutoAcknowledgement(request.getEmailContact(), request.getSenderName());
+
         return "redirect:/contact?success";
     }
 
@@ -54,21 +69,28 @@ public class RequestController {
     }
 
     @PostMapping("/requests/{id}/reply")
-    public String replyToRequest(@PathVariable UUID id, @RequestParam("replyMessage") String replyMessage) {
-        // 1. Безпечно зберігаємо відповідь в БД
-        requestService.saveAdminReply(id, replyMessage);
-
-        // 2. Дістаємо запит для відправки листа
+    public String replyToRequest(@PathVariable UUID id, @RequestParam ("replyMessage") String replyMessage, Principal principal) {
+        // 1. Отримуємо заявку з бази
         Request request = requestService.findById(id);
 
+        // 2. Оновлюємо статус та зберігаємо відповідь в архіве платформи
+        request.setStatus(RequestStatus.ANSWERED);
+        request.setAdminReply(replyMessage);
+        requestService.save(request, principal); // Переконайся, що метод save або update оновлює існуючий запис
+
+        // 3. МАРШРУТИЗАЦІЯ КАНАЛІВ ЗВ'ЯЗКУ
         if (request.getEmailContact() != null && !request.getEmailContact().isBlank()) {
+            // Канал пошти
             emailService.sendSupportReply(
                     request.getEmailContact(),
                     request.getSenderName(),
                     request.getMessage(),
-                    replyMessage);
+                    replyMessage
+            );
+        }  else {
+            throw new IllegalArgumentException("Неможливо надіслати відповідь: контактні дані відсутні.");
         }
 
-        return "redirect:/requests?success";
+        return "redirect:/requests";
     }
 }

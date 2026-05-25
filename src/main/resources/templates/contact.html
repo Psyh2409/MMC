@@ -19,7 +19,7 @@
         ✔ Ваше повідомлення надіслано. Ми зв'яжемося з Вами найближчим часом.
     </div>
 
-    <form th:action="@{/contact}" method="post" class="stack-form stack-form-sans">
+    <form th:action="@{/contact}" th:object="${request}" method="post" class="stack-form stack-form-sans">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
         <div th:unless="${#authorization.expression('isAuthenticated()')}">
@@ -30,11 +30,18 @@
             </div>
 
             <div class="form-field">
-                <label class="form-label">Контактні дані (Телефон або Email)</label>
-                <input type="text" name="contact" required placeholder="Куди мені відповісти?"
+                <label class="form-label" for="emailContact">E-mail для відповіді</label>
+
+                <input type="email"
+                       id="emailContact"
+                       th:field="*{emailContact}"
+                       required
+                       placeholder="example@domain.com"
+                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
                        class="form-input">
-                <small style="display:block; margin-top: 5px; color: #888; font-size: 0.85em;">
-                    * Якщо Ви не можете увійти, вкажіть Email Вашого акаунта для ідентифікації.
+
+                <small class="form-text-muted">
+                    * Вкажіть діючу електронну пошту. Вона буде використана для відправки відповіді.
                 </small>
             </div>
         </div>
