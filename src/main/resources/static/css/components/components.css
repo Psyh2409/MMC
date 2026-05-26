@@ -779,11 +779,6 @@ margin-top: var(--space-md);
     border-radius: var(--radius-md, 0.375rem);
 }
 
-.form-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
 .media-input-group {
     display: flex;
     flex-direction: column;

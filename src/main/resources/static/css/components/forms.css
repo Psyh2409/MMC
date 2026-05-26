@@ -294,8 +294,15 @@
 
 .form-actions {
     display: flex;
+    align-items: center;
     gap: var(--space-md);
     margin-top: var(--space-lg);
+}
+
+.right-actions.form-actions {
+    justify-content: flex-end;
+    /* Використовуємо той самий токен, щоб не було розсинхрону */
+    gap: var(--space-md);
 }
 
 /* --- ТВОЇ РІДНІ КЛАСИ ДЛЯ ОКА ПАРОЛЯ --- */

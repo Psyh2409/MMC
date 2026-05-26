@@ -381,8 +381,3 @@ main {
     margin-top: var(--space-sm);
     width: 100%;
 }
-
-.right-actions.form-actions {
-    display: flex;
-    gap: 0.5rem;
-}

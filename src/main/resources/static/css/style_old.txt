@@ -2595,13 +2595,6 @@ h1, h2, h3 {
     display: inline-block;
 }
 
-/* Напис "Скасувати" у формі створення статті */
-.form-actions .site-nav-link {
-    color: var(--accent-color) !important;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
 /* Прибираємо блакитний з описів статей (SEO-посилання, Кризи близькості тощо) */
 .article-description a,
 .articles-list a,
@@ -2768,16 +2761,6 @@ h1, h2, h3 {
     cursor: pointer !important;
     text-decoration: none !important;
     display: inline-block !important;
-}
-
-/* Напис "Скасувати" у формі створення (робимо видимим) */
-.btn-secondary, .form-actions .site-nav-link {
-    color: var(--accent-color) !important;
-    font-weight: bold !important;
-    text-decoration: underline !important;
-    opacity: 1 !important;
-    font-size: 1rem !important;
-    margin-left: 0.8rem !important; /* Відступ від кнопки "Опублікувати" */
 }
 
 /* Стилі для спільного чату */
