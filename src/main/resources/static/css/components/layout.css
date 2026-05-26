@@ -12,15 +12,6 @@
     color: var(--text-primary);
 }
 
-.page-main {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-    padding: 0 0 calc(var(--step) * 8);
-    padding-top: var(--space-xl);
-    padding-bottom: calc(var(--space-xl) * 4);
-}
-
 .main-content-shell {
     display: block;
 }
@@ -35,22 +26,26 @@ html, body {
 }
 
 /* 2. ГІГІЄНА КОНТЕЙНЕРІВ: Прибираємо жадібні внутрішні скроли */
+/* 1. Загальна логіка для "оболонок" сторінки */
 .page-shell,
-.page-main,
 .main-content-shell {
-    /* Замість жорсткої фіксації висоти дозволяємо сторінці рости природно вниз */
     height: auto;
     min-height: 100vh;
-
-    /* Забороняємо внутрішнім обгорткам плодити власні повзунки */
     overflow: visible;
-
-    /* Гарантуємо, що відступи не роздують ширину чи висоту понад норму */
     box-sizing: border-box;
 }
 
-main {
-    padding-bottom: 8vh;
+/* 2. Специфічна логіка для головного робочого простору */
+.page-main {
+    flex: 1;
+    min-height: 100vh; /* Щоб збігалося з shell */
+    overflow: auto;    /* Окремий скрол для контенту */
+    box-sizing: border-box;
+
+    padding-top: var(--space-xl);
+    padding-bottom: calc(var(--space-xl) * 4);
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* --- 2. НОВІ СИСТЕМНІ СТАНДАРТИ (Замінять старі контейнери) --- */

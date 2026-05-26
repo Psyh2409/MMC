@@ -264,13 +264,6 @@ html, body {
     color: var(--accent-color);
 }
 
-.page-main {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-    padding: 0 0 32px;
-}
-
 .standard-container {
     max-width: 700px;
     width: 90%;
