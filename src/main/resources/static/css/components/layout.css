@@ -232,11 +232,14 @@ html, body {
     padding-left: var(--space-xl);
 }
 
+/* layout.css - Єдине джерело для .profile-divider */
 .profile-divider {
+    display: block;
     width: 100%;
-    border: 0;
+    align-self: stretch; /* Гарантує розтягнення у flex-контейнері */
+    border: none;
     border-top: calc(var(--step) * 0.25) solid var(--border-soft);
-    margin: var(--space-xl) 0;
+    margin: var(--space-xl) 0; /* Обираємо XL як стандарт для секційного розділювача */
 }
 
 @media (max-width: 48rem) {

@@ -460,16 +460,6 @@ margin-top: var(--space-md);
     width: 100%;
 }
 
-/* Фікс розділювача всередині Flex-контейнера, щоб він не стискався */
-.profile-divider {
-    display: block;
-    width: 100%;
-    align-self: stretch;   /* Змушує лінію лягти від краю до краю картки */
-    border: none;
-    border-top: 0.0625rem solid var(--border-soft);
-    margin: var(--space-lg) 0;
-}
-
 /* --- ІНТЕРАКТИВНІ РОЗГОРТАНІ КАРТКИ ЖУРНАЛУ --- */
 
 .note-interactive-card {
