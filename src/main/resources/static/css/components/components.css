@@ -662,38 +662,18 @@ margin-top: var(--space-md);
     padding: var(--space-xl) 0;
 }
 
-/* Сама картка помилки */
-.error-card {
-    background-color: var(--bg-elevated);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--space-xl);
-    max-width: 35rem;
-    width: 100%;
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
 /* Заголовок всередині картки */
-.error-card .section-title {
+.section-title {
     margin: 0;
 }
 
 /* Текст опису помилки */
-.error-card .error-description {
+.error-description {
     color: var(--text-muted);
     line-height: 1.6;
     margin: 0;
 }
 
-/* Центрування кнопок всередині картки */
-.error-card {
-    justify-content: center;
-    margin-top: var(--space-sm);
-}
 /* ==========================================================================
    JOURNAL ENCRYPTED FEED CARDS
    ========================================================================== */

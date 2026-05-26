@@ -41,6 +41,44 @@
 
 /* --- 2. СПЕЦИФІЧНІ КАРТКИ (Тимчасово залишаємо для сумісності з HTML) --- */
 
+/* 1. Спільні ефекти (залиш цей блок, це оптимізація) */
+.home-service-card,
+.error-card,
+.steps-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* 2. Єдина точка правди для картки помилки */
+.error-card {
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    margin-top: var(--space-sm);
+    width: 100%;
+    max-width: calc(var(--step) * 160); /* Обираємо цю специфікацію як головну */
+    text-align: center;
+
+    /* Style Tokens */
+    background-color: var(--bg-surface);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 var(--space-sm) var(--space-lg) var(--bg-overlay);
+}
+
+/* 3. Оформлення внутрішніх елементів */
+.error-card .section-title {
+    margin: 0;
+}
+
+.error-card .error-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
 .steps-card,
 .issue-grid-card {
     background-color: var(--bg-canvas);
@@ -49,7 +87,6 @@
 }
 
 .home-service-card,
-.error-card,
 .steps-card {
     box-shadow: 0 var(--space-sm) var(--space-lg) var(--bg-overlay);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -79,14 +116,6 @@
     border-left: calc(var(--step) * 1) solid var(--accent-primary);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-main);
-}
-
-.error-card {
-    max-width: calc(var(--step) * 160);
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    background-color: var(--bg-surface);
-    border: calc(var(--step) * 0.25) solid var(--border-soft);
 }
 
 .article-card,

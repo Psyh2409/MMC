@@ -1688,15 +1688,6 @@ main {
     justify-content: center;
 }
 
-.error-card {
-    max-width: 640px;
-    padding: 36px 32px;
-    border-radius: 24px;
-    background: var(--bg-main);
-    box-shadow: 0 18px 45px var(--shadow-main);
-    text-align: center;
-}
-
 .error-code {
     margin: 0 0 10px;
     color: var(--primary-color);
