@@ -17,11 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,7 +206,8 @@ public class CssAuditService {
 
         // Використовуємо TreeMap для автоматичного сортування імен файлів за алфавітом
         Map<String, List<String>> missingByPage = new java.util.TreeMap<>();
-        List<String> unusedStyles = new ArrayList<>();
+        // Використовуємо TreeMap для сортування ключів (файлів) за алфавітом
+        Map<String, List<String>> unusedStylesByFile = new TreeMap<>();
         List<String> styleConflicts = new ArrayList<>();
         List<String> orphansForRescue = new ArrayList<>();
 
@@ -233,10 +230,11 @@ public class CssAuditService {
             }
             // 2. Пошук невикористаних стилів
             else if (hasCssDefinition && !hasHtmlUsage) {
-                unusedStyles.add(selectorName + " (defined in: " +
-                        descriptor.getDefinitions().stream().map(StyleDefinition::getSourceFile).collect(Collectors.joining(", ")) + ")");
+                descriptor.getDefinitions().forEach(def -> {
+                    unusedStylesByFile.computeIfAbsent(def.getSourceFile(), k -> new ArrayList<>())
+                            .add(selectorName);
+                });
             }
-
             // 3. Пошук конфліктів стилів (групування за Media Query залишаємо без змін)
             if (hasCssDefinition && descriptor.getDefinitions().size() > 1) {
                 Map<String, List<StyleDefinition>> definitionsByMediaQuery = descriptor.getDefinitions().stream()
@@ -275,18 +273,24 @@ public class CssAuditService {
                 selectors.stream().sorted().forEach(s -> auditReport.append("   - ").append(s).append("\n"));
             });
         }
-/*
-        if (!unusedStyles.isEmpty()) {
-            auditReport.append("\n--- Unused Styles (Defined in CSS but not used in HTML) ---\n");
-            unusedStyles.stream().sorted().forEach(s -> auditReport.append("- ").append(s).append("\n"));
+
+        if (!unusedStylesByFile.isEmpty()) {
+            auditReport.append("\n--- Unused Styles (Grouped by file) ---\n");
+            unusedStylesByFile.forEach((fileName, selectors) -> {
+                auditReport.append("📁 ").append(fileName).append(":\n");
+                // Сортуємо селектори всередині файлу, прибираємо дублікати (distinct)
+                selectors.stream().distinct().sorted().forEach(s ->
+                        auditReport.append("   - ").append(s).append("\n")
+                );
+            });
         }
-*/
+
         if (!styleConflicts.isEmpty()) {
             auditReport.append("\n--- Style Conflicts (Sorted) ---\n");
             styleConflicts.stream().sorted().forEach(s -> auditReport.append("- ").append(s).append("\n"));
         }
 
-        if (missingByPage.isEmpty() && unusedStyles.isEmpty() && styleConflicts.isEmpty()) {
+        if (missingByPage.isEmpty() && unusedStylesByFile.isEmpty() && styleConflicts.isEmpty()) {
             auditReport.append("\n--- No CSS/HTML audit issues found. ---\n");
         }
 
@@ -527,5 +531,52 @@ public class CssAuditService {
             System.out.println("Помилка доступу до папки шаблонів");
         }
         System.out.println("=== ГЛОБАЛЬНА СТАНДАРТИЗОВАНА СИСТЕМА ПРИЙНЯТА ===");
+    }
+
+    public void extractInlineScripts() {
+        try {
+            Files.walk(templatesPath)
+                    .filter(p -> p.toString().endsWith(".html"))
+                    .forEach(path -> {
+                        try {
+                            Document doc = Jsoup.parse(path.toFile(), "UTF-8");
+                            // Знаходимо всі <script>, у яких немає атрибута src (тобто інлайнові)
+                            doc.select("script:not([src])").forEach(script -> {
+                                String scriptContent = script.html().trim();
+                                if (scriptContent.isEmpty()) return;
+
+                                // Генеруємо ім'я файлу (напр: journal.js)
+                                String baseName = path.getFileName().toString().replace(".html", "");
+                                String jsFileName = baseName + ".js";
+                                Path jsPath = Paths.get("src/main/resources/static/js/pages/", jsFileName);
+
+                                // Створюємо папку, якщо треба
+                                try {
+                                    Files.createDirectories(jsPath.getParent());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                // Записуємо в окремий файл
+                                try {
+                                    Files.writeString(jsPath, scriptContent);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                // Логуємо для тебе
+                                System.out.println("✅ Екстраговано: " + jsFileName);
+                                System.out.println("   Шаблон: " + path.getFileName());
+                                if (scriptContent.contains("[[")) {
+                                    System.out.println("   ⚠️ УВАГА: Знайдено Thymeleaf-вирази '[[...]]'. Потрібен ручний рефакторинг!");
+                                }
+                            });
+                        } catch (IOException e) {
+                            log.error("Помилка обробки шаблону: " + path, e);
+                        }
+                    });
+        } catch (IOException e) {
+            log.error("Помилка читання папок", e);
+        }
     }
 }
