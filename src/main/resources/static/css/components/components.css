@@ -399,14 +399,6 @@ margin-top: var(--space-md);
     fill: currentColor;
 }
 
-/* Стіна журналу профілю */
-.journal-wall {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    width: 100%;
-}
-
 .journal-section {
     margin-top: var(--space-lg);
 }
