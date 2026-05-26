@@ -279,9 +279,10 @@
     padding-top: var(--space-lg);
 }
 
-.logout-form,
-.inline-form {
-    display: inline-block;
+.inline-form,
+.logout-form {
+    display: inline-flex;
+    align-items: center;
     margin: 0;
     padding: 0;
 }

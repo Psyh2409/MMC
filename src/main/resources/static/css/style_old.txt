@@ -2206,11 +2206,6 @@ h1, h2, h3 {
     width: 200px; /* Фіксована ширина для колонки з кнопками */
 }
 
-.inline-form {
-    margin: 0;
-    display: inline-block;
-}
-
 .btn-action {
     padding: 6px 12px;
     border-radius: 4px;
@@ -2560,13 +2555,6 @@ h1, h2, h3 {
 
 .btn-delete, .btn-delete-sm {
     background-color: var(--primary-color) !important; /* Твій шоколад */
-}
-
-/* Форма видалення, щоб не переносила кнопку на новий рядок */
-.inline-form {
-    display: inline-block !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }
 
 /* 5. Обмеження довжини назви статті, щоб не "перло" вбік */

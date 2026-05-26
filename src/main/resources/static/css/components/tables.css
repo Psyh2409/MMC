@@ -127,13 +127,6 @@
     gap: var(--space-sm);
 }
 
-/* 3. Гасимо дефолтні відступи форми, щоб вона не розпирала рядок */
-.inline-form {
-    display: inline-flex;
-    margin: 0;
-    padding: 0;
-}
-
 .admin-controls-wrapper {
     display: flex;
     flex-direction: column;
