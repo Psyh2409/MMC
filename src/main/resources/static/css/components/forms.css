@@ -218,11 +218,6 @@
     width: 100%;
 }
 
-.password-container .form-input {
-    padding-right: calc(var(--step) * 10);
-    width: 100%;
-}
-
 /* --- ПІДКАЗКИ ТА ДИНАМІЧНІ ПОЛЯ --- */
 .new-category-input,
 .hidden-category-field,
@@ -315,9 +310,11 @@
 }
 
 /* Відступ справа, щоб текст не заліз під око */
+/* forms.css - Єдине джерело для стилізації поля пароля */
 .password-container .form-input {
     width: 100%;
-    padding-right: 3rem;
+    /* Використовуємо системний токен замість хардкоду 3rem */
+    padding-right: calc(var(--step) * 10);
 }
 
 /* Твоя кнопка */

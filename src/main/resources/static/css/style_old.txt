@@ -1856,12 +1856,6 @@ h1, h2, h3 {
     color: var(--primary-color); /* Темнішає при наведенні */
 }
 
-/* Коригування інпуту, щоб текст не заходив під кнопку */
-.password-container .form-input {
-    padding-right: 40px;
-    width: 100%;
-}
-
 .profile-card {
     background: var(--bg-card);
     border-top: 4px solid var(--primary-color); /* тонка лінія кольору дерева зверху */

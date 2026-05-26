@@ -531,12 +531,6 @@ margin-top: var(--space-md);
     width: 100%;
 }
 
-/* Робимо відступ справа, щоб текст пароля не залазив під іконку ока */
-.password-container .form-input {
-    width: 100%;
-    padding-right: 3rem;
-}
-
 /* Сама кнопка "око" */
 .btn-toggle-password {
     position: absolute;
