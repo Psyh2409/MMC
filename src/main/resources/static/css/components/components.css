@@ -726,11 +726,11 @@ margin-top: var(--space-md);
     opacity: 1; /* або колір */
 }
 
-/* Контейнер для кнопок в хедері */
+/* Єдиний стандарт для дій над постами */
 .post-actions {
     display: flex;
-    gap: var(--spacing-sm);
     align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .media-wrapper {
