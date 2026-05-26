@@ -232,46 +232,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    // Б) Перехоплення подій CHANGE для медіа-прев'ю (через FileReader)
-    document.addEventListener('change', (e) => {
-        if (e.target.matches('.journal-media-input')) {
-            const file = e.target.files[0];
-            const container = e.target.closest('form') || e.target.closest('.button-row');
-            const previewContainer = container.querySelector('.edit-media-preview');
-            const fileNameDisplay = container.querySelector('.file-name-display') || document.getElementById('fileNameDisplay');
-            const currentMediaDisplay = container.querySelector('.current-media-display');
+    // Б) Перехоплення подій CHANGE для медіа-прев'ю (ЧИСТИЙ РОБОЧИЙ КОД)
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.journal-media-input')) {
+                const file = e.target.files[0];
+                const container = e.target.closest('form') || e.target.closest('.button-row');
+                const previewContainer = container.querySelector('.edit-media-preview');
+                const fileNameDisplay = container.querySelector('.file-name-display') || document.getElementById('fileNameDisplay');
+                const currentMediaDisplay = container.querySelector('.current-media-display');
 
-            if (fileNameDisplay) {
-                fileNameDisplay.textContent = file ? file.name : '';
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file ? file.name : '';
+                }
+
+                if (currentMediaDisplay) {
+                    currentMediaDisplay.classList.toggle('hidden', !!file);
+                }
+
+                if (!previewContainer) return;
+                previewContainer.innerHTML = '';
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        if (file.type.startsWith('video/')) {
+                            const video = document.createElement('video');
+                            video.src = event.target.result;
+                            video.controls = true;
+                            video.classList.add('media-preview');
+                            previewContainer.appendChild(video);
+                        } else if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.src = event.target.result;
+                            img.classList.add('media-preview');
+                            previewContainer.appendChild(img);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
-
-            if (currentMediaDisplay) {
-                currentMediaDisplay.classList.toggle('hidden', !!file);
-            }
-
-            if (!previewContainer) return;
-            previewContainer.innerHTML = '';
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    if (file.type.startsWith('video/')) {
-                        const video = document.createElement('video');
-                        video.src = event.target.result;
-                        video.controls = true;
-                        video.classList.add('preview-video');
-                        previewContainer.appendChild(video);
-                    } else if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = event.target.result;
-                        img.classList.add('preview-img');
-                        previewContainer.appendChild(img);
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    });
+        });
 
     // В) Керування видимістю кнопок основної форми (Скасувати / Опублікувати)
         const mainTextarea = document.getElementById('journalContent');

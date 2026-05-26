@@ -50,3 +50,12 @@
 tr.is-hidden {
     display: none;
 }
+
+/* Глобальні утиліти вирівнювання (працюють для будь-якого Flex-контейнера) */
+.center {
+    justify-content: center;
+}
+
+.start {
+    justify-content: flex-start;
+}

@@ -118,29 +118,33 @@
                 <div class="admin-controls-wrapper" th:if="${!u.isAdmin()}">
 
                     <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
-                        <button type="submit" th:class="${u.enabled} ? 'btn-toggle btn-site-ok' : 'btn-toggle btn-danger'">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-toggle btn-toggle-site" th:data-active="${u.enabled}">
                             <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
-                        <button type="submit" th:class="${u.chatEnabled} ? 'btn-toggle btn-chat-ok' : 'btn-toggle btn-danger'">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-toggle btn-toggle-chat" th:data-active="${u.chatEnabled}">
                             <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/toggle-comments/{id}(id=${u.id})}" method="post">
-                        <button type="submit" th:class="${u.commentsEnabled} ? 'btn-toggle btn-comm-ok' : 'btn-toggle btn-comm-ban'">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-toggle btn-toggle-comm" th:data-active="${u.commentsEnabled}">
                             <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
                           class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
-                        <button type="submit" class="btn-primary btn-danger">Видалити акаунт</button>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-toggle btn-toggle-danger">Видалити</button>
                     </form>
-                </div>
 
+                </div>
                 <span th:if="${u.isAdmin()}" class="admin-badge-self">Адміністратор (Ви)</span>
             </td>
         </tr>

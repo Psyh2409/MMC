@@ -371,12 +371,15 @@ main {
     width: 100%;
 }
 
+/* Базова анатомія ряду: робить елементи в лінію та дозволяє перенос */
 .button-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: space-between; /* Дефолт: рознесення по краях */
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    width: 100%;
 }
 
 .right-actions.form-actions {

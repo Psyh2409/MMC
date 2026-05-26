@@ -37,7 +37,11 @@
     transition: all 0.2s ease;
     line-height: 1;
 }
-.btn-outline:hover { background-color: var(--bg-surface); }
+.btn-outline:hover {
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    transform: translateY(calc(var(--step) * -0.5));
+}
 
 /* 3. ДЕНДЖЕР: Небезпечна дія (Видалити, Бан) */
 .btn-danger {
@@ -66,37 +70,6 @@
 /* Надійна зміна кольору тексту за рахунок специфічності ID (1-0-0) */
 #ptsr-link {
     color: var(--text-on-accent);
-}
-
-/* --- РЯДОК КНОПОК У ФОРМАХ --- */
-.button-row {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-sm);
-    width: 100%;
-}
-
-/* Контурна кнопка скасування */
-/*.btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-sm) var(--space-lg);
-    background-color: transparent;
-    color: var(--accent-primary);
-    border: calc(var(--step) * 0.25) solid var(--accent-primary);
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}*/
-
-.btn-outline:hover {
-    background-color: var(--accent-primary);
-    color: var(--text-on-accent);
-    transform: translateY(calc(var(--step) * -0.5));
 }
 
 /* ФІКС: Початковий стан кнопки — прихована за замовчуванням */
@@ -189,17 +162,5 @@
 }
 
 .btn-icon:hover {
-    background-color: hsl(var(--theme-h), var(--theme-s), 90%);
-}
-
-/* Делікатна зміна кольору при наведенні на видалення */
-.btn-icon.delete-icon:hover {
-    color: hsl(0, 70%, 50%);
-    background-color: hsl(0, 70%, 95%);
-}
-
-/* Ніжна кнопка видалення замість кричущо-червоної */
-.btn-icon.delete-icon:hover {
-    background-color: hsl(0, 70%, 95%);
-    color: hsl(0, 60%, 50%);
+    background-color: hsl(var(--theme-h), var(--theme-s), var(--l-border));
 }

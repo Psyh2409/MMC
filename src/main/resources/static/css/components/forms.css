@@ -505,6 +505,21 @@
     border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 80%);
 }
 
+.media-preview {
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+
+    /* Додай ці два рядки: */
+    max-width: none;
+    height: 8rem;
+
+    border-radius: var(--radius-md);
+    margin-top: var(--space-xs);
+    border: 0.0625rem solid hsl(var(--theme-h), var(--theme-s), var(--l-border));
+}
+
 /* КАТЕГОРИЧНЕ РІШЕННЯ ДЛЯ СМУЖОК:
    Якщо контейнер прев'ю порожній, він повністю виключається з рендерингу */
 .edit-media-preview:empty {
