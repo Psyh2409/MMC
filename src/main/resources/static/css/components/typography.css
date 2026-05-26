@@ -230,11 +230,3 @@ h3 {
 .journal-post-media-box {
     padding: 0 1.5rem 1.5rem 1.5rem; /* Безпечний відступ для медіа в стрічці */
 }
-.journal-post-img,
-.journal-post-video {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    object-fit: contain;
-    display: block;
-}
