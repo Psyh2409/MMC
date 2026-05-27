@@ -45,7 +45,7 @@
                 </td>
 
                 <td>
-                    <span th:text="${req.senderName}"></span>
+                    <span th:text="${req.name}"></span>
                 </td>
 
                 <td>
@@ -55,10 +55,10 @@
                            class="btn-primary">✍ Відповісти</a>
 
                         <span th:unless="${req.status == null or req.status.name() != 'ANSWERED'}" class="text-navigation text-sm">
-                            <th:block th:if="${req.emailContact != null}">
-                                📧 <span th:text="${req.emailContact}"></span>
+                            <th:block th:if="${req.contact != null}">
+                                📧 <span th:text="${req.contact}"></span>
                             </th:block>
-                            <th:block th:if="${req.emailContact == null and req.smsContact != null}">
+                            <th:block th:if="${req.contact == null and req.smsContact != null}">
                                 📱 <span th:text="${req.smsContact}"></span>
                             </th:block>
                         </span>

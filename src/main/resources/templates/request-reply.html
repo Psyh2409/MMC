@@ -18,9 +18,9 @@
     <div class="card-elevated content-section">
         <div class="profile-header-info">
         <span class="profile-section-title">
-            <span th:text="${request.senderName}">Ім'я відправника</span>
+            <span th:text="${request.name}">Ім'я відправника</span>
             <span class="text-muted">
-                (Контакт: <span th:text="${request.emailContact ?: (request.smsContact ?: 'Не вказано')}"></span> |
+                (Контакт: <span th:text="${request.contact}"></span> |
                 Дата: <span th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span>)
             </span>
         </span>

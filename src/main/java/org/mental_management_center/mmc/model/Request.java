@@ -47,28 +47,6 @@ public class Request {
 
     public Request(){}
 
-    // Зручний метод для отримання імені (свого або гостя)
-    public String getSenderName() {
-        return (user != null) ? user.getName() : name;
-    }
-
-    public String getEmailContact() {
-        if (user != null && user.getEmail() != null && !user.getEmail().isBlank()) {
-            return user.getEmail();
-        }
-        if (contact != null && contact.contains("@")) {
-            return contact;
-        }
-        return null;
-    }
-
-    public String getSmsContact() {
-        if (contact != null && !contact.isBlank() && !contact.contains("@")) {
-            return contact;
-        }
-        return null;
-    }
-
     public boolean hasRole(RoleBit role) {
         return (rolesMask & role.getMask()) != 0;
     }

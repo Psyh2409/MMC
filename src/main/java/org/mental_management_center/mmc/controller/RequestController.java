@@ -32,20 +32,19 @@ public class RequestController {
 
     @PostMapping("/contact")
     public String submitForm(@ModelAttribute Request request, Principal principal) {
-        String email = request.getEmailContact();
+        String contact = request.getContact();
 
-        // Регулярний вираз для валідації структури email
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-
-        // Якщо поле порожнє або не відповідає формату емейлу — не приймаємо форму
-        if (email == null || !email.matches(emailRegex)) {
-            // Повертаємо користувача назад з прапорцем помилки в URL
-            return "redirect:/contact?error=invalid_email";
+        if (contact != null) {
+            // Відрізаємо випадкові пробіли
+            request.setContact(contact.trim());
         }
 
-        // Якщо перевірка пройшла — зберігаємо в БД та шлемо автовідповідь
+        // Зберігаємо в БД (твоя логіка в RequestService сама підтягне ім'я юзера, якщо він авторизований)
         requestService.save(request, principal);
-        emailService.sendAutoAcknowledgement(request.getEmailContact(), request.getSenderName());
+
+        // Відправляємо автопідтвердження.
+        // Замість старих методів використовуємо чисті поля, які вже точно є в об'єкті:
+        emailService.sendAutoAcknowledgement(request.getContact(), request.getName());
 
         return "redirect:/contact?success";
     }
@@ -79,11 +78,11 @@ public class RequestController {
         requestService.save(request, principal); // Переконайся, що метод save або update оновлює існуючий запис
 
         // 3. МАРШРУТИЗАЦІЯ КАНАЛІВ ЗВ'ЯЗКУ
-        if (request.getEmailContact() != null && !request.getEmailContact().isBlank()) {
+        if (request.getContact() != null && !request.getContact().isBlank()) {
             // Канал пошти
             emailService.sendSupportReply(
-                    request.getEmailContact(),
-                    request.getSenderName(),
+                    request.getContact(),
+                    request.getName(),
                     request.getMessage(),
                     replyMessage
             );
