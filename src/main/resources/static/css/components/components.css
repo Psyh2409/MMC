@@ -536,30 +536,38 @@ margin-top: var(--space-md);
    КОМПОНЕНТ: УНІВЕРСАЛЬНА СИСТЕМА АВАТАРІВ (AVATAR SYSTEM)
    ========================================================================== */
 
-/* Базовий круглий каркас (за замовчуванням масштабований під великий розмір профілю) */
+/* Базовий нейтральний Аватар */
 .avatar-circle {
-    width: calc(var(--step) * 20);
-    height: calc(var(--step) * 20);
-    background-color: var(--accent-primary);
-    color: var(--text-on-accent);
-    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
-    font-weight: bold;
-    box-shadow: var(--shadow-main);
-    flex-shrink: 0;   /* Захист: флекс-контейнери ніколи не стиснуть коло в овал */
-    overflow: hidden; /* Захист для майбутніх фотографій */
-
-    /* МАРЖИН ВИДАЛЕНО! Базовий компонент не повинен штовхати сусідні елементи в чатах */
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    flex-shrink: 0;
 }
 
-/* Підтримка імедж-тегів (для реальних фотографій користувачів у майбутньому) */
+/* Стандарт для зображень всередині будь-якого аватара */
 .avatar-circle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+}
+
+/* 1. ВЕЛИКИЙ (Тільки для профілю) */
+.avatar-md {
+    width: calc(var(--step) * 20);
+    height: calc(var(--step) * 20);
+    font-size: 1.75rem;
+}
+
+/* 2. МАЛИЙ (Універсальний для чату та коментарів) */
+.avatar-xs, .avatar-sm {
+    width: calc(var(--step) * 8);
+    height: calc(var(--step) * 8);
+    font-size: 0.8rem;
 }
 
 /* АТОМНІ МОДИФІКАТОРИ РОЗМІРІВ */
@@ -583,7 +591,7 @@ margin-top: var(--space-md);
 /* СЕМАНТИЧНІ СТИЛІ ДЛЯ СТРУКТУРИ LAYOUT */
 
 /* Контекстний відступ для аватара виключно всередині картки профілю (profile.html) */
-.profile-sidebar .avatar-circle {
+.profile-sidebar {
     margin-bottom: var(--space-md);
 }
 
@@ -789,14 +797,6 @@ margin-top: var(--space-md);
     border-bottom-left-radius: 0;
 }
 
-/* Ремонт аватарок (щоб картинка не вилазила за межі кола) */
-.avatar-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-full);
-}
-
 /* Блок цитати (На що відповідаємо) */
 .message-reply-context {
     background-color: var(--bg-input);
@@ -873,24 +873,8 @@ margin-top: var(--space-md);
     border-bottom-left-radius: 0;
 }
 
-/* 🎯 РЕМОНТ АВАТАРОК (Жорсткий розмір через квантовий крок) */
-.avatar-circle {
-    width: calc(var(--step) * 10);
-    height: calc(var(--step) * 10);
-    border-radius: var(--radius-full);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-canvas);
-    flex-shrink: 0;
-}
 
-.avatar-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+
 
 /* Блок цитати (Контекст) */
 .message-reply-context {

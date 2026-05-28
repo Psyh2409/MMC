@@ -288,7 +288,7 @@ function showMessage(message, targetId, chatType) {
 
     const hasAvatar = message.senderAvatar && message.senderAvatar.trim().length > 0;
     const avatarHtml = hasAvatar
-        ? `<img src="/uploads/avatars/${escapeHtml(message.senderAvatar)}" alt="Avatar">`
+        ? `<img src="/api/media/${escapeHtml(message.senderAvatar)}" alt="Avatar">`
         : displayName.charAt(0).toUpperCase();
 
     let replyContextHtml = '';
