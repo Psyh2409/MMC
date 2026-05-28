@@ -80,18 +80,7 @@
 
 /* --- 3. ЧАТ ТА ПОВІДОМЛЕННЯ (REAL-TIME UI) --- */
 
-.chat-window {
-    height: calc(var(--step) * 125); /* ~500px */
-    overflow-y: auto;
-    background-color: var(--bg-canvas);
-    border: calc(var(--step) * 0.25) solid var(--border-color);
-    border-radius: var(--radius-sm);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-}
-
-.message-box, .message-item {
+.message-box {
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);
     max-width: 80%;
@@ -778,4 +767,160 @@ margin-top: var(--space-md);
 .reply-box-text {
     color: var(--text-muted);
     white-space: pre-wrap; /* Зберігає твої абзаци при виводі з бази */
+}
+
+/* ==========================================================================
+   CHAT COMPONENT (Спільний простір)
+   ========================================================================== */
+
+/* МОЄ ПОВІДОМЛЕННЯ (Праворуч) */
+.message-me {
+    align-self: flex-end;
+    background-color: var(--bg-elevated); /* Трохи виділений фон */
+    border: 0.0625rem solid var(--border-strong);
+    border-bottom-right-radius: 0; /* Гострий кут, як у месенджерах */
+}
+
+/* ЧУЖЕ ПОВІДОМЛЕННЯ (Ліворуч) */
+.message-other {
+    align-self: flex-start;
+    background-color: var(--bg-surface); /* Стандартна картка */
+    border: 0.0625rem solid var(--border-soft);
+    border-bottom-left-radius: 0;
+}
+
+/* Ремонт аватарок (щоб картинка не вилазила за межі кола) */
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-full);
+}
+
+/* Блок цитати (На що відповідаємо) */
+.message-reply-context {
+    background-color: var(--bg-input);
+    border-left: 0.25rem solid var(--accent-primary);
+    padding: var(--space-xs) var(--space-sm);
+    margin: var(--space-xs) 0;
+    border-radius: var(--radius-sm);
+}
+
+.reply-quote {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.context-author {
+    color: var(--accent-primary);
+}
+
+/* СИГНАЛЬНЕ МЕРЕХТІННЯ КНОПКИ (Привертає увагу) */
+@keyframes pulseAlert {
+    0% { box-shadow: 0 0 0 0 var(--border-strong); }
+    70% { box-shadow: 0 0 0 0.5rem transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.pulse-notification {
+    animation: pulseAlert 1.5s infinite;
+    border-color: var(--accent-primary) !important;
+    color: var(--accent-primary) !important;
+}
+
+/* ==========================================================================
+   CHAT COMPONENT (Спільний простір)
+   ========================================================================== */
+
+/* Оболонка вікна повідомлень */
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background-color: var(--bg-canvas);
+    border-radius: var(--radius-lg);
+    height: 60vh;
+    overflow-y: auto;
+    border: 0.0625rem solid var(--border-soft);
+}
+
+/* Спільний клас для всіх реплік */
+.message-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xs);
+}
+
+/* МОЄ ПОВІДОМЛЕННЯ (Праворуч) */
+.message-me {
+    align-self: flex-end;
+    background-color: var(--bg-elevated);
+    border: 0.0625rem solid var(--border-color);
+    border-bottom-right-radius: 0;
+}
+
+/* ЧУЖЕ ПОВІДОМЛЕННЯ (Ліворуч) */
+.message-other {
+    align-self: flex-start;
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-bottom-left-radius: 0;
+}
+
+/* 🎯 РЕМОНТ АВАТАРОК (Жорсткий розмір через квантовий крок) */
+.avatar-circle {
+    width: calc(var(--step) * 10);
+    height: calc(var(--step) * 10);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-canvas);
+    flex-shrink: 0;
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Блок цитати (Контекст) */
+.message-reply-context {
+    background-color: var(--bg-canvas);
+    border-left: 0.25rem solid var(--primary-color);
+    padding: var(--space-xs) var(--space-sm);
+    margin: var(--space-xs) 0;
+    border-radius: var(--radius-sm);
+}
+
+.reply-quote {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.context-author {
+    color: var(--primary-color);
+}
+
+/* 🎯 СИГНАЛЬНЕ МЕРЕХТІННЯ (Працює від твоїх змінних) */
+@keyframes pulseAlert {
+    0% { box-shadow: 0 0 0 0 var(--border-color); }
+    70% { box-shadow: 0 0 0 0.5rem transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.pulse-notification {
+    animation: pulseAlert 1.5s infinite;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
 }

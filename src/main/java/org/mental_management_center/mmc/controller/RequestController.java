@@ -35,16 +35,30 @@ public class RequestController {
         String contact = request.getContact();
 
         if (contact != null) {
-            // Відрізаємо випадкові пробіли
             request.setContact(contact.trim());
         }
 
-        // Зберігаємо в БД (твоя логіка в RequestService сама підтягне ім'я юзера, якщо він авторизований)
+        // 1. Зберігаємо в БД
         requestService.save(request, principal);
 
-        // Відправляємо автопідтвердження.
-        // Замість старих методів використовуємо чисті поля, які вже точно є в об'єкті:
+        // 2. Автовідповідь клієнту (що його запит отримано)
         emailService.sendAutoAcknowledgement(request.getContact(), request.getName());
+
+        // 3. ЧИСТА СИГНАЛЬНА ФУНКЦІЯ ДЛЯ ТЕБЕ (Без переплутаних шаблонів)
+        String adminSubject = "🌿 Нове звернення на сайті від: " + request.getName();
+        String adminBody = String.format(
+                "На платформі MMC залишено нове повідомлення!\n\n" +
+                        "Відправник: %s\n" +
+                        "Зв'язок (Контакт): %s\n\n" +
+                        "--- ТЕКСТ ЗВЕРНЕННЯ ---\n" +
+                        "%s\n" +
+                        "-----------------------",
+                request.getName(),
+                request.getContact(),
+                request.getMessage()
+        );
+
+        emailService.sendAdminNotification(adminSubject, adminBody);
 
         return "redirect:/contact?success";
     }
@@ -75,7 +89,7 @@ public class RequestController {
         // 2. Оновлюємо статус та зберігаємо відповідь в архіве платформи
         request.setStatus(RequestStatus.ANSWERED);
         request.setAdminReply(replyMessage);
-        requestService.save(request, principal); // Переконайся, що метод save або update оновлює існуючий запис
+        requestService.saveAdminReply(id, replyMessage); // Переконайся, що метод save або update оновлює існуючий запис
 
         // 3. МАРШРУТИЗАЦІЯ КАНАЛІВ ЗВ'ЯЗКУ
         if (request.getContact() != null && !request.getContact().isBlank()) {

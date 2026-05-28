@@ -14,7 +14,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -130,5 +132,23 @@ public class ChatController {
             model.addAttribute("user", user);
         }
         return "chat";
+    }
+
+    @DeleteMapping("/api/chat/messages/{id}")
+    public ResponseEntity<?> deleteMessage(@PathVariable UUID id, Principal principal) {
+        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        // Знаходимо користувача та повідомлення
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+        ChatMessage message = chatMessageRepository.findById(id).orElse(null);
+
+        // Перевіряємо, чи існує повідомлення і чи є цей користувач його автором (або адміном)
+        if (message != null && message.getSenderId().equals(user.getId())) {
+            chatMessageRepository.delete(message);
+            return ResponseEntity.ok().build();
+        } else {
+            // Якщо намагається видалити чуже або не знайдено
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }

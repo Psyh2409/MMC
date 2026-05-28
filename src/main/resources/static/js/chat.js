@@ -6,7 +6,24 @@ let currentParentId = null;
 const PUBLIC_ID = '11111111-1111-1111-1111-111111111111';
 let currentRecipientId = PUBLIC_ID;
 let activeTab = 'public';
-let lastDisplayedDate = null;
+
+// Окремі трекери дат для кожної вкладки, щоб вони не перетиналися
+let lastDatePublic = null;
+let lastDatePrivate = null;
+
+// НАДІЙНИЙ КЕШ ДЛЯ ЗБЕРЕЖЕННЯ КОНТЕКСТУ ПОВІДОМЛЕНЬ
+const messageCache = new Map();
+
+// Утиліта для захисту від XSS атак (екранування HTML-тегів у тексті)
+function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
 
 function scrollToBottom(elementId) {
     const el = document.getElementById(elementId);
@@ -17,26 +34,38 @@ function scrollToBottom(elementId) {
     }
 }
 
-function checkAndDisplayDate(message, targetArea) {
+function checkAndDisplayDate(message, targetArea, type) {
     const messageDate = new Date(message.timestamp).toLocaleDateString('uk-UA', {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
     });
 
-    if (lastDisplayedDate !== messageDate) {
+    const lastDate = (type === 'public') ? lastDatePublic : lastDatePrivate;
+
+    if (lastDate !== messageDate) {
         const dateSeparator = document.createElement('div');
         dateSeparator.className = 'date-separator';
         dateSeparator.innerHTML = `<span>${messageDate}</span>`;
         targetArea.appendChild(dateSeparator);
-        lastDisplayedDate = messageDate;
+
+        if (type === 'public') {
+            lastDatePublic = messageDate;
+        } else {
+            lastDatePrivate = messageDate;
+        }
     }
 }
 
 function connect() {
-    currentUser = document.querySelector('meta[name="current-user"]').content;
+    const userMeta = document.querySelector('meta[name="current-user"]');
+    if (!userMeta) return; // Захист, якщо ми не на сторінці чату
+    currentUser = userMeta.content;
+
     let socket = new SockJS('/ws-chat');
     stompClient = Stomp.over(socket);
+    // Вимикаємо зайвий спам від Stomp у консоль
+    stompClient.debug = null;
 
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/topic/public', function (message) {
@@ -52,7 +81,6 @@ function connect() {
     });
 }
 
-// 🟢 ФІКС ВКАДКАДКАХ: Тепер класи динамічно змінюються за нашою дизайн-системою
 function switchChat(type) {
     activeTab = type;
     const pubArea = document.getElementById('chat-messages');
@@ -75,6 +103,8 @@ function switchChat(type) {
         pubTab.className = 'btn-outline';
         privTab.className = 'btn-primary';
 
+        privTab.classList.remove('pulse-notification');
+
         scrollToBottom('private-messages');
 
         const badge = document.getElementById('private-badge');
@@ -87,13 +117,18 @@ function switchChat(type) {
 
 function handleIncomingMessage(message, type) {
     const targetAreaId = type === 'public' ? 'chat-messages' : 'private-messages';
-    showMessage(message, targetAreaId);
+    showMessage(message, targetAreaId, type);
 
     if (type === 'private' && activeTab === 'public') {
         const badge = document.getElementById('private-badge');
+        const privTab = document.getElementById('tab-private');
+
         if (badge) {
             badge.classList.remove('hidden');
             badge.innerText = parseInt(badge.innerText) + 1;
+        }
+        if (privTab) {
+            privTab.classList.add('pulse-notification');
         }
     }
 }
@@ -105,11 +140,11 @@ function loadPublicHistory() {
             const chatArea = document.getElementById('chat-messages');
             if (!chatArea) return;
             chatArea.innerHTML = '';
-            lastDisplayedDate = null;
+            lastDatePublic = null; // Скидаємо трекер перед завантаженням
             messages.forEach(msg => {
-                checkAndDisplayDate(msg, chatArea);
-                showMessage(msg, 'chat-messages');
+                showMessage(msg, 'chat-messages', 'public');
             });
+            scrollToBottom('chat-messages');
         });
 }
 
@@ -120,31 +155,33 @@ function loadPrivateHistory() {
             const privArea = document.getElementById('private-messages');
             if (!privArea) return;
             privArea.innerHTML = '';
-            lastDisplayedDate = null;
+            lastDatePrivate = null; // Скидаємо трекер перед завантаженням
             messages.forEach(msg => {
-                checkAndDisplayDate(msg, privArea);
-                showMessage(msg, 'private-messages');
+                showMessage(msg, 'private-messages', 'private');
             });
+            scrollToBottom('private-messages');
         });
 }
 
-function prepareReply(messageId, senderName, type, senderUuid) {
+function prepareReply(messageId, senderName, type, recipientId) {
     currentParentId = messageId;
-    currentRecipientId = (type === 'private') ? senderUuid : PUBLIC_ID;
-
-    if (type === 'private') {
+    if (type === 'private' && recipientId) {
+        currentRecipientId = recipientId;
         switchChat('private');
+    } else {
+        currentRecipientId = PUBLIC_ID;
     }
+
+    const parentMessage = messageCache.get(messageId.toLowerCase());
+    const snippet = parentMessage ? escapeHtml(parentMessage.content) : '';
+    const shortSnippet = snippet.length > 60 ? snippet.substring(0, 60) + '...' : snippet;
 
     const replyPreview = document.getElementById('reply-preview');
     const replyToText = document.getElementById('reply-to-text');
 
-    if (replyPreview && replyToText) {
-        const modeText = type === 'private' ? '🔒 Приватна відповідь для ' : '💬 Публічна відповідь для ';
-        replyToText.innerText = modeText + senderName;
-        replyPreview.style.backgroundColor = type === 'private' ? 'var(--bg-elevated)' : 'var(--bg-main)';
-        replyPreview.classList.remove('hidden');
-    }
+    replyToText.innerHTML = `Вам відповідь для <strong>${escapeHtml(senderName)}</strong> на: <span class="preview-text-snippet">"${shortSnippet}"</span>`;
+    replyPreview.classList.remove('hidden');
+
     document.getElementById('messageInput').focus();
 }
 
@@ -152,6 +189,40 @@ function cancelReply() {
     currentParentId = null;
     const replyPreview = document.getElementById('reply-preview');
     if (replyPreview) replyPreview.classList.add('hidden');
+}
+
+// НОВА ФУНКЦІЯ: ВИДАЛЕННЯ ПОВІДОМЛЕННЯ
+function deleteMessage(messageId) {
+    if (!confirm('Ви впевнені, що хочете видалити це повідомлення? Цю дію неможливо скасувати.')) {
+        return;
+    }
+
+    // Витягуємо CSRF токен з мета-тегів сторінки для безпеки Spring
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (csrfToken && csrfHeader) {
+        headers[csrfHeader] = csrfToken;
+    }
+
+    fetch(`/api/chat/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: headers
+    })
+    .then(response => {
+        if (response.ok) {
+            // 1. Прибираємо повідомлення з екрана миттєво
+            const msgElement = document.getElementById(`msg-item-${messageId}`);
+            if (msgElement) msgElement.remove();
+
+            // 2. Очищаємо з кешу, щоб у цитатах писало "Видалено"
+            messageCache.delete(messageId);
+        } else {
+            alert('Помилка при видаленні повідомлення. Спробуйте оновити сторінку.');
+        }
+    })
+    .catch(error => console.error('Помилка видалення:', error));
 }
 
 function sendMessage(event) {
@@ -191,49 +262,65 @@ function sendMessage(event) {
     }
 }
 
-function showMessage(message, targetId) {
+// ДОДАНО ПАРАМЕТР type (public/private) ДЛЯ ПРАВИЛЬНИХ ДАТ
+function showMessage(message, targetId, chatType) {
+    if (!message || !message.id) return;
+
+    // Нормалізуємо UUID, щоб кеш працював залізобетонно
+    messageCache.set(message.id.toLowerCase(), message);
+
     const chatArea = document.getElementById(targetId);
     if (!chatArea) return;
 
+    // Передаємо chatType для правильної дати
+    checkAndDisplayDate(message, chatArea, chatType);
+
     const messageElement = document.createElement('div');
-    messageElement.id = 'msg-' + message.id;
+    // НАДАЄМО ID ДЛЯ ВИДАЛЕННЯ
+    messageElement.id = `msg-item-${message.id}`;
 
-    const isMe = message.senderId === currentUser;
-    messageElement.className = isMe ? 'message-box my-message' : 'message-box other-message';
+    const isMe = message.senderId && currentUser &&
+                 (message.senderId.toString().toLowerCase() === currentUser.toString().toLowerCase());
 
-    // 🟢 ЗАХИСТ ВІД ПАДІННЯ: Безпечний пошук нотаток без крашу всього чату
-    let quoteHtml = '';
-    if (message.parentId) {
-        const parentElem = document.getElementById('msg-' + message.parentId);
-        let textToQuote = "Повідомлення не знайдено";
-        let authorToQuote = "Хтось";
+    messageElement.className = `message-item ${isMe ? 'message-me' : 'message-other'}`;
 
-        if (parentElem) {
-            const textNode = parentElem.querySelector('.message-text');
-            const authorNode = parentElem.querySelector('.message-meta strong');
-            if (textNode) textToQuote = textNode.innerText;
-            if (authorNode) authorToQuote = authorNode.innerText;
+    const displayName = isMe ? 'Я' : escapeHtml(message.senderName);
+
+    const hasAvatar = message.senderAvatar && message.senderAvatar.trim().length > 0;
+    const avatarHtml = hasAvatar
+        ? `<img src="/uploads/avatars/${escapeHtml(message.senderAvatar)}" alt="Avatar">`
+        : displayName.charAt(0).toUpperCase();
+
+    let replyContextHtml = '';
+        if (message.parentId) {
+            // Завжди шукаємо в нижньому регістрі!
+            const parentMessage = messageCache.get(message.parentId.toLowerCase());
+
+            if (parentMessage) {
+                const parentSender = (parentMessage.senderId && currentUser && (parentMessage.senderId.toString().toLowerCase() === currentUser.toString().toLowerCase())) ? 'Я' : escapeHtml(parentMessage.senderName);
+                const cleanText = escapeHtml(parentMessage.content);
+                const shortText = cleanText.length > 50 ? cleanText.substring(0, 50) + '...' : cleanText;
+
+                replyContextHtml = `
+                    <div class="message-reply-context">
+                        <small>💬 У відповідь для <strong class="context-author">${parentSender}</strong>:</small>
+                        <blockquote class="reply-quote">${shortText}</blockquote>
+                    </div>
+                `;
+            } else {
+                replyContextHtml = `
+                    <div class="message-reply-context">
+                        <small>💬 Відповідь на повідомлення:</small>
+                        <blockquote class="reply-quote" style="opacity: 0.6;">[Повідомлення недоступне в поточній сесії]</blockquote>
+                    </div>
+                `;
+            }
         }
 
-        const shortText = textToQuote.length > 50 ? textToQuote.substring(0, 50) + '...' : textToQuote;
-        quoteHtml = `
-            <div class="quote-box">
-                 <small class="quote-author">Відповідь для <b>${authorToQuote}</b>:</small>
-                 <div class="quote-text">↳ <i>${shortText}</i></div>
-            </div>`;
-    }
+    const safeContent = escapeHtml(message.content);
 
-    const senderName = message.senderName || 'Користувач';
-    const displayName = message.senderName || 'Анонім';
-        const firstLetter = displayName.charAt(0).toUpperCase();
-
-        // ДИНАМІЧНИЙ АВАТАР: якщо бекенд прислав назву файлу — малюємо тег img, якщо ні — літеру
-        const avatarHtml = message.senderAvatar
-            ? `<img src="/api/media/${message.senderAvatar}" alt="Avatar">`
-            : `<span>${firstLetter}</span>`;
-        console.log("RAW MESSAGE ДЛЯ АВАТАРА:", message);
-        // Абсолютно чистий шаблон без інлайн-стилів
-        messageElement.innerHTML = `
+    // ВІЗУАЛЬНИЙ БЛОК ДІЙ (ТУТ ДОДАНО КНОПКУ ВИДАЛЕННЯ ДЛЯ ВЛАСНИХ ПОВІДОМЛЕНЬ)
+    messageElement.innerHTML = `
             <div class="message-header">
                 <div class="avatar-circle avatar-xs">${avatarHtml}</div>
                 <div class="message-meta">
@@ -241,25 +328,27 @@ function showMessage(message, targetId) {
                 </div>
             </div>
 
-            <div class="message-text">${message.content}</div>
+            ${replyContextHtml}
+
+            <div class="message-text">${safeContent}</div>
 
             <div class="message-actions" style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap;">
-                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'public')">
-                    Відповісти публічно
-                </button>
-                ${!isMe ? `
-                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${senderName}', 'private', '${message.senderId}')">
-                    Написати приватно
-                </button>
-                ` : ''}
-            </div>
+                            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'public')">
+                                Відповісти публічно
+                            </button>
+                            ${!isMe ? `
+                            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'private', '${message.senderId}')">
+                                Написати приватно
+                            </button>
+                            ` : `
+                            <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
+                                Видалити
+                            </button>
+                            `}
+                        </div>
         `;
 
     chatArea.appendChild(messageElement);
-
-    if (targetId === (activeTab === 'public' ? 'chat-messages' : 'private-messages')) {
-        scrollToBottom(targetId);
-    }
 }
 
 document.addEventListener('DOMContentLoaded', connect);

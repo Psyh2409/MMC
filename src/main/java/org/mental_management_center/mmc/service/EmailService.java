@@ -166,4 +166,19 @@ public class EmailService {
             logger.error("Не вдалося надіслати автопідтвердження клієнту: {}", e.getMessage());
         }
     }
+
+    public void sendAdminNotification(String subject, String text) {
+        try {
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo(this.adminMail); // Автоматично шле на твою пошту mental.m.center@gmail.com
+            email.setSubject(subject);
+            email.setText(text);
+            email.setFrom(this.adminMail);
+
+            mailSender.send(email);
+            logger.info("Сигнальне сповіщення для адміна успішно надіслано.");
+        } catch (MailException e) {
+            logger.error("Не вдалося надіслати адмінське сповіщення: {}", e.getMessage());
+        }
+    }
 }
