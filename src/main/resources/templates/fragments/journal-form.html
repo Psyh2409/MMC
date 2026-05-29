@@ -142,26 +142,15 @@
     </div>
 
     <div th:if="${totalPages > 1}" class="button-row pagination-row">
-
-
-        <button th:disabled="${currentPage == 0}"
-
+        <button th:if="${currentPage > 0}"
                 th:onclick="'window.loadFeedPage(' + (${currentPage} - 1) + ', ' + ${pageSize} + ')'"
-
                 class="btn-outline btn-sm">Попередня</button>
-
-
 
         <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentPage} + 1) + ' з ' + ${totalPages}">Сторінка 1 з 1</span>
 
-
-
-        <button th:disabled="${!hasMore}"
-
+        <button th:if="${hasMore}"
                 th:onclick="'window.loadFeedPage(' + (${currentPage} + 1) + ', ' + ${pageSize} + ')'"
-
                 class="btn-outline btn-sm">Наступна</button>
-
     </div>
 
 </div>

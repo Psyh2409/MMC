@@ -176,13 +176,13 @@
                         </div>
 
                         <div th:if="${totalNotesPages > 1}" class="button-row pagination-row">
-                            <button th:disabled="${currentNotesPage == 0}"
+                            <button th:if="${currentNotesPage > 0}"
                                     th:onclick="'window.loadNotesPage(' + (${currentNotesPage} - 1) + ')'"
                                     class="btn-outline btn-sm">Попередня</button>
 
                             <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentNotesPage} + 1) + ' з ' + ${totalNotesPages}">Сторінка 1</span>
 
-                            <button th:disabled="${!hasMoreNotes}"
+                            <button th:if="${hasMoreNotes}"
                                     th:onclick="'window.loadNotesPage(' + (${currentNotesPage} + 1) + ')'"
                                     class="btn-outline btn-sm">Наступна</button>
                         </div>
