@@ -295,12 +295,6 @@
     margin-top: var(--space-lg);
 }
 
-.right-actions.form-actions {
-    justify-content: flex-end;
-    /* Використовуємо той самий токен, щоб не було розсинхрону */
-    gap: var(--space-md);
-}
-
 /* --- ТВОЇ РІДНІ КЛАСИ ДЛЯ ОКА ПАРОЛЯ --- */
 .password-container {
     position: relative;
@@ -535,4 +529,24 @@
 /* Якщо текстове поле з ім'ям файлу порожнє — ховаємо його */
 .file-name-display:empty {
     display: none;
+}
+
+/* Перебиваємо глобальний margin-top від .form-actions виключно для кнопок у Journal */
+.right-actions.form-actions {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs); /* Відстань між кнопками Опублікувати та Скасувати */
+}
+
+/* І для повної ідеальності вирівнюємо лівий блок з медіафайлом */
+.left-actions {
+    display: flex;
+    align-items: center;
+}
+
+.left-actions label.btn-outline {
+    margin: 0; /* Прибираємо системні відступи лейбла */
+    display: inline-flex;
+    align-items: center;
 }

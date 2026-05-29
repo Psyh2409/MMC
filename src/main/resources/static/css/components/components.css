@@ -873,3 +873,10 @@ margin-top: var(--space-md);
     border-color: var(--primary-color) !important;
     color: var(--primary-color) !important;
 }
+
+/* Стилі для центрування кнопок пагінації */
+.pagination-row {
+    justify-content: center;
+    margin-top: var(--space-md);
+    gap: var(--space-sm);
+}

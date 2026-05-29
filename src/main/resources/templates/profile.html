@@ -175,7 +175,7 @@
                             </div>
                         </div>
 
-                        <div th:if="${totalNotesPages > 1}" class="button-row">
+                        <div th:if="${totalNotesPages > 1}" class="button-row pagination-row">
                             <button th:disabled="${currentNotesPage == 0}"
                                     th:onclick="'window.loadNotesPage(' + (${currentNotesPage} - 1) + ')'"
                                     class="btn-outline btn-sm">Попередня</button>

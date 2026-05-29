@@ -164,3 +164,17 @@
     width: 100%;
     justify-content: center; /* Центруємо текст всередині кнопки */
 }
+
+/* Вирівнювання контейнера лівих дій у формах */
+.button-row .left-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* Змушуємо label (Медіафайл) виглядати і стояти точно як сусідні button */
+.button-row .left-actions label.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0; /* Прибираємо системні відступи лейблів, через які кнопка "підстрибує" */
+}

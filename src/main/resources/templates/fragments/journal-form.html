@@ -141,8 +141,7 @@
 
     </div>
 
-    <div th:if="${totalPages > 1}" class="button-row" style="justify-content: center; margin-top: var(--space-md); gap: var(--space-sm);">
-
+    <div th:if="${totalPages > 1}" class="button-row pagination-row">
 
 
         <button th:disabled="${currentPage == 0}"
