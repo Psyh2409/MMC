@@ -1,7 +1,8 @@
 <div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
     <div class="comment-header">
-        <div class="avatar-circle avatar-sm">
-            <img th:if="${comment.author != null and comment.author.avatarFileName != null}"
+
+            <div class="avatar-circle avatar-xs">
+                <img th:if="${comment.author != null and comment.author.avatarFileName != null}"
                  th:src="@{/api/media/{name}(name=${comment.author.avatarFileName})}"
                  alt="Avatar">
 

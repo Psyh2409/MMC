@@ -563,29 +563,20 @@ margin-top: var(--space-md);
     font-size: 1.75rem;
 }
 
-/* 2. МАЛИЙ (Універсальний для чату та коментарів) */
-.avatar-xs, .avatar-sm {
-    width: calc(var(--step) * 8);
-    height: calc(var(--step) * 8);
-    font-size: 0.8rem;
-}
-
 /* АТОМНІ МОДИФІКАТОРИ РОЗМІРІВ */
 
-/* XS — Для стрічки повідомлень чату (і публічного, і приватного) */
-.avatar-xs {
-    width: 1.35rem;
-    height: 1.35rem;
-    min-width: 1.35rem;
-    font-size: 0.65rem;
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
 }
 
-/* SM — Для дерева коментарів під статтями (comment-tree.html вже використовує його) */
-.avatar-sm {
-    width: 1.75rem;
-    height: 1.75rem;
-    min-width: 1.75rem;
-    font-size: 0.75rem;
+/* XS — Для стрічки повідомлень чату (і публічного, і приватного) та коментарів */
+.avatar-xs {
+    width: calc(var(--step) * 6);/*1.35rem;*/
+    height: calc(var(--step) * 6);/*1.35rem;*/
+    font-size: 0.65rem;
 }
 
 /* СЕМАНТИЧНІ СТИЛІ ДЛЯ СТРУКТУРИ LAYOUT */
