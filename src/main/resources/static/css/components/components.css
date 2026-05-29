@@ -278,7 +278,7 @@
 .admin-shell, .requests-shell, .error-shell {
     max-width: 80rem;
     margin: var(--space-xl) auto;
-    padding: 0 var(--space-md);
+    /*padding: 0 var(--space-md);*/
 }
 
 .section-header {

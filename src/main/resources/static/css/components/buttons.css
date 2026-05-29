@@ -158,3 +158,9 @@
 .btn-icon:hover {
     background-color: hsl(var(--theme-h), var(--theme-s), var(--l-border));
 }
+
+.admin-controls-wrapper .btn-sm,
+.admin-controls-wrapper .btn-outline {
+    width: 100%;
+    justify-content: center; /* Центруємо текст всередині кнопки */
+}

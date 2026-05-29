@@ -166,7 +166,7 @@
                                             <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
                                             <div class="button-row">
                                                 <button type="submit" class="btn-primary">Зберегти зміни</button>
-                                                <button type="submit" th:form="'deleteForm-' + ${note.id}" class="btn-outline btn-danger">Видалити нотатку</button>
+                                                <button type="submit" th:form="'deleteForm-' + ${note.id}" class="btn-outline">Видалити нотатку</button>
                                             </div>
                                         </form>
                                         <form th:id="'deleteForm-' + ${note.id}" th:action="@{/profile/notes/delete/{id}(id=${note.id})}" method="post" onsubmit="return confirm('Ви впевнені?');" class="hidden-element"></form>

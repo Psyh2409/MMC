@@ -379,3 +379,78 @@ html, body {
     margin-top: var(--space-sm);
     width: 100%;
 }
+
+/* --- ПАНЕЛЬ КЕРУВАННЯ (DASHBOARD CARD) --- */
+.dashboard-hero-card {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    /*margin-bottom: var(--space-lg);*/
+    border: 0.0625rem solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Верхній рядок: розносимо по краях і центруємо по вертикалі */
+.hero-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.hero-text-block h2 {
+    margin: 0 0 var(--space-xs) 0; /* Прибираємо зайві відступи знизу */
+}
+
+.hero-description {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+/* Кнопки більше не прилипають до верху */
+.hero-global-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+/* Делікатний роздільник між інформацією та табличними фільтрами */
+.hero-divider {
+    border: none;
+    border-top: 0.0625rem solid var(--border-color);
+    margin: var(--space-md) 0;
+}
+
+/* Нижній рядок: розносимо статистику і фільтри */
+.hero-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Якщо екран малий, фільтри перескочать вниз */
+    gap: var(--space-md);
+}
+
+.hero-stats-group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* Робимо цифри схожими на акуратні бейджі */
+.stat-pill {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background-color: var(--bg-main);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--border-color);
+}
+
+.stat-pill b {
+    color: var(--text-main);
+    margin-left: 0.25rem;
+}
+
+.hero-filters-group {
+    display: flex;
+    gap: var(--space-xs);
+}

@@ -7,46 +7,38 @@
 </head>
 <body>
 <section class="standard-container standard-container-wide admin-shell">
-    <div class="dashboard-hero">
-        <div>
-            <h2 class="contact-intro-title">Центр керування користувачами</h2>
-            <p class="contact-intro-text">Керуйте ролями, доступами та внутрішніми нотатками в єдиному робочому просторі.</p>
+    <div class="dashboard-hero-card">
+        <div class="hero-top-row">
+            <div class="hero-text-block">
+                <h2 class="page-title-accent">Центр керування користувачами</h2>
+                <p class="hero-description">Керуйте ролями, доступами та внутрішніми нотатками.</p>
+            </div>
+            <div class="hero-global-actions">
+                <a th:href="@{/admin/articles}" class="btn-outline">📝 Статті</a>
+                <a th:href="@{/requests}" class="btn-outline">📂 Бардачок</a>
+            </div>
         </div>
-        <div class="action-group" style="display: flex; gap: 10px;">
-            <a th:href="@{/admin/articles}" class="btn-primary card-elevated">📝 Керувати статтями</a>
-            <a th:href="@{/requests}" class="btn-primary card-elevated">📂 Відкрити бардачок</a>
-        </div>
-    </div>
 
-    <div th:if="${param.success}" class="status-message status-success">
-        Дію виконано успішно.
-    </div>
-    <div th:if="${param.error}" class="status-message status-error" th:text="${param.error}">
-        Не вдалося виконати дію.
-    </div>
+        <hr class="hero-divider">
 
-    <div class="admin-stats">
-        <div class="admin-stat-card">
-            <strong>Читачі</strong>
-            <div th:text="${countUsers}">0</div>
-        </div>
-        <div class="admin-stat-card admin-stat-card-client">
-            <strong>У терапії</strong>
-            <div th:text="${countClients}">0</div>
-        </div>
-        <div class="admin-stat-card admin-stat-card-visits">
-            <strong>Загалом візитів</strong>
-            <div th:text="${totalVisits}">0</div>
-        </div>
-    </div>
+        <div class="hero-bottom-row">
+            <div class="hero-stats-group">
+                <span class="stat-pill">Читачі: <b th:text="${countUsers}">0</b></span>
+                <span class="stat-pill">У терапії: <b th:text="${countClients}">0</b></span>
+                <span class="stat-pill">Візити: <b th:text="${totalVisits}">0</b></span>
+            </div>
 
-    <div class="action-group">
-        <button onclick="filterTable('ALL')" class="btn-primary" type="button">Всі</button>
-        <button onclick="filterTable('ADMIN')" class="btn-primary" type="button">Адмін</button>
-        <button onclick="filterTable('THERAPIST')" class="btn-primary" type="button">Колеги</button>
-        <button onclick="filterTable('CLIENT')" class="btn-primary" type="button">Клієнти</button>
-        <button onclick="filterTable('READER')" class="btn-primary" type="button">Читачі</button>
+            <div class="hero-filters-group">
+                <button onclick="filterTable('ALL')" class="btn-primary btn-sm" type="button">Всі</button>
+                <button onclick="filterTable('ADMIN')" class="btn-primary btn-sm" type="button">Адмін</button>
+                <button onclick="filterTable('THERAPIST')" class="btn-primary btn-sm" type="button">Колеги</button>
+                <button onclick="filterTable('CLIENT')" class="btn-primary btn-sm" type="button">Клієнти</button>
+                <button onclick="filterTable('READER')" class="btn-primary btn-sm" type="button">Читачі</button>
+            </div>
+        </div>
     </div>
+    <div th:if="${param.success}" class="status-message status-success">Дію виконано успішно.</div>
+    <div th:if="${param.error}" class="status-message status-error" th:text="${param.error}">Не вдалося.</div>
 
     <div class="table-scroll">
     <table class="data-table data-table-compact">
@@ -88,7 +80,7 @@
                       method="post"
                       class="admin-action-form-inline">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="btn-outline">Зробити клієнтом</button>
+                    <button type="submit" class="btn-outline">Працювати</button>
                 </form>
 
                 <!-- ВАРІАНТ Б: Користувач вже КЛІЄНТ — на тому ж місці з'являється кнопка Відеоконнекту -->
@@ -119,21 +111,21 @@
 
                     <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn-toggle btn-toggle-site" th:data-active="${u.enabled}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.enabled}">
                             <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn-toggle btn-toggle-chat" th:data-active="${u.chatEnabled}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.chatEnabled}">
                             <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
                         </button>
                     </form>
 
                     <form th:action="@{/admin/toggle-comments/{id}(id=${u.id})}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn-toggle btn-toggle-comm" th:data-active="${u.commentsEnabled}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.commentsEnabled}">
                             <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
                         </button>
                     </form>
@@ -141,7 +133,7 @@
                     <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
                           class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn-toggle btn-toggle-danger">Видалити</button>
+                        <button type="submit" class="btn-outline btn-sm">Видалити</button>
                     </form>
 
                 </div>

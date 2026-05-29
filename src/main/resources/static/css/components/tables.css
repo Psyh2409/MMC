@@ -9,7 +9,7 @@
     width: 100%;
     overflow-x: auto;
     box-sizing: border-box;
-    margin-top: var(--space-md); /* Використовуємо токен замість calc */
+    /*margin-top: var(--space-md);  Використовуємо токен замість calc */
     border-radius: var(--radius-lg);
 }
 
