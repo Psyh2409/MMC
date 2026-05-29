@@ -772,29 +772,12 @@ margin-top: var(--space-md);
    CHAT COMPONENT (Спільний простір)
    ========================================================================== */
 
-/* МОЄ ПОВІДОМЛЕННЯ (Праворуч) */
-.message-me {
-    align-self: flex-end;
-    background-color: var(--bg-elevated); /* Трохи виділений фон */
-    border: 0.0625rem solid var(--border-strong);
-    border-bottom-right-radius: 0; /* Гострий кут, як у месенджерах */
-}
-
 /* ЧУЖЕ ПОВІДОМЛЕННЯ (Ліворуч) */
 .message-other {
     align-self: flex-start;
     background-color: var(--bg-surface); /* Стандартна картка */
     border: 0.0625rem solid var(--border-soft);
     border-bottom-left-radius: 0;
-}
-
-/* Блок цитати (На що відповідаємо) */
-.message-reply-context {
-    background-color: var(--bg-input);
-    border-left: 0.25rem solid var(--accent-primary);
-    padding: var(--space-xs) var(--space-sm);
-    margin: var(--space-xs) 0;
-    border-radius: var(--radius-sm);
 }
 
 .reply-quote {
@@ -804,10 +787,6 @@ margin-top: var(--space-md);
     font-size: 0.85rem;
 }
 
-.context-author {
-    color: var(--accent-primary);
-}
-
 /* СИГНАЛЬНЕ МЕРЕХТІННЯ КНОПКИ (Привертає увагу) */
 @keyframes pulseAlert {
     0% { box-shadow: 0 0 0 0 var(--border-strong); }
@@ -815,11 +794,6 @@ margin-top: var(--space-md);
     100% { box-shadow: 0 0 0 0 transparent; }
 }
 
-.pulse-notification {
-    animation: pulseAlert 1.5s infinite;
-    border-color: var(--accent-primary) !important;
-    color: var(--accent-primary) !important;
-}
 
 /* ==========================================================================
    CHAT COMPONENT (Спільний простір)

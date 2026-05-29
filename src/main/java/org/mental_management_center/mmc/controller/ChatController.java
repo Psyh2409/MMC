@@ -136,6 +136,7 @@ public class ChatController {
 
     @DeleteMapping("/api/chat/messages/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable UUID id, Principal principal) {
+        System.out.println("🔥 СПРОБА ВИДАЛЕННЯ ПОВІДОМЛЕННЯ. ID: " + id); // Додай цей рядок
         if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         // Знаходимо користувача та повідомлення
