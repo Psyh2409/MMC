@@ -1,5 +1,8 @@
 package org.mental_management_center.mmc.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,15 +48,28 @@ public class ContentController {
 
     @Transactional(readOnly = true)
     @GetMapping("/articles/{id}")
-    public String getArticle(@PathVariable UUID id, Model model) {
+    public String getArticle(@PathVariable UUID id,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size,
+                             Model model) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Статтю не знайдено"));
 
         model.addAttribute("article", article);
 
-        // Ось він, твій List! Тепер ти його бачиш і контролюєш.
-        List<Comment> comments = commentRepository.findCommentsWithTreeByArticle(article);
-        model.addAttribute("comments", comments);
+        // 1. Створюємо об'єкт запиту сторінки
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 2. Отримуємо сторінку ТІЛЬКИ кореневих коментарів (без фетчу відповідей, щоб не ламати БД)
+        Page<Comment> commentsPage = commentRepository.findTopLevelCommentsByArticle(article, pageable);
+
+        // 3. Передаємо сам список коментарів (щоб не ламати старий HTML)
+        model.addAttribute("comments", commentsPage.getContent());
+
+        // 4. Передаємо змінні для кнопок пагінації
+        model.addAttribute("currentPage", commentsPage.getNumber());
+        model.addAttribute("totalPages", commentsPage.getTotalPages());
+        model.addAttribute("pageSize", commentsPage.getSize());
 
         return "article";
     }

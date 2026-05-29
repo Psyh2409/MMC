@@ -54,6 +54,18 @@
             <div th:each="comment : ${comments}">
                 <div th:replace="~{fragments/comment-tree :: commentNode(${comment}, 0)}"></div>
             </div>
+
+            <div th:if="${totalPages != null and totalPages > 1}" class="button-row pagination-row">
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/articles/{id}(id=${article.id}, page=${currentPage - 1}, size=${pageSize})}"
+                   class="btn-outline btn-sm">Попередня</a>
+
+                <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentPage} + 1) + ' з ' + ${totalPages}"></span>
+
+                <a th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/articles/{id}(id=${article.id}, page=${currentPage + 1}, size=${pageSize})}"
+                   class="btn-outline btn-sm">Наступна</a>
+            </div>
         </div>
     </section>
 
