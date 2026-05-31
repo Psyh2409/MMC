@@ -18,8 +18,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 10MB      # Максимальний розмір одного файлу
-      max-request-size: 10MB   # Максимальний розмір усього запиту
+      max-file-size: 100MB      # Максимальний розмір одного файлу
+      max-request-size: 100MB   # Максимальний розмір усього запиту
     session:
       persistent: false
 

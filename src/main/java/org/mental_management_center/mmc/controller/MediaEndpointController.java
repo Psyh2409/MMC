@@ -7,10 +7,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,11 +47,11 @@ public class MediaEndpointController {
     }
 
     @PostMapping("/api/media/upload")
-    public ResponseEntity<java.util.Map<String, String>> uploadMediaAsync(
-            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+    public ResponseEntity<Map<String, String>> uploadMediaAsync(
+            @RequestParam("file") MultipartFile file) {
 
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(java.util.Map.of("error", "Файл порожній"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Файл порожній"));
         }
 
         try {
@@ -60,12 +62,12 @@ public class MediaEndpointController {
             String fileUrl = "/api/media/" + uniqueName;
 
             // Повертаємо JSON з адресою для фронтенду
-            return ResponseEntity.ok(java.util.Map.of(
+            return ResponseEntity.ok(Map.of(
                     "url", fileUrl,
                     "filename", uniqueName
             ));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(java.util.Map.of("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 }

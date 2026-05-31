@@ -265,48 +265,71 @@ public class JournalController {
 
     @GetMapping("/media/{filename:.+}")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getMedia(@PathVariable String filename,
-                                      @RequestHeader(value = HttpHeaders.RANGE, required = false) HttpRange range) {
-
+    public ResponseEntity<Resource> getMedia(@PathVariable String filename) {
         Path filePath = fileStorageService.findFileAnywhere(filename);
-        if (filePath == null || !Files.exists(filePath)) return ResponseEntity.notFound().build();
 
-        JournalPost post = journalPostRepository.findFirstByMediaFileName(filename)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+        if (filePath == null || !Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
 
         try {
+            JournalPost post = journalPostRepository.findFirstByMediaFileName(filename)
+                    .orElseThrow(() -> new RuntimeException("Запис не знайдено"));
+
+            if (post.getEncryptedMediaHeader() == null) {
+                Resource resource = new UrlResource(filePath.toUri());
+                String contentType = Files.probeContentType(filePath);
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
+                        .body(resource);
+            }
+
             byte[] decryptedHead = cryptoService.decryptBytes(post.getEncryptedMediaHeader());
             long totalLength = decryptedHead.length + Files.size(filePath);
 
-            // Якщо браузер не питає діапазон - віддаємо файл цілим (як картинку)
-            if (range == null) {
-                java.io.InputStream combinedStream = new java.io.SequenceInputStream(
-                        new java.io.ByteArrayInputStream(decryptedHead),
-                        Files.newInputStream(filePath)
-                );
-                return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(Files.probeContentType(filePath) != null ? Files.probeContentType(filePath) : "application/octet-stream"))
-                        .body(new org.springframework.core.io.InputStreamResource(combinedStream));
+            // Визначаємо Content-Type за розширенням файлу, який ми повернули
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                if (filename.toLowerCase().endsWith(".mp4")) contentType = "video/mp4";
+                else if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".jpeg")) contentType = "image/jpeg";
+                else if (filename.toLowerCase().endsWith(".png")) contentType = "image/png";
+                else contentType = "application/octet-stream";
             }
 
-            // Якщо це Range-запит (відео)
-            java.io.InputStream combinedStream = new java.io.SequenceInputStream(
-                    new java.io.ByteArrayInputStream(decryptedHead),
-                    Files.newInputStream(filePath)
-            );
-            Resource resource = new org.springframework.core.io.InputStreamResource(combinedStream);
+            // Розумний динамічний ресурс, який підтримує стримінг відео шматочками
+            Resource dynamicResource = new org.springframework.core.io.AbstractResource() {
+                @Override
+                public String getDescription() {
+                    return "Decrypted stream for: " + filename;
+                }
 
-            ResourceRegion region = new ResourceRegion(resource, range.getRangeStart(totalLength),
-                    range.getRangeEnd(totalLength) - range.getRangeStart(totalLength) + 1);
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return new java.io.SequenceInputStream(
+                            new java.io.ByteArrayInputStream(decryptedHead),
+                            Files.newInputStream(filePath)
+                    );
+                }
 
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                    .contentType(MediaType.parseMediaType(Files.probeContentType(filePath) != null ? Files.probeContentType(filePath) : "video/mp4"))
-                    .body(region);
+                @Override
+                public long contentLength() throws IOException {
+                    return totalLength; // Це змушує Spring Boot автоматично обробляти відео-діапазони (Range requests)
+                }
+
+                @Override
+                public boolean exists() {
+                    return Files.exists(filePath);
+                }
+            };
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .body(dynamicResource);
 
         } catch (Exception e) {
-            log.error("Критична помилка відео: {}", filename, e);
+            log.error("Помилка стримінгу медіафайлу {}", filename, e);
             return ResponseEntity.internalServerError().build();
         }
     }
-
 }

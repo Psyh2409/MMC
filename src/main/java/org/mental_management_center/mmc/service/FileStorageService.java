@@ -195,9 +195,8 @@ public class FileStorageService {
         }
     }
 
-    // Новий метод для розрізання медіафайлів з підтримкою SHA-256 дедуплікації
     public FileSurgeryResult storePrivateTail(MultipartFile file) throws IOException {
-        byte[] head = new byte[4096]; // Наші 4 КБ
+        byte[] head = new byte[4096];
         InputStream inputStream = file.getInputStream();
 
         // 1. Відкушуємо голову
@@ -208,7 +207,7 @@ public class FileStorageService {
             head = new byte[0];
         }
 
-        // 2. Готуємо тимчасовий файл у папці journal_private та рахуємо хеш на льоту
+        // 2. Тимчасовий файл для обчислення хешу
         Path tempFile = Files.createTempFile(privateStorageLocation, "temp_tail_", ".tmp");
         String tailHash;
 
@@ -217,32 +216,37 @@ public class FileStorageService {
             try (java.io.OutputStream os = Files.newOutputStream(tempFile)) {
                 byte[] buffer = new byte[8192];
                 int read;
-                // Читаємо залишок потоку (хвіст), пишемо на диск і одночасно згодовуємо хешеру
                 while ((read = inputStream.read(buffer)) != -1) {
                     os.write(buffer, 0, read);
                     digest.update(buffer, 0, read);
                 }
             }
-            // Витягуємо готовий хеш хвоста (Java 17)
             tailHash = java.util.HexFormat.of().formatHex(digest.digest());
         } catch (java.security.NoSuchAlgorithmException e) {
             Files.deleteIfExists(tempFile);
-            throw new RuntimeException("Помилка ініціалізації SHA-256", e);
+            throw new RuntimeException("SHA-256 не підтримується", e);
         } finally {
             inputStream.close();
         }
 
-        // 3. Формуємо фінальне ім'я файлу ТІЛЬКИ з хешу (хвости зберігаємо як .bin)
-        String uniqueFileName = tailHash + ".bin";
+        // --- ОСЬ ТУТ ЗМІНА: Зберігаємо рідне розширення контенту ---
+        String originalFilename = org.springframework.util.StringUtils.cleanPath(java.util.Objects.requireNonNull(file.getOriginalFilename()));
+        String ext = "";
+        int dotIdx = originalFilename.lastIndexOf('.');
+        if (dotIdx >= 0) {
+            ext = originalFilename.substring(dotIdx).toLowerCase(); // отримаємо наприклад ".mp4" або ".jpg"
+        }
+
+        String uniqueFileName = tailHash + ext;
         Path targetLocation = privateStorageLocation.resolve(uniqueFileName);
 
-        // 4. Дедуплікація: перевіряємо, чи такий хвіст вже існує
+        // 3. Дедуплікація
         if (Files.exists(targetLocation)) {
-            log.info("ℹ️ Дедуплікація [Щоденник]: Хвіст з хешем {} вже існує. Використовуємо наявний.", tailHash);
-            Files.deleteIfExists(tempFile); // Знищуємо тимчасовий файл, бо є оригінал
+            log.info("ℹ️ Дедуплікація: Хвіст {} вже існує.", uniqueFileName);
+            Files.deleteIfExists(tempFile);
         } else {
-            log.info("✅ [Щоденник] Збережено новий унікальний хвіст: {}", uniqueFileName);
-            Files.move(tempFile, targetLocation, java.nio.file.StandardCopyOption.REPLACE_EXISTING); // Зберігаємо назавжди
+            log.info("✅ Збережено новий унікальний хвіст: {}", uniqueFileName);
+            Files.move(tempFile, targetLocation, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
 
         return new FileSurgeryResult(head, uniqueFileName);

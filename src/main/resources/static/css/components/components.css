@@ -880,3 +880,8 @@ margin-top: var(--space-md);
     margin-top: var(--space-md);
     gap: var(--space-sm);
 }
+
+.file-name-display {
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
