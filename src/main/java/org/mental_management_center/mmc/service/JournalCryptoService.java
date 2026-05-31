@@ -72,4 +72,30 @@ public class JournalCryptoService {
             return new String(gis.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
+
+    // 3. Шифрування чистих байтів заголовка медіафайлу (без GZIP)
+    public byte[] encryptBytes(byte[] rawBytes) {
+        if (rawBytes == null || rawBytes.length == 0) return null;
+        try {
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+            return cipher.doFinal(rawBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка шифрування заголовка медіафайлу", e);
+        }
+    }
+
+    // 4. Дешифрування чистих байтів заголовка медіафайлу
+    public byte[] decryptBytes(byte[] encryptedBytes) {
+        if (encryptedBytes == null || encryptedBytes.length == 0) return null;
+        try {
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec);
+            return cipher.doFinal(encryptedBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка дешифрування заголовка медіафайлу", e);
+        }
+    }
 }

@@ -35,6 +35,7 @@ public class User {
     @NotBlank(message = "Email не може бути порожнім")
     private String email;
 
+    @Column(nullable = false)
     @NotBlank(message = "Пароль не може бути порожнім")
     @Size(min = 8, message = "Пароль має бути не менше 8 символів")
     private String password;

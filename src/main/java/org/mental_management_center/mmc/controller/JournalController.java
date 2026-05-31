@@ -25,11 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -56,11 +58,9 @@ public class JournalController {
 
         if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        // Перевіряємо наявність контенту
         boolean hasText = content != null && !content.trim().isEmpty();
         boolean hasMedia = mediaFile != null && !mediaFile.isEmpty();
 
-        // Якщо немає ні тексту, ні файлу — тільки тоді це помилка
         if (!hasText && !hasMedia) {
             return ResponseEntity.badRequest().body("Запис щоденника не може бути порожнім.");
         }
@@ -69,20 +69,26 @@ public class JournalController {
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-            // Якщо тексту немає, шифруємо системний маркер, щоб обійти NOT NULL у базі
             byte[] encryptedData = cryptoService.encryptAndCompress(hasText ? content.trim() : "[MEDIA_ONLY]");
-            // Обробка медіафайлу через твій сервіс зберігання
+
+            // Ініціалізуємо змінні для медіа як null за замовчуванням
+            byte[] encryptedHead = null;
             String savedFileName = null;
+
             if (hasMedia) {
-                // Тепер файл реально копіюється на диск, а метод повертає його унікальний UUID
-                savedFileName = fileStorageService.storePrivateFile(mediaFile);
+                // 1. Відкушуємо голову і зберігаємо хвіст на диск
+                FileStorageService.FileSurgeryResult surgery = fileStorageService.storePrivateTail(mediaFile);
+                // 2. Шифруємо ці 4 КБ системним ключем
+                encryptedHead = cryptoService.encryptBytes(surgery.head);
+                savedFileName = surgery.tailFileName;
             }
 
-            // Будуємо об'єкт поста з унікальним UUID-іменем файлу
+            // Будуємо об'єкт поста зі всіма зібраними даними
             JournalPost post = JournalPost.builder()
                     .userId(user.getId())
                     .encryptedContent(encryptedData)
-                    .mediaFileName(savedFileName) // Сюди піде "a1b2c3d4-....jpg"
+                    .encryptedMediaHeader(encryptedHead) // Зашифрована голова (або null)
+                    .mediaFileName(savedFileName)        // Ім'я хвоста (або null)
                     .createdAt(LocalDateTime.now())
                     .build();
 
@@ -232,9 +238,14 @@ public class JournalController {
         if (file != null && !file.isEmpty()) {
             String oldFileName = post.getMediaFileName();
             try {
-                String newFileName = fileStorageService.storePrivateFile(file);
-                post.setMediaFileName(newFileName);
+                // Використовуємо таку ж "хірургію" для оновлених файлів
+                FileStorageService.FileSurgeryResult surgery = fileStorageService.storePrivateTail(file);
+                byte[] encryptedHead = cryptoService.encryptBytes(surgery.head);
 
+                post.setEncryptedMediaHeader(encryptedHead);
+                post.setMediaFileName(surgery.tailFileName);
+
+                // Очищення старого хвоста
                 if (oldFileName != null) {
                     long usageCount = journalPostRepository.countUsage(oldFileName);
                     if (usageCount <= 1) {
@@ -248,29 +259,52 @@ public class JournalController {
         }
 
         journalPostRepository.save(post);
-        log.info("📝 Пост {} успішно оновлено через стабільний SSR-інтерфейс", id);
+        log.info("📝 Пост {} успішно оновлено зі збереженням стандартів шифрування", id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/media/{filename:.+}")
-    public ResponseEntity<Resource> getMedia(@PathVariable String filename) {
-        Path filePath = fileStorageService.findFileAnywhere(filename);
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getMedia(@PathVariable String filename,
+                                      @RequestHeader(value = HttpHeaders.RANGE, required = false) HttpRange range) {
 
-        if (filePath == null || !Files.exists(filePath)) {
-            return ResponseEntity.notFound().build();
-        }
+        Path filePath = fileStorageService.findFileAnywhere(filename);
+        if (filePath == null || !Files.exists(filePath)) return ResponseEntity.notFound().build();
+
+        JournalPost post = journalPostRepository.findFirstByMediaFileName(filename)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
         try {
-            Resource resource = new UrlResource(filePath.toUri());
-            // Визначаємо тип контенту через стандартний Java-метод
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) contentType = "application/octet-stream";
+            byte[] decryptedHead = cryptoService.decryptBytes(post.getEncryptedMediaHeader());
+            long totalLength = decryptedHead.length + Files.size(filePath);
 
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
-                    .body(resource);
-        } catch (IOException e) {
+            // Якщо браузер не питає діапазон - віддаємо файл цілим (як картинку)
+            if (range == null) {
+                java.io.InputStream combinedStream = new java.io.SequenceInputStream(
+                        new java.io.ByteArrayInputStream(decryptedHead),
+                        Files.newInputStream(filePath)
+                );
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(Files.probeContentType(filePath) != null ? Files.probeContentType(filePath) : "application/octet-stream"))
+                        .body(new org.springframework.core.io.InputStreamResource(combinedStream));
+            }
+
+            // Якщо це Range-запит (відео)
+            java.io.InputStream combinedStream = new java.io.SequenceInputStream(
+                    new java.io.ByteArrayInputStream(decryptedHead),
+                    Files.newInputStream(filePath)
+            );
+            Resource resource = new org.springframework.core.io.InputStreamResource(combinedStream);
+
+            ResourceRegion region = new ResourceRegion(resource, range.getRangeStart(totalLength),
+                    range.getRangeEnd(totalLength) - range.getRangeStart(totalLength) + 1);
+
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                    .contentType(MediaType.parseMediaType(Files.probeContentType(filePath) != null ? Files.probeContentType(filePath) : "video/mp4"))
+                    .body(region);
+
+        } catch (Exception e) {
+            log.error("Критична помилка відео: {}", filename, e);
             return ResponseEntity.internalServerError().build();
         }
     }

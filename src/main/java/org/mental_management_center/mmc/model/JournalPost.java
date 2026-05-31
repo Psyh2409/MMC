@@ -38,4 +38,9 @@ public class JournalPost {
     // Поле для фронтенду, не зберігається в БД у чистому вигляді
     @Transient
     private String content;
+
+    // Зашифровані 4 КБ початкових метаданих медіафайлу
+    @Lob
+    @Column(name = "encrypted_media_header")
+    private byte[] encryptedMediaHeader;
 }

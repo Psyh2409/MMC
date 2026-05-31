@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -22,4 +23,6 @@ public interface JournalPostRepository extends JpaRepository<JournalPost, UUID> 
     // SQL-запит: "Порахуй, скільки рядків у таблиці мають таке ім'я файлу"
     @Query("SELECT COUNT(jp) FROM JournalPost jp WHERE jp.mediaFileName = :fileName")
     long countUsage(@Param("fileName") String fileName);
+
+    Optional<JournalPost> findFirstByMediaFileName(String mediaFileName);
 }
