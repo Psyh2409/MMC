@@ -6,11 +6,14 @@ let currentParentId = null;
 const PUBLIC_ID = '11111111-1111-1111-1111-111111111111';
 let currentRecipientId = PUBLIC_ID;
 let activeTab = 'public';
-
+let publicPage = 0;
+let privatePage = 0;
+let isChatLoading = false;
 // Окремі трекери дат для кожної вкладки, щоб вони не перетиналися
 let lastDatePublic = null;
 let lastDatePrivate = null;
-
+let publicMessages = [];
+let privateMessages = [];
 // НАДІЙНИЙ КЕШ ДЛЯ ЗБЕРЕЖЕННЯ КОНТЕКСТУ ПОВІДОМЛЕНЬ
 const messageCache = new Map();
 
@@ -79,6 +82,20 @@ function connect() {
         loadPublicHistory();
         loadPrivateHistory();
     });
+    // Додати в кінець функції connect(), перед закриваючою дужкою }
+    const pubArea = document.getElementById('chat-messages');
+    if (pubArea) {
+        pubArea.addEventListener('scroll', () => {
+            if (pubArea.scrollTop === 0) loadMoreMessages();
+        });
+    }
+
+    const privArea = document.getElementById('private-messages');
+    if (privArea) {
+        privArea.addEventListener('scroll', () => {
+            if (privArea.scrollTop === 0) loadMoreMessages();
+        });
+    }
 }
 
 function switchChat(type) {
@@ -116,50 +133,56 @@ function switchChat(type) {
 }
 
 function handleIncomingMessage(message, type) {
+    // 1. Зберігаємо повідомлення в масив (для правильної роботи історії)
+    if (type === 'public') {
+        publicMessages.push(message);
+    } else {
+        privateMessages.push(message);
+    }
+
+    // 2. Виводимо бульбашку повідомлення на екран
     const targetAreaId = type === 'public' ? 'chat-messages' : 'private-messages';
     showMessage(message, targetAreaId, type);
 
+    // 3. ВІДНОВЛЕНА СИГНАЛІЗАЦІЯ (БЛИМАННЯ ТА ЦИФРА)
     if (type === 'private' && activeTab === 'public') {
         const badge = document.getElementById('private-badge');
-        const privTab = document.getElementById('tab-private');
-
         if (badge) {
-            badge.classList.remove('hidden');
-            badge.innerText = parseInt(badge.innerText) + 1;
-        }
-        if (privTab) {
-            privTab.classList.add('pulse-notification');
+            badge.classList.remove('hidden'); // Знімаємо приховування (твоє CSS блимання знову запрацює)
+            let currentCount = parseInt(badge.innerText) || 0;
+            badge.innerText = currentCount + 1; // Збільшуємо циферку на +1
         }
     }
 }
 
 function loadPublicHistory() {
-    fetch('/api/chat/history/public')
+    publicPage = 0;
+    fetch(`/chat/${PUBLIC_ID}/messages?page=0`) // Тягнемо тільки перші 20 штук!
         .then(response => response.json())
         .then(messages => {
-            const chatArea = document.getElementById('chat-messages');
-            if (!chatArea) return;
-            chatArea.innerHTML = '';
-            lastDatePublic = null; // Скидаємо трекер перед завантаженням
-            messages.forEach(msg => {
-                showMessage(msg, 'chat-messages', 'public');
-            });
+            // Сервер віддає найновіші першими. Перевертаємо для хронологічного порядку.
+            publicMessages = messages.reverse();
+            renderAllMessages('chat-messages', 'public', publicMessages);
             scrollToBottom('chat-messages');
         });
 }
 
 function loadPrivateHistory() {
+    // Жодних заглушок! Стукаємо прямо в твій старий, надійний ендпоінт
     fetch('/api/chat/history/private')
         .then(response => response.json())
         .then(messages => {
-            const privArea = document.getElementById('private-messages');
-            if (!privArea) return;
-            privArea.innerHTML = '';
-            lastDatePrivate = null; // Скидаємо трекер перед завантаженням
-            messages.forEach(msg => {
-                showMessage(msg, 'private-messages', 'private');
-            });
+            // Зберігаємо повідомлення в масив
+            privateMessages = messages;
+
+            // Відмальовуємо їх на екрані
+            renderAllMessages('private-messages', 'private', privateMessages);
+
+            // Прокручуємо вниз до останнього повідомлення
             scrollToBottom('private-messages');
+        })
+        .catch(error => {
+            console.error('Помилка завантаження приватної історії:', error);
         });
 }
 
@@ -359,3 +382,86 @@ document.getElementById('messageInput').addEventListener('keydown', function(e) 
         document.getElementById('messageForm').dispatchEvent(new Event('submit'));
     }
 });
+
+// ЗАМІНИ loadMoreMessages на цей варіант:
+function loadMoreMessages() {
+    if (activeTab === 'private') return;
+    if (isChatLoading) return;
+
+    const chatAreaId = activeTab === 'public' ? 'chat-messages' : 'private-messages';
+    const chatElement = document.getElementById(chatAreaId);
+    if (!chatElement) return;
+
+    const loaderId = 'chat-history-loader';
+    if (!document.getElementById(loaderId)) {
+        const loader = document.createElement('div');
+        loader.id = loaderId;
+        loader.style.padding = 'var(--space-md)';
+        loader.style.textAlign = 'center';
+        loader.style.color = 'var(--color-primary)';
+        loader.style.fontWeight = 'bold';
+        loader.innerText = '⏳ Завантаження старої історії...';
+        chatElement.insertBefore(loader, chatElement.firstChild);
+    }
+
+    const oldScrollHeight = chatElement.scrollHeight;
+    let nextPage = activeTab === 'public' ? publicPage + 1 : privatePage + 1;
+    let roomId = activeTab === 'public' ? PUBLIC_ID : currentRecipientId;
+
+    isChatLoading = true;
+
+    fetch(`/chat/${roomId}/messages?page=${nextPage}`)
+        .then(response => response.json()) // Отримуємо JSON
+        .then(messages => {
+            const loader = document.getElementById(loaderId);
+            if (loader) loader.remove();
+
+            if (messages.length > 0) {
+                const olderMessages = messages.reverse();
+
+                // Додаємо старі повідомлення НА ПОЧАТОК масиву і перемальовуємо
+                if (activeTab === 'public') {
+                    publicMessages = [...olderMessages, ...publicMessages];
+                    publicPage++;
+                    renderAllMessages(chatAreaId, 'public', publicMessages);
+                } else {
+                    privateMessages = [...olderMessages, ...privateMessages];
+                    privatePage++;
+                    renderAllMessages(chatAreaId, 'private', privateMessages);
+                }
+
+                // Повертаємо скрол рівно на те повідомлення, яке ти читав
+                chatElement.scrollTop = chatElement.scrollHeight - oldScrollHeight;
+            } else {
+                const endNode = document.createElement('div');
+                endNode.style.padding = 'var(--space-sm)';
+                endNode.style.textAlign = 'center';
+                endNode.style.color = 'var(--color-text-muted)';
+                endNode.innerText = '✨ Вся історія завантажена';
+                chatElement.insertBefore(endNode, chatElement.firstChild);
+                setTimeout(() => endNode.remove(), 2000);
+            }
+            isChatLoading = false;
+        })
+        .catch(error => {
+            console.error('Помилка:', error);
+            const loader = document.getElementById(loaderId);
+            if (loader) loader.remove();
+            isChatLoading = false;
+        });
+}
+
+function renderAllMessages(targetId, chatType, messageArray) {
+    const chatArea = document.getElementById(targetId);
+    if (!chatArea) return;
+
+    chatArea.innerHTML = ''; // Очищаємо екран
+
+    // Скидаємо трекери дат, щоб вони розставились коректно
+    if (chatType === 'public') lastDatePublic = null;
+    else lastDatePrivate = null;
+
+    messageArray.forEach(msg => {
+        showMessage(msg, targetId, chatType);
+    });
+}

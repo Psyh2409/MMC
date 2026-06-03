@@ -7,6 +7,9 @@ import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,9 +17,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -151,5 +153,16 @@ public class ChatController {
             // Якщо намагається видалити чуже або не знайдено
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    @GetMapping("/chat/{chatRoomId}/messages")
+    @ResponseBody
+    public ResponseEntity<List<ChatMessage>> getMoreMessages(@PathVariable UUID chatRoomId,
+                                                             @RequestParam(defaultValue = "0") int page) {
+
+        Pageable pageable = PageRequest.of(page, 20);
+        Slice<ChatMessage> messageSlice = chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(chatRoomId, pageable);
+
+        return ResponseEntity.ok(messageSlice.getContent());
     }
 }
