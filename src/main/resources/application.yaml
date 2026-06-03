@@ -49,6 +49,10 @@ server:
 
 app:
   public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  jitsi:
+    app-id: vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6
+    api-key-id: vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6/bef9f5
+    private-key-path: ${MMC_JITSI_KEY_PATH}
   crypto:
     secret-key: ${MMC_CRYPTO_KEY}
   upload-dir: ${APP_UPLOAD_DIR:./uploads/articles} # 2. ДОДАЄМО ШЛЯХ ДО ЗАХИЩЕНОЇ ПАПКИ МЕДІА

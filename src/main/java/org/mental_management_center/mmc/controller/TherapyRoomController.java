@@ -7,6 +7,7 @@ import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.TherapyRoomService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.service.TherapyNoteService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,10 +31,15 @@ public class TherapyRoomController {
     private final TherapyRoomService therapyRoomService;
 
 
-    // Дані з вашої панелі JaaS (краще винести в application.properties)
-    private final String APP_ID = "vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6";
-    private final String API_KEY_ID = "vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6/bef9f5"; // Замініть на Key ID з панелі
-    private final String PRIVATE_KEY_PATH = "C:\\Users\\ASUS\\MyMMCv1\\JaaS_security\\MMC_JaaS.pk"; // Шлях до вашого файлу .pk
+    @Value("${app.jitsi.app-id}")
+    private String appId;
+    @Value("${app.jitsi.api-key-id}")
+    private String apiKeyId;
+    @Value("${app.jitsi.private-key-path}")
+    private String privateKeyPath;
+    private final String APP_ID = appId;
+    private final String API_KEY_ID = apiKeyId;
+    private final String PRIVATE_KEY_PATH = privateKeyPath;
 
     public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService) {
         this.userService = userService;
