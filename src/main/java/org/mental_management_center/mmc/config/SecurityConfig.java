@@ -55,6 +55,12 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/ws-chat/**")
+                )
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

@@ -12,9 +12,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 1. Точка входу для фронтенду
-        // Саме сюди буде підключатися наш JavaScript (SockJS)
-        registry.addEndpoint("/ws-chat").withSockJS();
+        registry.addEndpoint("/ws-chat")
+                .setAllowedOriginPatterns("https://mental.cx.ua", "http://localhost:8080")
+                .withSockJS();
     }
 
     @Override
