@@ -222,3 +222,78 @@
 .tab-pane.active {
     display: block;
 }
+
+@media (max-width: 48em) {
+    /* Гарантуємо, що падінги не роздувають загальну ширину елементів */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* 1. Хірургічне стискання кнопок через падінги та шрифт */
+    .site-header .btn-primary,
+    .site-footer .btn-primary,
+    .site-footer .btn-outline {
+        padding: 0.35rem 0.75rem; /* Компактні мобільні відступи */
+        font-size: 0.85rem;       /* Акуратний, читабельний розмір тексту */
+        line-height: 1.2;
+    }
+
+    /* 2. Розділяємо логіку логотипів для шапки та підвалу */
+    .site-header .site-brand-text {
+        font-size: 1.1rem; /* У шапці лишаємо помітним */
+    }
+
+    .site-footer .site-brand-text {
+        display: inline-block;
+                max-width: 5rem;      /* Обмежуємо ширину, щоб текст м'яко перенісся */
+                white-space: normal;  /* Дозволяємо перенос рядка */
+                font-size: 0.85rem;
+                line-height: 1.2;
+                text-align: left;
+                vertical-align: middle;
+    }
+
+    /* 3. Компактизуємо сам підвал, щоб він не був занадто глибоким */
+    .site-footer-inner {
+        padding: 1rem;            /* Зменшуємо загальний падінг футера */
+        gap: 0.75rem;             /* Робимо менші відстані між рядками підвалу */
+    }
+
+    /* 1. Ховаємо іконку-конверт на кнопці "Контакти" */
+        .hide-btn-icon {
+            display: none;
+        }
+
+        /* 2. Ховаємо довгу частину копірайту, залишаючи тільки "© 2026 MMC" */
+        .hide-mobile {
+            display: none;
+        }
+}
+
+/*
+@media (max-width: 48em) {
+    /* 1. Зменшуємо логотипи "Шлях до себе" */
+/*    .site-brand-text {
+        font-size: 1.1rem;
+    }
+
+    /* 2. Зменшуємо простір між лінками в хедері та їхній розмір */
+/*    .site-nav {
+        gap: 0.5rem;
+    }
+
+    .site-nav-link,
+    .site-nav-label {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* 3. Робимо кнопки у футері компактнішими і дозволяємо тексту переноситись */
+/*    .site-footer .btn-primary,
+    .site-footer .btn-outline {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        white-space: normal; /* Дозволяє тексту "Створити акаунт" впасти на 2 рядки */
+/*        line-height: 1.2;
+    }
+}*/

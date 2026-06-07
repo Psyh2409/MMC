@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const loginBtn = document.getElementById('navLoginBtn') || document.querySelector('.btn-login-header');
 
         if (loginBtn) {
-            loginBtn.textContent = 'Зареєструватися';
+            loginBtn.textContent = 'Створити акаунт';
             loginBtn.href = '/register'; // Твій URL сторінки реєстрації
         }
 

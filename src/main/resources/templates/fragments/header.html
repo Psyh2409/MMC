@@ -9,7 +9,7 @@
 
         <nav class="site-nav">
             <div class="dropdown">
-                <span class="site-nav-label">Проблематика ▼</span>
+                <span class="site-nav-label">Статті ▼</span>
                 <div class="dropdown-content">
                     <a th:each="entry : ${allCategoriesMap}"
                        th:href="@{/issues/{topic}(topic=${entry.key})}"

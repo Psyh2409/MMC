@@ -12,19 +12,19 @@
 
             <div sec:authorize="isAnonymous()">
                 <a th:href="@{/contact}" class="btn-primary">
-                    📩 Контакти
+                    <span class="hide-btn-icon">📩</span> Контакти
                 </a>
             </div>
 
             <div sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
                 <a th:href="@{/contact}" class="btn-outline">
-                    📩 Контакти
+                    <span class="hide-btn-icon">📩</span> Контакти
                 </a>
             </div>
         </div>
 
         <div class="footer-center">
-            <span class="text-muted">© 2026 MMC Mental Management Center</span>
+            <span class="text-muted">© 2026 MMC<span class="hide-mobile"> Mental Management Center</span></span>
         </div>
 
         <div class="footer-right">
