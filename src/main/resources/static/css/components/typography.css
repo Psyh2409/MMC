@@ -218,13 +218,14 @@ h3 {
 }
 
 .content-section {
+    white-space: pre-wrap;
     text-align: justify;
     line-height: 1.6;
 }
 
 /* Отступ для абзацев через rem, чтобы текст дышал */
 .content-section p {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .journal-post-media-box {
