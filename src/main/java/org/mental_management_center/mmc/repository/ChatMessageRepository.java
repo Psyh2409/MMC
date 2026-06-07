@@ -37,4 +37,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> 
 
     @Query("SELECT m FROM ChatMessage m WHERE m.recipientId = :chatRoomId ORDER BY m.timestamp DESC")
     Slice<ChatMessage> findByChatRoomIdOrderByCreatedAtDesc(@Param("chatRoomId") UUID chatRoomId, Pageable pageable);
+
+    // Рахуємо повідомлення, які відправив користувач
+    long countBySenderId(java.util.UUID senderId);
+
+    // Видаляємо повідомлення, де користувач є відправником або отримувачем
+    void deleteBySenderIdOrRecipientId(java.util.UUID senderId, java.util.UUID recipientId);
+
 }

@@ -3,10 +3,13 @@ package org.mental_management_center.mmc.service;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.model.RoleBit; // Наш новий енам
 import org.mental_management_center.mmc.model.VerificationToken;
+import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
+import org.mental_management_center.mmc.repository.JournalPostRepository;
 import org.mental_management_center.mmc.repository.VerificationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,10 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final VerificationTokenRepository tokenRepository; // Нове
     private final EmailService emailService; // Нове
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private JournalPostRepository journalPostRepository;
 
     // Оновлений конструктор — Spring сам підставить сюди всі залежності
     public UserService(UserRepository userRepository,
@@ -151,13 +158,24 @@ public class UserService {
     }
 
     @SuppressWarnings("null")
-
+    @Transactional
     public void deleteUserById(UUID id, String currentAdminEmail) {
+        // 1. Твоя перевірка існування користувача
         User userToDelete = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
+
+        // 2. Твій захист від видалення власного адмін-акаунту
         if (userToDelete.getEmail().equals(currentAdminEmail)) {
             throw new RuntimeException("Sie konnen Ihr eigenes Administratorkonto nicht loschen!");
         }
+
+        // 3. Безпечне очищення повідомлень чату за UUID
+        chatMessageRepository.deleteBySenderIdOrRecipientId(id, id);
+
+        // 4. Безпечне очищення зашифрованих постів журналу за UUID
+        journalPostRepository.deleteByUserId(id);
+
+        // 5. Твоє фінальне видалення користувача з бази даних
         userRepository.deleteById(id);
     }
 

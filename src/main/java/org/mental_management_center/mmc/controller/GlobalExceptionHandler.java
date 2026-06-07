@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,20 @@ public class GlobalExceptionHandler {
     public String handleAccessDenied(AccessDeniedException exception, HttpServletResponse response, Model model) {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         fillModel(model, HttpStatus.FORBIDDEN);
+        return "error";
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleDataIntegrityViolation(DataIntegrityViolationException exception, HttpServletResponse response, Model model) {
+        log.warn("Спроба дублювання даних (можливо, подвійний клік при реєстрації): {}", exception.getMessage());
+
+        response.setStatus(HttpStatus.CONFLICT.value()); // Встановлюємо статус 409 Conflict
+
+        // Використовуємо твою існуючу логіку шаблону error.html
+        model.addAttribute("statusCode", 409);
+        model.addAttribute("errorTitle", "Дані вже існують");
+        model.addAttribute("errorMessage", "Користувач з такою електронною поштою вже зареєстрований. Будь ласка, перейдіть на сторінку входу або скористайтеся іншою поштою.");
+
         return "error";
     }
 

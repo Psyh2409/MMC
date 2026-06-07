@@ -106,9 +106,12 @@
 
                     <div id="deactivationVault" class="tab-pane">
                         <p class="text-muted text-sm mt-sm">
-                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої коментарі та повідомлення на платформі.
+                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої коментарі, нотатки та повідомлення на платформі.
                         </p>
-                        <button type="button" id="submitDeactivateBtn" class="btn-primary mt-sm w-100">Запросити деактивацію</button>
+
+                        <form th:action="@{/profile/request-deactivation}" method="post" class="mt-sm" onsubmit="return confirm('Ви впевнені, що хочете надіслати запит на деактивацію? Цю дію неможливо скасувати.');">
+                            <button type="submit" id="submitDeactivateBtn" class="btn-primary w-100">Запросити деактивацію</button>
+                        </form>
                     </div>
                 </div>
             </div>

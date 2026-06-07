@@ -73,6 +73,27 @@ public class User {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    // --- ЗВ'ЯЗКИ ДЛЯ ПОВНОГО ВИДАЛЕННЯ (Особисті дані клієнта) ---
+
+    // У Request.java поле називається user
+    @OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private List<Request> requests = new ArrayList<>();
+
+    // У Comment.java поле називається author
+    @OneToMany(mappedBy = "author", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    // Нотатки, які клієнт НАПИСАВ САМ (якщо він автор - вони теж видаляються)
+    @OneToMany(mappedBy = "author", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private List<TherapyNote> authoredNotes = new ArrayList<>();
+
+    // ЗВ'ЯЗКИ БЕЗ ВИДАЛЕННЯ (Для збереження твоїх записів)
+    @OneToMany(mappedBy = "client")
+    private List<TherapyNote> clientNotes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "therapist")
+    private List<TherapyNote> therapistNotes = new ArrayList<>();
+
     // Твій конструктор (тепер він не заважає Hibernate завдяки @NoArgsConstructor)
     public User(String name, String email, String password, RoleBit initialRole) {
         this.name = name;
@@ -80,6 +101,22 @@ public class User {
         this.password = password;
         this.rolesMask = (initialRole != null) ? initialRole.getMask() : 2;
         this.enabled = true;
+    }
+
+    // === БЛОК 3: МАГІЯ ВІДВ'ЯЗУВАННЯ НОТАТОК ===
+    // Цей метод автоматично спрацьовує за мілісекунду до видалення юзера.
+    // Він каже: "Якщо цей юзер був у нотатках, просто забудь про нього, але нотатку залиш".
+    @jakarta.persistence.PreRemove
+    private void preRemoveNotes() {
+        if (authoredNotes != null) {
+            for (TherapyNote note : authoredNotes) { note.setAuthor(null); }
+        }
+        if (clientNotes != null) {
+            for (TherapyNote note : clientNotes) { note.setClient(null); }
+        }
+        if (therapistNotes != null) {
+            for (TherapyNote note : therapistNotes) { note.setTherapist(null); }
+        }
     }
 
     // --- ЛОГІКА ПЕРЕВІРКИ РОЛЕЙ ---

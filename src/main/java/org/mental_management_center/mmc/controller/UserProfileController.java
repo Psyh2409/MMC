@@ -1,16 +1,17 @@
 package org.mental_management_center.mmc.controller;
 
+import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.ChatMessageRepository;
+import org.mental_management_center.mmc.repository.JournalPostRepository;
 import org.mental_management_center.mmc.repository.TherapyNoteRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
-import org.mental_management_center.mmc.service.FileStorageService;
-import org.mental_management_center.mmc.service.TherapyNoteService;
-import org.mental_management_center.mmc.service.TherapyRoomService;
-import org.mental_management_center.mmc.service.UserService;
+import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.PasswordChangeForm;
 import org.mental_management_center.mmc.web.form.ProfileUpdateForm;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +19,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Map;
@@ -37,8 +40,14 @@ public class UserProfileController {
     private final TherapyNoteRepository therapyNoteRepository;
     private final TherapyRoomService therapyRoomService;
     private final FileStorageService fileStorageService;
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
 
+    @Autowired
+    private JournalPostRepository journalPostRepository;
 
+    @Autowired
+    private RequestService requestService;
 
     public UserProfileController(UserService userService, UserRepository userRepository, TherapyNoteService therapyNoteService, TherapyNoteRepository therapyNoteRepository, TherapyRoomService therapyRoomService, FileStorageService fileStorageService) {
         this.userService = userService;
@@ -254,5 +263,43 @@ public class UserProfileController {
         mav.addObject("user", user);
 
         return mav;
+    }
+
+    @Transactional
+    @PostMapping("/profile/request-deactivation")
+    public String requestDeactivation(Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Знаходимо користувача, який зараз онлайн
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));        UUID userId = currentUser.getId();
+
+        // 1. Рахуємо дані, які зв'язані безпосередньо в User.java
+        int commentsCount = currentUser.getComments().size();
+        int authoredNotesCount = currentUser.getAuthoredNotes().size();
+
+        // 2. Рахуємо дані через репозиторії (бо вони прив'язані тільки по UUID)
+        long chatCount = chatMessageRepository.countBySenderId(userId);
+        long journalCount = journalPostRepository.countByUserId(userId);
+
+        long totalActivity = commentsCount + authoredNotesCount + chatCount + journalCount;
+
+        // 3. Терапевтичний бар'єр: якщо активність є, не даємо відправити заявку
+        if (totalActivity > 0) {
+            String message = String.format(
+                    "Вам необхідно власноруч видалити свої дані: коментарів (%d), записів у щоденнику (%d), повідомлень у чаті (%d), нотаток (%d). Тільки після цього можна відправити запит.",
+                    commentsCount, journalCount, chatCount, authoredNotesCount
+            );
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+            return "redirect:/profile";
+        }
+
+        // 4. Якщо все чисто — створюємо системний запит для адміна
+        Request deactivationRequest = new Request();
+        deactivationRequest.setUser(currentUser);
+        deactivationRequest.setMessage("Користувач власноруч очистив свої дані і просить деактивувати акаунт.");
+        requestService.save(deactivationRequest, principal);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Ваш профіль повністю очищено. Заявку на деактивацію відправлено адміністратору.");
+        return "redirect:/profile";
     }
 }

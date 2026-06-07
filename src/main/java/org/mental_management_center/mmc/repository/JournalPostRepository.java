@@ -25,4 +25,11 @@ public interface JournalPostRepository extends JpaRepository<JournalPost, UUID> 
     long countUsage(@Param("fileName") String fileName);
 
     Optional<JournalPost> findFirstByMediaFileName(String mediaFileName);
+
+    // Рахуємо записи в особистому журналі
+    long countByUserId(java.util.UUID userId);
+
+    // Повністю видаляємо журнал користувача
+    void deleteByUserId(java.util.UUID userId);
+
 }
