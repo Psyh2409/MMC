@@ -37,9 +37,6 @@ public class TherapyRoomController {
     private String apiKeyId;
     @Value("${app.jitsi.private-key-path}")
     private String privateKeyPath;
-    private final String APP_ID = appId;
-    private final String API_KEY_ID = apiKeyId;
-    private final String PRIVATE_KEY_PATH = privateKeyPath;
 
     public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService) {
         this.userService = userService;
@@ -119,10 +116,10 @@ public class TherapyRoomController {
             ));
 
             return Jwts.builder()
-                    .setHeaderParam("kid", API_KEY_ID)
+                    .setHeaderParam("kid", apiKeyId)
                     .setHeaderParam("typ", "JWT")
                     .setIssuer("chat")
-                    .setSubject(APP_ID)
+                    .setSubject(appId)
                     .setAudience("jitsi")
                     .setExpiration(new Date(exp))
                     .setIssuedAt(new Date(now))
@@ -137,7 +134,7 @@ public class TherapyRoomController {
     }
 
     private PrivateKey loadPrivateKey() throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(PRIVATE_KEY_PATH));
+        byte[] keyBytes = Files.readAllBytes(Paths.get(privateKeyPath));
         String privateKeyContent = new String(keyBytes)
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
