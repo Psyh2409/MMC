@@ -48,7 +48,7 @@ public class ArticleService {
 
     @Transactional
     public void saveFromForm(ArticleForm form, User author, String imagePath) {
-        String slug = form.getCategory();
+        String slug = generateSlug(form.getCategory());
         String nameUa = form.getCategoryNameUa();
 
         // 1. ОНОВЛЕННЯ СЛОВНИКА КАТЕГОРІЙ
@@ -103,7 +103,13 @@ public class ArticleService {
         } else {
             article.setTags(new HashSet<>());
         }
-
         articleRepository.save(article);
+    }
+
+    public String generateSlug(String slug) {
+        return slug.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "") // Видаляємо все, крім букв, цифр і пробілів (слеш і двокрапка зникнуть)
+                .replaceAll("\\s+", "-")         // Замінюємо пробіли на дефіси
+                .replaceAll("-+", "-");          // Прибираємо подвійні дефіси
     }
 }
