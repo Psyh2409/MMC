@@ -15,4 +15,6 @@ public interface RequestRepository extends JpaRepository<Request, UUID>{
 
     @EntityGraph(attributePaths = "user")
     Optional<Request> findById(UUID id);
+
+    void deleteByUserId(UUID userId);
 }

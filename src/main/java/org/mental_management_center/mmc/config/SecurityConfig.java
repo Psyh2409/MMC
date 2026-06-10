@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -16,13 +17,15 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
     private final Environment environment;
+    private final SessionRegistry sessionRegistry;
 
     public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
                           CustomOidcUserService customOidcUserService,
-                          Environment environment) {
+                          Environment environment, SessionRegistry sessionRegistry) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customOidcUserService = customOidcUserService;
         this.environment = environment;
+        this.sessionRegistry = sessionRegistry;
     }
 
     @Bean
@@ -69,6 +72,11 @@ public class SecurityConfig {
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(10)
+                        .sessionRegistry(sessionRegistry)
+                        .expiredUrl("/login?expired=true")
                 );
 
         if (isGoogleOAuthEnabled()) {

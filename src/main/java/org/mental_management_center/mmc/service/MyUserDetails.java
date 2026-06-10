@@ -1,13 +1,15 @@
 package org.mental_management_center.mmc.service;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects; // <-- Додано цей імпорт
 
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class MyUserDetails implements UserDetails {
 
     @Getter
@@ -28,6 +30,7 @@ public class MyUserDetails implements UserDetails {
         return user.getPassword();
     }
 
+    @EqualsAndHashCode.Include
     @Override
     public String getUsername() {
         return user.getEmail();
@@ -54,8 +57,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return user.isEnabled(); // <-- Спрінг дивиться сюди, щоб знати, чи юзер не забанений
     }
 }
-
-
