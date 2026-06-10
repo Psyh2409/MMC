@@ -2,58 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/base :: main-layout(
       ~{::title},
-      ~{::section},
+      ~{::section.standard-container},
       ~{})}">
 <head>
     <title>Перші кроки | Психотерапія</title>
 </head>
 <body>
-<div class="content-section">
-    <section class="steps-hero">
-        <h1 class="hero-title-light steps-hero-title">Початок роботи над собою</h1>
-        <p class="steps-hero-subtitle">Це не швидкий шлях. Але чесний.</p>
-    </section>
 
-    <section class="steps-text-block">
+<section class="standard-container container-reading layout-stack">
+
+    <header class="section-header header-stacked">
+        <h1 class="page-title-accent">Початок роботи над собою</h1>
+        <p class="heading-lg">Це не швидкий шлях. Але чесний.</p>
+    </header>
+
+    <div>
         <p>Психотерапія — це не магічна таблетка і не швидкий спосіб отримати полегшення за один сеанс. Це глибокий, поступовий процес трансформації.</p>
-
-        <p class="steps-pull-quote">«Дев'ять жінок не зможуть народити дитину за один місяць...»</p>
-
+        <br>
+        <p><em>«Дев'ять жінок не зможуть народити дитину за один місяць...»</em></p>
+        <br>
         <p>Певні речі потребують часу, визрівання та терпіння. Я працюю з людьми, які готові досліджувати свій внутрішній світ та брати на себе відповідальність за власне життя.</p>
-    </section>
+    </div>
 
-    <section class="steps-expectations">
-        <h2>Чого очікувати від першої зустрічі?</h2>
+    <div class="home-services">
+        <h2 class="home-section-title">Чого очікувати від першої зустрічі?</h2>
 
-        <div class="steps-grid">
-            <div class="steps-card">
-                <h3>1. Знайомство</h3>
-                <p>Ми створимо безпечний простір. Ви розповідаєте стільки, скільки готові. Тут немає "правильних" відповідей.</p>
-            </div>
-            <div class="steps-card">
-                <h3>2. Запит</h3>
-                <p>Ми спробуємо сформулювати, що саме болить зараз і якого результату ви хочете досягти.</p>
-            </div>
-            <div class="steps-card">
-                <h3>3. План</h3>
-                <p>Ми обговоримо періодичність зустрічей та тривалість нашої спільної роботи.</p>
-            </div>
-            <div class="steps-card">
-                <h3>4. Конфіденційність</h3>
-                <p>Все, що сказано в кабінеті (чи онлайн), залишається між нами. Це непорушне правило.</p>
-            </div>
-        </div>
-    </section>
+        <ol class="layout-stack">
+            <li><strong>Знайомство.</strong> Ми створимо безпечний простір. Ви розповідаєте стільки, скільки готові. Тут немає "правильних" відповідей.</li>
+            <li><strong>Запит.</strong> Ми спробуємо сформулювати, що саме болить зараз і якого результату ви хочете досягти.</li>
+            <li><strong>План.</strong> Ми обговоримо періодичність зустрічей та тривалість нашої спільної роботи.</li>
+            <li><strong>Конфіденційність.</strong> Все, що сказано в кабінеті (чи онлайн), залишається між нами. Це непорушне правило.</li>
+        </ol>
+    </div>
 
-    <section class="steps-summary">
-        <p>Моя роль — бути поруч, підтримувати та допомагати знайти ваші власні відповіді у цьому процесі.</p>
-    </section>
+    <footer class="section-header">
+        <p class="heading-lg">Моя роль — бути поруч, підтримувати та допомагати знайти ваші власні відповіді у цьому процесі.</p>
+    </footer>
 
-    <section class="steps-cta">
-        <h2>Готові розпочати?</h2>
-        <p>Зробіть перший крок назустріч собі.</p>
-        <a href="/contact" class="nav-link">Написати мені</a>
-    </section>
-</div>
+</section>
+
 </body>
 </html>
