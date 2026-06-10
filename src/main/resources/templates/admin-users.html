@@ -86,7 +86,7 @@
                 <!-- ВАРІАНТ Б: Користувач вже КЛІЄНТ — на тому ж місці з'являється кнопка Відеоконнекту -->
                 <div th:if="${u.isClient()}" class="admin-action-form-inline">
                     <a th:href="@{/therapy/room/{id}(id=${u.id})}"
-                       class="btn-primary"
+                       class="btn-primary btn-admin"
                        target="_blank"
                        onclick="return handleVideoStart(this);">Відео чат</a>
                 </div>

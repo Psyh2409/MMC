@@ -178,3 +178,42 @@
     justify-content: center;
     margin: 0; /* Прибираємо системні відступи лейблів, через які кнопка "підстрибує" */
 }
+
+/* Стандартизована, тонка та акуратна кнопка адмінки */
+.btn-admin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Відступ між текстом та іконкою */
+
+    /* Відносні відступи замість пікселів (Quantum Grid) */
+    padding: 0.5rem 1.25rem;
+
+    /* Геометрія кнопки */
+    font-family: inherit;
+    font-size: 0.875rem; /* Трохи менший, акуратний текст для адмінки */
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+
+    /* Колірні токени на HSL */
+    background-color: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    color: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
+
+    /* Акуратний радіус округлення */
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Ефект при наведенні */
+.btn-admin:hover {
+    background-color: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 5%));
+}
+
+/* Ефект при натисканні (прибирає пузатість і візуально "вдавлює" кнопку) */
+.btn-admin:active {
+    transform: scale(0.98);
+}
