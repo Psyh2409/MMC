@@ -1,3 +1,5 @@
+b04aab7 docs: integrate dynamic technical archives into readme
+5130ad7 docs: add commit history and branches snapshots to repository
 237ec1b feat(infra): add automated daily backup script for postgres and uploads mirror
 2545e74 Add ZombieSessionFilter and refactor first-steps UI
 d8085f1 Save stable DB deletion and SessionConfig

@@ -4,7 +4,7 @@
   change-profile
   chat-avatars-refactor
   chat-moderation
-* chat-pagination
+  chat-pagination
   cleanup-and-activity
   css-system-cleanup
   css-unification
@@ -19,6 +19,7 @@
   journal-crud-operations
   journal-feed-pagination
   kill-rings
+* media-links
   media-room
   mmc-next-adventures
   pagination-comments
