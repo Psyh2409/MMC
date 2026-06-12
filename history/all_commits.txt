@@ -1,3 +1,5 @@
+a2d3e31 chore(infra): backup config files and infrastructure scripts
+e78ab59 chore(infra): auto-update history via backup cron
 c567378 chore(infra): auto-update history via backup cron
 57cb94f chore(infra): auto-update history via backup cron
 b04aab7 docs: integrate dynamic technical archives into readme
