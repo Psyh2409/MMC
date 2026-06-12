@@ -408,6 +408,9 @@ window.loadFeedPage = async function(page = 0, size = 5) {
         if (feedContainer) {
             // Замінюємо вміст контейнера на нову порцію постів з кнопками навігації
             feedContainer.innerHTML = htmlFragment;
+            if (typeof window.applyMediaFacades === 'function') {
+                            window.applyMediaFacades();
+            }
         }
     } catch (err) {
         console.error('Помилка навігації щоденника:', err);

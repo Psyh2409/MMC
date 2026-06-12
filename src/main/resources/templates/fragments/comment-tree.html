@@ -21,8 +21,8 @@
     <div th:id="'reply-form-container-' + ${comment.id}" class="form-group"></div>
 
     <button type="button"
-            class="btn-outline"
-            th:onclick="moveReplyForm([[${comment.id}]])">
+            class="btn-outline reply-action-btn"
+            th:data-comment-id="${comment.id}">
         Відповісти
     </button>
 

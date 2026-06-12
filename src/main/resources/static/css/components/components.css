@@ -885,3 +885,71 @@ margin-top: var(--space-md);
     word-break: break-all;
     overflow-wrap: break-word;
 }
+
+/* --- COMPONENT: YOUTUBE FACADE (media-links) --- */
+.youtube-facade {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    margin: var(--space-sm) 0;
+    background-color: hsla(var(--theme-h), var(--theme-s), var(--l-card-bg), 1);
+    /* Адаптивна тінь на основі твого кроку */
+    box-shadow: 0 calc(var(--step) * 1) calc(var(--step) * 1.5) var(--shadow-main, rgba(0,0,0,0.1));
+}
+
+.youtube-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.youtube-facade:hover img {
+    transform: scale(1.05);
+}
+
+.youtube-facade .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Класичний YouTube червоний, але з прозорістю */
+    background-color: hsla(0, 100%, 50%, 0.8);
+    color: hsl(0, 0%, 100%);
+    border: none;
+    border-radius: var(--radius-full);
+    /* Розміри через квантову сітку (12 кроків = ~48px) */
+    width: calc(var(--step) * 12);
+    height: calc(var(--step) * 12);
+    /* Розмір іконки через сітку */
+    font-size: calc(var(--step) * 6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.youtube-facade:hover .play-btn {
+    background-color: hsla(0, 100%, 50%, 1);
+}
+
+/* Живий iframe, який з'являється після кліку */
+.youtube-iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    margin: var(--space-sm) 0;
+    border: none; /* Замінює інлайн frameborder="0" */
+}
+
+/* Зовнішні посилання */
+.external-link {
+    color: hsl(var(--theme-h), var(--theme-s), var(--l-primary));
+    text-decoration: underline;
+    text-underline-offset: var(--space-xs);
+    word-break: break-all;
+}

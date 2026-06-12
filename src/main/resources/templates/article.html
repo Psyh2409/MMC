@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section.article-view}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.article-view},
+      ~{::page-scripts}
+      )}">
 <head>
     <title th:text="${article.title} + ' | Психотерапія'">Назва статті</title>
 </head>
@@ -10,7 +14,7 @@
         <div class="article-meta">
             <span class="text-muted" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
             <span class="article-category"
-                  th:text="${allCategoriesMap[article.category] ?: article.category}">
+                  th:text="${allCategoriesMap != null ? allCategoriesMap[article.category] : article.category}">
                     Категорія
             </span>
         </div>
@@ -79,46 +83,10 @@
             <a href="/contact" class="btn-primary">Обговорити запит</a>
         </div>
     </footer>
-    <script>
-        function moveReplyForm(commentId) {
-            // 1. Шукаємо форму
-            const formBox = document.getElementById('main-comment-form-box');
-            if (!formBox) {
-                console.log("Форма не знайдена: користувач не авторизований");
-                return;
-            }
-
-            // 2. Шукаємо контейнер під коментарем
-            const targetContainer = document.getElementById('reply-form-container-' + commentId);
-
-            if (targetContainer) {
-                // 3. Переносимо форму в контейнер
-                targetContainer.appendChild(formBox);
-
-                // 4. Записуємо ID коментаря в приховане поле parentId
-                document.getElementById('parentIdInput').value = commentId;
-
-                // 5. Показуємо кнопку скасування і фокусуємось на тексті
-                document.getElementById('cancel-reply-btn').style.display = 'inline-block';
-                formBox.querySelector('textarea').focus();
-            } else {
-                console.error("Контейнер не знайдено для ID: " + commentId);
-            }
-        }
-
-        function resetReplyForm() {
-            // Повертаємо форму на початкове місце (перед списком коментарів)
-            const formBox = document.getElementById('main-comment-form-box');
-            const commentsList = document.getElementById('comments-container');
-
-            if (formBox && commentsList) {
-                // Вставляємо форму назад перед контейнером усіх коментарів
-                commentsList.parentNode.insertBefore(formBox, commentsList);
-
-                // Очищаємо ID (тепер це знову новий незалежний коментар)
-                document.getElementById('parentIdInput').value = '';
-                document.getElementById('cancel-reply-btn').style.display = 'none';
-            }
-        }
-    </script>
 </section>
+<th:block th:fragment="page-scripts">
+    <script src="/js/media-links.js" defer></script>
+    <script src="/js/article.js" defer></script>
+</th:block>
+</body>
+</html>
