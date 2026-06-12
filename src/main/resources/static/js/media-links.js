@@ -1,6 +1,6 @@
 // Оголошуємо глобальну функцію, щоб її міг викликати journal.js після fetch
 window.applyMediaFacades = function() {
-    const textContainers = document.querySelectorAll('.comment-text, .journal-post-text, .journal-post-content');
+    const textContainers = document.querySelectorAll('.comment-text, .article-content, .journal-post-text, .journal-post-content');
 
     textContainers.forEach(container => {
         if (container.dataset.linkified === 'true') return;
