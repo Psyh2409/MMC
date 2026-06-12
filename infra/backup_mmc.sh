@@ -31,4 +31,4 @@ git branch -a > history/all_branches.txt
 # Додаємо зміни до індексу та пушимо
 git add history/all_commits.txt history/all_branches.txt
 git commit -m "chore(infra): auto-update history via backup cron"
-git push origin media-links
+git push origin HEAD

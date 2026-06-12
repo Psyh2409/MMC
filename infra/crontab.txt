@@ -1,1 +1,2 @@
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 0 3 * * * /home/mentalmcenter/MMC/infra/backup_mmc.sh >> /home/mentalmcenter/MMC/backup_cron.log 2>&1
