@@ -1,23 +1,32 @@
 window.applyMediaFacades = function() {
-    // Всі класи контейнерів
-    const textContainers = document.querySelectorAll('.comment-text, article.content-section, .journal-post-text, .journal-post-content');
+    const textContainers = document.querySelectorAll('.comment-text, article.content-section, .journal-post-text, .journal-post-content'); //, #journalFeed, .journal-post-text, .journal-post-content, .journal-post-card, .journal-post-card.journal-post-text, .profile-main-content, .journal-section'
+    console.log(`[MediaLinks] 🟢 ЗАПУСК. Знайдено контейнерів для перевірки: ${textContainers.length}`);
 
-    const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
+    // Тільки 11 символів ID! Ніякого сміття.
+    const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
     const urlRegex = /(https?:\/\/[^\s<]+)/g;
 
-    function walkDOM(node) {
-        // Пропускаємо елементи, які ми вже створили (щоб не зациклитись)
-        if (node.classList && (node.classList.contains('youtube-facade') || node.classList.contains('image-facade-wrapper'))) return;
+    textContainers.forEach((container, index) => {
+        if (container.dataset.linkified === 'true') return;
+        console.log(`[MediaLinks] 👉 Аналізуємо контейнер №${index} (Клас: ${container.className})`);
 
-        // СЦЕНАРІЙ 1: Для СТАТЕЙ (де посилання вже загорнуті в тег <a> редактором)
-        if (node.tagName === 'A') {
-            const href = node.getAttribute('href');
-            if (!href || !href.startsWith('http')) return;
+        // ==========================================
+        // КРОК 1: ДЛЯ СТАТЕЙ (Шукаємо готові теги <a>)
+        // ==========================================
+        const links = Array.from(container.querySelectorAll('a'));
+        if (links.length > 0) {
+            console.log(`[MediaLinks]   Знайдено тегів <a>: ${links.length}`);
+        }
 
-            // Якщо це Ютуб - замінюємо тег <a> на плеєр
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
             const ytMatch = href.match(ytRegex);
             if (ytMatch) {
                 const videoId = ytMatch[1];
+                console.log(`[MediaLinks]   🎥 ЮТУБ В СТАТТІ! ID: ${videoId}. Замінюємо тег <a> на плеєр.`);
+
                 const facade = document.createElement('div');
                 facade.className = 'youtube-facade';
                 facade.setAttribute('data-video-id', videoId);
@@ -25,92 +34,82 @@ window.applyMediaFacades = function() {
                     <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="YouTube Video">
                     <button class="play-btn" aria-label="Play">▶</button>
                 `;
-                node.parentNode.replaceChild(facade, node);
-                return;
-            }
+                // Безпечна заміна без розриву HTML!
+                link.parentNode.replaceChild(facade, link);
+            } else if (!href.includes('img.youtube.com')) {
+                console.log(`[MediaLinks]   🖼 ІНШЕ ПОСИЛАННЯ В СТАТТІ: ${href}. Робимо спробу малюнка.`);
+                // Робимо малюнок. Якщо заблокує (CORB) - чистий JS перетворить його на лінк без style=""
+                const img = document.createElement('img');
+                img.src = href;
+                img.alt = "Медіа";
+                img.className = "external-image-preview";
+                img.setAttribute("onerror", "console.warn('[MediaLinks] ⚠️ Гугл заблокував малюнок! Робимо звичайний лінк:', this.src); this.replaceWith(Object.assign(document.createElement('a'), {href: this.src, textContent: this.src, className: 'external-link', target: '_blank'}));");
 
-            // Якщо не Ютуб - намагаємось зробити прев'ю малюнка (якщо малюнок битий - повернеться оригінальний лінк)
-            if (!href.includes('img.youtube.com')) {
-                const originalText = node.innerHTML;
-                const span = document.createElement('span');
-                span.className = 'image-facade-wrapper';
-                span.innerHTML = `
-                    <img src="${href}" alt="Preview" class="external-image-preview" style="max-width: 100%; border-radius: 8px; display: block; margin: 10px 0;"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <a href="${href}" target="_blank" class="external-link" style="display:none; word-break: break-all;">${originalText}</a>
-                `;
-                node.parentNode.replaceChild(span, node);
+                link.parentNode.replaceChild(img, link);
             }
-            return; // З тегом <a> закінчили
+        });
+
+        // ==========================================
+        // КРОК 2: ДЛЯ КОМЕНТАРІВ (Шукаємо "голий" текст)
+        // ==========================================
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+            // Пропускаємо тексти, які вже є посиланнями або всередині нашого відео
+            if (node.parentNode.tagName !== 'A' && !node.parentNode.closest('.youtube-facade') && !node.parentNode.closest('.external-image-preview')) {
+                textNodes.push(node);
+            }
         }
 
-        // СЦЕНАРІЙ 2: Для КОМЕНТАРІВ (де посилання - це просто "голий" текст)
-        if (node.nodeType === 3) {
-            const text = node.nodeValue;
-            if (!urlRegex.test(text)) return; // Якщо в тексті немає лінків - пропускаємо
+        textNodes.forEach(textNode => {
+            const text = textNode.nodeValue;
+            if (!urlRegex.test(text)) return;
 
-            const parent = node.parentNode;
-            if (parent && parent.tagName === 'A') return; // Захист: якщо текст вже всередині <a>, не чіпаємо
+            console.log(`[MediaLinks]   📝 Знайдено текст із посиланням: ${text.trim().substring(0, 30)}...`);
 
             const tempDiv = document.createElement('span');
             tempDiv.innerHTML = text.replace(urlRegex, (match) => {
                 const ytMatch = match.match(ytRegex);
                 if (ytMatch) {
                     const videoId = ytMatch[1];
+                    console.log(`[MediaLinks]   🎥 ЮТУБ В ТЕКСТІ! ID: ${videoId}`);
                     return `<div class="youtube-facade" data-video-id="${videoId}">
                                 <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="YouTube Video">
                                 <button class="play-btn" aria-label="Play">▶</button>
                             </div>`;
                 }
-                return `<span class="image-facade-wrapper">
-                            <img src="${match}" alt="Preview" class="external-image-preview" style="max-width: 100%; border-radius: 8px; display: block; margin: 10px 0;"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <a href="${match}" target="_blank" class="external-link" style="display:none; word-break: break-all;">${match}</a>
-                        </span>`;
+
+                console.log(`[MediaLinks]   🖼 СПРОБА МАЛЮНКА В ТЕКСТІ: ${match}`);
+                return `<img src="${match}" alt="Медіа" class="external-image-preview" onerror="console.warn('[MediaLinks] ⚠️ Малюнок не завантажився (Гугл/CORB)! Перетворюю на лінк:', this.src); this.replaceWith(Object.assign(document.createElement('a'), {href: this.src, textContent: this.src, className: 'external-link', target: '_blank'}));">`;
             });
 
-            // Замінюємо старий голий текст на наші нові елементи
             while (tempDiv.firstChild) {
-                parent.insertBefore(tempDiv.firstChild, node);
+                textNode.parentNode.insertBefore(tempDiv.firstChild, textNode);
             }
-            parent.removeChild(node);
-            return;
-        }
+            textNode.parentNode.removeChild(textNode);
+        });
 
-        // Йдемо вглиб HTML-дерева (перевіряємо кожен параграф, дів і т.д.)
-        if (node.nodeType === 1) {
-            Array.from(node.childNodes).forEach(child => walkDOM(child));
-        }
-    }
-
-    textContainers.forEach(container => {
-        if (container.dataset.linkified === 'true') return;
-        // Запускаємо наш обережний прохід по всім елементам всередині контенту
-        Array.from(container.childNodes).forEach(child => walkDOM(child));
         container.dataset.linkified = 'true';
     });
+    console.log(`[MediaLinks] 🛑 ОБРОБКУ ЗАВЕРШЕНО.`);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     window.applyMediaFacades();
 
-    // Делегування кліку для відтворення відео Ютуба
+    // Запуск відео при кліку
     document.body.addEventListener('click', (e) => {
         const facade = e.target.closest('.youtube-facade');
         if (!facade) return;
 
+        console.log(`[MediaLinks] ▶️ Клік по відео! Запускаємо iframe.`);
         const videoId = facade.getAttribute('data-video-id');
         const iframe = document.createElement('iframe');
         iframe.setAttribute('src', `https://www.youtube.com/embed/${videoId}?autoplay=1`);
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
         iframe.setAttribute('allowfullscreen', 'true');
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.position = 'absolute';
-        iframe.style.top = '0';
-        iframe.style.left = '0';
-        iframe.style.border = 'none';
-        iframe.style.borderRadius = 'var(--radius-md)';
+        iframe.className = 'youtube-iframe'; // Жодних інлайнових стилів!
 
         facade.innerHTML = '';
         facade.appendChild(iframe);

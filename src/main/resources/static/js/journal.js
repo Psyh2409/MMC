@@ -303,7 +303,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnSubmitMain.classList.add('hidden');
             });
         }
-
+//    if (typeof window.applyMediaFacades === 'function') {
+//            window.applyMediaFacades();
+//    }
 });
 
 /* =========================================
@@ -408,8 +410,26 @@ window.loadFeedPage = async function(page = 0, size = 5) {
         if (feedContainer) {
             // Замінюємо вміст контейнера на нову порцію постів з кнопками навігації
             feedContainer.innerHTML = htmlFragment;
+
+            console.log("--- DEBUG JOURNAL ---");
+            const feed = document.getElementById('journalFeed');
+            console.log("HTML всередині journalFeed:", feed ? feed.innerHTML.substring(0, 200) : "Контейнер не знайдено!");
+            // А тепер давай подивимось, що реально є на сторінці після вставки
+            const allDivs = document.querySelectorAll('div');
+            let found = false;
+            allDivs.forEach(d => {
+                if(d.classList.contains('journal-post-text')) {
+                    console.log("Знайдено блок з класом journal-post-text");
+                    found = true;
+                }
+            });
+            if(!found) console.log("Блоків з класом journal-post-text НЕМАЄ на сторінці!");
+
             if (typeof window.applyMediaFacades === 'function') {
-                            window.applyMediaFacades();
+//                 setTimeout(() => {
+                         window.applyMediaFacades();
+//                         console.log("[Journal] Автоматична обробка медіа запущена після паузи");
+//                     }, 50);
             }
         }
     } catch (err) {
