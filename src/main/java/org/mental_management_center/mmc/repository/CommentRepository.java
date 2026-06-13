@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
-    @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.article = :article AND c.parentComment IS NULL ORDER BY c.createdAt ASC",
+    @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.article = :article AND c.parentComment IS NULL ORDER BY c.createdAt DESC",
             countQuery = "SELECT COUNT(c) FROM Comment c WHERE c.article = :article AND c.parentComment IS NULL")
     Page<Comment> findTopLevelCommentsByArticle(@Param("article") Article article, Pageable pageable);
 
@@ -22,5 +22,5 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
             "LEFT JOIN FETCH c.replies r " +
             "LEFT JOIN FETCH r.author " +
             "WHERE c.article = :article AND c.parentComment IS NULL " +
-            "ORDER BY c.createdAt ASC")
+            "ORDER BY c.createdAt DESC")
     List<Comment> findCommentsWithTreeByArticle(@Param("article") Article article);}
