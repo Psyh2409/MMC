@@ -465,3 +465,19 @@ function renderAllMessages(targetId, chatType, messageArray) {
         showMessage(msg, targetId, chatType);
     });
 }
+
+// Автоматичне підхоплення медіа-фасадів для чату
+const chatObserver = new MutationObserver((mutations) => {
+    if (typeof window.applyMediaFacades === 'function') {
+        window.applyMediaFacades();
+    }
+});
+
+// Вішаємо спостерігача на обидві вкладки чату
+document.addEventListener('DOMContentLoaded', () => {
+    const pubArea = document.getElementById('chat-messages');
+    const privArea = document.getElementById('private-messages');
+
+    if (pubArea) chatObserver.observe(pubArea, { childList: true, subtree: true });
+    if (privArea) chatObserver.observe(privArea, { childList: true, subtree: true });
+});

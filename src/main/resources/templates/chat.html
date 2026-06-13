@@ -50,7 +50,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <meta name="current-user" th:content="${user.id}" />
-    <script th:src="@{/js/chat.js}"></script>
+    <script th:src="@{/js/media-links.js}" defer></script>
+    <script th:src="@{/js/chat.js}" defer></script>
 </th:block>
 
 </body>

@@ -1,5 +1,5 @@
 window.applyMediaFacades = function() {
-    const textContainers = document.querySelectorAll('.comment-text, article.content-section, .journal-post-text, .journal-post-content'); //, #journalFeed, .journal-post-text, .journal-post-content, .journal-post-card, .journal-post-card.journal-post-text, .profile-main-content, .journal-section'
+    const textContainers = document.querySelectorAll('.comment-text, article.content-section, .journal-post-text, .journal-post-content, .message-text'); //, #journalFeed, .journal-post-text, .journal-post-content, .journal-post-card, .journal-post-card.journal-post-text, .profile-main-content, .journal-section'
     console.log(`[MediaLinks] 🟢 ЗАПУСК. Знайдено контейнерів для перевірки: ${textContainers.length}`);
 
     // Тільки 11 символів ID! Ніякого сміття.
