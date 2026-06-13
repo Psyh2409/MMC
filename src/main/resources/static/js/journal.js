@@ -456,3 +456,14 @@ window.loadNotesPage = async function(page = 0, size = 10) {
         console.error('Невдалося оновити сторінку нотаток:', err);
     }
 };
+
+const observer = new MutationObserver((mutations) => {
+    if (typeof window.applyMediaFacades === 'function') {
+        window.applyMediaFacades();
+    }
+});
+
+const feed = document.getElementById('journalFeed');
+if (feed) {
+    observer.observe(feed, { childList: true, subtree: true });
+}
