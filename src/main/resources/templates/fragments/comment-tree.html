@@ -1,0 +1,34 @@
+<div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
+    <div class="comment-header">
+
+            <div class="avatar-circle avatar-xs">
+                <img th:if="${comment.author != null and comment.author.avatarFileName != null}"
+                 th:src="@{/api/media/{name}(name=${comment.author.avatarFileName})}"
+                 alt="Avatar">
+
+            <span th:unless="${comment.author != null and comment.author.avatarFileName != null}"
+                  th:text="${comment.author != null ? #strings.substring(comment.author.name, 0, 1).toUpperCase() : '❓'}">А</span>
+        </div>
+
+        <div class="comment-meta">
+            <strong th:text="${comment.author != null ? (comment.author.name ?: comment.author.email) : 'Анонім'}">Автор</strong>
+            <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+        </div>
+    </div>
+
+    <p th:text="${comment.content}" class="comment-text">Текст коментаря</p>
+
+    <div th:id="'reply-form-container-' + ${comment.id}" class="form-group"></div>
+
+    <button type="button"
+            class="btn-outline reply-action-btn"
+            th:data-comment-id="${comment.id}">
+        Відповісти
+    </button>
+
+    <div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
+        <div th:each="reply : ${comment.replies}">
+            <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
+        </div>
+    </div>
+</div>

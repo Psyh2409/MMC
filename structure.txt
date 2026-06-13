@@ -1,0 +1,254 @@
+Get-ChildItem -Include *.css, *.java -Recurse | ForEach-Object {
+>>     Write-Host "`n--- FILE: $($_.FullName) ---" -ForegroundColor Cyan
+>>     # Шукаємо класи в CSS та методи/змінні в Java одним махом
+>>     Select-String -Path $_.FullName -Pattern '(?<=\.)[a-zA-Z0-9_-]+(?=\s*\{)|(public|private|protected)\s+\w+\s+\w+\s*\(.*?\)' -AllMatches | ForEach-Object {
+>>         $_.Matches.Value.Trim()
+>>     }
+>> }
+
+
+Folder PATH listing
+Volume serial number is 0000008B F253:38D3
+C:.
+|   .env.example
+|   .gitattributes
+|   .gitignore
+|   desktop.ini
+|   mvnw
+|   mvnw.cmd
+|   pom.xml
+|   README.md
+|   src+pom_ MMC.zip
+|   structure.txt
+|   
++---.ai
+|   \---mcp
+|           mcp.json
+|           
++---.idea
+|   |   .gitignore
+|   |   compiler.xml
+|   |   dataSources.local.xml
+|   |   dataSources.xml
+|   |   encodings.xml
+|   |   jarRepositories.xml
+|   |   misc.xml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   \---dataSources
+|           data_sources_history.xml
+|           
++---.mvn
+|   \---wrapper
+|           maven-wrapper.properties
+|           
++---scripts
+|       start-ngrok-oauth.ps1
+|       
++---src
+|   +---main
+|   |   +---java
+|   |   |   \---org
+|   |   |       \---mental_management_center
+|   |   |           \---mmc
+|   |   |               |   MentalManagementCenterApplication.java
+|   |   |               |   
+|   |   |               +---config
+|   |   |               |       OAuth2ClientConfig.java
+|   |   |               |       PasswordConfig.java
+|   |   |               |       SecurityConfig.java
+|   |   |               |       
+|   |   |               +---controller
+|   |   |               |       AuthController.java
+|   |   |               |       ContentController.java
+|   |   |               |       EncounterController.java
+|   |   |               |       GlobalModelAttributes.java
+|   |   |               |       IssueController.java
+|   |   |               |       RequestController.java
+|   |   |               |       TestController.java
+|   |   |               |       
+|   |   |               +---model
+|   |   |               |       Request.java
+|   |   |               |       SiteStats.java
+|   |   |               |       User.java
+|   |   |               |       
+|   |   |               +---repository
+|   |   |               |       RequestRepository.java
+|   |   |               |       SiteStatsRepository.java
+|   |   |               |       UserRepository.java
+|   |   |               |       
+|   |   |               \---service
+|   |   |                       CustomOAuth2UserService.java
+|   |   |                       CustomOidcUserService.java
+|   |   |                       CustomUserDetailsService.java
+|   |   |                       MyUserDetails.java
+|   |   |                       OAuth2Principal.java
+|   |   |                       RequestService.java
+|   |   |                       UserService.java
+|   |   |                       
+|   |   \---resources
+|   |       |   application.yaml
+|   |       |   
+|   |       +---static
+|   |       |   +---css
+|   |       |   |       style.css
+|   |       |   |       
+|   |       |   +---images
+|   |       |   |       hero-bg.jpg
+|   |       |   |       
+|   |       |   \---js
+|   |       |           admin.js
+|   |       |           
+|   |       \---templates
+|   |           |   about.html
+|   |           |   admin-users.html
+|   |           |   contact.html
+|   |           |   first-steps.html
+|   |           |   index.html
+|   |           |   login.html
+|   |           |   my-format.html
+|   |           |   register.html
+|   |           |   requests.html
+|   |           |   
+|   |           +---fragments
+|   |           |       footer.html
+|   |           |       header-footer.html
+|   |           |       header.html
+|   |           |       
+|   |           +---issues
+|   |           |       closeness-crisis.html
+|   |           |       default.html
+|   |           |       dialogue.html
+|   |           |       exit-nearby.html
+|   |           |       freedom-choice.html
+|   |           |       inner-calm.html
+|   |           |       new-meanings.html
+|   |           |       restore-resource.html
+|   |           |       
+|   |           \---layout
+|   |                   article-layout.html
+|   |                   base.html
+|   |                   
+|   \---test
+|       \---java
+|           \---org
+|               \---mental_management_center
+|                   \---mentalmanagementcenter
+|                           MentalManagementCenterApplicationTests.java
+|                           
+\---target
+    |   MentalManagementCenter-0.0.1-SNAPSHOT.jar
+    |   MentalManagementCenter-0.0.1-SNAPSHOT.jar.original
+    |   
+    +---classes
+    |   |   application.yaml
+    |   |   
+    |   +---org
+    |   |   \---mental_management_center
+    |   |       \---mmc
+    |   |           |   MentalManagementCenterApplication.class
+    |   |           |   
+    |   |           +---config
+    |   |           |       OAuth2ClientConfig.class
+    |   |           |       PasswordConfig.class
+    |   |           |       SecurityConfig.class
+    |   |           |       
+    |   |           +---controller
+    |   |           |       AuthController.class
+    |   |           |       ContentController.class
+    |   |           |       EncounterController.class
+    |   |           |       GlobalModelAttributes.class
+    |   |           |       IssueController.class
+    |   |           |       RequestController.class
+    |   |           |       TestController.class
+    |   |           |       
+    |   |           +---model
+    |   |           |       Request.class
+    |   |           |       SiteStats.class
+    |   |           |       User.class
+    |   |           |       
+    |   |           +---repository
+    |   |           |       RequestRepository.class
+    |   |           |       SiteStatsRepository.class
+    |   |           |       UserRepository.class
+    |   |           |       
+    |   |           \---service
+    |   |                   CustomOAuth2UserService.class
+    |   |                   CustomOidcUserService.class
+    |   |                   CustomUserDetailsService.class
+    |   |                   MyUserDetails.class
+    |   |                   OAuth2Principal.class
+    |   |                   RequestService.class
+    |   |                   UserService.class
+    |   |                   
+    |   +---static
+    |   |   +---css
+    |   |   |       style.css
+    |   |   |       
+    |   |   +---images
+    |   |   |       hero-bg.jpg
+    |   |   |       
+    |   |   \---js
+    |   |           admin.js
+    |   |           
+    |   \---templates
+    |       |   about.html
+    |       |   admin-users.html
+    |       |   contact.html
+    |       |   first-steps.html
+    |       |   index.html
+    |       |   login.html
+    |       |   my-format.html
+    |       |   register.html
+    |       |   requests.html
+    |       |   
+    |       +---fragments
+    |       |       footer.html
+    |       |       header-footer.html
+    |       |       header.html
+    |       |       
+    |       +---issues
+    |       |       closeness-crisis.html
+    |       |       default.html
+    |       |       dialogue.html
+    |       |       exit-nearby.html
+    |       |       freedom-choice.html
+    |       |       inner-calm.html
+    |       |       new-meanings.html
+    |       |       restore-resource.html
+    |       |       
+    |       \---layout
+    |               article-layout.html
+    |               base.html
+    |               
+    +---generated-sources
+    |   \---annotations
+    +---generated-test-sources
+    |   \---test-annotations
+    +---maven-archiver
+    |       pom.properties
+    |       
+    +---maven-status
+    |   \---maven-compiler-plugin
+    |       +---compile
+    |       |   \---default-compile
+    |       |           createdFiles.lst
+    |       |           inputFiles.lst
+    |       |           
+    |       \---testCompile
+    |           \---default-testCompile
+    |                   createdFiles.lst
+    |                   inputFiles.lst
+    |                   
+    +---surefire-reports
+    |       org.mental_management_center.mentalmanagementcenter.MentalManagementCenterApplicationTests.txt
+    |       TEST-org.mental_management_center.mentalmanagementcenter.MentalManagementCenterApplicationTests.xml
+    |       
+    \---test-classes
+        \---org
+            \---mental_management_center
+                \---mentalmanagementcenter
+                        MentalManagementCenterApplicationTests.class
+                        
+

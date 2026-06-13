@@ -1,0 +1,187 @@
+/* =========================================
+   TABLES SYSTEM 2.0 - ПОВНА АРХІТЕКТУРА
+   ========================================= */
+
+/* 1. КОНТЕЙНЕРИ ТА СКРОЛ */
+.table-responsive-wrapper,
+.table-scroll,
+.admin-list {
+    width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+    /*margin-top: var(--space-md);  Використовуємо токен замість calc */
+    border-radius: var(--radius-lg);
+}
+
+/* 2. БАЗОВА СТРУКТУРА */
+.admin-table,
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bg-main);
+    margin-top: var(--space-lg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-main);
+    table-layout: auto;
+    min-width: 38rem; /* Захист від стискання */
+}
+
+.data-table-compact {
+    border-radius: var(--radius-md);
+    box-shadow: none;
+}
+
+/* 3. ШАПКА (THEAD) */
+.admin-table thead tr,
+.data-table thead tr {
+    background-color: var(--bg-main);
+    text-align: left;
+    border-bottom: 0.125rem solid var(--border-color);
+}
+
+.admin-table th,
+.data-table th {
+    padding: var(--space-md);
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03rem;
+    font-family: 'Georgia', serif;
+    white-space: nowrap;
+}
+
+/* 4. ТІЛО (TBODY) ТА КОМІРКИ */
+.admin-table td,
+.data-table td {
+    padding: var(--space-md);
+    vertical-align: middle;
+    border-bottom: 0.0625rem solid var(--border-soft);
+    color: var(--text-main);
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.data-table-compact td {
+    padding: var(--space-sm);
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+/* 5. СПЕЦИФІКАЦІЯ UUID ТА ТЕКСТУ */
+.uuid-text {
+    display: inline-block;
+    max-width: 5rem; /* Рівно 20 кроків сітки */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    font-family: monospace;
+    font-size: 0.8em;
+    letter-spacing: 0.02rem;
+    color: var(--primary-color);
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.data-table-id {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.data-table-message,
+.title-cell,
+.title-cell-truncate {
+    max-width: 25rem; /* Обмеження довжини повідомлень/назв */
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--primary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 6. ІНТЕРАКТИВ ТА ДІЇ */
+.admin-table tbody tr:hover,
+.data-table tbody tr:hover {
+    background-color: var(--overlay-light);
+    transition: background-color 0.2s ease;
+}
+
+/* 1. Забираємо flex з комірки, повертаємо їй природну поведінку таблиці */
+.action-cell,
+.actions-column {
+    min-width: 7rem;
+    text-align: right;
+    vertical-align: middle;
+}
+
+/* 2. Робимо флекс-контейнером внутрішній div.
+      Кнопки стануть в ряд (row) з ідеальними відступами */
+.action-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Притискаємо кнопки вправо */
+    gap: var(--space-sm);
+}
+
+.admin-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    min-width: 10rem;
+}
+
+.uuid-cell {
+    max-width: calc(var(--space-xl) * 3);
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.uuid-cell:hover .btn-copy-uuid {
+    opacity: 1;
+}
+
+/*=================================================================================================================*/
+/* Чистий семантичний стандарт для таблиць в адмінці */
+.table-main {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.table-main th {
+    background-color: var(--bg-canvas);
+    color: var(--text-secondary);
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.table-main td {
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-primary);
+    border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.table-main tr:hover td {
+    background-color: var(--bg-elevated); /* Рядок підсвічується твоїм токеном */
+}
+
+/* Модифікатор інтерактивного рядка (Бардачок) */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+    background-color: var(--bg-elevated); /* Використовуємо твою змінну фону */
+}

@@ -1,0 +1,552 @@
+/* ==========================================================================
+   MMC FORMS SYSTEM - CLEANED & ATOMIC
+   ========================================================================== */
+
+/* --- БАЗОВІ ФОРМИ ТА ЛЕЙАУТ --- */
+.stack-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.stack-form-sans {
+    font-family: sans-serif;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--step) * 1.25);
+}
+
+.form-label,
+.form-group label {
+    display: block;
+    color: var(--text-primary);
+    font-weight: bold;
+    margin-bottom: var(--space-sm);
+}
+
+/* --- ІНПУТИ ТА ТЕКСТАРЕЇ (ЄДИНИЙ СТАНДАРТ) --- */
+.form-input{
+    width: 100%;
+    padding: calc(var(--step) * 3);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-input); /* Використовуємо правильний токен шару */
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/* СТАН ФОКУСУ */
+.form-input:focus{
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
+}
+
+/* --- ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК --- */
+.form-error-text,
+.error-text {
+    color: var(--status-error);
+    font-size: 0.9em;
+    margin-top: calc(var(--step) * 1.25);
+    font-weight: 500;
+    display: block;
+}
+
+.helper-text-centered {
+    text-align: center;
+    margin-top: calc(var(--step) * 6.25);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.helper-link {
+    color: var(--accent-primary);
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: calc(var(--step) * 0.5);
+    transition: color 0.2s ease;
+}
+
+.helper-link:hover {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+/* --- OAUTH ТА БЛОКИ АВТОРИЗАЦІЇ --- */
+.oauth-login-block {
+    margin-top: calc(var(--step) * 4.5);
+    width: 100%;
+}
+
+/* --- КНОПКИ АВТОРИЗАЦІЇ (OAuth) --- */
+.oauth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.oauth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.oauth-button:hover {
+    background-color: var(--bg-elevated);
+    transform: translateY(calc(var(--step) * -0.5));
+}
+
+.oauth-button-icon {
+    width: calc(var(--step) * 5);
+    height: calc(var(--step) * 5);
+}
+
+.oauth-divider {
+    position: relative;
+    margin: var(--space-sm) 0 var(--space-md);
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+
+.oauth-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: calc(var(--step) * 0.25) solid var(--bg-surface);
+}
+
+.oauth-divider span {
+    position: relative;
+    padding: 0 var(--space-sm);
+    background-color: var(--bg-canvas);
+}
+
+.oauth-disabled-google {
+    border-color: var(--bg-surface);
+}
+
+.oauth-disabled-note {
+    padding: var(--space-md);
+    border: calc(var(--step) * 0.25) dashed var(--border-soft);
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.oauth-disabled-note p {
+    margin: var(--space-sm) 0 0;
+}
+
+.oauth-disabled-note code {
+    padding: calc(var(--step) * 0.5) var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-surface);
+    color: var(--accent-primary);
+}
+
+/* --- АДМІНІСТРАТИВНІ МІКРО-ФОРМИ ТА ЛЕЙАУТ --- */
+.admin-action-form-inline {
+    margin-top: calc(var(--step) * 1.25);
+}
+
+.admin-actions {
+    margin-bottom: calc(var(--step) * 7.5);
+}
+
+.admin-form {
+    background-color: var(--bg-canvas);
+    padding: calc(var(--step) * 7.5);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--space-xs) var(--space-sm) var(--bg-overlay);
+}
+
+.admin-notes {
+    width: calc(var(--step) * 45);
+    height: calc(var(--step) * 12.5);
+    padding: calc(var(--step) * 1.25);
+    border-radius: var(--radius-sm);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9em;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-notes:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
+}
+
+/* --- КОНТЕЙНЕРИ ПАРОЛІВ --- */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* --- ПІДКАЗКИ ТА ДИНАМІЧНІ ПОЛЯ --- */
+.new-category-input,
+.hidden-category-field,
+.category-input-hidden {
+    display: none;
+}
+.new-category-input,
+.hidden-category-field {
+    margin-top: calc(var(--step) * 2.5);
+}
+
+/* --- ФОРМИ ЧАТУ ТА ПОВІДОМЛЕНЬ --- */
+.chat-form {
+    display: flex;
+    gap: calc(var(--step) * 2.5);
+    margin: 0;
+    align-items: flex-end;
+}
+
+.chat-form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: calc(var(--step) * 2.5);
+    background-color: var(--bg-canvas);
+    border-top: calc(var(--step) * 0.25) solid var(--border-soft);
+}
+
+.chat-textarea {
+    width: 100%;
+    min-height: calc(var(--step) * 15);
+    padding: calc(var(--step) * 3);
+    border: calc(var(--step) * 0.5) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.chat-textarea:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
+}
+
+/* --- ДОДАТКОВІ ФОРМ-ЕЛЕМЕНТИ --- */
+.contact-direct {
+    margin-top: var(--space-xl);
+    border-top: calc(var(--step) * 0.25) solid var(--border-soft);
+    padding-top: var(--space-lg);
+}
+
+.inline-form,
+.logout-form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.form-delete-account {
+    margin-top: var(--space-xs);
+    border-top: calc(var(--step) * 0.25) solid var(--border-soft);
+    padding-top: var(--space-sm);
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+/* --- ТВОЇ РІДНІ КЛАСИ ДЛЯ ОКА ПАРОЛЯ --- */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Відступ справа, щоб текст не заліз під око */
+/* forms.css - Єдине джерело для стилізації поля пароля */
+.password-container .form-input {
+    width: 100%;
+    /* Використовуємо системний токен замість хардкоду 3rem */
+    padding-right: calc(var(--step) * 10);
+}
+
+/* Твоя кнопка */
+.toggle-password-btn {
+    position: absolute;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.helper-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Контейнер для списку завантажених файлів */
+.media-queue {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    width: 100%;
+}
+
+/* Рядок завантаженого медіаелемента */
+.media-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-canvas, hsl(var(--theme-h) var(--theme-s) var(--l-bg-main)));
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--border-color, hsl(var(--theme-h) var(--theme-s) var(--l-border)));
+    gap: var(--space-md);
+}
+
+/* Назва оригінального файлу */
+.media-item-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Поле з кодом, яке зручно копіювати */
+.media-item-input {
+    font-family: monospace;
+    font-size: 0.85rem;
+    flex: 1;
+    background-color: var(--bg-main);
+    cursor: pointer;
+}
+
+/* Компактна та охайна Drop Zone */
+.file-drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-lg); /* Зменшили падінги, щоб зона не була роздутою */
+    width: 100%;
+    box-sizing: border-box; /* Захищає від роздування через внутрішні відступи */
+    border: 0.125rem dashed var(--border-color, hsl(var(--theme-h) var(--theme-s) var(--l-border)));
+    border-radius: var(--radius-md);
+    background-color: var(--bg-canvas, hsl(var(--theme-h) var(--theme-s) var(--l-bg-main)));
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    text-align: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+/* Стан наведення */
+.file-drop-zone.drag-over,
+.file-drop-zone:hover {
+    border-color: var(--accent-primary);
+    background-color: hsla(var(--theme-h), var(--theme-s), var(--l-primary), 0.04);
+}
+
+/* Ізольована іконка папки: тепер вона слухається лише цих правил */
+.drop-zone-icon {
+    display: block;
+    font-size: 1.5rem; /* Охайний відносний розмір */
+    line-height: 1;
+    margin-bottom: var(--space-xs); /* Жорстко відштовхує текст вниз, унеможливлюючи наїзд */
+}
+
+.file-drop-zone p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.file-drop-zone-trigger {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+/* Додатковий фікс для тексту обмежень під описом */
+.file-drop-zone .helper-text {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Абсолютно чистий від пікселів токен приховування інпуту у forms.css */
+.visually-hidden-input {
+    position: absolute;
+    width: 0.0625rem;
+    height: 0.0625rem;
+    padding: 0;
+    margin: -0.0625rem;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.profile-avatar-clickable {
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    position: relative;
+}
+
+.profile-avatar-clickable:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+}
+
+:root {
+    --border-width: 0.0625rem; /* Твоя "золота" міра замість 1px */
+}
+
+.edit-form-container {
+    border-top: var(--border-width) solid var(--l-border);
+    padding: var(--space-md);
+}
+
+.form-textarea {
+    width: 100%;
+    /* Товщина межі та її колір з твоїх токенів */
+    border: var(--border-width-thin, 0.0625rem) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    /* Забороняємо формі криво розтягуватись по горизонталі, тільки по вертикалі */
+    resize: vertical;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    /* Використовуємо твій квантовий крок для розрахунку товщини кільця фокусу */
+    box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--overlay-light);
+}
+
+/* Оптимізація зони прев'ю медіафайлу */
+.media-preview-area {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    min-height: 0; /* Запобігає утримуванню порожнього простору */
+}
+
+/* Обмеження розміру картинок/відео суворо у полі форми перед відправкою */
+.edit-media-preview .preview-img,
+.edit-media-preview .preview-video,
+.current-media-display .preview-img,
+.current-media-display .preview-video {
+    max-width: 12rem;
+    max-height: 12rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 0.1rem solid hsl(var(--theme-h), var(--theme-s), 80%);
+}
+
+.media-preview {
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    /* Додай ці два рядки: */
+    max-width: none;
+    height: 8rem;
+    border-radius: var(--radius-md);
+    margin-top: var(--space-xs);
+    border: 0.0625rem solid hsl(var(--theme-h), var(--theme-s), var(--l-border));
+}
+
+/* КАТЕГОРИЧНЕ РІШЕННЯ ДЛЯ СМУЖОК:
+   Якщо контейнер прев'ю порожній, він повністю виключається з рендерингу */
+.edit-media-preview:empty {
+    display: none;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+/* Якщо текстове поле з ім'ям файлу порожнє — ховаємо його */
+.file-name-display:empty {
+    display: none;
+}
+
+/* Перебиваємо глобальний margin-top від .form-actions виключно для кнопок у Journal */
+.right-actions.form-actions {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs); /* Відстань між кнопками Опублікувати та Скасувати */
+}
+
+/* І для повної ідеальності вирівнюємо лівий блок з медіафайлом */
+.left-actions {
+    display: flex;
+    align-items: center;
+}
+
+.left-actions label.btn-outline {
+    margin: 0; /* Прибираємо системні відступи лейбла */
+    display: inline-flex;
+    align-items: center;
+}

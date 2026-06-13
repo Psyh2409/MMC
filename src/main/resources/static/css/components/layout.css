@@ -1,0 +1,473 @@
+/* ==========================================================================
+   LAYOUT SYSTEM - АТОМАРНА ВЕРСІЯ (CLEANED)
+   Фокус: Тільки сітки, оболонки та контейнери.
+   ========================================================================== */
+
+/* --- 1. ГЛОБАЛЬНІ ОБОЛОНКИ --- */
+.page-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+}
+
+.main-content-shell {
+    display: block;
+}
+
+/* 1. ГЛОБАЛЬНИЙ КОНТРОЛЬ: Браузер — єдиний господар повзунка */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden; /* Захист від випадкового горизонтального скролу */
+    overflow-y: auto;   /* Дозволяємо лише один вертикальний повзунок */
+}
+
+/* 2. ГІГІЄНА КОНТЕЙНЕРІВ: Прибираємо жадібні внутрішні скроли */
+/* 1. Загальна логіка для "оболонок" сторінки */
+.page-shell,
+.main-content-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+/* 2. Специфічна логіка для головного робочого простору */
+.page-main {
+    flex: 1;
+    min-height: 100vh; /* Щоб збігалося з shell */
+    overflow: auto;    /* Окремий скрол для контенту */
+    box-sizing: border-box;
+
+    padding-top: var(--space-xl);
+    padding-bottom: calc(var(--space-xl) * 4);
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* --- 2. НОВІ СИСТЕМНІ СТАНДАРТИ (Замінять старі контейнери) --- */
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.layout-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.content-section {
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.action-group {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* --- 3. СТАРІ СИСТЕМНІ КОНТЕЙНЕРИ (Тимчасово залишаємо) --- */
+.standard-container {
+    max-width: calc(var(--step) * 175);
+    width: 90%;
+    margin: calc(var(--step) * 15) auto;
+    background-color: var(--bg-surface);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    box-shadow: 0 calc(var(--step) * 2.5) calc(var(--step) * 7.5) var(--bg-overlay);
+    box-sizing: border-box;
+}
+
+.standard-container-narrow {
+    max-width: calc(var(--step) * 150);
+    padding: var(--space-lg);
+}
+
+.standard-container-compact {
+    max-width: calc(var(--step) * 112);
+    padding: calc(var(--step) * 7.5);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 var(--space-xs) var(--space-sm) var(--shadow-main);
+}
+
+.standard-container-login {
+    max-width: calc(var(--step) * 100);
+    margin: calc(var(--step) * 20) auto;
+}
+
+/* --- 4. ШИРОКІ КОНТЕЙНЕРИ ТА ДАШБОРДИ --- */
+.home-services-inner,
+.content-with-sidebar,
+.admin-container {
+    max-width: calc(var(--step) * 300);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.standard-container-wide {
+    max-width: calc(var(--step) * 260);
+    width: 90%;
+    margin: calc(var(--step) * 15) auto;
+    padding: var(--space-xl);
+    background-color: var(--bg-canvas);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 calc(var(--step) * 2.5) calc(var(--step) * 7.5) var(--bg-overlay);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    min-height: calc(100vh - var(--space-xl) * 2);
+}
+
+/* --- 5. СІТКИ ТА ГРІДИ --- */
+.home-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(var(--step) * 88), 1fr));
+    gap: var(--space-lg);
+}
+
+.content-with-sidebar {
+    display: grid;
+    grid-template-columns: calc(var(--step) * 70) minmax(0, 1fr);
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+}
+
+/* --- 6. HERO СЕКЦІЇ --- */
+.home-hero, .steps-hero {
+    min-height: calc(var(--step) * 112);
+    padding: calc(var(--step) * 30) var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.home-hero {
+    background: linear-gradient(var(--shadow-main), var(--shadow-main)),
+                url('/images/hero-bg.jpg') center/cover;
+}
+
+.home-hero-title {
+    margin-bottom: var(--space-md);
+    font-size: calc(var(--step) * 14);
+    color: var(--bg-main);
+    text-shadow: calc(var(--step) * 0.5) calc(var(--step) * 0.5) var(--space-xs) var(--shadow-main);
+}
+
+.home-hero-subtitle {
+    margin-bottom: calc(var(--space-xl) * 1.5);
+    font-size: calc(var(--step) * 7);
+    font-style: italic;
+    color: var(--overlay-light);
+}
+
+/* --- 7. ФУТЕР --- */
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 6vh;
+    max-height: calc(var(--space-xl) + var(--space-md));
+    min-height: calc(var(--space-xl) + var(--space-xs));
+    background-color: var(--bg-navigation);
+    color: var(--text-navigation);
+    font-family: 'Georgia', serif;
+    border-top: calc(var(--step) * 0.5) solid var(--border-navigation);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.site-footer-inner {
+    width: 100%;
+    max-width: calc(var(--space-xl) * 30);
+    margin: 0 auto;
+    padding: 0 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-left, .footer-right { flex: 1; display: flex; align-items: center; }
+.footer-left { justify-content: flex-start; }
+.footer-right { justify-content: flex-end; }
+.footer-center { flex: 2; text-align: center; display: flex; justify-content: center; align-items: center; }
+
+/* --- 8. ПРОФІЛЬ ТА ДАШБОРД --- */
+.profile-dashboard {
+    display: grid;
+    grid-template-columns: calc(var(--step) * 80) 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.profile-user-info { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.profile-sidebar { display: flex; flex-direction: column; gap: var(--space-lg); }
+
+.profile-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    padding-left: var(--space-xl);
+}
+
+/* layout.css - Єдине джерело для .profile-divider */
+.profile-divider {
+    display: block;
+    width: 100%;
+    align-self: stretch; /* Гарантує розтягнення у flex-контейнері */
+    border: none;
+    border-top: calc(var(--step) * 0.25) solid var(--border-soft);
+    margin: var(--space-xl) 0; /* Обираємо XL як стандарт для секційного розділювача */
+}
+
+@media (max-width: 48rem) {
+    .profile-dashboard { grid-template-columns: 1fr; }
+    .profile-main-content { padding-left: 0; }
+}
+
+/* --- 9. JITSI ТА ВІДЕО СЕСІЇ --- */
+.video-main-frame {
+    flex: none;
+    width: 100%;
+    height: 55vh;
+    background-color: var(--bg-input);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--space-xs) calc(var(--step) * 3) var(--shadow-main);
+    overflow: hidden;
+    position: relative;
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+}
+
+#jitsi-container { width: 100%; height: 100%; flex-grow: 1; }
+
+.notes-bottom-panel {
+    flex: 1;
+    background-color: var(--bg-surface);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.therapy-textarea {
+    width: 100%;
+    flex-grow: 1;
+    min-height: calc(var(--step) * 40);
+    padding: var(--space-md);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    font-size: 1rem;
+}
+
+.therapy-textarea:focus { outline: none; border-color: var(--accent-primary); }
+
+.session-info-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-md);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    margin-bottom: var(--space-sm);
+    font-size: calc(var(--step) * 3.5);
+    color: var(--text-secondary);
+}
+
+/* --- 10. МОДАЛЬНІ ВІКНА --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
+    display: none !important;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal, 2000);
+}
+
+.modal-overlay.is-visible { display: flex !important; }
+
+.modal-content {
+    background-color: var(--bg-surface);
+    width: 85vw;
+    max-width: calc(var(--step) * 320);
+    height: 85vh;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    overflow-y: auto;
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    box-shadow: 0 calc(var(--step) * 5) calc(var(--step) * 10) hsla(var(--theme-h), var(--theme-s), 5%, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: var(--space-sm);
+    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
+}
+
+.profile-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+}
+
+/* ==========================================================================
+   TABS VISIBILITY LOGIC
+   ========================================================================== */
+.tab-pane {
+    display: none; /* За замовчуванням усі вкладки жорстко сховані */
+}
+
+.tab-pane.active {
+    display: block; /* Показуємо тільки ту, яка має клас active */
+}
+
+.journal-wall {
+    display: grid;
+    /* замість 300px -> 18rem (приблизно 288px) */
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+/* Базова анатомія ряду: робить елементи в лінію та дозволяє перенос */
+.button-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Дефолт: рознесення по краях */
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    width: 100%;
+}
+
+/* --- ПАНЕЛЬ КЕРУВАННЯ (DASHBOARD CARD) --- */
+.dashboard-hero-card {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    /*margin-bottom: var(--space-lg);*/
+    border: 0.0625rem solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Верхній рядок: розносимо по краях і центруємо по вертикалі */
+.hero-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.hero-text-block h2 {
+    margin: 0 0 var(--space-xs) 0; /* Прибираємо зайві відступи знизу */
+}
+
+.hero-description {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+/* Кнопки більше не прилипають до верху */
+.hero-global-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+/* Делікатний роздільник між інформацією та табличними фільтрами */
+.hero-divider {
+    border: none;
+    border-top: 0.0625rem solid var(--border-color);
+    margin: var(--space-md) 0;
+}
+
+/* Нижній рядок: розносимо статистику і фільтри */
+.hero-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Якщо екран малий, фільтри перескочать вниз */
+    gap: var(--space-md);
+}
+
+.hero-stats-group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* Робимо цифри схожими на акуратні бейджі */
+.stat-pill {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background-color: var(--bg-main);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--border-color);
+}
+
+.stat-pill b {
+    color: var(--text-main);
+    margin-left: 0.25rem;
+}
+
+.hero-filters-group {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+/* --- Модифікатори для текстових сторінок (перші кроки тощо) --- */
+
+/* Додає відступи та вирівнювання по центру для хедера */
+.header-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+/* Розширює стандартний контейнер для кращого читання тексту */
+.container-reading {
+    max-width: 90%;
+    margin: 0 auto;
+}

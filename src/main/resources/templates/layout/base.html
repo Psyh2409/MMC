@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent, pageScripts)">
+<head>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script>
+        (function() {
+            // 1. Читаємо збережені дані
+            var savedTheme = localStorage.getItem('app-theme');
+            var customHue = localStorage.getItem('custom-hue');
+            var customSat = localStorage.getItem('custom-sat');
+
+            // 2. ПЕРЕВІРКА: Якщо даних немає (Гість), вмикаємо Монохромну Класику
+            if (!savedTheme) {
+                document.documentElement.setAttribute('data-theme', 'custom');
+                document.documentElement.style.setProperty('--theme-h', '210');
+                document.documentElement.style.setProperty('--theme-s', '5%');
+            } else {
+                // 3. Якщо це повернувся АВТОР або КЛІЄНТ - відновлюємо їх колір
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'custom' && customHue) {
+                    document.documentElement.style.setProperty('--theme-h', customHue);
+                    document.documentElement.style.setProperty('--theme-s', customSat || '75%');
+                }
+            }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Психотерапія | Шлях до себе</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+</head>
+<body class="page-shell">
+
+<div th:replace="~{fragments/header :: header-fragment}"></div>
+
+<main class="page-main">
+    <div th:replace="${mainContent}"></div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer-fragment}"></div>
+
+<script th:src="@{/js/theme-switcher.js}"></script>
+
+<th:block th:replace="${pageScripts} ?: ~{}"></th:block>
+</body>
+</html>

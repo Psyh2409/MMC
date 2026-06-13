@@ -1,0 +1,1 @@
+.\scripts\start-ngrok-oauth.ps1 -PublicBaseUrl "[https://your-current-ngrok-domain.ngrok-free.dev](https://your-current-ngrok-domain.ngrok-free.dev)"

@@ -1,0 +1,61 @@
+.hidden { display: none; }
+
+/* Utilities: Borders */
+.border-top-main {
+    border-top: 0.0625rem solid var(--border-color);
+}
+
+.border-top-accent {
+    border-top: 0.125rem solid var(--accent-primary);
+}
+
+.border-top-muted {
+    border-top: 0.0625rem solid var(--text-muted);
+}
+
+/* Спеціальні рамки для карток (Issues) */
+.issue-border-main {
+    border-top: 0.5rem solid var(--accent-primary);
+}
+
+.issue-border-top-main {
+    border-top: 0.5rem solid var(--accent-primary);
+}
+
+.issue-border-secondary {
+    border-top: 0.375rem solid var(--accent-secondary);
+}
+
+.issue-border-top-muted {
+    border-top: 0.375rem solid var(--accent-secondary);
+}
+
+.hidden-element {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Додаємо правило для примусового переносу довгих рядків без пробілів */
+.text-break {
+    word-break: break-all;      /* Розбиває слово, якщо воно не вміщується */
+    overflow-wrap: break-word; /* Сучасний аналог word-wrap для коректної обробки */
+}
+
+/* --- СТАНИ (STATES) --- */
+/* Приховування елементів через природну специфічність */
+.is-hidden,
+tr.is-hidden {
+    display: none;
+}
+
+/* Глобальні утиліти вирівнювання (працюють для будь-якого Flex-контейнера) */
+.center {
+    justify-content: center;
+}
+
+.start {
+    justify-content: flex-start;
+}

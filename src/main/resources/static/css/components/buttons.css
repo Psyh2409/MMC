@@ -1,0 +1,219 @@
+/* ==========================================================================
+   BUTTONS SYSTEM - ЄДИНЕ ДЖЕРЕЛО ПРАВДИ
+   ========================================================================== */
+
+/* 1. ПРАЙМЕРІ: Головна дія (Надіслати, Зберегти) */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    line-height: 1;
+
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-0.0625rem); }
+
+/* 2. АУТЛАЙН: Другорядна дія (Скасувати, Назад) */
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0.0625rem solid var(--accent-primary);
+    color: var(--accent-primary);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+.btn-outline:hover {
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    transform: translateY(calc(var(--step) * -0.5));
+}
+
+/* 3. ДЕНДЖЕР: Небезпечна дія (Видалити, Бан) */
+.btn-danger {
+    background-color: var(--status-error);
+    color: var(--text-on-accent);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 4. САКСЕС: Дія схвалення (Дозволити) */
+.btn-success {
+    background-color: var(--status-success);
+    color: var(--text-on-accent);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Надійна зміна кольору тексту за рахунок специфічності ID (1-0-0) */
+#ptsr-link {
+    color: var(--text-on-accent);
+}
+
+/* ФІКС: Початковий стан кнопки — прихована за замовчуванням */
+#cancel-reply-btn {
+    display: none;
+    color: var(--accent-primary);
+}
+
+/* --- КНОПКА ПЕРЕМИКАННЯ ТЕМИ --- */
+.btn-theme-toggle {
+    background-color: transparent; /* Жорстко вбиваємо дефолтний білий фон */
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    color: var(--text-primary); /* Щоб іконка (якщо це SVG) брала колір теми */
+}
+
+.btn-theme-toggle:hover {
+    transform: scale(1.1); /* Легке збільшення при наведенні */
+    background-color: var(--bg-elevated); /* Легка підсвітка фону на ховері */
+}
+
+/* --- Компактні кнопки для чату/коментарів --- */
+.btn-sm {
+    padding: calc(var(--space-xs) * 0.7) var(--space-sm);
+    font-size: 0.85rem;
+    border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   PROFILE ACCOUNT DEACTIVATION BUTTONS (Pixel-free)
+   ========================================================================== */
+.btn-link-muted {
+    background: transparent;
+    border: none;
+    color: hsl(var(--text-muted-hsl, 0 0% 40%));
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+
+.btn-link-muted:hover {
+    color: hsl(var(--error-hsl, 0 85% 60%));
+}
+
+.btn-deactivate-submit {
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    background-color: transparent;
+    border: 0.0625rem solid hsl(var(--error-hsl, 0 85% 60%) / 0.4);
+    color: hsl(var(--error-hsl, 0 85% 60%));
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: var(--space-xs);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-deactivate-submit:hover {
+    background-color: hsl(var(--error-hsl, 0 85% 60%));
+    color: hsl(0 0% 100%);
+}
+
+/* Кнопка-іконка (✏️, ❌), яка адаптується під колір поточної теми */
+.btn-icon {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    color: hsl(var(--theme-h), var(--theme-s), 40%); /* Колір поточної теми */
+}
+
+.btn-icon:hover {
+    background-color: hsl(var(--theme-h), var(--theme-s), var(--l-border));
+}
+
+.admin-controls-wrapper .btn-sm,
+.admin-controls-wrapper .btn-outline {
+    width: 100%;
+    justify-content: center; /* Центруємо текст всередині кнопки */
+}
+
+/* Вирівнювання контейнера лівих дій у формах */
+.button-row .left-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* Змушуємо label (Медіафайл) виглядати і стояти точно як сусідні button */
+.button-row .left-actions label.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0; /* Прибираємо системні відступи лейблів, через які кнопка "підстрибує" */
+}
+
+/* Стандартизована, тонка та акуратна кнопка адмінки */
+.btn-admin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Відступ між текстом та іконкою */
+
+    /* Відносні відступи замість пікселів (Quantum Grid) */
+    padding: 0.5rem 1.25rem;
+
+    /* Геометрія кнопки */
+    font-family: inherit;
+    font-size: 0.875rem; /* Трохи менший, акуратний текст для адмінки */
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+
+    /* Колірні токени на HSL */
+    background-color: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    color: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
+
+    /* Акуратний радіус округлення */
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Ефект при наведенні */
+.btn-admin:hover {
+    background-color: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 5%));
+}
+
+/* Ефект при натисканні (прибирає пузатість і візуально "вдавлює" кнопку) */
+.btn-admin:active {
+    transform: scale(0.98);
+}

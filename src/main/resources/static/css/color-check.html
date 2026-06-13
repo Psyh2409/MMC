@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- Жорстко додаємо тему, щоб кольори підтягнулися без Spring -->
+<html lang="uk" data-theme="brown" data-mode="light">
+<head>
+    <meta charset="UTF-8">
+    <title>MMC Color Audit | Ревізія палітри</title>
+
+    <!-- ВИПРАВЛЕНО: шлях "./main.css", бо файл лежить в тій же папці -->
+    <link rel="stylesheet" href="./main.css">
+
+    <style>
+        /* Додаткові стилі для наочності аудиту */
+        .audit-container { padding: 2rem; max-width: 1000px; margin: 0 auto; background: var(--bg-canvas); min-height: 100vh; }
+        .color-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border-radius: 8px; overflow: hidden; margin-top: 20px; }
+        .color-table th, .color-table td { padding: 1rem; border: 1px solid var(--border-soft); text-align: left; color: var(--text-primary); }
+
+        /* Робимо ячейку з кольором великою та помітною */
+        .color-swatch {
+            width: 100px;
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid var(--border-soft);
+            display: block;
+        }
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        h1 { color: var(--text-primary); }
+    </style>
+</head>
+<body class="page-shell">
+<div class="audit-container">
+    <h1>Ревізія Квантової Палітри 2.0</h1>
+
+    <div class="controls">
+        <!-- Кнопки для швидкої перевірки тем прямо тут -->
+        <button onclick="document.documentElement.setAttribute('data-mode', 'light')" class="btn-accent-capsule">Денний режим</button>
+        <button onclick="document.documentElement.setAttribute('data-mode', 'dark')" class="btn-accent-capsule">Нічний режим</button>
+    </div>
+
+    <table class="color-table">
+        <thead>
+        <tr>
+            <th>Назва змінної (Token)[cite: 2, 3]</th>
+            <th>Значення / Роль''</th>
+            <th>Візуальна заливка</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 0. БРЕНД'' -->
+        <tr><td><code>--bg-main</code></td><td>#efebe9 (Підлога)</td><td style="background: var(--bg-main);"></td></tr>
+        <tr><td><code>--card-bg</code></td><td>#d7ccc8 (Картки)</td><td style="background: var(--card-bg);"></td></tr>
+        <tr><td><code>--primary-color</code></td><td>#6d4c41 (Бренд)</td><td style="background: var(--primary-color);"></td></tr>
+        <tr><td><code>--accent-color</code></td><td>#4e342e (Акцент)</td><td style="background: var(--accent-color);"></td></tr>
+
+        <!-- 1. ТИПОГРАФІКА'' -->
+        <tr><td><code>--text-main</code></td><td>#3e2723 (Основний)</td><td style="background: var(--text-main);"></td></tr>
+        <tr><td><code>--text-muted</code></td><td>#8d6e63 (Другорядний)</td><td style="background: var(--text-muted);"></td></tr>
+        <tr><td><code>--text-on-primary</code></td><td>#fbe9e7 (На кнопках)</td><td style="background: var(--text-on-primary);"></td></tr>
+        <tr><td><code>--border-color</code></td><td>#a1887f (Межі)</td><td style="background: var(--border-color);"></td></tr>
+
+        <!-- 2. ЕФЕКТИ'' -->
+        <tr><td><code>--shadow-main</code></td><td>rgba(62, 39, 35, 0.2)</td><td style="background: var(--shadow-main); border: 2px solid #000;"></td></tr>
+        <tr><td><code>--overlay-light</code></td><td>rgba(245, 240, 232, 0.4)</td><td style="background: var(--overlay-light); border: 2px solid #000;"></td></tr>
+
+        <!-- 3. СИГНАЛЬНІ СТАНИ'' -->
+        <tr><td><code>--danger-color</code></td><td>#d32f2f</td><td style="background: var(--danger-color);"></td></tr>
+        <tr><td><code>--danger-hover-bg</code></td><td>#ffcdd2</td><td style="background: var(--danger-hover-bg);"></td></tr>
+        <tr><td><code>--danger-hover-text</code></td><td>#b71c1c</td><td style="background: var(--danger-hover-text);"></td></tr>
+
+        <tr><td><code>--success-color</code></td><td>#2e7d32</td><td style="background: var(--success-color);"></td></tr>
+        <tr><td><code>--success-hover-bg</code></td><td>#c8e6c9</td><td style="background: var(--success-hover-bg);"></td></tr>
+        <tr><td><code>--success-hover-text</code></td><td>#1b5e20</td><td style="background: var(--success-hover-text);"></td></tr>
+
+        <tr><td><code>--warning-color</code></td><td>#f57c00</td><td style="background: var(--warning-color);"></td></tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

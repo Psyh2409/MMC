@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Автоматичний Генератор Логотипу MMC</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #111111;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .controls {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        button {
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #1b5e20;
+        }
+        canvas {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+            background: #161f26;
+            max-width: 512px; /* На екрані показуємо меншим для зручності, але скачається 1024 */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button onclick="downloadLogo()">📥 СКАЧАТИ ПРАВИЛЬНИЙ PNG (1024x1024)</button>
+    <p style="color: #aaa; font-size: 14px;">Натисни кнопку вище — файл згенерується машиною без помилок</p>
+</div>
+
+<canvas id="logoCanvas" width="1024" height="1024"></canvas>
+
+<script>
+    const canvas = document.getElementById('logoCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 1. Заливка фону (Твій фірмовий глибокий HSL колір)
+    ctx.fillStyle = 'hsl(210, 24%, 12%)';
+    ctx.fillRect(0, 0, 1024, 1024);
+
+    // 2. Налаштування тіні для об'єму емблеми
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 24;
+
+    // 3. Малюємо росток 🌿 по центру
+    ctx.font = '340px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🌿', 512, 440);
+
+    // 4. Скидаємо тінь, щоб текст був чітким і без бруду
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    // 5. Малюємо напис MMC (Контрастний білий)
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 96px system-ui, -apple-system, sans-serif';
+
+    // Робимо красивий інженерний розряд літер (letter-spacing) через вбудований інструмент канвасу
+    ctx.letterSpacing = '24px';
+    ctx.fillText('MMC', 524, 760); // Зсув 12px компенсує фінальний пробіл розряду
+
+    // Функція автоматичного завантаження
+    function downloadLogo() {
+        const link = document.createElement('a');
+        link.download = 'mmc-logo-1024.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+</script>
+</body>
+</html>

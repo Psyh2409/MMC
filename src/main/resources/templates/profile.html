@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts})}">
+<head>
+    <title>Мій Профіль | Психотерапія</title>
+</head>
+<body>
+
+<section class="standard-container-wide">
+    <h2 class="contact-intro-title">Особистий кабінет</h2>
+    <div class="profile-dashboard">
+
+        <aside class="profile-sidebar">
+
+            <div class="profile-card">
+                <div id="avatarContainer" class="avatar-circle avatar-md profile-avatar-clickable">
+                    <img th:if="${user.avatarFileName != null}"
+                         th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
+                         id="avatarImage"
+                         alt="User Avatar">
+
+                    <span th:unless="${user.avatarFileName != null}"
+                          id="avatarLetter"
+                          th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1).toUpperCase() : 'U'}">С</span>
+
+                    <input type="file" id="avatarFileInput" class="visually-hidden-input" accept="image/*">
+                </div>
+
+                <h3 class="profile-header-title" th:text="${user.name}">Ім'я</h3>
+                <div class="role-badge">
+                    <p><span th:text="${user.getPrimaryRoleName()}">USER</span></p>
+                </div>
+                <p class="text-muted">Технічні налаштування</p>
+
+                <hr class="profile-divider">
+
+                <h4 class="profile-section-title">Кольорова тема</h4>
+                <div class="theme-spectrum-container mb-sm">
+                    <input type="range" id="theme-slider" class="theme-spectrum-slider" min="0" max="360" value="15">
+                </div>
+                <div class="ptsr-mode-container">
+                    <button type="button" id="ptsr-link" class="btn-primary">Монохромна тема</button>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h4 class="profile-section-title">Дані профілю</h4>
+                <div th:if="${profileSuccess}" class="status-message status-success" th:text="${profileSuccess}"></div>
+
+                <form th:action="@{/profile}" th:object="${profileUpdateForm}" method="post" class="stack-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <div class="form-field">
+                        <label class="form-input-label">Email (Логін)</label>
+                        <input type="email" th:value="${user.email}" class="form-input" readonly disabled>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-input-label">Ім'я для відображення</label>
+                        <input type="text" th:field="*{name}" class="form-input" placeholder="Ім'я">
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-input-label">Телефон</label>
+                        <input type="text" th:field="*{phone}" class="form-input" placeholder="+380...">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Зберегти</button>
+                </form>
+
+                <hr class="profile-divider">
+
+                <h4 class="profile-section-title">Зміна пароля</h4>
+                <div th:if="${passwordSuccess}" class="status-message status-success" th:text="${passwordSuccess}"></div>
+
+                <form th:action="@{/profile/password}" th:object="${passwordChangeForm}" method="post" class="stack-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div class="form-field">
+                        <div class="password-container">
+                            <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Поточний пароль">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="password-container">
+                            <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Новий пароль">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="password-container">
+                            <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Підтвердіть новий">
+                            <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Оновити</button>
+                </form>
+
+                <hr class="profile-divider">
+
+                <div class="danger-zone">
+                    <button type="button" class="btn-primary" id="toggleDeactivationBtn">⚙️ Видалення акаунта</button>
+
+                    <div id="deactivationVault" class="tab-pane">
+                        <p class="text-muted text-sm mt-sm">
+                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої коментарі, нотатки та повідомлення на платформі.
+                        </p>
+
+                        <form th:action="@{/profile/request-deactivation}" method="post" class="mt-sm" onsubmit="return confirm('Ви впевнені, що хочете надіслати запит на деактивацію? Цю дію неможливо скасувати.');">
+                            <button type="submit" id="submitDeactivateBtn" class="btn-primary w-100">Запросити деактивацію</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="profile-main-content">
+
+            <nav class="tabs-navigation">
+                <button type="button" class="tab-button active" data-target="therapy-tab">Терапевтичний простір</button>
+                <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
+            </nav>
+
+            <div id="therapy-tab" class="tab-pane active">
+
+                <div th:if="${hasInvitation}" class="card-primary mb-md">
+                    <div class="invitation-text">
+                        <h3>Сесія активна</h3>
+                        <p>Ваш терапевт чекає на вас у кабінеті.</p>
+                    </div>
+                    <a th:href="${therapyRoomUrl}" class="btn-primary">Увійти в кабінет</a>
+                </div>
+
+                <div th:if="${professionalNotes != null}" class="journal-section mb-md">
+                    <div class="journal-header">
+                        <h3 class="heading-lg">Клінічний журнал (Тільки для фахівця)</h3>
+                    </div>
+                    <div class="journal-wall">
+                        <div th:each="note : ${professionalNotes}" class="journal-entry">
+                            <div class="note-header">
+                                <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                                <span class="note-person" th:text="${note.client.name}">Клієнт</span>
+                            </div>
+                            <p class="content-section" th:text="${note.content}">Зміст...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${myNotes != null and !myNotes.isEmpty()}" class="layout-container">
+                    <h3 class="heading-lg">Мій журнал (Нотатки з терапії)</h3>
+
+                    <div id="notesContainer" th:fragment="notesList">
+                        <div class="layout-stack">
+                            <div th:each="note : ${myNotes}" class="card-primary note-interactive-card">
+                                <details class="journal-details">
+                                    <summary class="journal-summary">
+                                        <div class="note-header">
+                                            <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                            <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
+                                        </div>
+                                        <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
+                                    </summary>
+
+                                    <div class="journal-expand-box">
+                                        <form th:id="'editForm-' + ${note.id}" th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
+                                            <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
+                                            <div class="button-row">
+                                                <button type="submit" class="btn-primary">Зберегти зміни</button>
+                                                <button type="submit" th:form="'deleteForm-' + ${note.id}" class="btn-outline">Видалити нотатку</button>
+                                            </div>
+                                        </form>
+                                        <form th:id="'deleteForm-' + ${note.id}" th:action="@{/profile/notes/delete/{id}(id=${note.id})}" method="post" onsubmit="return confirm('Ви впевнені?');" class="hidden-element"></form>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+
+                        <div th:if="${totalNotesPages > 1}" class="button-row pagination-row">
+                            <button th:if="${currentNotesPage > 0}"
+                                    th:onclick="'window.loadNotesPage(' + (${currentNotesPage} - 1) + ')'"
+                                    class="btn-outline btn-sm">Попередня</button>
+
+                            <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentNotesPage} + 1) + ' з ' + ${totalNotesPages}">Сторінка 1</span>
+
+                            <button th:if="${hasMoreNotes}"
+                                    th:onclick="'window.loadNotesPage(' + (${currentNotesPage} + 1) + ')'"
+                                    class="btn-outline btn-sm">Наступна</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${myNotes == null or myNotes.isEmpty()}" class="profile-empty-state">
+                    <div class="icon">📝</div>
+                    <p>У вас поки немає збережених записів.</p>
+                </div>
+            </div>
+
+            <div id="journal-tab" class="tab-pane">
+                <div class="journal-section">
+                    <div class="journal-header">
+                        <h3 class="heading-lg">Мій простір рефлексії</h3>
+                        <p class="text-sm text-muted">🔒 AES-256 та GZIP стиснення</p>
+                    </div>
+                    <div th:replace="~{fragments/journal-form :: journalForm(isEdit=false, postId=null, content='')}"></div>
+                    <div id="journalFeed">
+                        <div th:replace="~{fragments/journal-form :: journalFeed}"></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</section>
+
+<th:block th:fragment="page-scripts">
+    <script src="/js/media-links.js" defer></script>
+    <script src="/js/journal.js" defer></script>
+</th:block>
+</body>
+</html>

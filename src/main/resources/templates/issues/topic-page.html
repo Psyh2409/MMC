@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.standard-container-wide},
+      ~{}
+      )}">
+<head>
+    <title th:text="${topicTitle} + ' | Психотерапія та самопізнання'">Назва розділу</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide layout-stack">
+    <header class="section-header">
+        <h1 class="page-title-accent" th:text="${allCategoriesMap[topic] ?: topicTitle}">Заголовок розділу</h1>
+        <p class="heading-lg">Матеріали, присвячені цій темі</p>
+    </header>
+
+    <div class="articles-grid">
+        <div class="article-card" th:each="article : ${articles}">
+            <div class="article-card-meta">
+                <span th:text="${#temporals.format(article.publishedAt, 'dd.MM.yyyy')}">01.01.2024</span>
+                <span class="category-badge" th:text="${article.categoryTranslation?.displayName ?: article.category}">Категорія</span>
+            </div>
+
+            <h2 class="article-card-title">
+                <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок статті</a>
+            </h2>
+
+            <div class="article-tags" th:if="${not #lists.isEmpty(article.tags)}" style="margin-bottom: 10px;">
+                <span th:each="tag : ${article.tags}" th:text="'#' + ${tag}"
+                      style="font-size: 0.8rem; color: #8b7355; margin-right: 8px;"></span>
+            </div>
+
+            <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
+
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="nav-link">Читати далі →</a>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(articles)}" class="empty-state">
+        <p>Наразі статтей у цьому розділі немає, але вони скоро з'являться.</p>
+    </div>
+</section>
+</body>
+</html>

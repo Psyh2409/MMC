@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Центр керування — Клієнти</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide admin-shell">
+    <div class="dashboard-hero-card">
+        <div class="hero-top-row">
+            <div class="hero-text-block">
+                <h2 class="page-title-accent">Центр керування користувачами</h2>
+                <p class="hero-description">Керуйте ролями, доступами та внутрішніми нотатками.</p>
+            </div>
+            <div class="hero-global-actions">
+                <a th:href="@{/admin/articles}" class="btn-outline">📝 Статті</a>
+                <a th:href="@{/requests}" class="btn-outline">📂 Бардачок</a>
+            </div>
+        </div>
+
+        <hr class="hero-divider">
+
+        <div class="hero-bottom-row">
+            <div class="hero-stats-group">
+                <span class="stat-pill">Читачі: <b th:text="${countUsers}">0</b></span>
+                <span class="stat-pill">У терапії: <b th:text="${countClients}">0</b></span>
+                <span class="stat-pill">Візити: <b th:text="${totalVisits}">0</b></span>
+            </div>
+
+            <div class="hero-filters-group">
+                <button onclick="filterTable('ALL')" class="btn-primary btn-sm" type="button">Всі</button>
+                <button onclick="filterTable('ADMIN')" class="btn-primary btn-sm" type="button">Адмін</button>
+                <button onclick="filterTable('THERAPIST')" class="btn-primary btn-sm" type="button">Колеги</button>
+                <button onclick="filterTable('CLIENT')" class="btn-primary btn-sm" type="button">Клієнти</button>
+                <button onclick="filterTable('READER')" class="btn-primary btn-sm" type="button">Читачі</button>
+            </div>
+        </div>
+    </div>
+    <div th:if="${param.success}" class="status-message status-success">Дію виконано успішно.</div>
+    <div th:if="${param.error}" class="status-message status-error" th:text="${param.error}">Не вдалося.</div>
+
+    <div class="table-scroll">
+    <table class="data-table data-table-compact">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ім'я</th>
+            <th>E-mail</th>
+            <th>Роль</th>
+            <th>Дата реєстрації</th>
+            <th>Нотатки терапевта</th>
+            <th>Дії</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${allUsers}" th:attr="data-role=${u.primaryRoleName}">
+            <td class="uuid-cell">
+                <th:block th:if="${u != null and u.id != null}">
+                    <span class="uuid-text" th:text="${u.id}">ID</span>
+                    <button type="button" class="btn-outline"
+                            th:attr="onclick=|copyToClipboard('${u.id}')|">
+                        📋
+                    </button>
+                </th:block>
+            </td>
+            <td th:text="${u.name}"></td>
+            <td th:text="${u.email}"></td>
+
+            <!-- Знаходимо стовпець "Роль" у твоїй таблиці -->
+            <td>
+                <!-- Відображення текстової ролі -->
+                <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
+
+                <!-- ЛОГІКА ПЕРЕМИКАННЯ КНОПОК -->
+
+                <!-- ВАРІАНТ А: Користувач ще не клієнт (Читач) — показуємо кнопку підвищення -->
+                <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
+                      th:action="@{/admin/promote/{id}(id=${u.id})}"
+                      method="post"
+                      class="admin-action-form-inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn-outline">Працювати</button>
+                </form>
+
+                <!-- ВАРІАНТ Б: Користувач вже КЛІЄНТ — на тому ж місці з'являється кнопка Відеоконнекту -->
+                <div th:if="${u.isClient()}" class="admin-action-form-inline">
+                    <a th:href="@{/therapy/room/{id}(id=${u.id})}"
+                       class="btn-primary btn-admin"
+                       target="_blank"
+                       onclick="return handleVideoStart(this);">Відео чат</a>
+                </div>
+            </td>
+
+            <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
+
+            <td>
+                <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <textarea name="notes"
+                              th:text="${u.adminNotes}"
+                              placeholder="Додайте коментар..."
+                              class="admin-notes"></textarea>
+                    <br>
+                    <button type="submit" class="btn-primary">Зберегти</button>
+                </form>
+            </td>
+
+            <td>
+                <div class="admin-controls-wrapper" th:if="${!u.isAdmin()}">
+
+                    <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.enabled}">
+                            <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.chatEnabled}">
+                            <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/toggle-comments/{id}(id=${u.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-primary btn-sm" th:data-active="${u.commentsEnabled}">
+                            <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
+                          class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn-outline btn-sm">Видалити</button>
+                    </form>
+
+                </div>
+                <span th:if="${u.isAdmin()}" class="admin-badge-self">Адміністратор (Ви)</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/admin.js}"></script>
+</th:block>
+</body>
+</html>

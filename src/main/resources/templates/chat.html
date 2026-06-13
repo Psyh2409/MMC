@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+        ~{::title},
+        ~{::#chat-content},
+        ~{::#chat-scripts}
+      )}">
+<head>
+    <title>Спільний простір MMC</title>
+</head>
+<body>
+
+<div id="chat-content">
+    <div class="standard-container">
+        <h2 class="section-title">Спільний простір MMC</h2>
+
+        <div id="chat-panel" class="layout-container">
+
+            <div class="button-row">
+                <button type="button" id="tab-public" class="btn-primary" onclick="switchChat('public')">
+                    🌐 Спільнота
+                </button>
+                <button type="button" id="tab-private" class="btn-outline" onclick="switchChat('private')">
+                    🔒 Приватні
+                    <span id="private-badge" class="badge hidden">0</span>
+                </button>
+            </div>
+            <div id="chat-messages" class="chat-window">
+            </div>
+
+            <div id="private-messages" class="chat-window hidden">
+            </div>
+
+            <div id="reply-preview" class="reply-preview-bar hidden">
+                <span id="reply-to-text"></span>
+                <button type="button" onclick="cancelReply()" class="btn-outline">✕</button>
+            </div>
+
+            <form id="messageForm" class="chat-form-vertical">
+                <textarea id="messageInput" class="chat-textarea" placeholder="Напишіть повідомлення..." rows="3" required></textarea>
+                <button type="submit" class="btn-primary">
+                    <span>Надіслати</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block id="chat-scripts">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <meta name="current-user" th:content="${user.id}" />
+    <script th:src="@{/js/media-links.js}" defer></script>
+    <script th:src="@{/js/chat.js}" defer></script>
+</th:block>
+
+</body>
+</html>

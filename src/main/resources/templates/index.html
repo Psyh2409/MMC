@@ -1,14 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.main-content-shell}, ~{})}">
+<!--      layout:decorate="~{layout}">-->
+
+
 <head>
-    <title>Meine Website</title>
-    <meta charset="UTF-8">
+    <title>Шлях до себе — Психологічна допомога та медіація</title>
 </head>
 <body>
+<div class="main-content-shell">
+    <main>
+        <section class="home-hero">
+            <h1 class="home-hero-title">Будь-який шлях веде до себе</h1>
+            <p class="home-hero-subtitle">і цей — найкоротший.</p>
 
-<h1 th:text="${message}"></h1>
+            <div th:if="${userName == null}">
+                <a th:href="@{/register}" class="btn-primary">Почати свій шлях</a>            </div>
 
-<p>Dies ist mein erster Schritt zur Erstellung einer Webseite.</p>
+            <div th:if="${userName != null}">
+                <p class="home-hero-return">Радий твоему поверненню до роботи над собою.</p>
+            </div>
+        </section>
 
+        <section class="home-services">
+            <div class="home-services-inner">
+                <h2 class="home-section-title">З чим ми працюємо</h2>
+
+                <div class="home-services-grid">
+                    <a href="/issues/inner-calm" class="nav-link">
+                        <div class="home-service-card">
+                            <h3>Тривога та панічні стани</h3>
+                            <p>Повернення внутрішньої опори, робота з панічними атаками та хронічним напруженням.</p>
+                        </div>
+                    </a>
+
+                    <a href="/issues/restore-resource" class="nav-link">
+                        <div class="home-service-card border-top-main">
+                            <h3>Вигорання та ресурс</h3>
+                            <p>Коли "батарейка" на нулі. Пошук джерел енергії та вихід із емоційного виснаження.</p>
+                        </div>
+                    </a>
+
+                    <a href="/issues/closeness-crisis" class="nav-link">
+                        <div class="home-service-card border-top-accent">
+                            <h3>Кризи близькості</h3>
+                            <p>Стосунки, що зайшли у глухий кут. Робота з самотністю вдвох та відновленням зв'язку.</p>
+                        </div>
+                    </a>
+
+                    <a href="/issues/new-meanings" class="nav-link">
+                        <div class="home-service-card border-top-muted">
+                            <h3>Депресія та сенси</h3>
+                            <p>Там, де зникли барви. Трансформація депресивних станів у нову глибину розуміння себе.</p>
+                        </div>
+                    </a>
+
+                    <a href="/issues/freedom-choice" class="nav-link">
+                        <div class="home-service-card border-top-accent">
+                            <h3>Залежна поведінка</h3>
+                            <p>Робота з механізмами втечі від реальності. Повернення права на вільний вибір.</p>
+                        </div>
+                    </a>
+
+                    <a href="/issues/exit-nearby" class="nav-link">
+                        <div class="home-service-card border-top-muted">
+                            <h3>Коли здається, що виходу нема</h3>
+                            <p>Тупик як початок нового шляху. Пошук дверей там, де раніше бачилася лише стіна.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

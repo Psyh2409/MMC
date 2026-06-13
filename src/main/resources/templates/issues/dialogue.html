@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.issue-content}, ~{})}">
+<head>
+    <title th:text="${topicTitle}">Конфлікти та медіація</title>
+</head>
+<body>
+<div class="content-section">
+    <main class="issue-shell">
+        <article class="issue-article">
+            <h1 class="issue-title" th:text="${topicTitle}">Конфлікти та медіація</h1>
+
+            <p class="issue-intro">
+                Конфлікт — це не завжди війна. Це зіткнення двох різних реальностей, кожна з яких має право на існування. Проблема виникає не тоді, коли ми сперечаємося, а тоді, коли ми перестаємо бачити в опонентові людину.
+            </p>
+
+            <div class="issue-callout issue-callout-left">
+                <h3>Роль медіатора: Нейтральна територія</h3>
+                <p>
+                    У медіації я не виступаю суддею. Я не вирішую, хто правий, а хто винен. Моє завдання — створити <strong>безпечний простір</strong>, де кожен може висловити свій біль і свої потреби.
+                </p>
+            </div>
+
+            <h2 class="issue-section-title">З чим ми працюємо?</h2>
+            <div class="issue-grid">
+                <div class="issue-grid-card"><strong>Сімейні розбіжності:</strong> Побут і старі образи, що заважають бачити майбутнє.</div>
+                <div class="issue-grid-card"><strong>Професійні конфлікти:</strong> Напруга в команді, що руйнує продуктивність.</div>
+                <div class="issue-grid-card"><strong>Внутрішні конфлікти:</strong> Боротьба між "треба" і "хочу", яка забирає сили.</div>
+                <div class="issue-grid-card"><strong>Кризові переговори:</strong> Коли емоції на межі, а рішення потрібне зараз.</div>
+            </div>
+
+            <div class="issue-quote issue-quote-large">
+                "Діалог починається не тоді, коли ми починаємо говорити, а тоді, коли ми стаємо здатні слухати."
+            </div>
+
+            <section class="issue-cta issue-cta-compact">
+                <p>Потрібен нейтральний простір для розмови?</p>
+                <a href="/contact" class="btn-primary">Запросити медіатора</a>
+            </section>
+        </article>
+    </main>
+</div>
+</body>
+</html>

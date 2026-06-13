@@ -1,0 +1,955 @@
+/* ==========================================================================
+   MMC COMPONENTS SYSTEM - ФІНАЛЬНА ЗБІРКА (БЕЗ ПІКСЕЛІВ ТА ХАРДКОДУ)
+   ========================================================================== */
+
+/* --- 1. КОНТЕЙНЕРИ СТАТЕЙ (ISSUE LAYOUT) --- */
+
+.issue-shell {
+    max-width: calc(var(--step) * 212); /* ~850px */
+    margin: var(--space-xl) auto 0;
+    padding: var(--space-lg);
+}
+
+.issue-article {
+    padding: calc(var(--step) * 12);
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-deep);
+    font-family: 'Georgia', serif;
+    color: var(--text-primary);
+}
+
+.issue-article-heavy {
+    padding: calc(var(--step) * 15);
+    box-shadow: var(--shadow-ultra);
+}
+
+/* Вторинний блок заклику до дії (CTA) */
+.issue-cta-secondary {
+    background-color: var(--bg-canvas);
+    border-color: var(--border-soft);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.issue-cta-secondary p {
+    color: var(--text-primary);
+}
+
+/* Декоративні акценти статей */
+.issue-border-top-contrast { border-top: calc(var(--step) * 2) solid var(--accent-primary); }
+.issue-border-left-primary { border-left: calc(var(--step) * 2) solid var(--accent-primary); }
+
+
+/* --- 2. СИСТЕМА КОМЕНТАРІВ (TREE STRUCTURE) --- */
+
+.comment-card-nested {
+    margin-top: var(--space-md);
+    border-left: calc(var(--step) * 0.5) solid var(--accent-primary);
+    padding-left: var(--space-md);
+    background-color: var(--bg-canvas);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.comment-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-md);
+    border: calc(var(--step) * 0.25) solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-canvas);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: var(--space-sm);
+    margin-top: var(--space-sm);
+    color: var(--text-primary);
+}
+
+/* Динамічна вкладеність (Змійка) */
+.depth-1 { margin-left: calc(var(--step) * 5); }
+.depth-2 { margin-left: calc(var(--step) * 10); }
+.depth-3 { margin-left: calc(var(--step) * 15); }
+.depth-4 { margin-left: calc(var(--step) * 20); }
+
+
+/* --- 3. ЧАТ ТА ПОВІДОМЛЕННЯ (REAL-TIME UI) --- */
+
+.message-box {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message-mine, .message-out {
+    align-self: flex-end;
+    background-color: var(--bg-surface-alt);
+    border: calc(var(--step) * 0.25) solid var(--success-color);
+    color: var(--text-main);
+}
+
+.message-others, .message-in {
+    align-self: flex-start;
+    background-color: var(--bg-surface);
+    border: calc(var(--step) * 0.25) solid var(--border-color);
+}
+
+
+/* --- 4. ЕЛЕМЕНТИ ІНТЕРФЕЙСУ (UI UTILS) --- */
+
+.reply-preview-bar {
+    background-color: var(--bg-surface-alt);
+    padding: var(--space-xs) var(--space-md);
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: calc(var(--step) * 0.25) solid var(--border-color);
+}
+
+.date-separator {
+    text-align: center;
+    margin: var(--space-lg) 0;
+    border-bottom: calc(var(--step) * 0.25) solid var(--card-bg);
+    line-height: 0.1rem;
+}
+
+.date-separator span {
+    background-color: var(--bg-canvas);
+    padding: 0 var(--space-md);
+    color: var(--primary-color);
+    font-size: calc(var(--step) * 3.5);
+    font-style: italic;
+}
+
+/* --- Badges --- */
+.badge {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    font-size: calc(var(--step) * 3.5);
+    font-weight: 500;
+}
+.badge-admin { background-color: var(--bg-canvas); color: var(--accent-primary); border: calc(var(--step) * 0.25) solid var(--border-strong); }
+.badge-therapist { background-color: var(--bg-surface); color: var(--accent-primary); }
+.badge-client { background-color: var(--accent-primary); color: var(--bg-canvas); }
+.badge-reader { background-color: var(--border-soft); color: var(--text-primary); }
+.category-badge { font-size: calc(var(--step) * 3.5); color: var(--text-primary); font-family: monospace; display: block; margin-top: var(--space-xs); }
+
+/* --- Steps & Issues --- */
+.steps-text-block { max-width: calc(var(--space-xl) * 20); margin: calc(var(--space-xl) * 1.25) auto; padding: 0 var(--space-lg); color: var(--accent-primary); line-height: 1.8; font-family: 'Georgia', serif; }
+.steps-pull-quote { margin: calc(var(--space-lg) * 1.25) 0; padding-left: var(--space-lg); border-left: calc(var(--step) * 0.75) solid var(--border-strong); font-style: italic; }
+.steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--space-md) * 2); }
+.steps-summary { max-width: calc(var(--space-xl) * 20); margin: var(--space-xl) auto; padding: 0 var(--space-lg); text-align: center; }
+.steps-summary p { color: var(--accent-primary); font-size: calc(var(--step) * 4.5); font-weight: bold; }
+
+.issue-intro { margin-top: calc(var(--space-md) * 2); color: var(--accent-primary); font-size: calc(var(--step) * 5); line-height: 1.9; }
+.issue-intro-deep { color: var(--text-primary); font-size: calc(var(--step) * 5); }
+.issue-intro-secondary { color: var(--accent-primary); font-size: calc(var(--step) * 5); }
+.issue-text { color: var(--accent-primary); line-height: 1.8; }
+.issue-text-deep { color: var(--text-primary); }
+.issue-text-secondary { color: var(--accent-primary); }
+.issue-text-spaced { margin-bottom: var(--space-lg); }
+.issue-text-end { margin-bottom: var(--space-xl); }
+
+.issue-callout-right { border-right: calc(var(--step) * 1.25) solid var(--border-strong); border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.issue-callout-bordered { border: calc(var(--step) * 0.25) solid var(--bg-canvas); color: var(--text-primary); }
+
+/* --- Dashboard & Admin --- */
+.dashboard-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.admin-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    justify-content: space-between;
+    margin-bottom: calc(var(--step) * 6);
+}
+
+.admin-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    justify-content: flex-start;
+}
+
+.issue-link-secondary {
+    color: var(--accent-primary);
+}
+
+.replies-container {
+    margin-top: calc(var(--step) * 3.75);
+    margin-left: calc(var(--step) * 6.25);
+    padding-left: calc(var(--step) * 5);
+    border-left: calc(var(--step) * 0.5) solid var(--border-soft);
+}
+
+/* --- 5. КОМПОНЕНТИ ПРОФІЛЮ ТА СЛАЙДЕР ТЕМ --- */
+
+.profile-section-title {
+    font-size: calc(var(--step) * 4.5);
+    margin: 0 0 var(--space-md) 0;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+}
+
+.profile-header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-header-title {
+    margin: 0 0 var(--space-xs) 0;
+    font-size: calc(var(--step) * 7);
+    color: var(--text-primary);
+}
+
+.theme-switcher-desc {
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-md) 0;
+    font-size: calc(var(--step) * 3.5);
+}
+
+.theme-switcher-grid {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.theme-dot {
+    width: calc(var(--step) * 10);
+    height: calc(var(--step) * 10);
+    border-radius: var(--radius-full);
+    border: calc(var(--step) * 0.75) solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    padding: 0;
+}
+
+.theme-dot:hover,
+.theme-dot.active-theme {
+    transform: scale(1.15);
+}
+
+.theme-dot.active-theme {
+    border-color: var(--text-primary);
+}
+
+/* Мапінг статичної палітри спектру */
+.theme-dot[data-theme-value="brown"]      { background-color: hsl(15, 25%, 50%); }
+.theme-dot[data-theme-value="red"]        { background-color: hsl(0, 65%, 50%); }
+.theme-dot[data-theme-value="red-orange"] { background-color: hsl(14, 100%, 50%); }
+.theme-dot[data-theme-value="orange"]     { background-color: hsl(33, 98%, 50%); }
+.theme-dot[data-theme-value="amber"]      { background-color: hsl(45, 100%, 50%); }
+.theme-dot[data-theme-value="yellow"]     { background-color: hsl(54, 98%, 50%); }
+.theme-dot[data-theme-value="lime"]       { background-color: hsl(64, 60%, 50%); }
+.theme-dot[data-theme-value="green"]      { background-color: hsl(123, 46%, 50%); }
+.theme-dot[data-theme-value="teal"]       { background-color: hsl(174, 100%, 40%); }
+.theme-dot[data-theme-value="light-blue"] { background-color: hsl(199, 97%, 50%); }
+.theme-dot[data-theme-value="blue"]       { background-color: hsl(216, 85%, 50%); }
+.theme-dot[data-theme-value="indigo"]     { background-color: hsl(231, 50%, 50%); }
+.theme-dot[data-theme-value="purple"]     { background-color: hsl(287, 65%, 50%); }
+.theme-dot[data-theme-value="pink"]       { background-color: hsl(338, 78%, 50%); }
+.theme-dot[data-theme-value="gray"]       { background-color: hsl(200, 18%, 50%); }
+
+/* --- 6. ОБДОНКИ ДАШБОРДІВ ТА АВАТАРИ --- */
+
+.admin-shell, .requests-shell, .error-shell {
+    max-width: 80rem;
+    margin: var(--space-xl) auto;
+    /*padding: 0 var(--space-md);*/
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    padding-bottom: var(--space-sm);
+}
+
+
+
+.ptsr-mode-container {
+    margin-top: var(--space-md);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* --- 7. ИНТЕРЕКТИВНИЙ СЛАЙДЕР СПЕКТРУ ТЕМ --- */
+
+.theme-spectrum-container {
+margin-top: var(--space-md);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 0.0625rem solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+
+    /* ФІКС: Розтягуємо весь блок спектру від краю до краю картки профілю */
+    width: 100%;
+    box-sizing: border-box;
+    align-self: stretch;
+}
+
+.theme-spectrum-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: calc(var(--step) * 5);
+    background: linear-gradient(to right,
+        hsl(0, 75%, 50%), hsl(60, 75%, 50%),
+        hsl(120, 75%, 50%), hsl(180, 75%, 50%),
+        hsl(240, 75%, 50%), hsl(300, 75%, 50%), hsl(360, 75%, 50%)
+    );
+    border-radius: var(--radius-full);
+    outline: none;
+    cursor: pointer;
+    border: none;
+}
+
+.theme-spectrum-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: calc(var(--step) * 7);
+    height: calc(var(--step) * 7);
+    border-radius: var(--radius-full);
+    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
+    border: 0.125rem solid var(--bg-surface);
+    box-shadow: var(--shadow-main);
+    cursor: grab;
+    transition: transform 0.1s ease;
+}
+
+.theme-spectrum-slider::-moz-range-thumb {
+    width: calc(var(--step) * 7);
+    height: calc(var(--step) * 7);
+    border-radius: var(--radius-full);
+    background-color: hsl(var(--theme-h), var(--theme-s), 50%);
+    border: 0.125rem solid var(--bg-surface);
+    box-shadow: var(--shadow-main);
+    cursor: grab;
+    transition: transform 0.1s ease;
+    border: none;
+}
+
+.theme-spectrum-slider:active::-webkit-slider-thumb,
+.theme-spectrum-slider:active::-moz-range-thumb {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+/* --- 8. КОМПОНЕНТИ ПЕРЕГЛЯДУ СТАТТІ --- */
+
+.article-header { margin-bottom: var(--space-lg); }
+.article-meta { display: flex; gap: var(--space-md); margin-bottom: var(--space-sm); color: var(--text-secondary); font-size: 0.9rem; }
+.article-category { font-weight: bold; color: var(--accent-primary); }
+.article-divider { border: none; border-top: 0.0625rem solid var(--border-soft); margin: var(--space-lg) 0; }
+.article-footer { margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 0.0625rem solid var(--border-soft); }
+.share-block { margin-bottom: var(--space-md); color: var(--text-muted); font-style: italic; }
+
+
+/* ==========================================================================
+   ДОДАНО: СИСТЕМА ЖУРНАЛУ ТА НОТАТОК (ЗА КВЕСТОМ PROFILE.HTML)
+   ========================================================================== */
+
+/* Базові системні іконки */
+.icon {
+    display: inline-block;
+    width: var(--space-md);
+    height: var(--space-md);
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+.journal-section {
+    margin-top: var(--space-lg);
+}
+
+.journal-header {
+    padding-bottom: var(--space-xs);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    margin-bottom: var(--space-md);
+}
+
+.journal-entry {
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Специфічні блоки внутрішніх нотаток терапії */
+.note-person {
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+/* Текст запрошень та плейсхолдери */
+.invitation-text {
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.media-placeholder {
+    background-color: var(--bg-canvas);
+    border: 0.0625rem dashed var(--border-soft);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    color: var(--text-secondary);
+}
+
+/* --- КВАНТОВИЙ ЛЕЙАУТ КАРТКИ ПРОФІЛЮ --- */
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* Центрує блоки (аватар, заголовки) по горизонталі */
+    text-align: center;    /* Центрує звичайний текст всередині тегів */
+    width: 100%;
+}
+
+/* --- ІНТЕРАКТИВНІ РОЗГОРТАНІ КАРТКИ ЖУРНАЛУ --- */
+
+.note-interactive-card {
+    padding: 0; /* Скидаємо внутрішні поля картки, щоб клікабельною була абсолютно вся площа */
+    overflow: hidden;
+}
+
+.journal-summary {
+    list-style: none; /* Прибираємо стандартну стрілку браузера */
+    outline: none;
+    cursor: pointer;
+    padding: var(--space-md); /* Переносимо падінги сюди, щоб клік працював чітко */
+}
+
+/* Прибираємо дефолтну стрілку для браузерів Safari */
+.journal-summary::-webkit-details-marker {
+    display: none;
+}
+
+.journal-hint-bar {
+    margin-top: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Внутрішнє віконце форми, яке відкривається знизу */
+.journal-expand-box {
+    padding: 0 var(--space-md) var(--space-sm) var(--space-md);
+    background-color: var(--bg-canvas);
+    border-top: 0.0625rem solid var(--border-soft);
+
+    /* Додаємо плавний ефект появи форми */
+    animation: slideDownFade 0.25s ease;
+}
+
+.journal-expand-box {
+    margin-top: var(--space-xs);     /* Мінімальний простір між textarea та кнопками */
+    margin-bottom: 0;                /* Повністю прибираємо порожнечу знизу кнопок */
+    gap: var(--space-sm);            /* Крок між кнопками "Зберегти" та "Видалити" */
+}
+
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(calc(var(--step) * -2));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- КОНТЕЙНЕР ДЛЯ ПАРОЛЯ З ОКОМ --- */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Сама кнопка "око" */
+.btn-toggle-password {
+    position: absolute;
+    right: 0.5rem; /* Відступ від правого краю інпута */
+    background: transparent; /* Вбиваємо білий фон */
+    border: none;
+    color: var(--text-muted); /* Тьмяний колір, як у плейсхолдера */
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Легка підсвітка при наведенні */
+.btn-toggle-password:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   КОМПОНЕНТ: УНІВЕРСАЛЬНА СИСТЕМА АВАТАРІВ (AVATAR SYSTEM)
+   ========================================================================== */
+
+/* Базовий нейтральний Аватар */
+.avatar-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    flex-shrink: 0;
+}
+
+/* Стандарт для зображень всередині будь-якого аватара */
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 1. ВЕЛИКИЙ (Тільки для профілю) */
+.avatar-md {
+    width: calc(var(--step) * 20);
+    height: calc(var(--step) * 20);
+    font-size: 1.75rem;
+}
+
+/* АТОМНІ МОДИФІКАТОРИ РОЗМІРІВ */
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+/* XS — Для стрічки повідомлень чату (і публічного, і приватного) та коментарів */
+.avatar-xs {
+    width: calc(var(--step) * 6);/*1.35rem;*/
+    height: calc(var(--step) * 6);/*1.35rem;*/
+    font-size: 0.65rem;
+}
+
+/* СЕМАНТИЧНІ СТИЛІ ДЛЯ СТРУКТУРИ LAYOUT */
+
+/* Контекстний відступ для аватара виключно всередині картки профілю (profile.html) */
+.profile-sidebar {
+    margin-bottom: var(--space-md);
+}
+
+/* Шапка повідомлення в чаті: чисті відступи без інлайнів у JS */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+/* ОБ'ЄДНАНО: Уніфікована логіка аватара профілю */
+.profile-avatar-container,
+.profile-avatar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+    width: 100%;
+}
+
+.profile-avatar {
+    width: calc(var(--step) * 30);
+    height: calc(var(--step) * 30);
+    border-radius: var(--radius-full);
+    border: 0.125rem solid var(--accent-primary);
+    object-fit: cover;
+    box-shadow: var(--shadow-main);
+    margin-bottom: var(--space-sm);
+}
+
+/* --- КОМПОНЕНТ: СТОРІНКА ПОМИЛКИ (ERROR CARD) --- */
+
+/* Контейнер-обгортка для вертикального та горизонтального центрування на екрані */
+.error-page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55vh; /* М'яке центрування по висоті екрана */
+    padding: var(--space-xl) 0;
+}
+
+/* Заголовок всередині картки */
+.section-title {
+    margin: 0;
+}
+
+/* Текст опису помилки */
+.error-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ==========================================================================
+   JOURNAL ENCRYPTED FEED CARDS
+   ========================================================================== */
+.journal-feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.crypto-badge {
+    /* Використовуємо success токени, якщо вони є, або жорстку генерацію з HSL як резерв */
+    color: var(--status-success, hsl(140, 50%, 45%));
+    background-color: hsla(140, 50%, 45%, 0.1);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.journal-post-media-box {
+    margin-top: var(--space-xs);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 0.0625rem solid var(--border-color);
+    max-height: 25rem;
+    display: flex;
+    justify-content: center;
+    background-color: var(--bg-main); /* Заглиблення на рівень підлоги */
+}
+
+.journal-file-name {
+    font-size: 0.875rem; /* rem замість px */
+    color: var(--text-muted);
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: var(--space-sm);
+}
+
+.article-illustration {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    /* 2rem зверху/знизу створюють буфер, щоб текст не налізав, auto — центрує */
+    margin: 2rem auto;
+    border-radius: 0.5rem;
+    /* М'яка тінь на основі HSL, без брудних rgba */
+    box-shadow: 0 0.25rem 0.75rem hsl(var(--theme-h) var(--theme-s) 10% / 0.05);
+}
+
+/* Кнопка видалення */
+.btn-delete-small {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Адаптивний розмір */
+    padding: var(--spacing-xs);
+    transition: opacity 0.2s;
+}
+
+.btn-delete-small:hover {
+    opacity: 1; /* або колір */
+}
+
+/* Єдиний стандарт для дій над постами */
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.media-wrapper {
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+/* Єдиний клас для медіа в постах журналу */
+.journal-post-img,
+.journal-post-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 25rem;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+}
+
+/* Відступ для назви поточного файлу */
+.current-media-label {
+    margin-left: var(--space-md, 1rem);
+}
+
+/* Якщо базовий клас btn-outline не має внутрішніх відступів, додаємо їх через спеціальний клас */
+.btn-cancel-inline {
+    padding: var(--space-sm, 0.5rem) var(--space-md, 1rem);
+    border-radius: var(--radius-md, 0.375rem);
+}
+
+.media-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+/* --- БЛОК РОЗГОРНУТОЇ ВІДПОВІДІ (Бардачок) --- */
+.reply-expanded-box {
+    padding: var(--space-md);
+    background-color: var(--bg-main);
+    border-left: calc(var(--step) * 2) solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.reply-box-title {
+    display: block;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--space-xs);
+}
+
+.reply-box-text {
+    color: var(--text-muted);
+    white-space: pre-wrap; /* Зберігає твої абзаци при виводі з бази */
+}
+
+/* ==========================================================================
+   CHAT COMPONENT (Спільний простір)
+   ========================================================================== */
+
+/* ЧУЖЕ ПОВІДОМЛЕННЯ (Ліворуч) */
+.message-other {
+    align-self: flex-start;
+    background-color: var(--bg-surface); /* Стандартна картка */
+    border: 0.0625rem solid var(--border-soft);
+    border-bottom-left-radius: 0;
+}
+
+.reply-quote {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* СИГНАЛЬНЕ МЕРЕХТІННЯ КНОПКИ (Привертає увагу) */
+@keyframes pulseAlert {
+    0% { box-shadow: 0 0 0 0 var(--border-strong); }
+    70% { box-shadow: 0 0 0 0.5rem transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+
+/* ==========================================================================
+   CHAT COMPONENT (Спільний простір)
+   ========================================================================== */
+
+/* Оболонка вікна повідомлень */
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background-color: var(--bg-canvas);
+    border-radius: var(--radius-lg);
+    height: 60vh;
+    overflow-y: auto;
+    border: 0.0625rem solid var(--border-soft);
+}
+
+/* Спільний клас для всіх реплік */
+.message-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xs);
+}
+
+/* МОЄ ПОВІДОМЛЕННЯ (Праворуч) */
+.message-me {
+    align-self: flex-end;
+    background-color: var(--bg-elevated);
+    border: 0.0625rem solid var(--border-color);
+    border-bottom-right-radius: 0;
+}
+
+/* ЧУЖЕ ПОВІДОМЛЕННЯ (Ліворуч) */
+.message-other {
+    align-self: flex-start;
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-bottom-left-radius: 0;
+}
+
+
+
+
+/* Блок цитати (Контекст) */
+.message-reply-context {
+    background-color: var(--bg-canvas);
+    border-left: 0.25rem solid var(--primary-color);
+    padding: var(--space-xs) var(--space-sm);
+    margin: var(--space-xs) 0;
+    border-radius: var(--radius-sm);
+}
+
+.reply-quote {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.context-author {
+    color: var(--primary-color);
+}
+
+/* 🎯 СИГНАЛЬНЕ МЕРЕХТІННЯ (Працює від твоїх змінних) */
+@keyframes pulseAlert {
+    0% { box-shadow: 0 0 0 0 var(--border-color); }
+    70% { box-shadow: 0 0 0 0.5rem transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.pulse-notification {
+    animation: pulseAlert 1.5s infinite;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Стилі для центрування кнопок пагінації */
+.pagination-row {
+    justify-content: center;
+    margin-top: var(--space-md);
+    gap: var(--space-sm);
+}
+
+.file-name-display {
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+/* --- COMPONENT: YOUTUBE FACADE (media-links) --- */
+.youtube-facade {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    margin: var(--space-sm) 0;
+    background-color: hsla(var(--theme-h), var(--theme-s), var(--l-card-bg), 1);
+    /* Адаптивна тінь на основі твого кроку */
+    box-shadow: 0 calc(var(--step) * 1) calc(var(--step) * 1.5) var(--shadow-main, rgba(0,0,0,0.1));
+}
+
+.youtube-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.youtube-facade:hover img {
+    transform: scale(1.05);
+}
+
+.youtube-facade .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Класичний YouTube червоний, але з прозорістю */
+    background-color: hsla(0, 100%, 50%, 0.8);
+    color: hsl(0, 0%, 100%);
+    border: none;
+    border-radius: var(--radius-full);
+    /* Розміри через квантову сітку (12 кроків = ~48px) */
+    width: calc(var(--step) * 12);
+    height: calc(var(--step) * 12);
+    /* Розмір іконки через сітку */
+    font-size: calc(var(--step) * 6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.youtube-facade:hover .play-btn {
+    background-color: hsla(0, 100%, 50%, 1);
+}
+
+/* Живий iframe, який з'являється після кліку */
+.youtube-iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    margin: var(--space-sm) 0;
+    border: none; /* Замінює інлайн frameborder="0" */
+}
+
+/* Зовнішні посилання */
+.external-link {
+    color: hsl(var(--theme-h), var(--theme-s), var(--l-primary));
+    text-decoration: underline;
+    text-underline-offset: var(--space-xs);
+    word-break: break-all;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Відповідь на звернення | MMC</title>
+</head>
+<body>
+<section class="standard-container standard-container-narrow">
+    <div class="dashboard-hero">
+        <div>
+            <h1 class="contact-intro-title">Деталі звернення</h1>
+            <p class="contact-intro-text">Простір для фокусування. Перечитайте контекст перед тим, як сформувати відповідь.</p>
+        </div>
+        <a th:href="@{/requests}" class="btn-outline">⬅ Повернутися</a>
+    </div>
+
+    <div class="card-elevated content-section">
+        <div class="profile-header-info">
+        <span class="profile-section-title">
+            <span th:text="${request.name}">Ім'я відправника</span>
+            <span class="text-muted">
+                (Контакт: <span th:text="${request.contact}"></span> |
+                Дата: <span th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span>)
+            </span>
+        </span>
+        </div>
+
+        <div class="issue-callout issue-callout-secondary mt-md">
+            <p class="issue-text-deep" th:text="${request.message}"></p>
+        </div>
+    </div>
+
+    <form th:action="@{/requests/{id}/reply(id=${request.id})}" method="post" class="stack-form">
+        <div class="form-group">
+            <label for="replyMessage" class="form-field">Ваша відповідь:</label>
+            <textarea id="replyMessage"
+                      name="replyMessage"
+                      class="form-textarea"
+                      rows="8"
+                      placeholder="Напишіть вашу відповідь тут... Лист буде відправлено на електронну пошту."
+                      required></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Надіслати відповідь</button>
+        </div>
+    </form>
+</section>
+</body>
+</html>

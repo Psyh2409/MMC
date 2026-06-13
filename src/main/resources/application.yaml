@@ -1,12 +1,63 @@
 spring:
+  profiles:
+    active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/psychotherapy
-    username: postgres
-    password: admin  # ПЕРЕВІР СВІЙ ПАРОЛЬ ТУТ
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/psychotherapy}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+
+    open-in-view: false
+
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  #Будьте обачні, використовуючи код.
+
+  servlet:
+    multipart:
+      max-file-size: 100MB      # Максимальний розмір одного файлу
+      max-request-size: 100MB   # Максимальний розмір усього запиту
+    session:
+      persistent: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+server:
+  servlet:
+    session:
+      persistent: false
+  forward-headers-strategy: framework
+  error:
+    whitelabel:
+      enabled: false
+
+app:
+  public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  jitsi:
+    app-id: vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6
+    api-key-id: vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6/bef9f5
+    private-key-path: ${MMC_JITSI_KEY_PATH}
+  crypto:
+    secret-key: ${MMC_CRYPTO_KEY}
+  upload-dir: ${APP_UPLOAD_DIR:./uploads/articles} # 2. ДОДАЄМО ШЛЯХ ДО ЗАХИЩЕНОЇ ПАПКИ МЕДІА
+  oauth2:
+    google:
+      client-id: ${OAUTH2_GOOGLE_CLIENT_ID:dummy}
+      client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET:dummy}
+

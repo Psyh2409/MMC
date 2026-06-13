@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.error-page-wrapper}, ~{})}">
+<head>
+    <title>Щось пішло не так | MMC</title>
+</head>
+<body>
+
+<div class="error-page-wrapper">
+    <section class="error-card">
+        <h2 class="section-title">Упс! Сталася помилка</h2>
+
+        <p class="error-description" th:text="${message ?: 'Не вдалося обробити запит. Систему сповіщено.'}">
+            Опис помилки з сервера.
+        </p>
+
+        <div class="button-row">
+            <a href="/" class="btn-outline">
+                🏠 На головну
+            </a>
+            <a th:href="@{/contact}" class="btn-primary">
+                📩 Написати адміністратору
+            </a>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+run.ps1
+.env
+#**/DataInitializer.java
+# Динамічні завантаження користувачів (Media runtime)
+uploads/
+
+###Get-ChildItem -Include *.css, *.java -Recurse | ForEach-Object {
+   #>>     Write-Host "`n--- FILE: $($_.FullName) ---" -ForegroundColor Cyan
+   #>>     # Шукаємо класи в CSS та методи/змінні в Java одним махом
+   #>>     Select-String -Path $_.FullName -Pattern '(?<=\.)[a-zA-Z0-9_-]+(?=\s*\{)|(public|private|protected)\s+\w+\s+\w+\s*\(.*?\)' -AllMatches | ForEach-Object {
+   #>>         $_.Matches.Value.Trim()
+   #>>     }
+   #>> }###

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.standard-container-wide},
+      ~{}
+      )}">
+<head>
+    <title>Блог | Психотерапія та самопізнання</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide layout-stack">
+    <header class="section-header">
+        <h1 class="page-title-accent">Матеріали та роздуми</h1>
+        <p class="heading-lg">Шлях до себе через усвідомлення та знання</p>
+    </header>
+
+    <div class="articles-grid">
+        <div class="article-card" th:each="article : ${articles}">
+            <div class="article-card-meta">
+                <span th:text="${#temporals.format(article.publishedAt, 'dd.MM.yyyy')}">01.01.2024</span>
+                <span class="category-badge"
+                      th:text="${allCategoriesMap[article.category] ?: article.category}">
+                        Категорія
+                </span>
+            </div>
+            <h2 class="article-card-title">
+                <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}">Заголовок</a>
+            </h2>
+            <p class="article-excerpt" th:text="${article.description}">Короткий опис...</p>
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="nav-link">Читати далі →</a>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(articles)}" class="empty-state">
+        <p>Наразі статтей немає, але вони скоро з'являться.</p>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.issue-content}, ~{})}">
+<head>
+    <title th:text="${topicTitle}">Ілюзія, що виходу нема — Вихід поруч</title>
+</head>
+<body>
+<div class="content-section">
+    <main class="issue-shell">
+        <article class="issue-article issue-article-heavy issue-border-top-accent">
+            <h1 class="issue-title issue-title-centered" th:text="${topicTitle}">Ілюзія, що виходу нема</h1>
+
+            <p class="issue-intro issue-intro-deep">
+                Колись у київському метрополітені на одних дверях був напис «Виходу немає». Це створювало відчуття глухого кута. Але після низки подій таблички замінили. Тепер там написано: <strong>«Вихід поруч»</strong>.
+            </p>
+
+            <div class="issue-callout issue-callout-quote">
+                "Це не просто технічне рішення. Це фундаментальна психологічна зміна фокуса. Коли ми в кризі, нам здається, що стіни зімкнулися. Але це лише ілюзія сприйняття, викликана болем. Вихід не зник — він просто знаходиться там, де ви ще не звикли його шукати."
+            </div>
+
+            <h2 class="issue-section-title issue-section-title-wide">Відповідальність перед майбутнім</h2>
+            <p class="issue-text issue-text-deep issue-text-spaced">
+                Ми маємо бути гранично чесними: те, як ми розпоряджаємося своїм життям, стає рульовою моделлю для наших дітей та близьких. Коли людина вчиняє фатальний крок, вона не просто припиняє свій біль — вона залишає цей сценарій як спадок. Це стає «інструкцією» для наступних поколінь.
+            </p>
+
+            <div class="issue-callout issue-callout-note">
+                <strong>Важливо розуміти:</strong> Суїцидальна поведінка має властивість передаватися в спадок не через гени, а через приклад. Наша стійкість сьогодні — це єдиний шанс перервати цей ланцюг і дати нащадкам право на життя.
+            </div>
+
+            <p class="issue-text issue-text-deep">
+                Я знаю, як це — входити в кожен новий етап життя наосліп. Саме тому я працюю з цією темою так глибоко. Мій обов'язок — допомогти вам знайти той самий «вихід поруч», щоб ви могли стати опорою для себе і прикладом для свого роду.
+            </p>
+
+            <section class="issue-cta-primary">
+                <p>Поговоріть зі мною. Ми знайдемо цей вихід разом.</p>
+                <a href="/contact" class="btn-primary">Записатися на консультацію</a>
+            </section>
+        </article>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.content-with-sidebar}, ~{})}">
+<head>
+    <title th:text="${categoryName}">Тема</title>
+</head>
+<body>
+<div class="content-with-sidebar">
+    <aside class="sidebar">
+        <h3 class="heading-lg">Зміст розділу:</h3>
+        <nav class="nav-vertical">
+            <a href="#definition">🔹 Що це таке?</a>
+            <a href="#symptoms">🔹 Симптоми та прояви</a>
+            <a href="#causes">🔹 Причини виникнення</a>
+            <a href="#self-help">🔹 Як собі допомогти</a>
+            <a href="#therapy">🔹 Терапія</a>
+        </nav>
+    </aside>
+
+    <article class="content-section">
+        <h1 th:text="${categoryName}" class="article-title">Назва теми</h1>
+
+        <section id="definition">
+            <h2 class="heading-lg">Що це таке?</h2>
+            <p>Конфлікт — це не обов'язково кінець стосунків, це часто точка їхнього зросту. У медіації ми розглядаємо конфлікт як зіткнення потреб, де кожна сторона має право бути почутою. Це можливість вийти за межі взаємних звинувачень і знайти рішення, яке поважає гідність кожного.</p>
+        </section>
+
+        <section id="symptoms" class="layout-container">
+            <h2 class="heading-lg">Як проявляється напруга?</h2>
+            <p>Замість діалогу з’являється "стіна" мовчання, або ж навпаки — постійні емоційні вибухи. Ви можете відчувати безсилля, неможливість донести свою думку або постійне "ходіння по колу" в одних і тих самих суперечках. Це ознаки того, що системі (парі, сім'ї чи колективу) потрібен посередник.</p>
+        </section>
+
+        <section id="causes" class="layout-container">
+            <h2 class="heading-lg">Чому виникають конфлікти?</h2>
+            <p>Часто причиною є не сама ситуація, а розбіжність у цінностях, накопичені образи або просто відсутність навичок ненасильницького спілкування. Ми вчимося бачити за агресією — біль, а за вимогою — незадоволену потребу.</p>
+        </section>
+
+        <section id="self-help" class="layout-container">
+            <h2 class="heading-lg">Перші кроки до порозуміння</h2>
+            <p>Спробуйте техніку "Я-повідомлення": говоріть про свої почуття, а не про помилки іншого. Наприклад: "Я почуваюся самотньо, коли ми не вечеряємо разом", замість "Ти знову запізнився". Це перший крок, щоб прибрати захисні бар'єри партнера.</p>
+        </section>
+
+        <div class="card-primary">
+            <p>"Медіація — це не про те, хто правий, а про те, як нам обом бути щасливими в цій ситуації."</p>
+        </div>
+
+        <section id="therapy" class="article-cta">
+            <p class="article-cta-title">Відчуваєте, що зайшли у глухий кут?</p>
+            <p class="article-cta-subtitle">Робота з медіатором допоможе знайти вихід без втрат для вашої гідності та почуттів.</p>
+            <a href="/contact" class="btn-primary">Записатися на медіацію / консультацію</a>
+        </section>
+    </article>
+</div>
+</body>
+</html>

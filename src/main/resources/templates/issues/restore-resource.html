@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.issue-content}, ~{})}">
+<head>
+    <title th:text="${topicTitle}">Відновлення ресурсу та подолання вигорання</title>
+</head>
+<body>
+<div class="content-section">
+    <main class="issue-shell">
+        <article class="issue-article issue-border-top-muted">
+            <h1 class="issue-title issue-title-secondary" th:text="${topicTitle}">Вигорання та відновлення ресурсу</h1>
+
+            <p class="issue-intro">
+                Професійне та особистісне вигорання — це стан, коли внутрішній вогонь, що давав енергію для звершень, перетворився на попіл. Це відчуття порожнечі, коли навіть улюблена справа починає викликати роздратування або байдужість.
+            </p>
+
+            <div class="issue-callout issue-callout-secondary">
+                <h3>Вигорання як втрата сенсу</h3>
+                <p>
+                    Людина може витримати майже будь-яке "Як", якщо вона знає "Навіщо". Вигорання часто стається не від кількості праці, а від втрати відповіді на це запитання. Коли діяльність стає механічною, ресурс починає танути.
+                </p>
+                <p class="issue-callout-secondary-strong">Ресурс — це ваша здатність бачити цінність у тому, що ви робите.</p>
+            </div>
+
+            <h2 class="issue-section-title issue-section-title-secondary">Екзистенційне виснаження</h2>
+            <p class="issue-text issue-text-deep">
+                Ми живемо в культурі, де зупинка сприймається як поразка. Але психіка має свої ліміти. Якщо ви ігноруєте сигнали тіла, вона вмикає "аварійний режим" — апатію. У терапії ми не просто вчимося відпочивати, ми переглядаємо ваші цінності та шукаємо нові джерела натхнення.
+            </p>
+
+            <div class="issue-quote issue-quote-secondary">
+                "Відновлення — це не повернення до колишнього темпу, а перехід на новий рівень усвідомленості, де ви керуєте справами, а не вони вами."
+            </div>
+
+            <h2 class="issue-section-title issue-section-title-secondary">Шлях до відновлення</h2>
+            <p class="issue-text issue-text-end">
+                Перший крок — це легалізація вашого права на слабкість. Ми працюємо над тим, щоб зняти почуття провини за "непродуктивність" і вибудувати нову систему пріоритетів. Повернення до життя починається з маленьких, але осмислених дій, які повертають вам авторство власного часу.
+            </p>
+
+            <section class="issue-cta issue-cta-secondary">
+                <p>Відчуваєте, що сили закінчуються?</p>
+                <a href="/contact" class="btn-primary">Відновити баланс</a>
+            </section>
+
+            <div class="issue-link-note">
+                <p>
+                    Якщо ви відчуваєте, що темрява стає надто густою...
+                    <a href="/issues/exit-nearby" class="issue-link-secondary">існує інший погляд</a>.
+                </p>
+            </div>
+        </article>
+    </main>
+</div>
+</body>
+</html>

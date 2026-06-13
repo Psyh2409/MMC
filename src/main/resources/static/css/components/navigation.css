@@ -1,0 +1,299 @@
+/* ==========================================================================
+   NAVIGATION SYSTEM - СИНХРОНІЗАЦІЯ ТА ВІДПОВІДНІСТЬ ТЗ
+   ========================================================================== */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: var(--space-sm) 0;
+    background: var(--bg-navigation);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    box-shadow: 0 0.125rem 0.25rem var(--bg-overlay);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.site-header-inner {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- 1. БРЕНДИНГ ТА ПОСИЛАННЯ --- */
+.site-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--text-navigation-hover);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.4rem;
+    transition: color 0.2s ease;
+}
+
+.site-brand-text {
+    color: var(--text-navigation);
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.site-nav-label {
+    color: var(--text-navigation);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2;
+    cursor: pointer;
+}
+
+.site-nav-label:hover {
+    color: var(--primary-color);
+}
+
+.site-nav-link {
+    color: var(--text-navigation);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.site-nav-link:hover {
+    color: var(--text-navigation-hover);
+}
+
+/* --- 2. DROPDOWN (Автентична логіка в REM) --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    min-width: 15rem;
+    background-color: var(--accent-primary);
+    box-shadow: var(--bg-overlay);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--step));
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transition-delay: 0.2s;
+}
+
+.dropdown-content::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--space-xs) * -1);
+    left: 0;
+    width: 100%;
+    height: var(--space-xs);
+    background: transparent;
+}
+
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--text-on-accent);
+    border-bottom: calc(var(--step) * 0.25) solid var(--accent-muted);
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--accent-hover);
+    color: var(--text-on-accent);
+}
+
+/* --- 3. МЕНЮ КОРИСТУВАЧА --- */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xs) var(--space-md);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-surface);
+}
+
+.user-menu-greeting {
+    font-size: 0.9rem;
+    color: var(--text-navigation);
+}
+
+.user-profile-link {
+    text-decoration: none;
+    color: var(--text-navigation-hover);
+}
+
+.user-profile-link:hover {
+    color: var(--text-navigation);
+}
+
+/* --- 4. НОВІ АТОМАРНІ СТАНДАРТИ НАВІГАЦІЇ --- */
+
+/* Універсальне системне посилання (для футерів, карток тощо) */
+.nav-link {
+    color: var(--text-navigation);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--text-navigation-hover);
+}
+
+/* Вертикальне меню (сайдбар або вкладки чату) */
+.nav-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
+}
+
+/* ==========================================================================
+   PROFILE TABS NAVIGATION (Pixel-free)
+   ========================================================================== */
+/* ==========================================================================
+   SPECTRUM TABS NAVIGATION (Zero-pixel / Pure HSL)
+   ========================================================================== */
+/* ==========================================================================
+   TABS NAVIGATION (Терапевтичний простір / Щоденник)
+   ========================================================================== */
+.tabs-navigation {
+    display: flex;
+    gap: var(--space-md);
+    border-bottom: 0.125rem solid var(--border-color); /* Чітка лінія під вкладками */
+    margin-bottom: var(--space-md);
+}
+
+.tab-button {
+    background: transparent; /* Ніякого фону, щоб не зливалося */
+    border: none;
+    color: var(--text-muted); /* Тьмяний текст для неактивних */
+    padding: var(--space-sm) 0; /* Відступи тільки зверху/знизу */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 0.1875rem solid transparent; /* Місце під активну лінію */
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-main);
+}
+
+.tab-button.active {
+    color: var(--primary-color); /* Яскравий акцентний колір теми */
+    border-bottom-color: var(--primary-color); /* Підкреслення кольором теми */
+    background: transparent;
+}
+/* Керування станом вкладок через каскад */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@media (max-width: 48em) {
+    /* Гарантуємо, що падінги не роздувають загальну ширину елементів */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* 1. Хірургічне стискання кнопок через падінги та шрифт */
+    .site-header .btn-primary,
+    .site-footer .btn-primary,
+    .site-footer .btn-outline {
+        padding: 0.35rem 0.75rem; /* Компактні мобільні відступи */
+        font-size: 0.85rem;       /* Акуратний, читабельний розмір тексту */
+        line-height: 1.2;
+    }
+
+    /* 2. Розділяємо логіку логотипів для шапки та підвалу */
+    .site-header .site-brand-text {
+        font-size: 1.1rem; /* У шапці лишаємо помітним */
+    }
+
+    .site-footer .site-brand-text {
+        display: inline-block;
+                max-width: 5rem;      /* Обмежуємо ширину, щоб текст м'яко перенісся */
+                white-space: normal;  /* Дозволяємо перенос рядка */
+                font-size: 0.85rem;
+                line-height: 1.2;
+                text-align: left;
+                vertical-align: middle;
+    }
+
+    /* 3. Компактизуємо сам підвал, щоб він не був занадто глибоким */
+    .site-footer-inner {
+        padding: 1rem;            /* Зменшуємо загальний падінг футера */
+        gap: 0.75rem;             /* Робимо менші відстані між рядками підвалу */
+    }
+
+    /* 1. Ховаємо іконку-конверт на кнопці "Контакти" */
+        .hide-btn-icon {
+            display: none;
+        }
+
+        /* 2. Ховаємо довгу частину копірайту, залишаючи тільки "© 2026 MMC" */
+        .hide-mobile {
+            display: none;
+        }
+}
+
+/*
+@media (max-width: 48em) {
+    /* 1. Зменшуємо логотипи "Шлях до себе" */
+/*    .site-brand-text {
+        font-size: 1.1rem;
+    }
+
+    /* 2. Зменшуємо простір між лінками в хедері та їхній розмір */
+/*    .site-nav {
+        gap: 0.5rem;
+    }
+
+    .site-nav-link,
+    .site-nav-label {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* 3. Робимо кнопки у футері компактнішими і дозволяємо тексту переноситись */
+/*    .site-footer .btn-primary,
+    .site-footer .btn-outline {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        white-space: normal; /* Дозволяє тексту "Створити акаунт" впасти на 2 рядки */
+/*        line-height: 1.2;
+    }
+}*/

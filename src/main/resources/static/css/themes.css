@@ -1,0 +1,102 @@
+/* ==========================================================================
+   КВАНТОВА ПАЛІТРА 2.0 - БАЗОВІ ВІДТІНКИ (HSL СИСТЕМА)
+   ========================================================================== */
+
+/* 0. DEFAULT & BROWN (Коричневий) */
+:root, [data-theme='brown'] {
+    --theme-h: 15;
+    --theme-s: 25%;
+}
+
+/* 1. RED (Червоний) */
+[data-theme='red'] {
+    --theme-h: 0;
+    --theme-s: 65%;
+}
+
+/* 2. RED-ORANGE (Червоно-помаранчевий) */
+[data-theme='red-orange'] {
+    --theme-h: 14;
+    --theme-s: 100%;
+}
+
+/* 3. ORANGE (Помаранчевий) */
+[data-theme='orange'] {
+    --theme-h: 33;
+    --theme-s: 98%;
+}
+
+/* 4. AMBER (Бурштиновий) */
+[data-theme='amber'] {
+    --theme-h: 45;
+    --theme-s: 100%;
+}
+
+/* 5. YELLOW (Жовтий) */
+[data-theme='yellow'] {
+    --theme-h: 54;
+    --theme-s: 98%;
+}
+
+/* 6. LIME (Лаймовий) */
+[data-theme='lime'] {
+    --theme-h: 64;
+    --theme-s: 60%;
+}
+
+/* 7. GREEN (Зелений) */
+[data-theme='green'] {
+    --theme-h: 123;
+    --theme-s: 46%;
+}
+
+/* 8. TEAL (Бірюзовий) */
+[data-theme='teal'] {
+    --theme-h: 174;
+    --theme-s: 100%;
+}
+
+/* 9. LIGHT-BLUE (Блакитний) */
+[data-theme='light-blue'] {
+    --theme-h: 199;
+    --theme-s: 97%;
+}
+
+/* 10. BLUE (Синій) */
+[data-theme='blue'] {
+    --theme-h: 216;
+    --theme-s: 85%;
+}
+
+/* 11. INDIGO (Індиго) */
+[data-theme='indigo'] {
+    --theme-h: 231;
+    --theme-s: 50%;
+}
+
+/* 12. PURPLE (Фіолетовий) */
+[data-theme='purple'] {
+    --theme-h: 287;
+    --theme-s: 65%;
+}
+
+/* 13. PINK (Рожевий) */
+[data-theme='pink'] {
+    --theme-h: 338;
+    --theme-s: 78%;
+}
+
+/* 14. GRAY (Сірий) */
+[data-theme='gray'] {
+    --theme-h: 200;
+    --theme-s: 18%;
+}
+
+/* СИГНАЛЬНІ СТАНИ (Єдині для всіх тем) */
+:root {
+    --danger-color: hsl(0, 70%, 50%);
+    --danger-hover-bg: hsl(0, 70%, 90%);
+    --success-color: hsl(120, 50%, 40%);
+    --success-hover-bg: hsl(120, 50%, 90%);
+    --warning-color: hsl(30, 100%, 50%);
+}

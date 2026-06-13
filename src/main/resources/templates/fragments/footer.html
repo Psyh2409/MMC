@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<footer th:fragment="footer-fragment" class="site-footer">
+    <div class="site-footer-inner">
+        <div class="footer-left">
+            <div sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/users}" class="btn-outline">
+                    ⚙️ Адмінка
+                </a>
+            </div>
+
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/contact}" class="btn-primary">
+                    <span class="hide-btn-icon">📩</span> Контакти
+                </a>
+            </div>
+
+            <div sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
+                <a th:href="@{/contact}" class="btn-outline">
+                    <span class="hide-btn-icon">📩</span> Контакти
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-center">
+            <span class="text-muted">© 2026 MMC<span class="hide-mobile"> Mental Management Center</span></span>
+        </div>
+
+        <div class="footer-right">
+            <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/chat}" class="btn-outline">
+                    💬 Чат спільноти
+                </a>
+            </div>
+
+            <div sec:authorize="isAnonymous()">
+                <a href="/" class="site-brand">
+                    🌿 <span class="site-brand-text">Шлях до себе</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
