@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -30,8 +32,14 @@ public class AdminUserController {
 
     // 1. Сторінка списку користувачів (Переїхала з AuthController)
     @GetMapping("/users")
-    public String showAdminUsers(Model model) {
-        model.addAttribute("allUsers", userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
+    public String showAdminUsers(Model model, Principal principal) {
+        // 2. Знаходимо поточного юзера (щоб знати, чи він TEST)
+        User currentUser = userRepository.findByEmail(principal.getName()).orElseThrow();
+        // 3. Отримуємо відфільтрований список (тільки реальні АБО тільки тестові)
+        List<User> visibleUsers = userService.getVisibleUsers(currentUser);
+        // 4. Сортуємо цей список за спаданням дати створення (те, що раніше робив Sort.by)
+        visibleUsers.sort(Comparator.comparing(User::getCreatedAt).reversed());
+        model.addAttribute("allUsers", visibleUsers);
         model.addAttribute("countUsers", userRepository.countByRoleMask(RoleBit.READER.getMask()));
         model.addAttribute("countClients", userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
 
@@ -43,6 +51,7 @@ public class AdminUserController {
     }
 
     // 2. Тотальний бан (Сайт)
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/toggle-status/{id}")
     public String toggleUserStatus(@PathVariable UUID id) {
         userService.toggleUserStatus(id);
@@ -50,6 +59,7 @@ public class AdminUserController {
     }
 
     // 3. Бан в чаті
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/toggle-chat/{id}")
     public String toggleChatStatus(@PathVariable UUID id) {
         userService.toggleChatStatus(id);
@@ -57,6 +67,7 @@ public class AdminUserController {
     }
 
     // 4. Бан в коментарях
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/toggle-comments/{id}")
     public String toggleCommentsStatus(@PathVariable UUID id) {
         userService.toggleCommentsStatus(id);
@@ -64,6 +75,7 @@ public class AdminUserController {
     }
 
     // 5. Призначення клієнтом (Переїхало з AuthController)
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/promote/{id}")
     public String promoteToClient(@PathVariable UUID id) {
         userService.promoteToClient(id);
@@ -80,6 +92,7 @@ public class AdminUserController {
     }
 
     // 7. Видалення (Переїхало з AuthController)
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін може видаляти, тестовий - ні
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable UUID id, Principal principal) {
         try {

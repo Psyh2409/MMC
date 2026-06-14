@@ -4,6 +4,7 @@ import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.RequestStatus;
 import org.mental_management_center.mmc.service.EmailService;
 import org.mental_management_center.mmc.service.RequestService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,7 @@ public class RequestController {
         return "redirect:/contact?success";
     }
 
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @GetMapping("/requests")
     public String showRequests(Model model) {
         model.addAttribute("requests", requestService.findAllNewestFirst());

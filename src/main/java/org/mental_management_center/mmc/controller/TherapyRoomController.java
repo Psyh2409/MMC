@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.TherapyRoomService;
@@ -81,7 +82,10 @@ public class TherapyRoomController {
         // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
         String lastNote = therapyNoteService.getLastNoteContent(roomOwner.getId(), therapist.getId(), currentUser.getId());
 
-        String jitsiJwt = generateJitsiJwt(currentUser, roomName);
+        String jitsiJwt = "";
+        if (!currentUser.hasRole(RoleBit.TEST)) {
+            jitsiJwt = generateJitsiJwt(currentUser, roomName);
+        }
 
         model.addAttribute("client", roomOwner);
         model.addAttribute("currentUser", currentUser);

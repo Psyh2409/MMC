@@ -6,7 +6,8 @@ public enum RoleBit {
         READER(2),       // 1 << 1
         CLIENT(4),       // 1 << 2
         THERAPIST(8),    // 1 << 3
-        ADMIN(16);       // 1 << 4
+        ADMIN(16),       // 1 << 4
+        TEST(128);             // 1 << 8
 
         private final int mask;
 
