@@ -1,3 +1,14 @@
+c1888d1 fix: reverse comment order to show newest first
+34f9ff8 feat: implement universal media facade system for MMC platform
+6883ca9 feat: implement media link facade support for chat messages
+7cc0b2b feat: integrate media facade support into journal and implement dynamic content observation
+7cf03a3 feat: extend media facade support to journal posts and add diagnostic logging
+7c6c743 fix: restore stable media-links functionality and fix article link selectors
+4f1d636 feat: add support for clickable external links in article content
+8e16756 fix(backend): resolve LazyInitializationException by setting author FetchType to EAGER and fix comment-tree html
+0c6bbcb chore(infra): use dynamic branch for git push and update crontab template
+c9b5792 chore(infra): set executable flag for backup script
+fcfb24f chore(infra): auto-update history via backup cron
 a2d3e31 chore(infra): backup config files and infrastructure scripts
 e78ab59 chore(infra): auto-update history via backup cron
 c567378 chore(infra): auto-update history via backup cron

@@ -19,7 +19,8 @@
   journal-crud-operations
   journal-feed-pagination
   kill-rings
-* media-links
+* main
+  media-links
   media-room
   mmc-next-adventures
   pagination-comments
