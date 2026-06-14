@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor; // Додай це
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,10 +15,13 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.List;
 
+
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor // Це вилікує помилки створення об'єкта Hibernate
 public class User {
     @Id
@@ -120,6 +121,7 @@ public class User {
     }
 
     // --- ЛОГІКА ПЕРЕВІРКИ РОЛЕЙ ---
+    public boolean isTest() { return hasRole(RoleBit.TEST); }
     public boolean isAdmin() { return hasRole(RoleBit.ADMIN); }
     public boolean isTherapist() { return hasRole(RoleBit.THERAPIST); }
     public boolean isClient() { return hasRole(RoleBit.CLIENT); }
@@ -127,6 +129,9 @@ public class User {
     public boolean isGuest() { return hasRole(RoleBit.GUEST); }
 
     public String getPrimaryRoleName() {
+        if (isTest()) {
+            return "Test";
+        }
         if (isAdmin()) {
             return "ADMIN";
         }
