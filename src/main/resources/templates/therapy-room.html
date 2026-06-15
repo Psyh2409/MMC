@@ -3,142 +3,10 @@
       th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
 <head>
     <title>Сесія | MMC Room</title>
-    <style>
-        /* Основні стилі контейнерів */
-        .standard-container-wide {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-            min-height: calc(100vh - var(--space-xl) * 2);
-            padding: var(--space-md);
-            background-color: var(--bg-canvas);
-        }
-
-        .video-main-frame {
-            flex: none;
-            height: 50vh;
-            background-color: #000;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 var(--step) calc(var(--step) * 3) var(--shadow-main);
-            overflow: hidden;
-            position: relative;
-            border: calc(var(--step) * 0.25) solid var(--border-soft);
-        }
-
-        #jitsi-container { width: 100%; height: 100%; }
-
-        /* Блок нотаток */
-        .notes-bottom-panel {
-            flex: 1;
-            background-color: var(--bg-surface);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            border: calc(var(--step) * 0.25) solid var(--border-soft);
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-        }
-
-        .notes-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-xs);
-        }
-
-        .therapy-textarea {
-            width: 100%;
-            flex-grow: 1;
-            min-height: calc(var(--step) * 15);
-            background-color: var(--bg-input);
-            color: var(--text-primary);
-            border-radius: var(--radius-md);
-            padding: var(--space-sm);
-            border: calc(var(--step) * 0.25) solid var(--border-soft);
-            resize: vertical; /* Дозволяє трохи розтягувати по вертикалі */
-        }
-
-        /* --- СТИЛІ МОДАЛЬНОГО ВІКНА ІСТОРІЇ --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
-    display: none !important; /* Гарантована скритість */
-    justify-content: center;
-    align-items: center;
-    z-index: var(--z-modal, 2000);
-}
-
-.modal-overlay.is-visible {
-    display: flex !important;
-}
-
-.modal-content {
-    background: var(--bg-surface);
-    width: 90%;
-    max-width: calc(var(--step) * 45);
-    max-height: 85vh;
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    overflow-y: auto;
-    border: calc(var(--step) * 0.25) solid var(--border-soft);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-/* Заголовок модалки: фіксує кнопку закриття праворуч */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding-bottom: var(--space-sm);
-    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
-}
-
-.modal-title {
-    margin: 0;
-    color: var(--text-main);
-}
-
-.history-item {
-    padding: var(--space-md) 0;
-    border-bottom: calc(var(--step) * 0.1) solid var(--border-soft);
-}
-
-.history-date {
-    font-size: var(--font-xs);
-    color: var(--text-secondary);
-    display: block;
-    margin-bottom: var(--space-xs);
-}
-
-.history-text {
-    color: var(--text-primary);
-    white-space: pre-wrap; /* Зберігає переноси рядків без інлайнів */
-    line-height: var(--line-height-base, 1.5);
-}
-
-.status-loading {
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-}
-
-        /* Індикатор збереження */
-        .sync-indicator {
-            font-size: var(--font-sm);
-            color: var(--text-secondary);
-        }
-    </style>
 </head>
 <body>
 
 <section class="standard-container-wide">
-
     <div class="video-main-frame">
         <div id="jitsi-container"></div>
     </div>
@@ -166,11 +34,9 @@
                 <h3 class="modal-title">Історія записів</h3>
                 <button type="button" id="close-modal" class="btn-primary">Закрити</button>
             </div>
-            <div id="history-list">
-            </div>
+            <div id="history-list"></div>
         </div>
     </div>
-
 </section>
 
 <th:block th:fragment="page-scripts">
@@ -180,165 +46,18 @@
     <script src="https://8x8.vc/external_api.js"></script>
 
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // --- ГЛОБАЛЬНІ ЗМІННІ (Thymeleaf -> JS) ---
-            const roomName = /*[[${roomName}]]*/ 'default-room';
-            const userName = /*[[${currentUser.name}]]*/ 'Користувач';
-            const clientUuid = /*[[${client.id}]]*/ '';
-            const jitsiJwt = /*[[${jitsiJwt}]]*/ null;
-
-            // 🟢 ДОДАНО: Перевіряємо, чи сторінку відкрив терапевт/адмін
-            const isProfessional = /*[[${isAdmin || isTherapist}]]*/ false;
-
-            const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
-
-            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-
-            // --- БЛОК 1: ІНІЦІАЛІЗАЦІЯ ВІДЕО JITSI ---
-            let jitsiApi = null;
-            const initJitsi = () => {
-                const container = document.querySelector('#jitsi-container');
-                if (!container) return;
-
-                const options = {
-                    roomName: `${appId}/${roomName}`,
-                    jwt: jitsiJwt,
-                    width: '100%',
-                    height: '100%',
-                    parentNode: container,
-                    userInfo: { displayName: userName },
-                    configOverwrite: { prejoinPageEnabled: false },
-                    interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false, TILE_VIEW_MAX_COLUMNS: 2 }
-                };
-
-                jitsiApi = new JitsiMeetExternalAPI("8x8.vc", options);
-                jitsiApi.addEventListener('videoConferenceJoined', () => {
-                    jitsiApi.executeCommand('toggleTileView');
-                });
-            };
-            initJitsi();
-
-            // --- БЛОК 2: АВТОЗБЕРЕЖЕННЯ (Stateless / Чистий аркуш) ---
-            const notesArea = document.getElementById('session-notes');
-            const statusLabel = document.getElementById('sync-status');
-
-            let saveTimeout = null;
-            let currentNoteId = null;
-
-            if (notesArea && statusLabel) {
-                notesArea.addEventListener('input', () => {
-                    statusLabel.innerText = "Збереження...";
-                    statusLabel.style.color = "var(--text-secondary)";
-
-                    clearTimeout(saveTimeout);
-                    saveTimeout = setTimeout(async () => {
-                        try {
-                            let url = `/therapy/notes/save/${clientUuid}`;
-                            if (currentNoteId) {
-                                url += `?noteId=${currentNoteId}`;
-                            }
-
-                            const response = await fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'text/plain;charset=UTF-8',
-                                    [csrfHeader]: csrfToken
-                                },
-                                body: notesArea.value
-                            });
-
-                            if (response.ok) {
-                                const textRes = await response.text();
-                                if (textRes) {
-                                    try {
-                                        const data = JSON.parse(textRes);
-                                        if (data && data.noteId) currentNoteId = data.noteId;
-                                    } catch(e) {}
-                                }
-
-                                statusLabel.innerText = "Дані збережено";
-                                statusLabel.style.color = "var(--status-success)";
-
-                                setTimeout(() => {
-                                    if(statusLabel.innerText === "Дані збережено") statusLabel.innerText = "";
-                                }, 3000);
-                            } else {
-                                throw new Error('Помилка сервера');
-                            }
-                        } catch (e) {
-                            console.error("Помилка автозбереження:", e);
-                            statusLabel.innerText = "Помилка зв'язку";
-                            statusLabel.style.color = "var(--status-error)";
-                        }
-                    }, 2000);
-                });
-            }
-
-            // --- БЛОК 3: ЛОГІКА МОДАЛЬНОГО ВІКНА (TOGGLE) ---
-            const modal = document.getElementById('history-modal');
-            const historyList = document.getElementById('history-list');
-            const btnShowHistory = document.getElementById('btn-show-history');
-            const btnCloseModal = document.getElementById('close-modal');
-
-            if (btnShowHistory && modal) {
-                const toggleHistory = async () => {
-                    const isVisible = modal.classList.contains('is-visible');
-
-                    if (isVisible) {
-                        modal.classList.remove('is-visible');
-                    } else {
-                        modal.classList.add('is-visible');
-                        historyList.innerHTML = '<span class="status-loading">Синхронізація з архівом...</span>';
-
-                        try {
-                            const response = await fetch(`/therapy/notes/history/${clientUuid}`);
-                            if (response.ok) {
-                                const notes = await response.json();
-                                if (notes.length === 0) {
-                                    historyList.innerHTML = '<p class="status-loading">Записів за історію не знайдено.</p>';
-                                } else {
-                                    historyList.innerHTML = notes.map(n => `
-                                        <div class="history-item">
-                                            <span class="history-date">${new Date(n.createdAt).toLocaleString('uk-UA')}</span>
-                                            <div class="history-text">${n.content}</div>
-                                        </div>
-                                    `).join('');
-                                }
-                            }
-                        } catch (e) {
-                            historyList.innerHTML = '<p class="status-error">Помилка завантаження історії.</p>';
-                        }
-                    }
-                };
-
-                btnShowHistory.addEventListener('click', toggleHistory);
-                btnCloseModal.addEventListener('click', () => modal.classList.remove('is-visible'));
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.classList.remove('is-visible');
-                });
-            }
-
-            // --- БЛОК 4: ВИМКНЕННЯ КІМНАТИ ПРИ ЗАКРИТТІ ---
-if (isProfessional) {
-    window.addEventListener('beforeunload', () => {
-        // ДОДАНО /therapy ПЕРЕД /room, щоб шлях став точним
-        const url = '/therapy/room/' + clientUuid + '/leave';
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                [csrfHeader]: csrfToken,
-                'Content-Type': 'application/json'
-            },
-            keepalive: true // Дозволяє запиту завершитися після закриття вкладки
-        });
-    });
-}
-
-        });
+        window.TherapyConfig = {
+            roomName: /*[[${roomName}]]*/ 'default-room',
+            userName: /*[[${currentUser.name}]]*/ 'Користувач',
+            clientUuid: /*[[${client.id}]]*/ '',
+            jitsiJwt: /*[[${jitsiJwt}]]*/ null,
+            isProfessional: /*[[${isAdmin || isTherapist}]]*/ false,
+            csrfToken: document.querySelector('meta[name="_csrf"]').content,
+            csrfHeader: document.querySelector('meta[name="_csrf_header"]').content
+        };
     </script>
+
+    <script src="/js/therapy-room.js"></script>
 </th:block>
 </body>
 </html>

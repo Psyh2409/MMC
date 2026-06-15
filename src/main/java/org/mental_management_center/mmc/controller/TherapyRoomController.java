@@ -82,10 +82,7 @@ public class TherapyRoomController {
         // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
         String lastNote = therapyNoteService.getLastNoteContent(roomOwner.getId(), therapist.getId(), currentUser.getId());
 
-        String jitsiJwt = "";
-        if (!currentUser.hasRole(RoleBit.TEST)) {
-            jitsiJwt = generateJitsiJwt(currentUser, roomName);
-        }
+        String jitsiJwt = generateJitsiJwt(currentUser, roomName);
 
         model.addAttribute("client", roomOwner);
         model.addAttribute("currentUser", currentUser);
