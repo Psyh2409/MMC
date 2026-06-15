@@ -1,3 +1,4 @@
+3e4843f chore(infra): auto-update history via backup cron
 c1888d1 fix: reverse comment order to show newest first
 34f9ff8 feat: implement universal media facade system for MMC platform
 6883ca9 feat: implement media link facade support for chat messages
