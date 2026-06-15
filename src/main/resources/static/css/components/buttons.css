@@ -9,7 +9,7 @@
     justify-content: center;
     background-color: var(--accent-primary);
     color: var(--text-on-accent);
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-full);
     border: none;
     font-weight: 600;
@@ -17,6 +17,7 @@
     transition: all 0.2s ease;
     text-decoration: none;
     line-height: 1;
+    text-align: center;
 
 }
 .btn-primary:hover { filter: brightness(1.1); transform: translateY(-0.0625rem); }
@@ -29,13 +30,14 @@
     background: transparent;
     border: 0.0625rem solid var(--accent-primary);
     color: var(--accent-primary);
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-full);
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.2s ease;
     line-height: 1;
+    text-align: center;
 }
 .btn-outline:hover {
     background-color: var(--accent-primary);
@@ -100,7 +102,7 @@
 
 /* --- Компактні кнопки для чату/коментарів --- */
 .btn-sm {
-    padding: calc(var(--space-xs) * 0.7) var(--space-sm);
+    padding: calc(var(--space-xs) * 0.7) var(--space-xs);
     font-size: 0.85rem;
     border-radius: var(--radius-sm);
 }

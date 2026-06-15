@@ -6,19 +6,19 @@
         <div class="footer-left">
             <div sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/admin/users}" class="btn-outline">
-                    ⚙️ Адмінка
+                    <span class="hide-btn-icon">⚙️ </span>Адмінка
                 </a>
             </div>
 
             <div sec:authorize="isAnonymous()">
                 <a th:href="@{/contact}" class="btn-primary">
-                    <span class="hide-btn-icon">📩</span> Контакти
+                    <span class="hide-btn-icon">📩 </span>Контакти
                 </a>
             </div>
 
             <div sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
                 <a th:href="@{/contact}" class="btn-outline">
-                    <span class="hide-btn-icon">📩</span> Контакти
+                    <span class="hide-btn-icon">📩 </span>Контакти
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="footer-right">
             <div sec:authorize="isAuthenticated()">
                 <a th:href="@{/chat}" class="btn-outline">
-                    💬 Чат спільноти
+                    <span class="hide-btn-icon">💬 </span>Чат спільноти
                 </a>
             </div>
 
