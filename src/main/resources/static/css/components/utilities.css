@@ -59,3 +59,25 @@ tr.is-hidden {
 .start {
     justify-content: flex-start;
 }
+
+/* --- THERAPY ROOM UTILITIES --- */
+/*.status-indicator {
+    font-size: var(--step--1);
+    font-weight: bold;
+}*/
+
+/* Статуси прив'язані до системних акцентів теми */
+/*.status-saving {
+    color: var(--accent-color);
+}
+.status-saved {
+    color: var(--primary-color);
+}
+.status-error {
+    color: var(--accent-color);
+}
+
+.btn-sm {
+    padding: calc(var(--step) * 0.5) var(--space-xs);
+    font-size: var(--step--1);
+}*/

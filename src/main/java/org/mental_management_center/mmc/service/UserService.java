@@ -344,4 +344,15 @@ public class UserService {
             }
         }
     }
+
+    // У UserService.java
+    public List<User> getVisibleUsers(User currentUser) {
+        if (currentUser.hasRole(RoleBit.TEST)) {
+            // Тестувальник бачить ТІЛЬКИ тестових
+            return userRepository.findTestUsers();
+        } else {
+            // Реальний адмін бачить ТІЛЬКИ реальних
+            return userRepository.findRealUsers();
+        }
+    }
 }

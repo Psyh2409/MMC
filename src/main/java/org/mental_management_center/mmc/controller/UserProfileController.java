@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -265,6 +266,7 @@ public class UserProfileController {
         return mav;
     }
 
+    @PreAuthorize("!hasRole('TEST')")
     @Transactional
     @PostMapping("/profile/request-deactivation")
     public String requestDeactivation(Principal principal, RedirectAttributes redirectAttributes) {

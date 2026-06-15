@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.TherapyRoomService;
