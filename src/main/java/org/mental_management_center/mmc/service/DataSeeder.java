@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 // Анотація @Profile("dev") гарантує, що цей код НЕ запуститься на сервері (якщо там prod)
-@Component
+//@Component
 @Profile("dev")
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
@@ -23,7 +23,7 @@ public class DataSeeder implements CommandLineRunner {
     private final CategoryTranslationRepository categoryTranslationRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    //./mvnw spring-boot:run "-Dspring-boot.run.profiles=dev" (fot cmd without './')
+    //./mvnw spring-boot:run -Dspring-boot.run.profiles=dev (fot cmd without './')
     @Override
     @Transactional
     public void run(String... args) {

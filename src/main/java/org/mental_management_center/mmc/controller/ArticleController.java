@@ -8,6 +8,7 @@ import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
 import org.mental_management_center.mmc.service.FileStorageService;
 import org.mental_management_center.mmc.web.form.ArticleForm;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -38,7 +39,7 @@ public class ArticleController {
         model.addAttribute("articles", articleService.findAll());
         return "admin-articles";
     }
-
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/admin/articles/delete/{id}")
     public String deleteArticle(@PathVariable UUID id) {
         articleService.deleteArticle(id);
@@ -57,6 +58,7 @@ public class ArticleController {
     }
 
     // 3. ОНОВЛЮЄМО МЕТОД РЕДАГУВАННЯ (GET)
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @GetMapping("/admin/articles/edit/{id}")
     public String editArticle(@PathVariable UUID id, Model model) {
         Article article = articleService.findById(id);
@@ -84,6 +86,7 @@ public class ArticleController {
         return "article-form";
     }
 
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/admin/articles/create")
     public String createArticle(@Valid @ModelAttribute("articleForm") ArticleForm form,
                                 BindingResult result,
