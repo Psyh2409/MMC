@@ -23,12 +23,3 @@ rsync -rt --delete "$UPLOADS_SOURCE/" "$BACKUP_DIR/uploads_mirror/"
 # --- ЕТАП 3: ОЧИЩЕННЯ СТАРИХ БАЗ ДАНИХ ---
 find "$BACKUP_DIR" -maxdepth 1 -name "db_*.sql.gz" -type f -mtime +7 -delete
 
-# --- АВТОМАТИЧНЕ ОНОВЛЕННЯ ІСТОРІЇ (Додано для діагностики) ---
-cd /home/mentalmcenter/MMC
-git log --oneline > history/all_commits.txt
-git branch -a > history/all_branches.txt
-
-# Додаємо зміни до індексу та пушимо
-git add history/all_commits.txt history/all_branches.txt
-git commit -m "chore(infra): auto-update history via backup cron"
-git push origin HEAD
