@@ -1,6 +1,40 @@
+//document.addEventListener('DOMContentLoaded', () => {
+//
+//    // --- 1. Отримуємо дані від бекенду через глобальний конфіг ---
+//    const config = window.TherapyConfig;
+//    if (!config) {
+//        console.error("Критична помилка: Конфігурація кімнати не завантажена.");
+//        return;
+//    }
+//
+//    const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
+//
+//    // --- БЛОК 1: ІНІЦІАЛІЗАЦІЯ ВІДЕО JITSI ---
+//    let jitsiApi = null;
+//    const initJitsi = () => {
+//        const container = document.querySelector('#jitsi-container');
+//        if (!container) return;
+//
+//        const options = {
+//            roomName: `${appId}/${config.roomName}`,
+//            jwt: config.jitsiJwt,
+//            width: '100%',
+//            height: '100%',
+//            parentNode: container,
+//            userInfo: { displayName: config.userName },
+//            configOverwrite: { prejoinPageEnabled: false },
+//            interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false, TILE_VIEW_MAX_COLUMNS: 2 }
+//        };
+//
+//        jitsiApi = new JitsiMeetExternalAPI("8x8.vc", options);
+//        jitsiApi.addEventListener('videoConferenceJoined', () => {
+//            jitsiApi.executeCommand('toggleTileView');
+//        });
+//    };
+//    initJitsi();
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Отримуємо дані від бекенду через глобальний конфіг ---
     const config = window.TherapyConfig;
     if (!config) {
         console.error("Критична помилка: Конфігурація кімнати не завантажена.");
@@ -9,11 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
 
-    // --- БЛОК 1: ІНІЦІАЛІЗАЦІЯ ВІДЕО JITSI ---
+    // Змінна для зберігання об'єкта Jitsi
     let jitsiApi = null;
+
+    // Функція ТІЛЬКИ створює Jitsi, але НЕ викликається сама по собі
     const initJitsi = () => {
         const container = document.querySelector('#jitsi-container');
         if (!container) return;
+
+        // Важливо: очищаємо контейнер перед новим створенням, щоб не було дублів
+        container.innerHTML = '';
 
         const options = {
             roomName: `${appId}/${config.roomName}`,
@@ -27,11 +66,51 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         jitsiApi = new JitsiMeetExternalAPI("8x8.vc", options);
-        jitsiApi.addEventListener('videoConferenceJoined', () => {
-            jitsiApi.executeCommand('toggleTileView');
-        });
     };
-    initJitsi();
+
+    // =========================================================
+        // БЛОК УПРАВЛІННЯ КНОПКОЮ (РОЗГОРНУТИ / ЗГОРНУТИ)
+        // =========================================================
+        const toggleBtn = document.getElementById('toggle-session-btn');
+        const sessionArea = document.getElementById('active-session-area'); // Це блок, де лежить відео і нотатки
+
+        if (toggleBtn && sessionArea) {
+            toggleBtn.addEventListener('click', () => {
+                if (sessionArea.classList.contains('hidden')) {
+                    // 1. РОЗГОРТАЄМО
+                    sessionArea.classList.remove('hidden');
+                    toggleBtn.innerHTML = '<span>❌</span> Згорнути відеосесію';
+
+                    // ЗАПУСКАЄМО JITSI
+                    initJitsi();
+                } else {
+                    // 2. ЗГОРТАЄМО
+                    sessionArea.classList.add('hidden');
+                    toggleBtn.innerHTML = '<span>📹</span> Розгорнути відеосесію';
+
+                    // ЖОРСТКО ВБИВАЄМО З'ЄДНАННЯ
+                    if (jitsiApi !== null) {
+                        jitsiApi.dispose();
+                        jitsiApi = null;
+                    }
+
+                    // --- ОЧИЩЕННЯ НОТАТОК ---
+                    const notesArea = document.getElementById('session-notes');
+                    if (notesArea) {
+                        notesArea.value = ''; // Очищаємо екран
+                    }
+
+                    if (typeof currentNoteId !== 'undefined') {
+                        currentNoteId = null; // Обнуляємо ID для створення нового запису в БД
+                    }
+
+                    const syncStatus = document.getElementById('sync-status');
+                    if (syncStatus) {
+                        syncStatus.innerText = 'Очікування...';
+                    }
+                }
+            });
+        }
 
     // --- БЛОК 2: АВТОЗБЕРЕЖЕННЯ ---
     const notesArea = document.getElementById('session-notes');

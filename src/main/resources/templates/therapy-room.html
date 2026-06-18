@@ -7,9 +7,17 @@
 <body>
 
 <section class="standard-container-wide">
-    <div class="video-main-frame">
-        <div id="jitsi-container"></div>
+    <div class="session-toggle-wrapper mb-md">
+        <button id="toggle-session-btn" class="btn-primary">
+            <span>📹</span> Розгорнути відеосесію
+        </button>
     </div>
+
+    <div id="active-session-area" class="hidden">
+        <div class="video-main-frame">
+            <div id="jitsi-container"></div>
+        </div>
+
 
     <div class="notes-bottom-panel">
         <div class="notes-header-row">
@@ -18,7 +26,7 @@
                 Історія нотаток
             </button>
         </div>
-
+    </div>
         <textarea id="session-notes"
                   class="therapy-textarea"
                   placeholder="Нова сесія. Почніть писати тут..."></textarea>
@@ -28,6 +36,12 @@
         </div>
     </div>
 
+    <div class="wall-section mt-md" style="margin-top: 30px;">
+        <h4 class="profile-section-title">Спільна стіна</h4>
+        <div id="sharedWallContainer">
+            <div th:replace="~{fragments/shared-wall-form :: wallFeed}"></div>
+        </div>
+    </div>
     <div id="history-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,7 +71,11 @@
         };
     </script>
 
-    <script src="/js/therapy-room.js"></script>
+    <script th:src="@{/js/therapy-room.js}"></script>
+
+    <script th:src="@{/js/media-links.js}"></script>
+    <script th:src="@{/js/shared-wall.js}"></script>
+
 </th:block>
 </body>
 </html>

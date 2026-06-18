@@ -2,13 +2,16 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.service.SharedWallService;
 import org.mental_management_center.mmc.service.TherapyRoomService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.service.TherapyNoteService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,7 +33,7 @@ public class TherapyRoomController {
     private final UserService userService;
     private final TherapyNoteService therapyNoteService;
     private final TherapyRoomService therapyRoomService;
-
+    private final SharedWallService sharedWallService;
 
     @Value("${app.jitsi.app-id}")
     private String appId;
@@ -39,14 +42,17 @@ public class TherapyRoomController {
     @Value("${app.jitsi.private-key-path}")
     private String privateKeyPath;
 
-    public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService) {
+    public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService, SharedWallService sharedWallService) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
         this.therapyRoomService = therapyRoomService;
+        this.sharedWallService = sharedWallService;
     }
 
     @GetMapping("/room/{clientUuid}")
     public String getTherapyRoom(@PathVariable UUID clientUuid, Principal principal, Model model) {
+        if (principal == null) return "redirect:/login";
+
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
         User roomOwner = userService.findById(clientUuid).orElseThrow();
 
@@ -91,6 +97,20 @@ public class TherapyRoomController {
         model.addAttribute("isAdmin", currentUser.isAdmin());
         model.addAttribute("isTherapist", currentUser.isTherapist()); // Передаємо у в'юху для можливих UI-рішень
         model.addAttribute("jitsiJwt", jitsiJwt);
+
+        // ====================================================================
+        // 2. НОВИЙ БЛОК: ЗАВАНТАЖЕННЯ ПЕРШОЇ СТОРІНКИ СТІНИ ДЛЯ СТАРТУ
+        // ====================================================================
+        // Беремо перші 5 повідомлень (page 0, size 5)
+        var messagesPage = sharedWallService.getWallMessages(clientUuid, PageRequest.of(0, 5));
+
+        model.addAttribute("posts", messagesPage.getContent());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("totalPages", messagesPage.getTotalPages());
+        model.addAttribute("pageSize", 5);
+        model.addAttribute("hasMore", messagesPage.hasNext());
+        model.addAttribute("isWall", true); // Маячок для фронтенду
+        model.addAttribute("roomId", clientUuid);
 
         return "therapy-room";
     }
