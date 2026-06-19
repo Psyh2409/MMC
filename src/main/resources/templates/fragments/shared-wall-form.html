@@ -5,17 +5,13 @@
             <div class="form-field">
                 <textarea id="wallContent" name="content" rows="4" class="form-input" placeholder="Напишіть повідомлення на спільній стіні..."></textarea>
             </div>
-
-            <div class="form-actions row-between">
-                <div class="file-upload-wrapper">
-                    <label for="wallMedia" class="btn-outline">
-                        <span class="btn-icon">📎 </span>Прикріпити медіа
-                    </label>
-                    <input type="file" id="wallMedia" name="media" class="hidden wall-media-input" accept="image/*,video/mp4,video/webm,video/ogg">
+            <div class="button-row">
+                <div class="left-actions">
+                    <label for="wallMedia" class="btn-outline">📎 Медіафайл</label>
+                    <input type="file" id="wallMedia" name="media" accept="image/*,video/*" class="visually-hidden-input wall-media-input">
                     <span id="wallFileNameDisplay" class="file-name-display text-sm text-muted ml-sm"></span>
                 </div>
-
-                <div class="button-row">
+                <div class="right-actions form-actions">
                     <button type="submit" id="btnSubmitWallForm" class="btn-primary hidden">Опублікувати</button>
                     <button type="button" id="btnResetWallForm" class="btn-outline hidden">Скасувати</button>
                 </div>
@@ -32,6 +28,9 @@
         <div th:each="post : ${posts}" class="journal-post-card card-secondary mb-sm relative">
 
             <div th:if="${post.authorId == currentUser.id}" class="post-actions absolute top-0 right-0 p-sm">
+                <button class="btn-icon" th:data-id="${post.id}" th:data-room="${roomId}" onclick="window.prepareEditWallPost(this.getAttribute('data-id'), this.getAttribute('data-room'), this)" title="Редагувати">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
                 <button class="btn-icon delete-icon" th:data-id="${post.id}" th:data-room="${roomId}" onclick="window.deleteWallPost(this)" title="Видалити">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
@@ -42,7 +41,7 @@
                 <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
             </div>
 
-            <div class="journal-post-content text-body" th:text="${post.content}">Текст</div>
+            <div th:if="${post.content != null and post.content != '[MEDIA_ONLY]'}" class="journal-post-content text-body" th:text="${post.content}">Текст</div>
 
             <div th:if="${post.mediaFileName != null}" class="journal-post-media-box mt-sm">
                 <div th:if="${post.mediaFileName.toLowerCase().matches('.*\.(mp4|webm|ogg)$')}" class="media-wrapper">
@@ -55,6 +54,7 @@
                 </div>
             </div>
         </div>
+        <div class="edit-form-container hidden"></div>
     </div>
 
     <div th:if="${totalPages > 1}" class="button-row pagination-row mt-md">

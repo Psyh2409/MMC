@@ -74,7 +74,7 @@ public class SharedWallController {
             if (hasText) {
                 encryptedText = cryptoService.encryptAndCompress(content);
             } else {
-                encryptedText = cryptoService.encryptAndCompress("[MEDIA_ONLY]");
+                encryptedText = cryptoService.encryptAndCompress(hasText ? content.trim() : "[MEDIA_ONLY]");
             }
 
             sharedWallService.saveMessage(roomId, currentUser.getId(), encryptedText, mediaFileName, encryptedHead);
