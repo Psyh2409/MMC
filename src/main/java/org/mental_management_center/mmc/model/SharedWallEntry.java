@@ -41,6 +41,9 @@ public class SharedWallEntry {
     @Column(name = "media_file_name", length = 512)
     private String mediaFileName;
 
+    @Column(name = "media_file_hash", length = 64)
+    private String mediaFileHash;
+
     @Transient // Для фронтенду
     private String content;
 

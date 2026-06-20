@@ -128,7 +128,7 @@ async function reloadWallFeed(roomId, page, size) {
 
         const feedContainer = document.getElementById('wallFeed');
         if (feedContainer) {
-            feedContainer.outerHTML = await response.text();
+            feedContainer.innerHTML = await response.text();
             if (typeof window.applyMediaFacades === 'function') {
                 window.applyMediaFacades();
             }
@@ -170,3 +170,128 @@ window.deleteWallPost = async function(btn) {
         alert('Помилка мережі: ' + err.message);
     }
 };
+
+// Підготовка форми редагування поста
+window.prepareEditWallPost = function(postId, roomId, buttonElement) {
+    console.log('[SharedWall] prepareEditWallPost викликано:', { postId, roomId });
+
+    const postCard = buttonElement.closest('.journal-post-card');
+    const editContainer = postCard.querySelector('.edit-form-container');
+
+    if (!editContainer) {
+        console.error('[SharedWall] edit-form-container не знайдено');
+        return;
+    }
+
+    console.log('[SharedWall] Завантаження форми редагування...');
+
+    // Завантаження форми редагування з сервера
+    fetch(`/api/room/${roomId}/wall/fragment/edit-form/${postId}`)
+        .then(response => {
+            console.log('[SharedWall] Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('Помилка завантаження форми редагування');
+            }
+            return response.text();
+        })
+        .then(html => {
+            console.log('[SharedWall] HTML отримано, довжина:', html.length);
+            editContainer.innerHTML = html;
+            editContainer.classList.remove('hidden');
+
+            // Приховати оригінальний контент поста (якщо існує)
+            const postContent = postCard.querySelector('.journal-post-content');
+            if (postContent) postContent.classList.add('hidden');
+
+            const postMedia = postCard.querySelector('.journal-post-media-box');
+            if (postMedia) postMedia.classList.add('hidden');
+
+            // Приховати кнопки дій (якщо існують)
+            const postActions = postCard.querySelector('.post-actions');
+            if (postActions) postActions.classList.add('hidden');
+
+            // Налаштувати обробку форми редагування
+            const editForm = editContainer.querySelector('form');
+            if (editForm) {
+                console.log('[SharedWall] Форма знайдена, встановлення action:', `/api/room/${roomId}/wall/${postId}/update`);
+                editForm.action = `/api/room/${roomId}/wall/${postId}/update`;
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleEditFormSubmit(editForm, postId, roomId, postCard);
+                });
+            } else {
+                console.error('[SharedWall] Форма не знайдена в завантаженому HTML');
+            }
+        })
+        .catch(error => {
+            console.error('[SharedWall] Помилка:', error);
+            alert('Не вдалося завантажити форму редагування');
+        });
+};
+
+// Скасування редагування поста
+window.cancelEditWallPost = function(buttonElement) {
+    const postCard = buttonElement.closest('.journal-post-card');
+    const editContainer = postCard.querySelector('.edit-form-container');
+
+    // Очистити контейнер
+    editContainer.innerHTML = '';
+    editContainer.classList.add('hidden');
+
+    // Показати оригінальний контент поста
+    const postContent = postCard.querySelector('.journal-post-content');
+    const postMedia = postCard.querySelector('.journal-post-media-box');
+    if (postContent) postContent.classList.remove('hidden');
+    if (postMedia) postMedia.classList.remove('hidden');
+
+    // Показати кнопки дій
+    const postActions = postCard.querySelector('.post-actions');
+    if (postActions) postActions.classList.remove('hidden');
+};
+
+// Обробка відправки форми редагування
+function handleEditFormSubmit(form, postId, roomId, postCard) {
+    console.log('[SharedWall] handleEditFormSubmit викликано');
+
+    const formData = new FormData(form);
+
+    // Додати CSRF токен
+    const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        body: formData
+    })
+    .then(response => {
+        console.log('[SharedWall] Response status:', response.status);
+        if (!response.ok) {
+            throw new Error('Помилка оновлення поста');
+        }
+        return response;
+    })
+    .then(() => {
+        console.log('[SharedWall] Пост успішно оновлено');
+        // Закрити форму редагування і показати оновлений контент
+        const editContainer = postCard.querySelector('.edit-form-container');
+        editContainer.innerHTML = '';
+        editContainer.classList.add('hidden');
+
+        // Показати оновлений контент
+        const postContent = postCard.querySelector('.journal-post-content');
+        const postMedia = postCard.querySelector('.journal-post-media-box');
+        if (postContent) postContent.classList.remove('hidden');
+        if (postMedia) postMedia.classList.remove('hidden');
+
+        // Показати кнопки дій
+        const postActions = postCard.querySelector('.post-actions');
+        if (postActions) postActions.classList.remove('hidden');
+
+        // Перезавантажити стіну для відображення оновлень
+        reloadWallFeed(roomId, 0, 5);
+    })
+    .catch(error => {
+        console.error('[SharedWall] Помилка:', error);
+        alert('Не вдалося оновити пост');
+    });
+}

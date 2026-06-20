@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
@@ -99,7 +102,9 @@ public class AdminUserController {
             userService.deleteUserById(id, principal.getName());
             return "redirect:/admin/users?success";
         } catch (RuntimeException e) {
-            return "redirect:/admin/users?error=" + e.getMessage();
+            String errorMessage = e.getMessage().replaceAll("[\r\n]", " ");
+            String encodedError = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            return "redirect:/admin/users?error=" + encodedError;
         }
     }
 }

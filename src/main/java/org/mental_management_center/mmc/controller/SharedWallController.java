@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
+import java.util.HexFormat;
 import java.util.UUID;
 
 @Slf4j
@@ -139,6 +142,119 @@ public class SharedWallController {
         return ResponseEntity.ok().build();
     }
 
+    // 4. Отримання форми редагування поста
+    @GetMapping("/fragment/edit-form/{postId}")
+    public String getEditFormFragment(@PathVariable UUID roomId,
+                                      @PathVariable UUID postId,
+                                      Model model, Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        SharedWallEntry entry = sharedWallRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Пост не знайдено"));
+
+        // Тільки автор посту може його редагувати
+        if (!entry.getAuthorId().equals(currentUser.getId())) {
+            throw new SecurityException("Доступ заборонено");
+        }
+
+        String decryptedContent = cryptoService.decryptAndDecompress(entry.getEncryptedContent());
+
+        model.addAttribute("isEdit", true);
+        model.addAttribute("postId", postId);
+        model.addAttribute("content", decryptedContent);
+        model.addAttribute("post", entry);
+        model.addAttribute("roomId", roomId);
+
+        return "fragments/shared-wall-form :: wallForm";
+    }
+
+    // 4. Оновлення поста на стіні
+    @PostMapping("/{postId}/update")
+    @Transactional
+    @ResponseBody
+    public ResponseEntity<Void> updateWallEntry(@PathVariable UUID roomId,
+                                                @PathVariable UUID postId,
+                                                @RequestParam("content") String newContent,
+                                                @RequestParam(value = "media", required = false) MultipartFile file,
+                                                Principal principal) {
+        log.info("Оновлення поста {}: roomId={}, postId={}", postId, roomId, postId);
+
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        SharedWallEntry entry = sharedWallRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Пост не знайдено"));
+
+        log.info("Автор поста: {}, Поточний користувач: {}", entry.getAuthorId(), currentUser.getId());
+
+        // Тільки автор посту може його оновити
+        if (!entry.getAuthorId().equals(currentUser.getId())) {
+            log.warn("Доступ заборонено: автор поста {} не дорівнює поточному користувачеві {}", entry.getAuthorId(), currentUser.getId());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        String trimmedContent = newContent.trim();
+        boolean hasText = !trimmedContent.isEmpty();
+        boolean hasMedia = file != null && !file.isEmpty();
+
+        if (!hasText && !hasMedia) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            // Оновлення тексту
+            if (hasText) {
+                byte[] encryptedAndCompressedData = cryptoService.encryptAndCompress(trimmedContent);
+                entry.setEncryptedContent(encryptedAndCompressedData);
+            } else {
+                entry.setEncryptedContent(cryptoService.encryptAndCompress("[MEDIA_ONLY]"));
+            }
+
+            // Оновлення медіа
+            if (hasMedia) {
+                String oldFileName = entry.getMediaFileName();
+                log.info("Старе ім'я файлу: {}", oldFileName);
+
+                // Обчислити хеш файлу для дедуплікації
+                String fileHash = calculateFileHash(file);
+                log.info("Хеш файлу: {}", fileHash);
+
+                // Перевірити, чи існує файл з таким хешем
+                java.util.Optional<SharedWallEntry> existingEntry = sharedWallRepository.findFirstByMediaFileHashOrderByCreatedAtDesc(fileHash);
+
+                if (existingEntry.isPresent()) {
+                    // Використати існуючий файл
+                    String existingFileName = existingEntry.get().getMediaFileName();
+                    byte[] existingHead = existingEntry.get().getMediaFileHead();
+
+                    entry.setMediaFileHead(existingHead);
+                    entry.setMediaFileName(existingFileName);
+                    entry.setMediaFileHash(fileHash);
+
+                    log.info("Використано існуючий файл: {}", existingFileName);
+                } else {
+                    // Зберегти новий файл
+                    FileStorageService.FileSurgeryResult surgery = fileStorageService.storePrivateTail(file);
+                    byte[] encryptedHead = cryptoService.encryptBytes(surgery.head);
+
+                    entry.setMediaFileHead(encryptedHead);
+                    entry.setMediaFileName(surgery.tailFileName);
+                    entry.setMediaFileHash(fileHash);
+
+                    log.info("Збережено новий файл: {}", surgery.tailFileName);
+                }
+            }
+
+            sharedWallRepository.save(entry);
+            log.info("Пост {} успішно оновлено", postId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("Помилка оновлення поста {}: {}", postId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // 4. Отримання медіа (без змін, працює ідеально)
     @GetMapping("/media/{filename:.+}")
     @ResponseBody
@@ -156,15 +272,27 @@ public class SharedWallController {
         }
 
         try {
+            log.info("Запит медіа файлу: {}", filename);
             SharedWallEntry entry = sharedWallRepository.findFirstByMediaFileNameOrderByCreatedAtDesc(filename)
-                    .orElseThrow(() -> new RuntimeException("Файл не знайдено"));
+                    .orElseThrow(() -> {
+                        log.warn("Файл {} не знайдено в базі даних", filename);
+                        return new RuntimeException("Файл не знайдено");
+                    });
 
-            if (entry.getMediaFileHead() == null) return ResponseEntity.notFound().build();
+            if (entry.getMediaFileHead() == null) {
+                log.warn("MediaFileHead є null для файлу {}", filename);
+                return ResponseEntity.notFound().build();
+            }
 
             byte[] decryptedHead = cryptoService.decryptBytes(entry.getMediaFileHead());
             Path filePath = fileStorageService.loadFromPrivate(filename);
 
-            if (!Files.exists(filePath)) return ResponseEntity.notFound().build();
+            if (!Files.exists(filePath)) {
+                log.warn("Файл {} не існує на диску за шляхом: {}", filename, filePath);
+                return ResponseEntity.notFound().build();
+            }
+
+            log.info("Файл {} успішно знайдено на диску", filename);
 
             long totalLength = decryptedHead.length + Files.size(filePath);
 
@@ -196,5 +324,19 @@ public class SharedWallController {
             log.error("❌ ПОМИЛКА СТРИМІНГУ: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    // Допоміжний метод для обчислення хешу файлу
+    private String calculateFileHash(MultipartFile file) throws IOException, NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        try (InputStream is = file.getInputStream()) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                digest.update(buffer, 0, bytesRead);
+            }
+        }
+        byte[] hashBytes = digest.digest();
+        return HexFormat.of().formatHex(hashBytes);
     }
 }

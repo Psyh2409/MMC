@@ -1,3 +1,53 @@
+<div th:fragment="wallForm(isEdit, postId, content, roomId, post)"
+     th:class="${isEdit} ? 'wall-edit-container' : 'card-primary mb-md'" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <form th:id="${isEdit} ? 'wallEditForm-' + ${postId} : 'wallForm'"
+          th:data-room="${roomId}"
+          action="#"
+          method="POST" class="stack-form" enctype="multipart/form-data">
+
+        <div class="form-field">
+            <textarea th:id="${isEdit} ? null : 'wallContent'"
+                      name="content"
+                      rows="4"
+                      class="form-input"
+                      th:placeholder="${isEdit} ? 'Редагуйте повідомлення...' : 'Напишіть повідомлення на спільній стіні...'"
+                      th:text="${content != null and content != '[MEDIA_ONLY]' ? content : ''}"></textarea>
+        </div>
+
+        <div class="media-preview-area">
+            <div th:if="${isEdit and post != null and post.mediaFileName != null}" class="current-media-display">
+                <div th:if="${post.mediaFileName.toLowerCase().matches('.*\.(mp4|webm|ogg)$')}">
+                    <video controls preload="metadata" class="media-preview">
+                        <source th:src="@{/api/room/{roomId}/wall/media/{name}(roomId=${roomId}, name=${post.mediaFileName})}" type="video/mp4">
+                    </video>
+                </div>
+                <div th:unless="${post.mediaFileName.toLowerCase().matches('.*\.(mp4|webm|ogg)$')}">
+                    <img th:src="@{/api/room/{roomId}/wall/media/{name}(roomId=${roomId}, name=${post.mediaFileName})}" alt="Media" class="media-preview">
+                </div>
+                <span class="text-sm text-muted current-media-label">
+                    📎 Файл у базі: <strong th:text="${post.mediaFileName}"></strong>
+                </span>
+            </div>
+
+            <div class="edit-media-preview"></div>
+            <span th:id="${isEdit} ? null : 'wallFileNameDisplay'" class="text-sm text-muted file-name-display"></span>
+        </div>
+
+        <div class="button-row">
+            <div class="left-actions">
+                <label th:for="${isEdit} ? 'wallMedia-' + ${postId} : 'wallMedia'" class="btn-outline">📎 Медіафайл</label>
+                <input type="file" th:id="${isEdit} ? 'wallMedia-' + ${postId} : 'wallMedia'" name="media" accept="image/*,video/*" class="visually-hidden-input wall-media-input">
+            </div>
+
+            <div class="right-actions form-actions">
+                <button type="submit" th:id="${isEdit} ? null : 'btnSubmitWallForm'" class="btn-primary" th:classappend="${!isEdit} ? 'hidden' : ''" th:text="${isEdit} ? 'Зберегти' : 'Опублікувати'">Опублікувати</button>
+                <button th:if="${!isEdit}" type="button" id="btnResetWallForm" class="btn-outline hidden">Скасувати</button>
+                <button th:if="${isEdit}" type="button" class="btn-outline" onclick="window.cancelEditWallPost(this)">Скасувати</button>
+            </div>
+        </div>
+    </form>
+</div>
 <div th:fragment="wallFeed" id="wallFeed" xmlns:th="http://www.w3.org/1999/xhtml">
 
     <div class="card-primary mb-md">
@@ -53,8 +103,8 @@
                     <img th:src="@{/api/room/{roomId}/wall/media/{name}(roomId=${roomId}, name=${post.mediaFileName})}" alt="Media" class="journal-post-img">
                 </div>
             </div>
-        </div>
-        <div class="edit-form-container hidden"></div>
+            <div class="edit-form-container hidden"></div>
+            </div>
     </div>
 
     <div th:if="${totalPages > 1}" class="button-row pagination-row mt-md">

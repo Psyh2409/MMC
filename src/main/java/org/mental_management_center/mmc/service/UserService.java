@@ -11,6 +11,7 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,8 @@ public class UserService {
     private RequestRepository requestRepository;
     @Autowired
     private SessionRegistry sessionRegistry;
+    @Autowired
+    private TherapyNoteRepository therapyNoteRepository;
 
     // Оновлений конструктор — Spring сам підставить сюди всі залежності
     public UserService(UserRepository userRepository,
@@ -108,23 +111,7 @@ public class UserService {
                     }
                     return userRepository.save(existingUser);
                 })
-                .orElseGet(() -> {
-                    User user = new User();
-                    user.setEmail(email);
-                    user.setName((name == null || name.isBlank()) ? email : name);
-
-                    // Додаємо базові ролі для нового соц-користувача
-                    user.addRole(RoleBit.GUEST);
-                    user.addRole(RoleBit.READER);
-
-                    user.setAuthProvider(provider);
-                    user.setProviderId(providerId);
-                    user.setEnabled(false);
-                    user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-                    User savedUser = userRepository.save(user);
-                    issueVerificationToken(savedUser);
-                    return savedUser;
-                });
+                .orElseThrow(() -> new OAuth2AuthenticationException("Користувача з email " + email + " не знайдено в системі. Будь ласка, зареєструйтесь спочатку."));
     }
 
     @Transactional
@@ -178,6 +165,8 @@ public class UserService {
         requestRepository.deleteByUserId(id);
         chatMessageRepository.deleteBySenderIdOrRecipientId(id, id);
         journalPostRepository.deleteByUserId(id);
+        therapyNoteRepository.deleteByClientId(id);
+        therapyNoteRepository.deleteByTherapistId(id);
 
         // Тільки тепер видаляємо юзера
         userRepository.deleteById(id);

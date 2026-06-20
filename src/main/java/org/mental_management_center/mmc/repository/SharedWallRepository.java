@@ -26,6 +26,10 @@ public interface SharedWallRepository extends JpaRepository<SharedWallEntry, UUI
 
     // Замість findByMediaFileName використовуємо findFirstBy... і сортуємо за датою
     Optional<SharedWallEntry> findFirstByMediaFileNameOrderByCreatedAtDesc(String mediaFileName);
+
+    // Пошук за хешем файлу для дедуплікації
+    Optional<SharedWallEntry> findFirstByMediaFileHashOrderByCreatedAtDesc(String mediaFileHash);
+
     // Рахуємо записи в особистому журналі
     long countByAuthorId(UUID authorId);
 

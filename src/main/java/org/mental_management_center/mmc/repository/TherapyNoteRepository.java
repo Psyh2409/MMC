@@ -26,4 +26,10 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
     // Наш новий метод репозиторію, який очікує пагінацію
     @EntityGraph(attributePaths = {"therapist", "client"})
     Page<TherapyNote> findByAuthorId(UUID authorId, Pageable pageable);
+
+    // Видалення нотаток за clientId (для видалення користувача-клієнта)
+    void deleteByClientId(UUID clientId);
+
+    // Видалення нотаток за therapistId (для видалення користувача-терапевта)
+    void deleteByTherapistId(UUID therapistId);
 }
