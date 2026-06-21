@@ -297,15 +297,14 @@ public class UserService {
     }
 
     public User findAdmin() {
-        return userRepository.findAll().stream()
+        return userRepository.findRealUsers().stream()
                 .filter(User::isAdmin)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Адміністратора не знайдено"));
+                .orElseThrow(() -> new RuntimeException("Реального адміністратора не знайдено"));
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
+    // ВИДАЛЕНО: findAll() - небезпечний метод, який повертав всіх користувачів без фільтрації
+    // Замість цього використовуйте getVisibleUsers(currentUser) для фільтрації тестових/реальних користувачів
 
     @Transactional
     public void updateAvatar(String email, String avatarFileName) {
