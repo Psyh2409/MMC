@@ -97,6 +97,7 @@ public class TherapyRoomController {
         model.addAttribute("isAdmin", currentUser.isAdmin());
         model.addAttribute("isTherapist", currentUser.isTherapist()); // Передаємо у в'юху для можливих UI-рішень
         model.addAttribute("jitsiJwt", jitsiJwt);
+        model.addAttribute("isSessionActive", therapyRoomService.isRoomActive(clientUuid));
 
         // ====================================================================
         // 2. НОВИЙ БЛОК: ЗАВАНТАЖЕННЯ ПЕРШОЇ СТОРІНКИ СТІНИ ДЛЯ СТАРТУ
@@ -247,4 +248,18 @@ public class TherapyRoomController {
         return ResponseEntity.ok().build();
     }
 
+//    @PostMapping("/room/{clientUuid}/activate")
+//    @ResponseBody
+//    public ResponseEntity<Void> activateTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
+//        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//
+//        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+//        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
+//
+//        if (isAuthorizedProfessional) {
+//            therapyRoomService.activateRoom(clientUuid);
+//        }
+//
+//        return ResponseEntity.ok().build();
+//    }
 }

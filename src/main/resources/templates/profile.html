@@ -120,18 +120,21 @@
         <main class="profile-main-content">
 
             <nav class="tabs-navigation">
-                <button type="button" class="tab-button active" data-target="therapy-tab">Терапевтичний простір</button>
+                <button type="button" class="tab-button active" data-target="therapy-tab"
+                        th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
+                    Терапевтичний простір</button>
                 <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
             </nav>
 
-            <div id="therapy-tab" class="tab-pane active">
+            <div id="therapy-tab" class="tab-pane active"
+                 th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
 
-                <div th:if="${hasInvitation}" class="card-primary mb-md">
+                <div class="card-primary mb-md">
                     <div class="invitation-text">
-                        <h3>Сесія активна</h3>
-                        <p>Ваш терапевт чекає на вас у кабінеті.</p>
+                        <h3>Терапевтичний кабінет</h3>
+                        <p>Ваша спільна стіна для роботи та матеріалів.</p>
                     </div>
-                    <a th:href="${therapyRoomUrl}" class="btn-primary">Увійти в кабінет</a>
+                    <a th:href="${therapyRoomUrl}" class="btn-primary">Перейти в кабінет</a>
                 </div>
 
                 <div th:if="${professionalNotes != null}" class="journal-section mb-md">

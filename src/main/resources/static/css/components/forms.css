@@ -55,6 +55,19 @@
     box-shadow: 0 0 0 calc(var(--step) * 0.5) var(--bg-overlay);
 }
 
+.form-input-readonly{
+    width: 100%;
+    padding: calc(var(--step) * 3);
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-surface); /* Використовуємо правильний токен шару */
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
 /* --- ТЕКСТИ ДОПОМОГИ ТА ПОМИЛОК --- */
 .form-error-text,
 .error-text {

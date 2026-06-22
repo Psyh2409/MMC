@@ -37,10 +37,31 @@ run.ps1
 # Динамічні завантаження користувачів (Media runtime)
 uploads/
 
-###Get-ChildItem -Include *.css, *.java -Recurse | ForEach-Object {
-   #>>     Write-Host "`n--- FILE: $($_.FullName) ---" -ForegroundColor Cyan
-   #>>     # Шукаємо класи в CSS та методи/змінні в Java одним махом
-   #>>     Select-String -Path $_.FullName -Pattern '(?<=\.)[a-zA-Z0-9_-]+(?=\s*\{)|(public|private|protected)\s+\w+\s+\w+\s*\(.*?\)' -AllMatches | ForEach-Object {
-   #>>         $_.Matches.Value.Trim()
-   #>>     }
-   #>> }###
+#Get-ChildItem -Path ".\src" -Include *.java, *.css, *.html, *.js -Recurse | ForEach-Object {
+#    $file = $_
+#    $buffer = @()
+#
+#    switch ($file.Extension) {
+#        ".java" {
+#            $found = Select-String -Path $file.FullName -Pattern '(public|private|protected)\s+[\w\<\>\[\]]+\s+\w+\s*\(' -AllMatches
+#            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
+#        }
+#        ".css" {
+#            $found = Select-String -Path $file.FullName -Pattern '(?<=\.)[a-zA-Z0-9_-]+(?=\s*\{)' -AllMatches
+#            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
+#        }
+#        ".html" {
+#            $found = Select-String -Path $file.FullName -Pattern '(th:fragment="[^"]+"|id="[^"]+")' -AllMatches
+#            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
+#        }
+#        ".js" {
+#            $found = Select-String -Path $file.FullName -Pattern '(function\s+\w+|const\s+\w+\s*=\s*(?:async\s*)?\()' -AllMatches
+#            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
+#        }
+#    }
+#
+#    if ($buffer -and $buffer.Count -gt 0) {
+#        Write-Host "`n--- FILE: $($file.FullName) ---" -ForegroundColor Cyan
+#        $buffer | Select-Object -Unique
+#    }
+#}
