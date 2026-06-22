@@ -67,12 +67,6 @@ public class TherapyRoomController {
             return "error/403";
         }
 
-        // 3. === НАШ ВИМИКАЧ КНОПКИ ===
-        // Якщо зайшов фахівець — запалюємо кнопку в профілі клієнта
-        if (isAuthorizedProfessional) {
-            therapyRoomService.activateRoom(clientUuid);
-        }
-
         // 4. ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ (для завантаження нотаток)
         User therapist;
         if (isAuthorizedProfessional) {
@@ -248,18 +242,24 @@ public class TherapyRoomController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/room/{clientUuid}/activate")
-//    @ResponseBody
-//    public ResponseEntity<Void> activateTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
-//        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//
-//        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-//        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
-//
-//        if (isAuthorizedProfessional) {
-//            therapyRoomService.activateRoom(clientUuid);
-//        }
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/room/{clientUuid}/activate")
+    @ResponseBody
+    public ResponseEntity<Void> activateTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
+        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
+
+        if (isAuthorizedProfessional) {
+            therapyRoomService.activateRoom(clientUuid);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/room/{clientUuid}/status")
+    @ResponseBody
+    public ResponseEntity<Boolean> getRoomStatus(@PathVariable UUID clientUuid) {
+        return ResponseEntity.ok(therapyRoomService.isRoomActive(clientUuid));
+    }
 }

@@ -7,7 +7,7 @@
 <body>
 
 <section class="standard-container-wide">
-    <div class="session-toggle-wrapper mb-md" th:if="${isSessionActive}">
+    <div class="session-toggle-wrapper mb-md" th:classappend="${(!isAdmin and !isTherapist and !isSessionActive) ? 'hidden' : ''}">
         <button id="toggle-session-btn" class="btn-primary">
             <span>📹</span> Розгорнути відеосесію
         </button>

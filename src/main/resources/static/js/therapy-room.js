@@ -1,38 +1,3 @@
-//document.addEventListener('DOMContentLoaded', () => {
-//
-//    // --- 1. Отримуємо дані від бекенду через глобальний конфіг ---
-//    const config = window.TherapyConfig;
-//    if (!config) {
-//        console.error("Критична помилка: Конфігурація кімнати не завантажена.");
-//        return;
-//    }
-//
-//    const appId = 'vpaas-magic-cookie-a6c49e33cd42404bb9c7e3d27f7825c6';
-//
-//    // --- БЛОК 1: ІНІЦІАЛІЗАЦІЯ ВІДЕО JITSI ---
-//    let jitsiApi = null;
-//    const initJitsi = () => {
-//        const container = document.querySelector('#jitsi-container');
-//        if (!container) return;
-//
-//        const options = {
-//            roomName: `${appId}/${config.roomName}`,
-//            jwt: config.jitsiJwt,
-//            width: '100%',
-//            height: '100%',
-//            parentNode: container,
-//            userInfo: { displayName: config.userName },
-//            configOverwrite: { prejoinPageEnabled: false },
-//            interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false, TILE_VIEW_MAX_COLUMNS: 2 }
-//        };
-//
-//        jitsiApi = new JitsiMeetExternalAPI("8x8.vc", options);
-//        jitsiApi.addEventListener('videoConferenceJoined', () => {
-//            jitsiApi.executeCommand('toggleTileView');
-//        });
-//    };
-//    initJitsi();
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const config = window.TherapyConfig;
@@ -212,18 +177,78 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- БЛОК 4: ВИМКНЕННЯ КІМНАТИ ПРИ ЗАКРИТТІ ---
-    if (config.isProfessional) {
-        window.addEventListener('beforeunload', () => {
-            const url = '/therapy/room/' + config.clientUuid + '/leave';
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    [config.csrfHeader]: config.csrfToken,
-                    'Content-Type': 'application/json'
-                },
-                keepalive: true
+    // --- БЛОК 4: КЕРУВАННЯ СТАНОМ КІМНАТИ (Для фахівця) ---
+        if (config.isProfessional) {
+            // 1. Старий запобіжник: якщо фахівець таки закрив вкладку - гасимо кімнату
+            window.addEventListener('beforeunload', () => {
+                fetch('/therapy/room/' + config.clientUuid + '/leave', {
+                    method: 'POST',
+                    headers: { [config.csrfHeader]: config.csrfToken, 'Content-Type': 'application/json' },
+                    keepalive: true
+                });
             });
-        });
-    }
+
+            // 2. НАШ НОВИЙ ПУЛЬТ: слухаємо клік по кнопці "Розгорнути / Згорнути"
+            const toggleBtn = document.querySelector('#toggle-session-btn');
+            const sessionArea = document.querySelector('#active-session-area');
+
+            if (toggleBtn && sessionArea) {
+                toggleBtn.addEventListener('click', () => {
+                    // Даємо браузеру 50 мілісекунд, щоб він встиг локально перемкнути CSS-клас 'hidden'
+                    setTimeout(() => {
+                        const isCollapsed = sessionArea.classList.contains('hidden');
+                        const endpoint = isCollapsed ? '/leave' : '/activate';
+
+                        fetch('/therapy/room/' + config.clientUuid + endpoint, {
+                            method: 'POST',
+                            headers: {
+                                [config.csrfHeader]: config.csrfToken,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                    }, 50);
+                });
+            }
+        }
+        // --- БЛОК 5: ОЧІ КЛІЄНТА ТА ПРИМУСОВА КАТАПУЛЬТА ---
+            if (!config.isProfessional) {
+                const toggleBtnWrapper = document.querySelector('.session-toggle-wrapper');
+                const sessionArea = document.getElementById('active-session-area');
+                const toggleBtn = document.getElementById('toggle-session-btn');
+
+                if (toggleBtnWrapper && sessionArea) {
+                    setInterval(() => {
+                        fetch('/therapy/room/' + config.clientUuid + '/status')
+                            .then(response => response.json())
+                            .then(isActive => {
+                                if (isActive) {
+                                    // 1. Терапевт увімкнув сесію -> показуємо кнопку
+                                    toggleBtnWrapper.classList.remove('hidden');
+                                } else {
+                                    // 2. Терапевт вимкнув сесію -> ховаємо кнопку
+                                    toggleBtnWrapper.classList.add('hidden');
+
+                                    // === ПРИМУСОВА КАТАПУЛЬТА ===
+                                    // Якщо клієнт прямо зараз сидів усередині відео — викидаємо його
+                                    if (!sessionArea.classList.contains('hidden')) {
+                                        sessionArea.classList.add('hidden'); // закриваємо екран з відео
+
+                                        if (toggleBtn) {
+                                            toggleBtn.innerHTML = '<span>📹</span> Розгорнути відеосесію';
+                                        }
+
+                                        // Жорстко обриваємо потік Jitsi
+                                        if (jitsiApi !== null) {
+                                            jitsiApi.dispose();
+                                            jitsiApi = null;
+                                        }
+
+                                        console.log("Сесію завершено фахівцем. Відео-з'єднання розірвано.");
+                                    }
+                                }
+                            })
+                            .catch(err => console.log("Спільний простір очікує..."));
+                    }, 3000);
+                }
+            }
 });
