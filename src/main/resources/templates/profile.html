@@ -55,7 +55,7 @@
 
                     <div class="form-field">
                         <label class="form-input-label">Email (Логін)</label>
-                        <input type="email" th:value="${user.email}" class="form-input" readonly disabled>
+                        <input type="email" th:value="${user.email}" class="form-input-readonly" readonly disabled>
                     </div>
 
                     <div class="form-field">
@@ -132,7 +132,7 @@
                 <div class="card-primary mb-md">
                     <div class="invitation-text">
                         <h3>Терапевтичний кабінет</h3>
-                        <p>Ваша спільна стіна для роботи та матеріалів.</p>
+                        <p>Ваша спільна стіна з фахівцем для роботи та матеріалів.</p>
                     </div>
                     <a th:href="${therapyRoomUrl}" class="btn-primary">Перейти в кабінет</a>
                 </div>
