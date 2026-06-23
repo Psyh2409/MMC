@@ -222,8 +222,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             .then(response => response.json())
                             .then(isActive => {
                                 if (isActive) {
-                                    // 1. Терапевт увімкнув сесію -> показуємо кнопку
-                                    toggleBtnWrapper.classList.remove('hidden');
+                                    // Перевіряємо: якщо кнопка ДО ЦЬОГО була в hidden — значить, сесія ЩОЙНО стартувала
+                                    if (toggleBtnWrapper.classList.contains('hidden')) {
+                                        toggleBtnWrapper.classList.remove('hidden');
+
+                                        // Вмикаємо плавний ліфт на самий верх сторінки
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        console.log("Сесію активовано: клієнта автоматично піднято вгору.");
+                                    }
                                 } else {
                                     // 2. Терапевт вимкнув сесію -> ховаємо кнопку
                                     toggleBtnWrapper.classList.add('hidden');
