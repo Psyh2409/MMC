@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import org.mental_management_center.mmc.service.SpecialistService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class ContentController {
 
     private final ArticleService articleService;
     private final ArticleRepository articleRepository;
-
+    private final SpecialistService specialistService;
     // ДОДАНО: Репозиторії для коментарів та юзерів
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -127,5 +128,11 @@ public class ContentController {
     @GetMapping("/about")
     public String about() {
         return "about";
+    }
+
+    @GetMapping("/specialists")
+    public String showSpecialistsDirectory(Model model) {
+        model.addAttribute("specialists", specialistService.getApprovedSpecialists());
+        return "specialists";
     }
 }

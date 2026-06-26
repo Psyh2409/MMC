@@ -163,6 +163,8 @@
     transition: color 0.2s ease;
 }
 
+
+
 .article-card a:hover,
 .profile-card a:hover {
     color: var(--accent-primary);
@@ -331,4 +333,23 @@
        Бокові: var(--space-sm) (0.5rem) — у сумі з падінгом картки дає ефект "дихання" тексту
        Нижній: Стискаємо до var(--space-sm) (0.5rem) замість колишнього 1rem для економії місця */
     padding: 0 var(--space-sm) var(--space-sm) var(--space-sm);
+}
+
+/* Модифікатори для сітки фахівців */
+.card-specialist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.card-specialist-avatar {
+    margin-bottom: 1rem;
+}
+
+.card-specialist-info {
+    width: 100%;
+    margin-top: 1rem;
+    text-align: left;
 }

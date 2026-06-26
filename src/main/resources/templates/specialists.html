@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title>Наші фахівці | MMC</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <div class="dashboard-hero-card">
+        <div class="hero-top-row">
+            <div class="hero-text-block">
+                <h1 class="page-title-accent">Реєстр Фахівців платформи</h1>
+                <p class="hero-description">Фахівці, чия вища фахова освіта підтверджена адміністрацією через базу ЄДЕБО.</p>
+            </div>
+        </div>
+        <hr class="hero-divider">
+    </div>
+
+    <!-- Сітка карток -->
+    <div class="articles-grid mt-md">
+        <th:block th:each="app : ${specialists}">
+            <div class="profile-card card-specialist">
+
+                <div class="card-specialist-avatar">
+                    <div class="avatar-circle avatar-md">
+                        <img th:if="${app.user.avatarFileName != null}"
+                             th:src="@{/api/media/{name}(name=${app.user.avatarFileName})}"
+                             alt="Аватар фахівця">
+                        <span th:unless="${app.user.avatarFileName != null}"
+                              th:text="${app.user.name != null and app.user.name.length() > 0 ? #strings.substring(app.user.name, 0, 1).toUpperCase() : 'U'}">
+                        </span>
+                    </div>
+                </div>
+
+                <h3 class="profile-header-title" th:text="${app.user.name}">Ім'я на платформі</h3>
+
+                <div class="badge badge-therapist">ВЕРИФІКОВАНО</div>
+
+                <div class="issue-callout p-sm card-specialist-info">
+                    <span class="text-muted text-sm">Освітній ступінь:</span>
+                    <strong class="d-block" th:text="${app.educationLevel}">Магістр</strong>
+
+                    <span class="text-muted text-sm mt-sm d-block">Фахівець:</span>
+                    <span th:text="${app.lastName + ' ' + app.firstName}">ПІБ</span>
+                </div>
+
+                <div class="action-group mt-md w-100 center">
+                    <!-- Заділ на наступний крок: Публічна візитка фахівця -->
+                    <a th:href="@{/therapist/public/{id}(id=${app.user.id})}" class="btn-primary">Сторінка фахівця</a>
+                </div>
+
+            </div>
+        </th:block>
+
+        <div th:if="${specialists == null or specialists.isEmpty()}" class="profile-empty-state">
+            <div class="icon">🌿</div>
+            <p>Реєстр верифікованих фахівців наразі наповнюється.</p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

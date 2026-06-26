@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,4 +28,8 @@ public interface SpecialistAppRepository extends JpaRepository<SpecialistApplica
             "LOWER(s.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(s.middleName) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<SpecialistApplication> searchApprovedSpecialists(@Param("query") String query, Pageable pageable);
+
+    // Витягнути всі заявки зі статусом APPROVED
+    @Query("SELECT s FROM SpecialistApplication s JOIN FETCH s.user WHERE s.status = :status")
+    List<SpecialistApplication> findAllByStatusWithUser(@Param("status") String status);
 }

@@ -4,9 +4,12 @@ import org.mental_management_center.mmc.model.SpecialistApplication;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.SpecialistAppRepository;
 import org.mental_management_center.mmc.web.form.EdeboVerificationForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,5 +57,10 @@ public class SpecialistService {
 
         // 3. Викликаємо сервіс користувача для зміни ролі (використовуємо метод з UserService)
         userService.promoteToSpecialist(userId);
+    }
+
+    // Отримати реєстр верифікованих фахівців
+    public List<SpecialistApplication> getApprovedSpecialists() {
+        return repository.findAllByStatusWithUser("APPROVED");
     }
 }
