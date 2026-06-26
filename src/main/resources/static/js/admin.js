@@ -1,6 +1,6 @@
 function filterTable(role) {
-    // Змінено селектор: шукаємо тільки основні рядки користувачів (ігноруємо рядки з дипломами)
-    const rows = document.querySelectorAll('table tbody tr.user-row');
+    // Шукаємо ТІЛЬКИ ті рядки, де є атрибут data-role
+    const rows = document.querySelectorAll('table tbody tr[data-role]');
 
     rows.forEach(row => {
         const rowRole = row.getAttribute('data-role');
@@ -9,7 +9,7 @@ function filterTable(role) {
         } else {
             row.style.display = 'none';
 
-            // Якщо ми ховаємо юзера через фільтр, примусово ховаємо і його відкриту заявку
+            // Якщо ми приховуємо користувача, ховаємо і його блок з дипломом
             const targetId = row.getAttribute('data-target');
             if (targetId) {
                 const appRow = document.getElementById(targetId);

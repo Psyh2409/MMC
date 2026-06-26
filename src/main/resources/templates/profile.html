@@ -33,6 +33,9 @@
                 <div class="role-badge">
                     <p><span th:text="${user.getPrimaryRoleName()}">USER</span></p>
                 </div>
+                <div th:if="${user.isTherapist() and user.specialistApplication != null}" class="text-muted p-sm">
+                    🎓 <span th:text="${user.specialistApplication.diplomaSeries + ' ' + user.specialistApplication.diplomaNumber}"></span>
+                </div>
                 <hr class="profile-divider">
                 <h4 class="profile-section-title">Кольорова тема</h4>
                 <div class="theme-spectrum-container mb-sm">
