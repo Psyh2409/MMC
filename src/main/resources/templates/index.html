@@ -16,11 +16,18 @@
             <h1 class="home-hero-title">Будь-який шлях веде до себе</h1>
             <p class="home-hero-subtitle">і цей — найкоротший.</p>
 
-            <div th:if="${userName == null}">
-                <a th:href="@{/register}" class="btn-primary">Почати свій шлях</a>            </div>
+            <!-- Блок для гостей: дві кнопки поруч (працює ідеально, як на image_2b669b.jpg) -->
+            <div th:if="${userName == null}" class="hero-global-actions">
+                <a th:href="@{/register}" class="btn-primary">Почати свій шлях</a>
+                <a th:href="@{/specialists}" class="btn-outline">Знайти фахівця</a>
+            </div>
 
-            <div th:if="${userName != null}">
-                <p class="home-hero-return">Радий твоему поверненню до роботи над собою.</p>
+            <!-- Блок для авторизованих: строго по центру -->
+            <div th:if="${userName != null}" class="center mt-md">
+                <p class="home-hero-return mb-sm">Радий твоєму поверненню до роботи над собою.</p>
+                <div class="hero-global-actions center">
+                    <a th:href="@{/specialists}" class="btn-outline">Знайти фахівця</a>
+                </div>
             </div>
         </section>
 

@@ -47,7 +47,14 @@
 
                 <div class="action-group mt-md w-100 center">
                     <!-- Заділ на наступний крок: Публічна візитка фахівця -->
-                    <a th:href="@{/therapist/public/{id}(id=${app.user.id})}" class="btn-primary">Сторінка фахівця</a>
+                    <a th:if="${#authorization.expression('isAuthenticated()')}"
+                       th:href="@{/therapist/public/{id}(id=${app.user.id})}"
+                       class="btn-primary">Сторінка фахівця</a>
+
+                    <a th:unless="${#authorization.expression('isAuthenticated()')}"
+                       th:href="@{/login}"
+                       class="btn-primary"
+                       title="Необхідна реєстрація">🔒 Увійдіть для перегляду</a>
                 </div>
 
             </div>

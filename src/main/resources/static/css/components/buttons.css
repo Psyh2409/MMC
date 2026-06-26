@@ -27,6 +27,13 @@
     color: var(--text-on-accent);
 }
 
+.profile-card a.btn-primary:hover,
+.article-card a.btn-primary:hover  {
+    color: var(--text-on-accent);
+    filter: brightness(1.1);
+    transform: translateY(-0.0625rem);
+}
+
 
 
 /* 2. АУТЛАЙН: Другорядна дія (Скасувати, Назад) */

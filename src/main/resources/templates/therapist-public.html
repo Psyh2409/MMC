@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${therapist.name} + ' | Профіль фахівця'">Профіль фахівця</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <div class="profile-dashboard mt-md">
+
+        <aside class="profile-sidebar">
+            <div class="profile-card card-specialist">
+                <div class="card-specialist-avatar">
+                    <div class="avatar-circle avatar-lg">
+                        <img th:if="${therapist.avatarFileName != null}"
+                             th:src="@{/api/media/{name}(name=${therapist.avatarFileName})}"
+                             alt="Аватар фахівця">
+                        <span th:unless="${therapist.avatarFileName != null}" class="avatar-circle avatar-md"
+                              th:text="${therapist.name != null and therapist.name.length() > 0 ? #strings.substring(therapist.name, 0, 1).toUpperCase() : 'U'}">
+                        </span>
+                    </div>
+                </div>
+
+                <h2 class="profile-header-title" th:text="${therapist.name}">Ім'я</h2>
+                <div class="badge badge-therapist">ВЕРИФІКОВАНИЙ ФАХІВЕЦЬ</div>
+
+                <div class="issue-callout p-sm card-specialist-info mt-md">
+                    <span class="text-muted text-sm">Освітній ступінь:</span>
+                    <strong class="d-block" th:text="${therapist.specialistApplication.educationLevel}">Магістр</strong>
+
+                    <span class="text-muted text-sm mt-sm d-block">Фахівець:</span>
+                    <span th:text="${therapist.specialistApplication.lastName + ' ' + therapist.specialistApplication.firstName}">ПІБ</span>
+                </div>
+
+                <div class="action-group mt-md w-100">
+                    <form th:action="@{/therapist/request-therapy/{id}(id=${therapist.id})}" method="post" class="w-100">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="button" class="btn-primary w-100">Звернутися за консультацією</button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+
+        <main class="profile-main-content">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h3 class="profile-header-title">Публікації та статті</h3>
+                </div>
+
+                <div class="profile-empty-state mt-md">
+                    <div class="icon">📝</div>
+                    <p>Фахівець ще не додав публікацій на свою стіну.</p>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</section>
+
+</body>
+</html>
