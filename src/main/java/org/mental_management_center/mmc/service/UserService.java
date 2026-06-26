@@ -51,42 +51,45 @@ public class UserService {
         this.emailService = emailService;
     }
 
-        @Transactional // Додай цю анотацію, щоб якщо лист не відправиться, юзер не зберігся (відкат)
-        public void registerNewUser(User user, String confirmPassword) {
+    @Transactional
+    public void registerNewUser(User user, String confirmPassword, boolean isPendingSpecialist) {
 
-            // 1. Твоя існуюча перевірка паролів
-            if (!user.getPassword().equals(confirmPassword)) {
-                throw new RuntimeException("Паролі не збігаються!");
-            }
+        // 1. Перевірка паролів
+        if (!user.getPassword().equals(confirmPassword)) {
+            throw new RuntimeException("Паролі не збігаються!");
+        }
 
-            if(userRepository.existsByEmail(user.getEmail()))
-                throw new RuntimeException("This email address is already taken");
+        if(userRepository.existsByEmail(user.getEmail()))
+            throw new RuntimeException("This email address is already taken");
 
-            // 2. Налаштування ролей та провайдера
-            if (!user.hasRole(RoleBit.READER)) {
-                user.addRole(RoleBit.READER);
-            }
+        // 2. Встановлюємо намір стати фахівцем (НАШ НОВИЙ КРОК)
+        user.setPendingSpecialist(isPendingSpecialist);
 
-            if (user.getAuthProvider() == null || user.getAuthProvider().isEmpty())
-                user.setAuthProvider("LOCAL");
+        // 3. Налаштування ролей та провайдера (Базова роль Читач - біт 2 залишається)
+        if (!user.hasRole(RoleBit.READER)) {
+            user.addRole(RoleBit.READER);
+        }
 
-            // 3. Шифрування пароля
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
+        if (user.getAuthProvider() == null || user.getAuthProvider().isEmpty())
+            user.setAuthProvider("LOCAL");
 
-            // 4. ТИМЧАСОВО вимикаємо юзера до підтвердження
-            user.setEnabled(false);
+        // 4. Шифрування пароля
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
 
-            // Зберігаємо юзера, щоб отримати його ID для токена
-            userRepository.save(user);
+        // 5. ТИМЧАСОВО вимикаємо юзера до підтвердження
+        user.setEnabled(false);
 
-            // 5. ГЕНЕРУЄМО ТОКЕН (Ініціація)
-            String token = UUID.randomUUID().toString();
-            VerificationToken verificationToken = new VerificationToken(token, user);
-            tokenRepository.save(verificationToken);
+        // Зберігаємо юзера, щоб отримати його UUID для токена
+        userRepository.save(user);
 
-            // 6. ВІДПРАВЛЯЄМО ЛИСТ
-            emailService.sendVerificationEmail(user.getEmail(), token);
+        // 6. ГЕНЕРУЄМО ТОКЕН (Ініціація)
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken(token, user);
+        tokenRepository.save(verificationToken);
+
+        // 7. ВІДПРАВЛЯЄМО ЛИСТ
+        emailService.sendVerificationEmail(user.getEmail(), token);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -342,5 +345,19 @@ public class UserService {
             // Реальний адмін бачить ТІЛЬКИ реальних
             return userRepository.findRealUsers();
         }
+    }
+
+    @Transactional
+    public void promoteToSpecialist(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Користувач не знайдений"));
+
+        // Додаємо роль фахівця
+        user.addRole(RoleBit.THERAPIST);
+
+        // Прибираємо маркер "очікування"
+        user.setPendingSpecialist(false);
+
+        userRepository.save(user);
     }
 }

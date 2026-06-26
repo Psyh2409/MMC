@@ -1,12 +1,10 @@
 package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.Request;
+import org.mental_management_center.mmc.model.SpecialistApplication;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.repository.ChatMessageRepository;
-import org.mental_management_center.mmc.repository.JournalPostRepository;
-import org.mental_management_center.mmc.repository.TherapyNoteRepository;
-import org.mental_management_center.mmc.repository.UserRepository;
+import org.mental_management_center.mmc.repository.*;
 import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.PasswordChangeForm;
 import org.mental_management_center.mmc.web.form.ProfileUpdateForm;
@@ -30,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -50,6 +49,9 @@ public class UserProfileController {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private SpecialistAppRepository specialistAppRepository;
+
     public UserProfileController(UserService userService, UserRepository userRepository, TherapyNoteService therapyNoteService, TherapyNoteRepository therapyNoteRepository, TherapyRoomService therapyRoomService, FileStorageService fileStorageService) {
         this.userService = userService;
         this.userRepository = userRepository;
@@ -66,9 +68,8 @@ public class UserProfileController {
         userService.findByEmail(principal.getName()).ifPresent(user -> {
             model.addAttribute("user", user);
 
-            // КРОК 1: Створюємо конфігурацію пагінації вручну для першої сторінки (0 сторінка, 2 елементи)
-            Pageable pageable = PageRequest.of(
-                    0, 10, Sort.by("createdAt").descending());
+            // КРОК 1: Створюємо конфігурацію пагінації вручну
+            Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
 
             // Запитуємо порційні дані у сервісу
             Page<TherapyNote> notesPage = therapyNoteService.getNotesByAuthor(user.getId(), pageable);
@@ -94,11 +95,17 @@ public class UserProfileController {
                 profileUpdateForm.setPhone(user.getPhone());
                 model.addAttribute("profileUpdateForm", profileUpdateForm);
             }
+
+            // --- БЛОК ЄДЕБО (ТЕПЕР В ПРАВИЛЬНОМУ МІСЦІ) ---
+            Optional<SpecialistApplication> app = specialistAppRepository.findByUserId(user.getId());
+            model.addAttribute("specialistApp", app.orElse(null));
+            // ----------------------------------------------
         });
 
         if (!model.containsAttribute("passwordChangeForm")) {
             model.addAttribute("passwordChangeForm", new PasswordChangeForm());
         }
+
         return "profile";
     }
 

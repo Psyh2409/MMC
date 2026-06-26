@@ -2,11 +2,16 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.SiteStats;
+import org.mental_management_center.mmc.model.SpecialistApplication;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
+import org.mental_management_center.mmc.repository.SpecialistAppRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
+import org.mental_management_center.mmc.service.SpecialistService;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,6 +37,10 @@ public class AdminUserController {
     private UserRepository userRepository;
     @Autowired
     private SiteStatsRepository siteStatsRepository;
+    @Autowired
+    private SpecialistAppRepository specialistAppRepository;
+    @Autowired
+    private SpecialistService specialistService;
 
     // 1. Сторінка списку користувачів (Переїхала з AuthController)
     @GetMapping("/users")
@@ -49,6 +58,9 @@ public class AdminUserController {
         UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
         SiteStats siteStats = siteStatsRepository.findById(statsId).orElse(new SiteStats());
         model.addAttribute("totalVisits", siteStats.getGuestVisits());
+        // У методі showAdminUsers:
+        Page<SpecialistApplication> pendingApps = specialistAppRepository.findByStatus("PENDING", PageRequest.of(0, 50));
+        model.addAttribute("pendingApplications", pendingApps.getContent());
 
         return "admin-users";
     }
@@ -106,5 +118,13 @@ public class AdminUserController {
             String encodedError = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
             return "redirect:/admin/users?error=" + encodedError;
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/verify-specialist/{id}")
+    public String verifySpecialist(@PathVariable UUID id) {
+        // Викликаємо єдину точку входу в бізнес-процес
+        specialistService.approveVerification(id);
+        return "redirect:/admin/users?success";
     }
 }

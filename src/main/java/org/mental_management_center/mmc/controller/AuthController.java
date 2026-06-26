@@ -72,7 +72,11 @@ public class AuthController {
             user.setPassword(registrationForm.getPassword());
 
             // 4. Реєстрація в сервісі (тут створюється токен та відправляється лист)
-            userService.registerNewUser(user, registrationForm.getConfirmPassword());
+            userService.registerNewUser(
+                    user,
+                    registrationForm.getConfirmPassword(),
+                    registrationForm.isRegisterAsSpecialist()
+                    );
 
             // 5. Перенаправлення на сторінку логіна зі спеціальним параметром
             return "redirect:/login?needsActivation";

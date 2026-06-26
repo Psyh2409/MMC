@@ -33,10 +33,7 @@
                 <div class="role-badge">
                     <p><span th:text="${user.getPrimaryRoleName()}">USER</span></p>
                 </div>
-                <p class="text-muted">Технічні налаштування</p>
-
                 <hr class="profile-divider">
-
                 <h4 class="profile-section-title">Кольорова тема</h4>
                 <div class="theme-spectrum-container mb-sm">
                     <input type="range" id="theme-slider" class="theme-spectrum-slider" min="0" max="360" value="15">
@@ -45,6 +42,8 @@
                     <button type="button" id="ptsr-link" class="btn-primary">Монохромна тема</button>
                 </div>
             </div>
+
+            <div th:replace="~{fragments/edebo-form :: edeboFormFragment}"></div>
 
             <div class="profile-card">
                 <h4 class="profile-section-title">Дані профілю</h4>

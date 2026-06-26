@@ -20,6 +20,18 @@ public class RegistrationForm {
     @NotBlank(message = "Підтвердження пароля є обов'язковим")
     private String confirmPassword;
 
+    // Прапорець, який прилетить з фронтенду
+    private boolean registerAsSpecialist;
+
+    // Геттер та Сеттер для Spring, щоб він міг записати і прочитати значення
+    public boolean isRegisterAsSpecialist() {
+        return registerAsSpecialist;
+    }
+
+    public void setRegisterAsSpecialist(boolean registerAsSpecialist) {
+        this.registerAsSpecialist = registerAsSpecialist;
+    }
+
     public String getName() {
         return name;
     }

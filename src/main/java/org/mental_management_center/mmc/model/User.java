@@ -74,10 +74,20 @@ public class User {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    // Додаємо поле для відстеження заявки на верифікацію фахівця
+    // @Builder.Default гарантує, що при створенні об'єкта через Builder значення буде false, а не null
+    @Builder.Default
+    @Column(name = "is_pending_specialist", nullable = false, columnDefinition = "boolean default false")
+    private boolean pendingSpecialist = false;
+
+    // Зв'язок із заявкою на фахівця. LAZY заощаджує RAM: дані диплома тягнуться з бази тільки тоді, коли ти розгортаєш рядок.
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private SpecialistApplication specialistApplication;
+
     // --- ЗВ'ЯЗКИ ДЛЯ ПОВНОГО ВИДАЛЕННЯ (Особисті дані клієнта) ---
 
     // У Request.java поле називається user
-    @OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Request> requests = new ArrayList<>();
 
     // У Comment.java поле називається author
@@ -107,7 +117,7 @@ public class User {
     // === БЛОК 3: МАГІЯ ВІДВ'ЯЗУВАННЯ НОТАТОК ===
     // Цей метод автоматично спрацьовує за мілісекунду до видалення юзера.
     // Він каже: "Якщо цей юзер був у нотатках, просто забудь про нього, але нотатку залиш".
-    @jakarta.persistence.PreRemove
+    @PreRemove
     private void preRemoveNotes() {
         if (authoredNotes != null) {
             for (TherapyNote note : authoredNotes) { note.setAuthor(null); }

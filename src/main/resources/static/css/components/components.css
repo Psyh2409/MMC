@@ -999,3 +999,7 @@ margin-top: var(--space-md);
     max-width: 100vw; /* Забороняємо вихід за межі екрана */
     overflow-x: hidden;
 }
+
+#profile-edebo .profile-header {
+    margin-bottom: 0.075rem; /* Замість стандартних 40px */
+}

@@ -1,0 +1,60 @@
+<div id="profile-edebo" th:fragment="edeboFormFragment" th:if="${user.pendingSpecialist and !user.isTherapist()}" class="profile-card card-compact">
+    <div class="profile-header">
+        <h3 class="profile-header-title">Дані документа про вищу освіту</h3>
+    </div>
+
+    <script th:if="${error != null}" th:inline="javascript">
+        console.error("[MMC Backend Error]:", /*[[${error}]]*/ '');
+    </script>
+    <div th:if="${success != null}" class="status-message status-success" th:text="${success}"></div>
+    <div th:if="${specialistApp != null}" class="status-message status-success">
+        <p><strong>Заявка на розгляді. Очікуйте перевірки адміністратором.</strong></p>
+    </div>
+
+    <th:block th:if="${specialistApp == null}">
+        <form th:action="@{/profile/verify-diploma}" method="post" class="stack-form" id="edebo-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <div class="form-field">
+                <label class="form-label">Рівень освіти *</label>
+                <select name="educationLevel" class="form-input" required>
+                    <option value="">Оберіть рівень...</option>
+                    <option value="Бакалавр">Бакалавр</option>
+                    <option value="Спеціаліст">Спеціаліст</option>
+                    <option value="Магістр">Магістр</option>
+                    <option value="Доктор філософії">Доктор філософії</option>
+                    <option value="Доктор наук">Доктор наук</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label class="form-label">Серія диплома *</label>
+                <input type="text" name="diplomaSeries" class="form-input" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Номер диплома *</label>
+                <input type="text" name="diplomaNumber" class="form-input" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Прізвище *</label>
+                <input type="text" name="lastName" class="form-input" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Ім'я *</label>
+                <input type="text" name="firstName" class="form-input" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label">По батькові</label>
+                <input type="text" name="middleName" class="form-input">
+            </div>
+            <div class="form-field">
+                <label>
+                    <input type="checkbox" name="noMiddleName" class="form-input">
+                    По батькові відсутнє у документі
+                </label>
+            </div>
+
+            <button type="submit" class="btn-primary">Надіслати на верифікацію</button>
+        </form>
+    </th:block>
+</div>
