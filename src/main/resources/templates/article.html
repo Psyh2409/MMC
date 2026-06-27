@@ -47,7 +47,7 @@
         </div>
 
         <div th:unless="${#authorization.expression('isAuthenticated()')}" class="comment-login-prompt">
-            <p><a th:href="@{/login}">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
+            <p><a th:href="@{/login}"  class="helper-link">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
         </div>
 
         <div class="layout-stack" id="comments-container">

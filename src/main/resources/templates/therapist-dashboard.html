@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title>Дашборд Фахівця | MMC</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <div class="dashboard-hero-card">
+        <h1 class="page-title-accent">Мій кабінет фахівця</h1>
+        <p class="hero-description">Тут ви можете керувати своїми клієнтами та запитами.</p>
+    </div>
+
+    <div th:if="${success}" class="status-message status-success mt-md" th:text="${success}"></div>
+    <div th:if="${error}" class="status-message status-error mt-md" th:text="${error}"></div>
+
+    <div class="profile-dashboard mt-md">
+        <main class="profile-main-content w-100">
+
+            <div class="profile-card">
+                <h3 class="profile-header-title">Нові запити на терапію</h3>
+                <hr class="hero-divider mb-md">
+
+                <div th:if="${!pendingRequests.isEmpty()}" class="articles-grid">
+                    <div th:each="request : ${pendingRequests}" class="issue-callout p-md">
+                        <strong>Клієнт: </strong> <span th:text="${request.client.name}">Ім'я клієнта</span><br>
+                        <span class="text-sm text-muted">Дата запиту: <span th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span></span>
+
+                        <div class="mt-sm">
+                            <form th:action="@{/therapist/dashboard/accept/{id}(id=${request.id})}" method="post">
+                                <button type="submit" class="btn-primary btn-sm">Прийняти клієнта</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${pendingRequests.isEmpty()}" class="profile-empty-state">
+                    <div class="icon">☕</div>
+                    <p>Наразі нових запитів немає. Час для кави!</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</section>
+
+</body>
+</html>

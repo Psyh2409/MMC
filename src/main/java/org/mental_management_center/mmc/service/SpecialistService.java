@@ -33,6 +33,7 @@ public class SpecialistService {
         SpecialistApplication application = SpecialistApplication.builder()
                 .user(user)
                 .educationLevel(form.getEducationLevel())
+                .specialty(form.getSpecialty())
                 .diplomaSeries(form.getDiplomaSeries())
                 .diplomaNumber(form.getDiplomaNumber())
                 .lastName(form.getLastName())

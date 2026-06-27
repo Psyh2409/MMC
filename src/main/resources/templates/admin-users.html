@@ -151,7 +151,7 @@
                             <div class="ag-edebo">
                                 <span class="text-muted">Дані ЄДЕБО:</span>
                                 <strong th:text="${u.specialistApplication.lastName + '   ' + u.specialistApplication.firstName + '   ' + (u.specialistApplication.noMiddleName ? '  ' : u.specialistApplication.middleName)}"></strong>
-                                <span th:text="${'   |   ' + u.specialistApplication.educationLevel + '   |   ' + u.specialistApplication.diplomaSeries + '   ' + u.specialistApplication.diplomaNumber}"></span>
+                                <span th:text="${'   |   ' + u.specialistApplication.educationLevel + '   |   ' + u.specialistApplication.specialty + '   |   ' + u.specialistApplication.diplomaSeries + '   ' + u.specialistApplication.diplomaNumber}"></span>
 
                                 <form th:if="${u.pendingSpecialist}" th:action="@{/admin/verify-specialist/{id}(id=${u.id})}" method="post" class="admin-action-form-inline">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

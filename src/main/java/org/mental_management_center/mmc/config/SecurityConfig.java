@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/articles/**").permitAll()
                         .requestMatchers(
                                 "/",
+                                "/api/media/**",
                                 "/specialists",
                                 "/about",
                                 "/issues/**", // Дозволяємо перегляд опису статті всім

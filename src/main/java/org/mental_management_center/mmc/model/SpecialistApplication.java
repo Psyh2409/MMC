@@ -34,6 +34,11 @@ public class SpecialistApplication {
     private String educationLevel;
 
     @NotBlank
+    @Size(max = 50)
+    @Column(name = "specialty", length = 100)
+    private String specialty;
+
+    @NotBlank
     @Size(max = 10)
     @Column(name = "diploma_series", nullable = false, length = 10)
     private String diplomaSeries;

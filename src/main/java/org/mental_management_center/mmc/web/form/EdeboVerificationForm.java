@@ -11,6 +11,9 @@ public class EdeboVerificationForm {
     @NotBlank(message = "Оберіть рівень освіти")
     private String educationLevel;
 
+    @NotBlank(message = "Вкажіть спеціальність за дипломом")
+    private String specialty;
+
     @NotBlank(message = "Серія диплома обов'язкова")
     private String diplomaSeries;
 

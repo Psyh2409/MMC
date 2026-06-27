@@ -28,15 +28,21 @@
                 <div class="issue-callout p-sm card-specialist-info mt-md">
                     <span class="text-muted text-sm">Освітній ступінь:</span>
                     <strong class="d-block" th:text="${therapist.specialistApplication.educationLevel}">Магістр</strong>
-
+                    <br>
+                    <span class="text-muted text-sm mt-sm d-block">Спеціальність:</span>
+                    <span th:text="${therapist.specialistApplication.specialty != null ? therapist.specialistApplication.specialty : 'Психологія/Психотерапія'}">Спеціальність</span>
+                    <br>
                     <span class="text-muted text-sm mt-sm d-block">Фахівець:</span>
                     <span th:text="${therapist.specialistApplication.lastName + ' ' + therapist.specialistApplication.firstName}">ПІБ</span>
                 </div>
 
+                <div th:if="${success}" class="status-message status-success mb-md" th:text="${success}"></div>
+                <div th:if="${error}" class="status-message status-error mb-md" th:text="${error}"></div>
+
                 <div class="action-group mt-md w-100">
                     <form th:action="@{/therapist/request-therapy/{id}(id=${therapist.id})}" method="post" class="w-100">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="button" class="btn-primary w-100">Звернутися за консультацією</button>
+                        <button type="submit" class="btn-primary w-100">Звернутися за консультацією</button>
                     </form>
                 </div>
             </div>

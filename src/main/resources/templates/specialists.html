@@ -40,7 +40,10 @@
                 <div class="issue-callout p-sm card-specialist-info">
                     <span class="text-muted text-sm">Освітній ступінь:</span>
                     <strong class="d-block" th:text="${app.educationLevel}">Магістр</strong>
-
+                    <br>
+                    <span class="text-muted text-sm mt-sm d-block">Спеціальність:</span>
+                    <span th:text="${app.specialty != null ? app.specialty : 'Психологія/Психотерапія'}">Спеціальність</span>
+                    <br>
                     <span class="text-muted text-sm mt-sm d-block">Фахівець:</span>
                     <span th:text="${app.lastName + ' ' + app.firstName}">ПІБ</span>
                 </div>
