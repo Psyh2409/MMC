@@ -19,3 +19,6 @@
 
 /* 5. УТИЛІТИ (Фінальні штрихи) — ВСТАВЛЯЙ СЮДИ */
 @import "components/utilities.css";
+
+/* 6. СПЕЦІАЛІЗОВАНИЙ СТИЛІЗАЦІЙ (ВСТАВЛЯЙ СЮДИ) */
+@import "components/offline-banner.css";

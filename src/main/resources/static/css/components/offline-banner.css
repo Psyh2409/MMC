@@ -1,0 +1,28 @@
+/* Банер офлайну */
+.system-offline-banner {
+    display: none; /* Приховано за замовчуванням */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-body); /* Твій колір фону */
+    color: var(--text-main);    /* Твій колір тексту */
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.system-offline-banner.is-active {
+    display: flex; /* Показуємо тільки при активації */
+}
+
+/* Можна додати стиль для картки всередині */
+.system-offline-banner .card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-md);
+}

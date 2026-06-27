@@ -42,10 +42,18 @@
     <div th:replace="${mainContent}"></div>
 </main>
 
+<div id="offline-banner" class="system-offline-banner">
+    <div class="card">
+        <h2>🛠 Технічна пауза</h2>
+        <p>Зв'язок із сервером тимчасово втрачено.</p>
+        <p>Це не ви, це інтернет з'єднання нашого серверу. Ми вже очікуємо на відновлення.</p>
+    </div>
+</div>
+
 <div th:replace="~{fragments/footer :: footer-fragment}"></div>
 
 <script th:src="@{/js/theme-switcher.js}"></script>
-
+<script th:src="@{/js/connectivity.js}"></script>
 <th:block th:replace="${pageScripts} ?: ~{}"></th:block>
 </body>
 </html>
