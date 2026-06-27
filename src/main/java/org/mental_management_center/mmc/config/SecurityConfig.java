@@ -59,7 +59,9 @@ public class SecurityConfig {
                                 "/error",
                                 "/test/**",
                                 "/test-email",
-                                "/images/**")
+                                "/images/**",
+                                "/sw.js",
+                                "/offline.html")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

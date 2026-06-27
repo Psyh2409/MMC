@@ -54,6 +54,13 @@
 
 <script th:src="@{/js/theme-switcher.js}"></script>
 <script th:src="@{/js/connectivity.js}"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js');
+        });
+    }
+</script>
 <th:block th:replace="${pageScripts} ?: ~{}"></th:block>
 </body>
 </html>

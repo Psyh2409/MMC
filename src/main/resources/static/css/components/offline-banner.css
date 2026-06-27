@@ -26,3 +26,19 @@
     border-radius: 0.5rem;
     box-shadow: var(--shadow-md);
 }
+
+/* --- 2. СТИЛІ ДЛЯ ОКРЕМОЇ СТОРІНКИ offline.html --- */
+/* Це те, що я по-дурному вліпив у <style> */
+.offline-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: var(--bg-body);
+}
+
+.offline-content {
+    text-align: center;
+    max-width: 31.25rem; /* Твої ідеальні реми замість 500px! */
+}
