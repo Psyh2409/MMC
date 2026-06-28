@@ -89,8 +89,12 @@ public class TherapistController {
         // Дістаємо всі запити, які чекають на відповідь
         List<TherapyAssignment> pendingRequests = assignmentService.getPendingRequestsForTherapist(therapist.getId());
 
+        // НОВЕ: Дістаємо активних клієнтів, щоб передати їх в HTML сторінку
+        List<TherapyAssignment> activeAssignments = assignmentService.getAssignmentsByStatus(therapist.getId(), "ACTIVE");
+
         model.addAttribute("therapist", therapist);
         model.addAttribute("pendingRequests", pendingRequests);
+        model.addAttribute("activeAssignments", activeAssignments); // Передаємо список на фронтенд
 
         return "therapist-dashboard";
     }
@@ -98,12 +102,17 @@ public class TherapistController {
     // 2. Обробка натискання кнопки "Прийняти"
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/dashboard/accept/{id}")
-    public String acceptRequest(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
+    public String acceptRequest(@PathVariable UUID id, Principal principal, RedirectAttributes redirectAttributes) {
         try {
-            assignmentService.acceptRequest(id);
+            // Знаходимо терапевта, який зараз натиснув кнопку
+            User therapist = userService.findByEmail(principal.getName()).orElseThrow();
+
+            // Передаємо id запиту ТА терапевта в сервіс
+            assignmentService.acceptRequest(id, therapist);
+
             redirectAttributes.addFlashAttribute("success", "Клієнта успішно додано до вашої практики!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Помилка при прийнятті запиту.");
+            redirectAttributes.addFlashAttribute("error", "Помилка при прийнятті запиту: " + e.getMessage());
         }
         return "redirect:/therapist/dashboard";
     }

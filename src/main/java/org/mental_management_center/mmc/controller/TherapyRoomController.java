@@ -4,16 +4,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.service.SharedWallService;
-import org.mental_management_center.mmc.service.TherapyRoomService;
-import org.mental_management_center.mmc.service.UserService;
-import org.mental_management_center.mmc.service.TherapyNoteService;
+import org.mental_management_center.mmc.service.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +33,7 @@ public class TherapyRoomController {
     private final TherapyNoteService therapyNoteService;
     private final TherapyRoomService therapyRoomService;
     private final SharedWallService sharedWallService;
+    private final TherapyAssignmentService therapyAssignmentService;
 
     @Value("${app.jitsi.app-id}")
     private String appId;
@@ -42,11 +42,16 @@ public class TherapyRoomController {
     @Value("${app.jitsi.private-key-path}")
     private String privateKeyPath;
 
-    public TherapyRoomController(UserService userService, TherapyNoteService therapyNoteService, TherapyRoomService therapyRoomService, SharedWallService sharedWallService) {
+    public TherapyRoomController(UserService userService,
+                                 TherapyNoteService therapyNoteService,
+                                 TherapyRoomService therapyRoomService,
+                                 SharedWallService sharedWallService,
+                                 TherapyAssignmentService therapyAssignmentService) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
         this.therapyRoomService = therapyRoomService;
         this.sharedWallService = sharedWallService;
+        this.therapyAssignmentService = therapyAssignmentService;
     }
 
     @GetMapping("/room/{clientUuid}")
@@ -57,8 +62,15 @@ public class TherapyRoomController {
         User roomOwner = userService.findById(clientUuid).orElseThrow();
 
         // 1. ПЕРЕВІРКА РОЛЕЙ: Чи є поточний юзер фахівцем (Адмін для v1.0 або Терапевт для v2.0)
-        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
+        // Якщо доступу немає — викидаємо помилку (щоб ніхто не зміг підібрати ID)
+        if (!hasAccessToRoom(currentUser, clientUuid)) {
+            throw new AccessDeniedException("Конфіденційно: Ви не маєте доступу до цього кабінету.");
+        }
 
+        // Для фронтенду передаємо, чи є людина терапевтом (щоб показати йому кнопки відео)
+        boolean isAuthorizedProfessional = currentUser.isTherapist();
+        model.addAttribute("isTherapist", isAuthorizedProfessional);
+        // Адміна звідси випиляли повністю.
         // TODO v2.0: Додати перевірку, чи цей Терапевт дійсно закріплений за цим Клієнтом
         // if (currentUser.isTherapist() && !roomOwner.getTherapistId().equals(currentUser.getId())) return "error/403";
 
@@ -232,10 +244,12 @@ public class TherapyRoomController {
         if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
 
-        // Якщо це вийшов фахівець — гасимо світло (ховаємо кнопку)
-        if (isAuthorizedProfessional) {
+        if (!hasAccessToRoom(currentUser, clientUuid)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (currentUser.isTherapist()) {
             therapyRoomService.deactivateRoom(clientUuid);
         }
 
@@ -248,9 +262,14 @@ public class TherapyRoomController {
         if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        boolean isAuthorizedProfessional = currentUser.isAdmin() || currentUser.isTherapist();
 
-        if (isAuthorizedProfessional) {
+        // Перевіряємо доступ через наш новий "Замок"
+        if (!hasAccessToRoom(currentUser, clientUuid)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 Доступ заборонено
+        }
+
+        // Тільки терапевт може фізично "вмикати світло" в кімнаті
+        if (currentUser.isTherapist()) {
             therapyRoomService.activateRoom(clientUuid);
         }
 
@@ -261,5 +280,22 @@ public class TherapyRoomController {
     @ResponseBody
     public ResponseEntity<Boolean> getRoomStatus(@PathVariable UUID clientUuid) {
         return ResponseEntity.ok(therapyRoomService.isRoomActive(clientUuid));
+    }
+
+    // =========================================================
+    // ЕТИЧНИЙ КОНТРОЛЬ ДОСТУПУ (Ніяких адмінів без дозволу)
+    // =========================================================
+    private boolean hasAccessToRoom(User user, UUID roomClientUuid) {
+        // 1. Клієнт має доступ ТІЛЬКИ до своєї власної кімнати
+        if (user.getId().equals(roomClientUuid)) {
+            return true;
+        }
+        // 2. Терапевт має доступ ТІЛЬКИ якщо є статус ACTIVE з цим клієнтом
+        if (user.isTherapist()) {
+            List<TherapyAssignment> assignments = therapyAssignmentService.getAssignmentsByStatus(user.getId(), "ACTIVE");
+            return assignments.stream().anyMatch(a -> a.getClient().getId().equals(roomClientUuid));
+        }
+        // 3. Адмін БЕЗ запрошення доступу НЕ МАЄ
+        return false;
     }
 }

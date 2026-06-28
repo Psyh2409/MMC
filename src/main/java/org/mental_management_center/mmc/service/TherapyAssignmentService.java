@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.service;
 
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
@@ -14,9 +15,11 @@ import java.util.UUID;
 public class TherapyAssignmentService {
 
     private final TherapyAssignmentRepository repository;
+    private final UserService userService;
 
-    public TherapyAssignmentService(TherapyAssignmentRepository repository) {
+    public TherapyAssignmentService(TherapyAssignmentRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     @Transactional
@@ -47,11 +50,20 @@ public class TherapyAssignmentService {
 
     // Прийняти запит (змінити статус на ACTIVE)
     @Transactional
-    public void acceptRequest(UUID assignmentId) {
+    public void acceptRequest(UUID assignmentId, User therapist) {
         TherapyAssignment assignment = repository.findById(assignmentId)
                 .orElseThrow(() -> new RuntimeException("Запит не знайдено"));
 
         assignment.setStatus("ACTIVE");
+        assignment.setApprovedByTherapist(therapist); // Записуємо, хто прийняв
+
+        userService.promoteToClient(assignment.getClient().getId());
+
         repository.save(assignment);
+    }
+
+    // Додай цей метод у TherapyAssignmentService.java
+    public List<TherapyAssignment> getAssignmentsByStatus(UUID therapistId, String status) {
+        return repository.findByTherapistIdAndStatus(therapistId, status);
     }
 }

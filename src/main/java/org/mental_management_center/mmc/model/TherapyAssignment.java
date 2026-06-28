@@ -43,4 +43,8 @@ public class TherapyAssignment {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approved_by_therapist_id")
+    private User approvedByTherapist;
 }

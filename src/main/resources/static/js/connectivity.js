@@ -4,7 +4,7 @@
     async function checkConnection() {
         try {
             // Робимо запит до твого ж сайту, але без кешу
-            const response = await fetch('/api/health', { method: 'HEAD', cache: 'no-cache' });
+            const response = await fetch('/', { method: 'HEAD', cache: 'no-cache' });
 
             if (response.ok) {
                 banner.classList.remove('is-active');

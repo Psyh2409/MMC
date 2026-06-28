@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.service;
 
+import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.model.RoleBit; // Наш новий енам
 import org.mental_management_center.mmc.model.VerificationToken;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @SuppressWarnings("null")
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -29,27 +31,12 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final VerificationTokenRepository tokenRepository; // Нове
     private final EmailService emailService; // Нове
-    @Autowired
-    private ChatMessageRepository chatMessageRepository;
-    @Autowired
-    private JournalPostRepository journalPostRepository;
-    @Autowired
-    private RequestRepository requestRepository;
-    @Autowired
-    private SessionRegistry sessionRegistry;
-    @Autowired
-    private TherapyNoteRepository therapyNoteRepository;
-
-    // Оновлений конструктор — Spring сам підставить сюди всі залежності
-    public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder passwordEncoder,
-                       VerificationTokenRepository tokenRepository,
-                       EmailService emailService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenRepository = tokenRepository;
-        this.emailService = emailService;
-    }
+    private final ChatMessageRepository chatMessageRepository;
+    private final JournalPostRepository journalPostRepository;
+    private final RequestRepository requestRepository;
+    private final SessionRegistry sessionRegistry;
+    private final TherapyNoteRepository therapyNoteRepository;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
 
     @Transactional
     public void registerNewUser(User user, String confirmPassword, boolean isPendingSpecialist) {
@@ -170,6 +157,7 @@ public class UserService {
         journalPostRepository.deleteByUserId(id);
         therapyNoteRepository.deleteByClientId(id);
         therapyNoteRepository.deleteByTherapistId(id);
+        therapyAssignmentRepository.deleteAllAssignmentsRelatedToUser(id);
 
         // Тільки тепер видаляємо юзера
         userRepository.deleteById(id);

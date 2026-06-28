@@ -39,8 +39,30 @@
                     <div class="icon">☕</div>
                     <p>Наразі нових запитів немає. Час для кави!</p>
                 </div>
+            </div> <div class="profile-card mt-md">
+            <h3 class="profile-header-title">Мої клієнти (В роботі)</h3>
+            <hr class="hero-divider mb-md">
+
+            <div th:if="${!activeAssignments.isEmpty()}" class="articles-grid">
+                <div th:each="assignment : ${activeAssignments}" class="issue-callout p-md">
+                    <strong>Клієнт: </strong> <span th:text="${assignment.client.name}"></span><br>
+
+                    <span class="text-xs text-muted" th:if="${assignment.approvedByTherapist != null}">
+                            Прийнято фахівцем: <span th:text="${assignment.approvedByTherapist?.name}"></span>
+                        </span>
+
+                    <div class="mt-sm">
+                        <a th:href="@{/therapy/room/{clientId}(clientId=${assignment.client.id})}" class="btn-primary">
+                            Увійти в робочий кабінет
+                        </a>
+                    </div>
+                </div>
             </div>
 
+            <div th:if="${activeAssignments.isEmpty()}" class="profile-empty-state">
+                <p>У вас поки немає активних клієнтів.</p>
+            </div>
+        </div>
         </main>
     </div>
 </section>
