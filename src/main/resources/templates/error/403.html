@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{})}">
+<head>
+    <title>Доступ обмежено | MMC</title>
+</head>
+<body>
+
+<section class="standard-container-narrow mt-md">
+    <div class="error-shell">
+        <div class="error-card center p-md">
+            <h2 class="issue-title mb-sm">Доступ заборонено</h2>
+
+            <p class="issue-text-secondary mb-md">
+                Цей простір є конфіденційним. У вас немає прав для перегляду цієї сторінки.
+                Доступ до кабінету відкривається лише учасникам активного терапевтичного процесу.
+            </p>
+
+            <hr class="hero-divider mb-sm">
+
+            <div class="button-row">
+                <a th:href="${backUrl}" class="btn-primary mt-sm">Повернутися назад</a>
+                <a th:href="@{/profile}" class="btn-outline mt-sm ml-sm">Мій кабінет</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

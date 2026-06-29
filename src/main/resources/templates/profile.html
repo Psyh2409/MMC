@@ -30,6 +30,17 @@
                 </div>
 
                 <h3 class="profile-header-title" th:text="${user.name}">Ім'я</h3>
+
+                <div th:if="${user.isTherapist()}" class="mt-md">
+                    <a th:href="@{/therapist/dashboard}" class="btn-primary" >
+                        💼 Мій кабінет
+                    </a>
+                    <p></p>
+                    <a th:href="@{/therapist/public/{id}(id=${user.id})}" class="btn-primary">
+                        👁️ Моя візитка
+                    </a>
+                </div>
+
                 <div class="role-badge">
                     <p><span th:text="${user.getPrimaryRoleName()}">USER</span></p>
                 </div>

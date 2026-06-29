@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -64,10 +65,22 @@ public class RequestController {
         return "redirect:/contact?success";
     }
 
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @GetMapping("/requests")
-    public String showRequests(Model model) {
-        model.addAttribute("requests", requestService.findAllNewestFirst());
+    public String showRequests(@RequestParam(required = false) String sort, Model model) {
+        List<Request> requests;
+
+        if ("name".equals(sort)) {
+            requests = requestService.findAllSortedByName();
+        } else if ("contact".equals(sort)) {
+            requests = requestService.findAllSortedByContact(); // Твоє унікальне поле
+        } else if ("date".equals(sort)) {
+            requests = requestService.findAllNewestFirst(); // Твій старий метод
+        } else {
+            // Дефолтна поведінка (або sort=status): Нові зверху!
+            requests = requestService.findAllSortedByUrgency();
+        }
+
+        model.addAttribute("requests", requests);
         return "requests";
     }
 

@@ -21,94 +21,89 @@
     </div>
     <div class="table-scroll">
     <table class="data-table">
-        <thead>
-        <tr>
-            <th>Статус</th>
-            <th>Відправник</th>
-            <th>Зв'язок</th>
-            <th>Повідомлення</th>
-            <th>Дата</th>
-            <th>Дії</th>
-        </tr>
-        </thead>
+        <<thead>
+    <tr>
+        <th><a th:href="@{/requests(sort='status')}" style="text-decoration: none; color: inherit;">Статус ↕</a></th>
+        <th><a th:href="@{/requests(sort='name')}" style="text-decoration: none; color: inherit;">Відправник ↕</a></th>
+        <th><a th:href="@{/requests(sort='contact')}" style="text-decoration: none; color: inherit;">Зв'язок ↕</a></th>
+        <th>Повідомлення</th>
+        <th><a th:href="@{/requests(sort='date')}" style="text-decoration: none; color: inherit;">Дата ↕</a></th>
+        <th>Дії</th>
+    </tr>
+    </thead>
+
         <tbody>
         <th:block th:each="req : ${requests}">
+            <!-- Прибрали inline-стиль cursor, перенесемо його в CSS -->
+            <tr th:attr="data-target='reply-' + ${req.id}" onclick="toggleReply(this)" class="clickable-row">
+                <td th:text="${req.status != null ? req.status.name() : 'NEW'}">Статус</td>
+                <td th:text="${req.name}">Ім'я</td>
+                <td th:text="${req.contact}">Контакт</td>
+                <td class="msg">
+                    <!-- Коротке повідомлення (видиме за замовчуванням) -->
+                    <span class="msg-short" th:text="${#strings.abbreviate(req.message, 50)}">Повідомлення</span>
 
-            <tr th:classappend="${req.status != null and req.status.name() == 'ANSWERED'} ? 'clickable-row' : ''"
-                th:data-target="${req.status != null and req.status.name() == 'ANSWERED'} ? 'reply-' + ${req.id} : ''"
-                onclick="toggleReply(this)">
-
-                <td>
-            <span class="badge"
-                  th:classappend="${req.clientRequest} ? 'badge-client' : 'badge-guest'"
-                  th:text="${req.roleLabel}">
-            </span>
+                    <!-- Довге повідомлення (приховане за замовчуванням класом is-hidden, БЕЗ інлайн display) -->
+                    <span class="msg-full is-hidden"
+                          th:if="${req.message.length() > 50}"
+                          th:text="${req.message}"></span>
                 </td>
-
+                <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</td>
                 <td>
-                    <span th:text="${req.name}"></span>
-                </td>
-
-                <td>
-                    <div class="action-group">
-                        <a th:if="${req.status == null or req.status.name() != 'ANSWERED'}"
-                           th:href="@{/requests/{id}/reply(id=${req.id})}"
-                           class="btn-primary">✍ Відповісти</a>
-
-                        <span th:unless="${req.status == null or req.status.name() != 'ANSWERED'}" class="text-navigation text-sm">
-                            <th:block th:if="${req.contact != null}">
-                                📧 <span th:text="${req.contact}"></span>
-                            </th:block>
-                            <th:block th:if="${req.contact == null and req.smsContact != null}">
-                                📱 <span th:text="${req.smsContact}"></span>
-                            </th:block>
-                        </span>
-                    </div>
-                </td>
-
-                <td th:text="${req.message}" class="data-table-message"></td>
-
-                <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
-
-                <td>
-                    <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')">
+                    <!-- Зупиняємо всплытие (propagation) кліку, щоб натискання на кнопку видалення не розгортало форму відповіді -->
+                    <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" onsubmit="return confirm('Видалити цей запис?')" onclick="event.stopPropagation();">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <button type="submit" class="btn-primary">Видалити</button>
                     </form>
                 </td>
             </tr>
 
-            <tr th:if="${req.status != null and req.status.name() == 'ANSWERED'}"
-                th:id="'reply-' + ${req.id}"
-                class="is-hidden">
+            <!-- Блок форми відповіді -->
+            <tr th:id="'reply-' + ${req.id}" class="is-hidden reply-row">
                 <td colspan="6">
                     <div class="reply-expanded-box">
-                        <span class="reply-box-title">Ваша відповідь користувачу:</span>
-                        <p class="reply-box-text" th:text="${req.adminReply}"></p>
+                        <div th:if="${req.status != null and req.status.name() == 'ANSWERED'}">
+                            <span class="reply-box-title">Ваша відповідь:</span>
+                            <p class="reply-box-text" th:text="${req.adminReply}"></p>
+                        </div>
+
+                        <div th:if="${req.status == null or req.status.name() != 'ANSWERED'}">
+                            <form th:action="@{/requests/{id}/reply(id=${req.id})}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <textarea name="replyMessage" class="form-textarea" rows="2" placeholder="Ваша відповідь..." required></textarea>
+                                <button type="submit" class="btn-primary btn-sm">Надіслати</button>
+                            </form>
+                        </div>
                     </div>
                 </td>
             </tr>
-
         </th:block>
         </tbody>
+
+
     </table>
-    </div> <script>
-    function toggleReply(element) {
-        // element — це той самий тег <tr>, на який ти клікнув мишкою
-        // .closest('tr') гарантує, що ми схопимо рядок, навіть якщо клік був по тексту всередині
-        const row = element.closest('tr');
+    </div>
+    <script>
+        function toggleReply(element) {
+    // 1. Отримуємо ID цільового рядка відповіді
+    const targetId = element.getAttribute('data-target');
+    const replyRow = document.getElementById(targetId);
 
-        // Витягуємо значення data-target (наприклад, "reply-uuid-123")
-        const targetId = row.getAttribute('data-target');
-        if (!targetId) return; // Якщо атрибута немає (рядок "Нове") — зупиняємо роботу
-
-        // Шукаємо під таблицею прихований рядок з таким ID
-        const replyRow = document.getElementById(targetId);
-        if (replyRow) {
-            // Перемикаємо стан: якщо клас is-hidden є — прибираємо (показуємо текст), якщо немає — додаємо (ховаємо)
-            replyRow.classList.toggle('is-hidden');
-        }
+    if (replyRow) {
+        replyRow.classList.toggle('is-hidden');
     }
-</script>
+
+    // 2. Шукаємо елементи тексту в межах поточного рядка, на який клікнули
+    const shortMsg = element.querySelector('.msg-short');
+    const fullMsg = element.querySelector('.msg-full');
+
+    // Перемикаємо видимість тільки якщо довга версія згенерована сервером
+    if (shortMsg && fullMsg) {
+        shortMsg.classList.toggle('is-hidden');
+        fullMsg.classList.toggle('is-hidden');
+    }
+}
+
+    </script>
 </section> </body>
 </html>

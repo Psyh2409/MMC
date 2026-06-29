@@ -215,6 +215,7 @@
 }
 
 .profile-header-info {
+    background-color: var(--bg-surface);
     display: flex;
     flex-direction: column;
 }

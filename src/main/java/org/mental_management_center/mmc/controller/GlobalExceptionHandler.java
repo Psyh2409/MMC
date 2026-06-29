@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -23,11 +25,27 @@ public class GlobalExceptionHandler {
         return "error";
     }
 
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public String handleAccessDenied(AccessDeniedException exception, HttpServletResponse response, Model model) {
+//        response.setStatus(HttpStatus.FORBIDDEN.value());
+//        fillModel(model, HttpStatus.FORBIDDEN);
+//        return "error";
+//    }
+
     @ExceptionHandler(AccessDeniedException.class)
-    public String handleAccessDenied(AccessDeniedException exception, HttpServletResponse response, Model model) {
+    public String handleAccessDenied(AccessDeniedException exception, HttpServletRequest request, HttpServletResponse response, Model model) {
+        // 1. Встановлюємо правильний статус 403
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        fillModel(model, HttpStatus.FORBIDDEN);
-        return "error";
+
+        // 2. Твоя логіка для кнопки "Назад" (Referer)
+        String referer = request.getHeader("Referer");
+        if (referer == null) {
+            referer = "/";
+        }
+        model.addAttribute("backUrl", referer);
+
+        // 3. Віддаємо твій новий красивий шаблон
+        return "error/403";
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -87,4 +105,20 @@ public class GlobalExceptionHandler {
         // Логуємо лише на рівні DEBUG або WARN, щоб не "засмічувати" консоль
         log.warn("Штатний обрив медіа-потоку (користувач закрив вкладку або пауза): {}", ex.getMessage());
     }
+
+//    @ExceptionHandler(AccessDeniedException.class)
+//    @GetMapping("/403")
+//    public String handle403(HttpServletRequest request, Model model) {
+//        // Отримуємо URL сторінки, з якої прийшов користувач
+//        String referer = request.getHeader("Referer");
+//
+//        // Якщо реферера немає (наприклад, користувач ввів url руками), задаємо дефолтний маршрут (наприклад, головна сторінка)
+//        if (referer == null) {
+//            referer = "/";
+//        }
+//
+//        model.addAttribute("backUrl", referer);
+//        return "error/403"; // ваш Thymeleaf шаблон
+//    }
+
 }

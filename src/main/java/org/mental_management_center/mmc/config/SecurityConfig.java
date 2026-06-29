@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/api/media/**",
+                                "/error/403",
                                 "/specialists",
                                 "/about",
                                 "/issues/**", // Дозволяємо перегляд опису статті всім
@@ -59,6 +60,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/test/**",
                                 "/test-email",
+                                "/api/ping",
                                 "/images/**",
                                 "/sw.js",
                                 "/offline.html")

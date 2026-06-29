@@ -97,6 +97,10 @@ html, body {
     padding: var(--space-lg);
 }
 
+section.standard-container-narrow.mt-md {
+    margin: 0 auto;
+}
+
 .standard-container-compact {
     max-width: calc(var(--step) * 112);
     padding: calc(var(--step) * 7.5);

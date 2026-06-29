@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.mental_management_center.mmc.model.CategoryTranslation;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.stereotype.Controller;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,7 +34,10 @@ public class GlobalModelAttributes {
 
     // ОНОВЛЕНО: Тепер меню будується динамічно з бази даних
     @ModelAttribute("allCategoriesMap")
-    public Map<String, String> allCategoriesMap() {
+    public Map<String, String> allCategoriesMap(HttpServletRequest request) {
+        if (request.getRequestURI().startsWith("/api/")) {
+            return Collections.emptyMap(); //якщо це метод категорій)
+        }
         return categoryTranslationRepository.findAll().stream()
                 .collect(Collectors.toMap(
                         CategoryTranslation::getCategorySlug,
@@ -44,7 +49,10 @@ public class GlobalModelAttributes {
     // Твій метод для користувача лишається АБСОЛЮТНО без змін
     // ====================================================================================
     @ModelAttribute("currentUserDisplayName")
-    public String currentUserDisplayName(Authentication authentication) {
+    public String currentUserDisplayName(Authentication authentication, HttpServletRequest request) {
+        if (request.getRequestURI().startsWith("/api/")) {
+            return null; // (або return java.util.Collections.emptyList(); якщо це метод категорій)
+        }
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }

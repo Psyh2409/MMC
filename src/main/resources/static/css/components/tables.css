@@ -192,3 +192,24 @@
 .clickable-row:hover {
     background-color: var(--bg-elevated); /* Використовуємо твою змінну фону */
 }
+
+/* Стиль для курсора миші при наведенні на рядок таблиці */
+.clickable-row {
+    cursor: pointer;
+}
+
+/* Форматування довгого тексту: перенос слів та збереження абзаців (заміна колишнього white-space: pre-wrap) */
+.msg-full {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    padding-top: 5px;
+}
+
+/* Додатково: вертикальне вирівнювання контенту таблиці по верхньому краю,
+   щоб при розширенні тексту інші стовпці виглядали акуратно */
+.clickable-row td {
+    vertical-align: top;
+    padding: 10px;
+}

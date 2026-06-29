@@ -57,6 +57,21 @@ public class RequestService {
          return repository.findAllByOrderByCreatedAtDesc();
      }
 
+    @Transactional(readOnly = true)
+    public List<Request> findAllSortedByUrgency() {
+        return repository.findAllSortedByUrgency();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Request> findAllSortedByName() {
+        return repository.findAllByOrderByNameAscCreatedAtDesc();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Request> findAllSortedByContact() {
+        return repository.findAllByOrderByContactAscCreatedAtDesc();
+    }
+
      @Transactional
      public void deleteById(UUID id) {
          repository.deleteById(id);
