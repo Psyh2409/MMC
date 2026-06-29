@@ -8,61 +8,114 @@
 
 <section class="standard-container standard-container-wide">
     <div class="dashboard-hero-card">
-        <h1 class="page-title-accent">Мій кабінет фахівця</h1>
-        <p class="hero-description">Тут ви можете керувати своїми клієнтами та запитами.</p>
+        <h1 class="page-title-accent">Робочий кабінет фахівця</h1>
+        <p class="hero-description">Простір для керування терапевтичним процесом, клієнтами та публікаціями.</p>
     </div>
 
     <div th:if="${success}" class="status-message status-success mt-md" th:text="${success}"></div>
     <div th:if="${error}" class="status-message status-error mt-md" th:text="${error}"></div>
 
     <div class="profile-dashboard mt-md">
-        <main class="profile-main-content w-100">
 
-            <div class="profile-card">
-                <h3 class="profile-header-title">Нові запити на терапію</h3>
-                <hr class="hero-divider mb-md">
+        <aside class="profile-sidebar">
+            <div class="card-primary text-center">
 
-                <div th:if="${!pendingRequests.isEmpty()}" class="articles-grid">
-                    <div th:each="request : ${pendingRequests}" class="issue-callout p-md">
-                        <strong>Клієнт: </strong> <span th:text="${request.client.name}">Ім'я клієнта</span><br>
-                        <span class="text-sm text-muted">Дата запиту: <span th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span></span>
-
-                        <div class="mt-sm">
-                            <form th:action="@{/therapist/dashboard/accept/{id}(id=${request.id})}" method="post">
-                                <button type="submit" class="btn-primary btn-sm">Прийняти клієнта</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="avatar-circle avatar-lg mb-sm" style="margin: 0 auto;">
+                    <img th:if="${user.avatarFileName != null}"
+                         th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
+                         alt="Аватар фахівця">
+                    <span th:unless="${user.avatarFileName != null}"
+                          th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1).toUpperCase() : 'Ф'}">Ф</span>
                 </div>
 
-                <div th:if="${pendingRequests.isEmpty()}" class="profile-empty-state">
-                    <div class="icon">☕</div>
-                    <p>Наразі нових запитів немає. Час для кави!</p>
-                </div>
-            </div> <div class="profile-card mt-md">
-            <h3 class="profile-header-title">Мої клієнти (В роботі)</h3>
-            <hr class="hero-divider mb-md">
+                <h3 class="profile-header-title mt-sm" th:text="${user.name}">Ім'я Фахівця</h3>
+                <span class="text-muted text-sm d-block mb-md">ТЕРАПЕВТ</span>
 
-            <div th:if="${!activeAssignments.isEmpty()}" class="articles-grid">
-                <div th:each="assignment : ${activeAssignments}" class="issue-callout p-md">
-                    <strong>Клієнт: </strong> <span th:text="${assignment.client.name}"></span><br>
+                <hr class="profile-divider">
 
-                    <span class="text-xs text-muted" th:if="${assignment.approvedByTherapist != null}">
-                            Прийнято фахівцем: <span th:text="${assignment.approvedByTherapist?.name}"></span>
-                        </span>
+                <nav class="stack-form" style="gap: 0.5rem; display: flex; flex-direction: column;">
+                    <a th:href="@{/therapist/public/{id}(id=${user.id})}" class="btn-outline text-center">👁️ Публічна візитка</a>
+                    <a th:href="@{/admin/articles}" class="btn-outline text-center">📝 Мої статті</a>
+                    <a href="#" class="btn-outline text-center">🌐 Публічна стіна</a>
+                    <a href="#" class="btn-outline text-center">✉️ Мої звернення</a>
+                </nav>
+            </div>
 
-                    <div class="mt-sm">
-                        <a th:href="@{/therapy/room/{clientId}(clientId=${assignment.client.id})}" class="btn-primary">
-                            Pобочий кабінет
-                        </a>
-                    </div>
+            <div class="card-primary mt-md text-center" style="border: 1px dashed var(--border-soft); box-shadow: none; background: transparent;">
+                <span class="text-muted text-sm d-block mb-sm">📅 Календар сесій</span>
+                <p class="text-xs text-muted">Тут буде ваш планувальник та нагадування про найближчі зустрічі.</p>
+            </div>
+        </aside>
+
+        <main class="profile-main-content min-w-0">
+
+            <div class="card-primary">
+                <h3 class="profile-header-title">Клієнти та Запити</h3>
+
+                <div class="table-responsive-wrapper">
+                    <table class="data-table table-fluid">
+                        <thead>
+                        <tr>
+                            <th class="col-client">Клієнт</th>
+                            <th class="col-contact">Контакти</th>
+                            <th class="col-status text-nowrap">Статус</th>
+                            <th class="col-actions text-right">Дії</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="request : ${pendingRequests}">
+                            <td>
+                                <strong class="text-wrap-break" th:text="${request.client.name}">Ім'я</strong><br>
+                                <span class="text-xs text-muted" th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy')}">Дата</span>
+                            </td>
+                            <td>
+                                <span class="text-sm text-wrap-break" th:text="${request.client.email}">email</span>
+                            </td>
+                            <td>
+                                <span class="text-error text-sm text-nowrap" style="font-weight: 600;">Очікує</span>
+                            </td>
+                            <td class="text-right">
+                                <form th:action="@{/therapist/dashboard/accept/{id}(id=${request.id})}" method="post" class="form-inline-reset">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn-primary btn-sm text-nowrap">Прийняти</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <tr th:each="assignment : ${activeAssignments}">
+                            <td>
+                                <strong class="text-wrap-break" th:text="${assignment.client.name}">Ім'я</strong>
+                            </td>
+                            <td>
+                                <span class="text-sm text-wrap-break" th:text="${assignment.client.email}">email</span>
+                            </td>
+                            <td>
+                                <span class="text-success text-sm text-nowrap" style="font-weight: 600;">В терапії</span>
+                            </td>
+                            <td>
+                                <div class="action-group action-group-col">
+                                    <a th:href="@{/therapy/room/{clientId}(clientId=${assignment.client.id})}" class="btn-primary btn-sm text-nowrap w-100">
+                                        🎥 Кабінет
+                                    </a>
+                                    <a th:href="@{/therapist/notes/{clientId}(clientId=${assignment.client.id})}" class="btn-outline btn-sm text-nowrap w-100">
+                                        📝 Нотатки
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${(pendingRequests == null or pendingRequests.isEmpty()) and (activeAssignments == null or activeAssignments.isEmpty())}">
+                            <td colspan="4" class="text-center text-muted" style="padding: 2rem 0;">
+                                ☕ У вас поки немає ані нових запитів, ані активних клієнтів.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div th:if="${activeAssignments.isEmpty()}" class="profile-empty-state">
-                <p>У вас поки немає активних клієнтів.</p>
-            </div>
-        </div>
         </main>
     </div>
 </section>

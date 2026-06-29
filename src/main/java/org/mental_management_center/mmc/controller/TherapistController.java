@@ -86,6 +86,8 @@ public class TherapistController {
         User therapist = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
+        model.addAttribute("user", therapist);
+
         // Дістаємо всі запити, які чекають на відповідь
         List<TherapyAssignment> pendingRequests = assignmentService.getPendingRequestsForTherapist(therapist.getId());
 

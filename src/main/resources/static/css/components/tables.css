@@ -204,12 +204,55 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-word;
-    padding-top: 5px;
+    padding-top: 0.3125rem;
 }
 
 /* Додатково: вертикальне вирівнювання контенту таблиці по верхньому краю,
    щоб при розширенні тексту інші стовпці виглядали акуратно */
 .clickable-row td {
     vertical-align: top;
-    padding: 10px;
+    padding: 0.625rem;
+}
+
+/* --- УТИЛІТИ ТАБЛИЦЬ ТА КОНТЕЙНЕРІВ --- */
+.min-w-0 {
+    min-width: 0;
+}
+
+/* Знімаємо обмеження min-width: 38rem для вузьких колонок */
+.table-fluid {
+    min-width: 0;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+.text-right {
+    text-align: right;
+}
+
+/* --- РОЗМІТКА КОЛОНОК CRM-ТАБЛИЦІ --- */
+.col-client { width: 20%; }
+.col-contact { width: 25%; }
+.col-status { width: 15%; }
+.col-actions { width: 15%; }
+
+/* --- МОДИФІКАТОРИ ДІЙ --- */
+.action-group-end {
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-xs);
+     align-items: flex-end;
+     justify-content: flex-end;
+     flex-wrap: nowrap;
+}
+.form-inline-reset {
+    margin: 0;
+    display: inline-block;
+}
+
+/* Дозвіл на перенесення довгого тексту */
+.text-wrap-break {
+    white-space: normal;
+    word-break: break-word;
 }
