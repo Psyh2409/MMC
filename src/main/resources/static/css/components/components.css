@@ -1021,3 +1021,17 @@ margin-top: var(--space-md);
 .profile-identity .text-muted {
     margin-bottom: 0;
 }
+
+/* Windsurf: Контейнер для кнопок терапевтичного кабінету (розставляє по боках) */
+.therapy-room-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.therapy-room-actions .btn-primary,
+.therapy-room-actions .btn-outline {
+    flex: 1;
+}

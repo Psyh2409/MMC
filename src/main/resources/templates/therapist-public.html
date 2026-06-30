@@ -46,6 +46,13 @@
                     </form>
                 </div>
             </div>
+            <div class="card-primary mt-md">
+                <h3 class="profile-header-title text-center mb-sm">Написати фахівцю</h3>
+                <div th:if="${param.success}" class="status-message status-success mb-sm">
+                    ✔ Ваше повідомлення успішно надіслано фахівцю!
+                </div>
+                <div th:replace="~{fragments/forms :: contact-form(actionUrl=@{/contact/specialist/{id}(id=${therapist.id})})}"></div>
+            </div>
         </aside>
 
         <main class="profile-main-content">

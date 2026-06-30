@@ -83,27 +83,30 @@
 
     </table>
     </div>
-    <script>
-        function toggleReply(element) {
-    // 1. Отримуємо ID цільового рядка відповіді
-    const targetId = element.getAttribute('data-target');
-    const replyRow = document.getElementById(targetId);
 
-    if (replyRow) {
-        replyRow.classList.toggle('is-hidden');
-    }
+    <script src="/js/requests.js" defer></script>
 
-    // 2. Шукаємо елементи тексту в межах поточного рядка, на який клікнули
-    const shortMsg = element.querySelector('.msg-short');
-    const fullMsg = element.querySelector('.msg-full');
+<!--    <script>-->
+<!--        function toggleReply(element) {-->
+<!--    // 1. Отримуємо ID цільового рядка відповіді-->
+<!--    const targetId = element.getAttribute('data-target');-->
+<!--    const replyRow = document.getElementById(targetId);-->
 
-    // Перемикаємо видимість тільки якщо довга версія згенерована сервером
-    if (shortMsg && fullMsg) {
-        shortMsg.classList.toggle('is-hidden');
-        fullMsg.classList.toggle('is-hidden');
-    }
-}
+<!--    if (replyRow) {-->
+<!--        replyRow.classList.toggle('is-hidden');-->
+<!--    }-->
 
-    </script>
+<!--    // 2. Шукаємо елементи тексту в межах поточного рядка, на який клікнули-->
+<!--    const shortMsg = element.querySelector('.msg-short');-->
+<!--    const fullMsg = element.querySelector('.msg-full');-->
+
+<!--    // Перемикаємо видимість тільки якщо довга версія згенерована сервером-->
+<!--    if (shortMsg && fullMsg) {-->
+<!--        shortMsg.classList.toggle('is-hidden');-->
+<!--        fullMsg.classList.toggle('is-hidden');-->
+<!--    }-->
+<!--}-->
+
+<!--    </script>-->
 </section> </body>
 </html>

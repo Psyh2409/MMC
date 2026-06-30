@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="contact-form(actionUrl)">
+
+    <form th:action="${actionUrl}" method="post" class="stack-form stack-form-sans">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+        <div th:unless="${#authorization.expression('isAuthenticated()')}">
+            <div class="form-field">
+                <label class="form-label">Ваше ім'я</label>
+                <input type="text" name="name" required placeholder="Як до вас звертатися?" class="form-input">
+            </div>
+
+            <div class="form-field">
+                <label class="form-label">E-mail для відповіді</label>
+                <input type="email" name="contact" required placeholder="example@domain.com" class="form-input">
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Ваше повідомлення</label>
+            <textarea name="message" rows="4" required placeholder="Опишіть Ваше питання..." class="form-textarea"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary w-100">
+            Надіслати повідомлення
+        </button>
+    </form>
+
+</th:block>
+
+</body>
+</html>

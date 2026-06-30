@@ -181,4 +181,35 @@ public class EmailService {
             logger.error("Не вдалося надіслати адмінське сповіщення: {}", e.getMessage());
         }
     }
+
+    public void sendTherapistReply(String toContact, String clientName, String originalMessage, String replyMessage, String therapistEmail, String therapistName) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toContact);
+            helper.setSubject("Відповідь від вашого фахівця: " + therapistName);
+
+            // МАГІЯ ТУТ: клієнт відповідатиме напряму на email фахівця
+            helper.setReplyTo(therapistEmail, therapistName);
+            // Відправник системний, щоб Google не кинув у спам
+            helper.setFrom(this.adminMail, "Mental Management Center");
+
+            String text = String.format(
+                    "Вітаємо, %s!\n\n" +
+                            "Ваш фахівець (%s) відповів на ваше звернення:\n\n" +
+                            "ВИ ПИСАЛИ:\n\"%s\"\n\n" +
+                            "ВІДПОВІДЬ ФАХІВЦЯ:\n\"%s\"\n\n" +
+                            "Ви можете відповісти на цей лист — він надійде безпосередньо вашому фахівцю.\n\n" +
+                            "З повагою,\nПлатформа Mental Management Center",
+                    clientName, therapistName, originalMessage, replyMessage
+            );
+
+            helper.setText(text, false);
+            mailSender.send(message);
+            logger.info("Відповідь фахівця {} успішно надіслана клієнту {}.", therapistEmail, toContact);
+        } catch (Exception e) {
+            logger.error("Помилка відправки відповіді фахівця: {}", e.getMessage());
+        }
+    }
 }

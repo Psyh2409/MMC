@@ -1,0 +1,134 @@
+
+======================================================
+           ЗВІТ ПРО ІНЛАЙН-СТИЛІ В HTML ШАБЛОНАХ   
+======================================================
+Дата: Tue Jun 30 23:41:44 EEST 2026
+======================================================
+
+📄 Файл: about.html
+   Знайдено інлайн-стилів: 1
+   ──────────────────────────────────────────────────
+   • Тег: <summary>
+     Стиль: "cursor: pointer; display: inline-block; padding: 0.75rem 1.5rem; font-weight: 600;"
+
+
+📄 Файл: logo.html
+   Знайдено інлайн-стилів: 1
+   ──────────────────────────────────────────────────
+   • Тег: <p>
+     Стиль: "color: #aaa; font-size: 14px;"
+
+
+📄 Файл: requests.html
+   Знайдено інлайн-стилів: 4
+   ──────────────────────────────────────────────────
+   • Тег: <a>
+     Стиль: "text-decoration: none; color: inherit;"
+
+   • Тег: <a>
+     Стиль: "text-decoration: none; color: inherit;"
+
+   • Тег: <a>
+     Стиль: "text-decoration: none; color: inherit;"
+
+   • Тег: <a>
+     Стиль: "text-decoration: none; color: inherit;"
+
+
+📄 Файл: therapist-dashboard.html
+   Знайдено інлайн-стилів: 6
+   ──────────────────────────────────────────────────
+   • Тег: <div>
+     Стиль: "margin: 0 auto;"
+
+   • Тег: <nav>
+     Стиль: "gap: 0.5rem; display: flex; flex-direction: column;"
+
+   • Тег: <div>
+     Стиль: "border: 0.0625rem dashed var(--border-soft); box-shadow: none; background: transparent;"
+
+   • Тег: <span>
+     Стиль: "font-weight: 600;"
+
+   • Тег: <span>
+     Стиль: "font-weight: 600;"
+
+   • Тег: <td>
+     Стиль: "padding: 2rem 0;"
+
+
+📄 Файл: therapist-public.html
+   Знайдено інлайн-стилів: 1
+   ──────────────────────────────────────────────────
+   • Тег: <div>
+     Стиль: "display: none;"
+
+
+📄 Файл: therapist-requests.html
+   Знайдено інлайн-стилів: 11
+   ──────────────────────────────────────────────────
+   • Тег: <div>
+     Стиль: "display: flex; justify-content: space-between; align-items: center;"
+
+   • Тег: <th>
+     Стиль: "width: 15%;"
+
+   • Тег: <th>
+     Стиль: "width: 25%;"
+
+   • Тег: <th>
+     Стиль: "width: 45%;"
+
+   • Тег: <th>
+     Стиль: "width: 15%; text-align: right;"
+
+   • Тег: <span>
+     Стиль: "font-weight: 600;"
+
+   • Тег: <tr>
+     Стиль: "background-color: var(--bg-canvas);"
+
+   • Тег: <td>
+     Стиль: "padding: var(--space-md);"
+
+   • Тег: <div>
+     Стиль: "border-left: 3px solid var(--primary-color); padding-left: var(--space-sm);"
+
+   • Тег: <div>
+     Стиль: "display: flex; justify-content: flex-end; margin-top: var(--space-sm);"
+
+   • Тег: <td>
+     Стиль: "padding: 3rem 0;"
+
+
+📄 Файл: therapy-room.html
+   Знайдено інлайн-стилів: 2
+   ──────────────────────────────────────────────────
+   • Тег: <div>
+     Стиль: "text-align: right; margin-top: var(--space-xs);"
+
+   • Тег: <div>
+     Стиль: "margin-top: 30px;"
+
+
+📄 Файл: topic-page.html
+   Знайдено інлайн-стилів: 2
+   ──────────────────────────────────────────────────
+   • Тег: <div>
+     Стиль: "margin-bottom: 10px;"
+
+   • Тег: <span>
+     Стиль: "font-size: 0.8rem; color: #8b7355; margin-right: 8px;"
+
+
+📊 СТАТИСТИКА:
+  Файлів з інлайн-стилями: 8
+  Всього знайдено інлайн-стилів: 28
+
+⚠️ УВАГА: Знайдено інлайн-стилі. Рекомендується замінити їх на CSS класи.
+
+💡 Поради:
+  - Перегляньте кожен інлайн-стиль та вирішіть, чи можна його замінити на CSS клас
+  - Динамічні стилі (через JavaScript) можуть залишатися
+  - Специфічні стилі для окремих елементів краще винести в CSS
+======================================================

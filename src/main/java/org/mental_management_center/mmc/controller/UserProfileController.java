@@ -42,6 +42,8 @@ public class UserProfileController {
     private final FileStorageService fileStorageService;
     @Autowired
     private ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private TherapyAssignmentRepository therapyAssignmentRepository;
 
     @Autowired
     private JournalPostRepository journalPostRepository;
@@ -87,6 +89,10 @@ public class UserProfileController {
                 model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
                 boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
                 model.addAttribute("hasInvitation", isSessionActive);
+
+                // Windsurf: Знаходимо активного терапевта клієнта для кнопки "Профіль фахівця"
+                therapyAssignmentRepository.findActiveByClientId(user.getId())
+                        .ifPresent(assignment -> model.addAttribute("myTherapist", assignment.getTherapist()));
             }
 
             if (!model.containsAttribute("profileUpdateForm")) {
@@ -166,6 +172,10 @@ public class UserProfileController {
                 model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
                 boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
                 model.addAttribute("hasInvitation", isSessionActive);
+
+                // Windsurf: Знаходимо активного терапевта клієнта для кнопки "Профіль фахівця"
+                therapyAssignmentRepository.findActiveByClientId(user.getId())
+                        .ifPresent(assignment -> model.addAttribute("myTherapist", assignment.getTherapist()));
             }
         });
 

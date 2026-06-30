@@ -148,7 +148,16 @@
                         <h3>Терапевтичний кабінет</h3>
                         <p>Ваша спільна стіна з фахівцем для роботи та матеріалів.</p>
                     </div>
-                    <a th:href="${therapyRoomUrl}" class="btn-primary">Перейти в кабінет</a>
+                    <!-- Windsurf: Контейнер для кнопок (розставляє по боках через CSS) -->
+                    <div class="therapy-room-actions">
+                        <a th:href="${therapyRoomUrl}" class="btn-primary">Перейти в кабінет</a>
+                        <!-- Windsurf: Показуємо кнопку тільки якщо у клієнта є активний терапевт -->
+                        <a th:if="${myTherapist != null}"
+                           th:href="@{/therapist/public/{id}(id=${myTherapist.id})}"
+                           class="btn-outline">
+                            👁️ Профіль фахівця
+                        </a>
+                    </div>
                 </div>
 
                 <div th:if="${professionalNotes != null}" class="journal-section mb-md">

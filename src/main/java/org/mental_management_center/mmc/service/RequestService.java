@@ -53,23 +53,23 @@ public class RequestService {
      @SuppressWarnings("null")
 
      @Transactional(readOnly = true)
-     public List<Request> findAllNewestFirst() {
-         return repository.findAllByOrderByCreatedAtDesc();
+     public List<Request> getAdminRequestsSortedByDate() {
+         return repository.findByRecipientIsNullOrderByCreatedAtDesc();
      }
 
     @Transactional(readOnly = true)
-    public List<Request> findAllSortedByUrgency() {
-        return repository.findAllSortedByUrgency();
+    public List<Request> getAdminRequestsSortedByUrgency() {
+        return repository.findByRecipientIsNullSortedByUrgency();
     }
 
     @Transactional(readOnly = true)
-    public List<Request> findAllSortedByName() {
-        return repository.findAllByOrderByNameAscCreatedAtDesc();
+    public List<Request> getAdminRequestsSortedByName() {
+        return repository.findByRecipientIsNullOrderByNameAscCreatedAtDesc();
     }
 
     @Transactional(readOnly = true)
-    public List<Request> findAllSortedByContact() {
-        return repository.findAllByOrderByContactAscCreatedAtDesc();
+    public List<Request> getAdminRequestsSortedByContact() {
+        return repository.findByRecipientIsNullOrderByContactAscCreatedAtDesc();
     }
 
      @Transactional
@@ -90,6 +90,20 @@ public class RequestService {
         request.setAdminReply(replyMessage);
         request.setStatus(RequestStatus.ANSWERED);
         repository.save(request); // Звичайний save з JpaRepository (а не твій кастомний)
+    }
+
+    public List<Request> findByRecipientOrderByCreatedAtDesc(User recipient) {
+        return repository.findByRecipientOrderByCreatedAtDesc(recipient);
+    }
+
+    // Метод для АДМІНА: віддає тільки загальні листи
+    public List<Request> getAdminRequests(org.springframework.data.domain.Sort sort) {
+        return repository.findByRecipientIsNull(sort);
+    }
+
+    // Якщо сортування у тебе реалізовано без об'єкта Sort, то додай такий:
+    public List<Request> getAdminRequests() {
+        return repository.findByRecipientIsNullOrderByCreatedAtDesc();
     }
 }
 

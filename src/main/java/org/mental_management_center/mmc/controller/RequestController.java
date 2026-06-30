@@ -2,8 +2,10 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.EmailService;
 import org.mental_management_center.mmc.service.RequestService;
+import org.mental_management_center.mmc.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +20,13 @@ public class RequestController {
 
     private final RequestService requestService;
     private final EmailService emailService;
+    private final UserService userService;
 
 
-    public RequestController(RequestService requestService, EmailService emailService) {
+    public RequestController(RequestService requestService, EmailService emailService, UserService userService) {
         this.requestService = requestService;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     @GetMapping("/contact")
@@ -66,22 +70,23 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    public String showRequests(@RequestParam(required = false) String sort, Model model) {
+    public String showRequests(@RequestParam(name = "sort", required = false) String sort, Model model) {
         List<Request> requests;
 
-        if ("name".equals(sort)) {
-            requests = requestService.findAllSortedByName();
+        // Використовуємо ТІЛЬКИ безпечні адмінські методи (де recipient == null)
+        if ("status".equals(sort)) {
+            requests = requestService.getAdminRequestsSortedByUrgency();
+        } else if ("name".equals(sort)) {
+            requests = requestService.getAdminRequestsSortedByName();
         } else if ("contact".equals(sort)) {
-            requests = requestService.findAllSortedByContact(); // Твоє унікальне поле
-        } else if ("date".equals(sort)) {
-            requests = requestService.findAllNewestFirst(); // Твій старий метод
+            requests = requestService.getAdminRequestsSortedByContact();
         } else {
-            // Дефолтна поведінка (або sort=status): Нові зверху!
-            requests = requestService.findAllSortedByUrgency();
+            // За замовчуванням
+            requests = requestService.getAdminRequestsSortedByDate();
         }
 
         model.addAttribute("requests", requests);
-        return "requests";
+        return "requests"; // Твій шаблон адмінки
     }
 
     @PostMapping("/requests/delete/{id}")
@@ -120,5 +125,75 @@ public class RequestController {
         }
 
         return "redirect:/requests";
+    }
+
+    // 1. ПРИЙОМ ПРИВАТНОГО ПОВІДОМЛЕННЯ ВІД КЛІЄНТА
+    @PostMapping("/contact/specialist/{specialistId}")
+    public String submitSpecialistRequest(@PathVariable UUID specialistId, @ModelAttribute Request request, Principal principal) {
+        // Знаходимо фахівця і призначаємо його отримувачем
+        User recipient = userService.findById(specialistId)
+                .orElseThrow();
+
+        request.setRecipient(recipient);
+        request.setStatus(RequestStatus.NEW);
+
+        // Викликаємо ТВІЙ метод save, який сам витягне клієнта з Principal
+        requestService.save(request, principal);
+
+        return "redirect:/therapist/public/" + specialistId + "?success";
+    }
+
+    // 2. ВІДПРАВКА ВІДПОВІДІ САМИМ ТЕРАПЕВТОМ
+    @PostMapping("/therapist/requests/{id}/reply")
+    public String therapistReply(@PathVariable UUID id, @RequestParam("replyMessage") String replyMessage, Principal principal) {
+        Request request = requestService.findById(id);
+        User therapist = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+
+        // ПЕРЕВІРКА КОНФІДЕНЦІЙНОСТІ: Адмін чи інший терапевт не може відповісти на цей лист
+        if (request.getRecipient() == null || !request.getRecipient().getId().equals(therapist.getId())) {
+            throw new SecurityException("Відмовлено в доступі: це не ваше звернення");
+        }
+
+        // Оновлюємо статус
+        request.setStatus(RequestStatus.ANSWERED);
+        request.setAdminReply(replyMessage);
+        requestService.saveAdminReply(id, replyMessage); // Зберігаємо в базу
+
+        // Відправляємо лист клієнту
+        if (request.getContact() != null && !request.getContact().isBlank()) {
+            emailService.sendTherapistReply(
+                    request.getContact(),
+                    request.getName() != null ? request.getName() : "Клієнт",
+                    request.getMessage(),
+                    replyMessage,
+                    therapist.getEmail(),
+                    therapist.getName()
+            );
+        }
+
+        return "redirect:/therapist/requests"; // Перенаправляємо назад у папку "Мої звернення"
+    }
+
+    // 3. СТОРІНКА "МОЇ ЗВЕРНЕННЯ" ДЛЯ ФАХІВЦЯ
+    @GetMapping("/therapist/requests")
+    public String showTherapistRequests(Model model, Principal principal) {
+        User therapist = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+
+        // Витягуємо тільки ті листи, де отримувач = поточний терапевт
+        List<Request> myRequests = requestService.findByRecipientOrderByCreatedAtDesc(therapist);
+
+        model.addAttribute("requests", myRequests);
+        model.addAttribute("user", therapist); // Для аватарки
+
+        return "therapist-requests";
+    }
+
+    // ВИДАЛЕННЯ ЗВЕРНЕННЯ З КАБІНЕТУ ФАХІВЦЯ
+    @PostMapping("/therapist/requests/delete/{id}")
+    public String deleteTherapistRequest(@PathVariable UUID id) {
+        requestService.deleteById(id);
+        return "redirect:/therapist/requests"; // Повертає назад у список звернень фахівця
     }
 }

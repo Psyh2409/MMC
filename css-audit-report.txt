@@ -1,0 +1,339 @@
+
+======================================================
+           ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
+======================================================
+Дата: Tue Jun 30 23:41:43 EEST 2026
+======================================================
+
+❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 81:
+  - Клас [article-cta-subtitle] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [article-cta] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [article-view] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [avatar-lg] є в HTML [therapist-public.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [btn-accent-capsule] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [btn-admin] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [btn-nav-round] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [card-compact] є в HTML [edebo-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [card-secondary] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [comment-login-prompt] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [comment-meta] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [comment-text] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [contact-direct-email] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [contact-direct-info] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [controls] є в HTML [logo.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [cta-panel-title] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [d-block] є в HTML [therapist-public.html, specialists.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [danger-zone] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [delete-icon] є в HTML [journal-form.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [form-input-label] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [form-text-muted] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [home-hero-return] є в HTML [index.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [home-services] є в HTML [index.html, first-steps.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-border-top-accent] є в HTML [exit-nearby.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-callout-secondary-emphasis] є в HTML [new-meanings.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-callout-secondary-strong] є в HTML [restore-resource.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-cta-compact] є в HTML [inner-calm.html, dialogue.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-cta-primary] є в HTML [exit-nearby.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-cta] є в HTML [new-meanings.html, inner-calm.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-grid] є в HTML [dialogue.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-link-note] є в HTML [new-meanings.html, restore-resource.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-quote-large] є в HTML [inner-calm.html, dialogue.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-quote-secondary] є в HTML [restore-resource.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-step-number] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-step-text] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [issue-step] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [journal-details] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [journal-feed-list] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [journal-media-input] є в HTML [journal-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [journal-post-content] є в HTML [journal-form.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [link-cta] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [longread-container] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [longread-content] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [manifesto-feature-alert] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [manifesto-feature] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [manifesto-footer] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [manifesto-page] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [manifesto-quote] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mb-md] є в HTML [about.html, therapist-public.html, therapist-requests.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mb-sm] є в HTML [about.html, therapist-public.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mb-xs] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [ml-sm] є в HTML [403.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [modal-title] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [msg-short] є в HTML [therapist-requests.html, requests.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [msg] є в HTML [requests.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mt-lg] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mt-sm] є в HTML [about.html, therapist-public.html, edebo-form.html, specialists.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [no-comments] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [notes-header-row] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [oauth-button-google] є в HTML [login.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [p-md] є в HTML [403.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [post-header] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [reply-action-btn] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [reply-row] є в HTML [requests.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [role-badge] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [row-between] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [session-toggle-wrapper] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [sidebar] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [site-brand-footer] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [site-brand-text-footer] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [sync-indicator] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-body] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-center] є в HTML [therapist-public.html, therapist-requests.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-error] є в HTML [therapist-requests.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-sm] є в HTML [therapist-public.html, specialists.html, therapist-requests.html, journal-form.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-success] є в HTML [therapist-requests.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-xs] є в HTML [therapist-requests.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [w-100] є в HTML [therapist-public.html, specialists.html, forms.html, profile.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [wall-media-input] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 150:
+  - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .04 є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .05 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .05em є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .0625rem є в CSS [layout.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .075rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .1 є в CSS [layout.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .125rem є в CSS [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .15 є в CSS [components.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .1875rem є в CSS [navigation.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .1rem є в CSS [navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .1s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .2 є в CSS [cards.css, navigation.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .25 є в CSS [layout.css, cards.css, navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .25rem є в CSS [layout.css, offline-banner.css, navigation.css, components.css, typography.css, buttons.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .25s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .2rem є в CSS [components.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .2s є в CSS [cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .3 є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .3125rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .375rem є в CSS [utilities.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .3rem є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .3s є в CSS [layout.css, cards.css, navigation.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .4 є в CSS [tables.css, forms.css, typography.css, buttons.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .45rem є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .4rem є в CSS [navigation.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .5 є в CSS [layout.css, cards.css, components.css, forms.css, buttons.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .5rem є в CSS [layout.css, offline-banner.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .5s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .6 є в CSS [layout.css, cards.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .625rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .65rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .7 є в CSS [cards.css, tables.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .75 є в CSS [cards.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .75rem є в CSS [navigation.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .7rem є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .8 є в CSS [components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .85 є в CSS [layout.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .85rem є в CSS [layout.css, tables.css, navigation.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .875em є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .875rem є в CSS [cards.css, tables.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .8em є в CSS [tables.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .8rem є в CSS [forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .9 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .95em є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .95rem є в CSS [navigation.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .9em є в CSS [tables.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .9rem є в CSS [navigation.css, components.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .action-group-end є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .active-theme є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-actions є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-container є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-form є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-stat-card є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-stat-card-client є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-stat-card-visits є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .admin-stats є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .article-illustration є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .avatar-sm є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .badge-admin є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .badge-client є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .badge-reader є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-cancel-inline є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-copy-uuid є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-danger є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-deactivate-submit є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-delete-small є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-link-muted є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-success є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .card-elevated є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .category-input-hidden є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .chat-form є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .context-author є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .crypto-badge є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .css є в CSS [main.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .dashboard-hero є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .data-table-id є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .data-table-message є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .date-separator є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .depth-1 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .depth-2 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .depth-3 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .depth-4 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .drag-over є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .external-link є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .filter-group є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .heading-md є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .heading-xl є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .hero-title-light є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .is-active є в CSS [offline-banner.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .is-visible є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .issue-border-main є в CSS [utilities.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .issue-border-secondary є в CSS [utilities.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .issue-border-top-contrast є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .issue-border-top-main є в CSS [utilities.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .journal-feed-container є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .journal-file-name є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .journal-hint-bar є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .jpg є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .media-input-group є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .media-item-input є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .media-item-name є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .media-item-row є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .media-placeholder є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-box є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-header є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-in є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-item є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-me є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-mine є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-other є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-others є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-out є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-reply-context є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .new-category-input є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .offline-content є в CSS [offline-banner.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .offline-wrapper є в CSS [offline-banner.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .play-btn є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .preview-img є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .preview-video є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-avatar є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-avatar-container є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-avatar-wrapper є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-header-info є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-shell є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .profile-user-info є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .pulse-notification є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .quote-block є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .quote-text є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .reply-quote є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .session-info-bar є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .start є в CSS [utilities.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-card є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-grid є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-hero є в CSS [layout.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-hero-subtitle є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-hero-title є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-pull-quote є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-summary є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .steps-text-block є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .table-main є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .text-break є в CSS [utilities.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .theme-dot є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .theme-switcher-desc є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .theme-switcher-grid є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .title-cell є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .youtube-facade є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .youtube-iframe є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+
+⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 51:
+  - Стиль .02 дублюється у декількох файлах: [cards.css, forms.css]
+  - Стиль .0625rem дублюється у декількох файлах: [layout.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
+  - Стиль .1 дублюється у декількох файлах: [layout.css, components.css, forms.css, buttons.css]
+  - Стиль .125rem дублюється у декількох файлах: [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css]
+  - Стиль .15 дублюється у декількох файлах: [components.css, variables.css]
+  - Стиль .1rem дублюється у декількох файлах: [navigation.css, components.css, forms.css]
+  - Стиль .2 дублюється у декількох файлах: [cards.css, navigation.css, components.css, typography.css]
+  - Стиль .25 дублюється у декількох файлах: [layout.css, cards.css, navigation.css, components.css, forms.css]
+  - Стиль .25rem дублюється у декількох файлах: [layout.css, offline-banner.css, navigation.css, components.css, typography.css, buttons.css, variables.css]
+  - Стиль .2rem дублюється у декількох файлах: [components.css, forms.css, typography.css]
+  - Стиль .2s дублюється у декількох файлах: [cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css]
+  - Стиль .375rem дублюється у декількох файлах: [utilities.css, components.css]
+  - Стиль .3s дублюється у декількох файлах: [layout.css, cards.css, navigation.css, components.css]
+  - Стиль .4 дублюється у декількох файлах: [tables.css, forms.css, typography.css, buttons.css, variables.css]
+  - Стиль .4rem дублюється у декількох файлах: [navigation.css, typography.css]
+  - Стиль .5 дублюється у декількох файлах: [layout.css, cards.css, components.css, forms.css, buttons.css, variables.css]
+  - Стиль .5rem дублюється у декількох файлах: [layout.css, offline-banner.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
+  - Стиль .6 дублюється у декількох файлах: [layout.css, cards.css, components.css, typography.css]
+  - Стиль .7 дублюється у декількох файлах: [cards.css, tables.css, buttons.css]
+  - Стиль .75 дублюється у декількох файлах: [cards.css, components.css]
+  - Стиль .75rem дублюється у декількох файлах: [navigation.css, components.css, typography.css]
+  - Стиль .8 дублюється у декількох файлах: [components.css, typography.css]
+  - Стиль .85 дублюється у декількох файлах: [layout.css, forms.css]
+  - Стиль .85rem дублюється у декількох файлах: [layout.css, tables.css, navigation.css, components.css, forms.css, buttons.css]
+  - Стиль .875rem дублюється у декількох файлах: [cards.css, tables.css, components.css, typography.css]
+  - Стиль .8em дублюється у декількох файлах: [tables.css, typography.css]
+  - Стиль .8rem дублюється у декількох файлах: [forms.css, typography.css]
+  - Стиль .95rem дублюється у декількох файлах: [navigation.css, forms.css]
+  - Стиль .9em дублюється у декількох файлах: [tables.css, forms.css, typography.css]
+  - Стиль .9rem дублюється у декількох файлах: [navigation.css, components.css, forms.css, typography.css]
+  - Стиль .action-group дублюється у декількох файлах: [layout.css, tables.css]
+  - Стиль .active дублюється у декількох файлах: [layout.css, navigation.css, utilities.css]
+  - Стиль .admin-controls-wrapper дублюється у декількох файлах: [tables.css, buttons.css]
+  - Стиль .article-card дублюється у декількох файлах: [cards.css, buttons.css]
+  - Стиль .btn-outline дублюється у декількох файлах: [navigation.css, components.css, forms.css, buttons.css]
+  - Стиль .btn-primary дублюється у декількох файлах: [navigation.css, components.css, buttons.css]
+  - Стиль .button-row дублюється у декількох файлах: [layout.css, buttons.css]
+  - Стиль .content-section дублюється у декількох файлах: [layout.css, typography.css]
+  - Стиль .error-description дублюється у декількох файлах: [cards.css, components.css]
+  - Стиль .file-name-display дублюється у декількох файлах: [components.css, forms.css]
+  - Стиль .hero-global-actions дублюється у декількох файлах: [layout.css, components.css]
+  - Стиль .journal-post-media-box дублюється у декількох файлах: [components.css, typography.css]
+  - Стиль .left-actions дублюється у декількох файлах: [forms.css, buttons.css]
+  - Стиль .password-container дублюється у декількох файлах: [components.css, forms.css]
+  - Стиль .profile-card дублюється у декількох файлах: [cards.css, components.css, buttons.css]
+  - Стиль .profile-sidebar дублюється у декількох файлах: [layout.css, components.css]
+  - Стиль .section-title дублюється у декількох файлах: [cards.css, components.css, typography.css]
+  - Стиль .site-footer дублюється у декількох файлах: [layout.css, navigation.css]
+  - Стиль .site-footer-inner дублюється у декількох файлах: [layout.css, navigation.css]
+  - Стиль .tab-pane дублюється у декількох файлах: [layout.css, navigation.css, utilities.css]
+  - Стиль .text-muted дублюється у декількох файлах: [components.css, typography.css]
+
+🔍 ПОТЕНЦІЙНІ ДУБЛІКАТИ (використовуються в багатьох місцях) - 35:
+  - Клас [issue-callout] використовується в багатьох HTML файлах (10): [new-meanings.html, inner-calm.html, therapist-public.html, exit-nearby.html, specialists.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, admin-users.html, dialogue.html]
+  - Клас [action-group] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, admin-articles.html, specialists.html, article.html, therapist-dashboard.html, my-format.html]
+  - Клас [standard-container-wide] використовується в багатьох HTML файлах (13): [article-form.html, admin-articles.html, specialists.html, article.html, profile.html, therapy-room.html, therapist-public.html, therapist-requests.html, requests.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
+  - Клас [content-section] використовується в багатьох HTML файлах (10): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, article.html, closeness-crisis.html, profile.html, restore-resource.html, default.html, dialogue.html]
+  - Клас [standard-container] використовується в багатьох HTML файлах (19): [about.html, article-form.html, admin-articles.html, reset-password.html, specialists.html, contact.html, article.html, login.html, forgot-password.html, therapist-public.html, therapist-requests.html, requests.html, chat.html, first-steps.html, register.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
+  - Клас [mt-md] використовується в багатьох HTML файлах (9): [about.html, therapist-public.html, specialists.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html]
+  - Клас [issue-intro] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [text-sm] використовується в багатьох HTML файлах (8): [therapist-public.html, specialists.html, therapist-requests.html, journal-form.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
+  - Клас [btn-primary] використовується в багатьох HTML файлах (36): [admin-articles.html, reset-password.html, specialists.html, contact.html, login.html, new-meanings.html, therapist-requests.html, index.html, chat.html, freedom-choice.html, footer.html, therapist-dashboard.html, admin-users.html, error.html, about.html, article-form.html, edebo-form.html, 403.html, article.html, closeness-crisis.html, profile.html, therapy-room.html, my-format.html, header.html, forgot-password.html, inner-calm.html, therapist-public.html, exit-nearby.html, requests.html, forms.html, journal-form.html, register.html, shared-wall-form.html, restore-resource.html, default.html, dialogue.html]
+  - Клас [heading-lg] використовується в багатьох HTML файлах (8): [article-form.html, first-steps.html, article.html, topic-page.html, profile.html, default.html, my-format.html, articles.html]
+  - Клас [layout-stack] використовується в багатьох HTML файлах (6): [about.html, first-steps.html, article.html, topic-page.html, profile.html, articles.html]
+  - Клас [issue-shell] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [issue-title] використовується в багатьох HTML файлах (8): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, 403.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [text-muted] використовується в багатьох HTML файлах (13): [about.html, comment-tree.html, specialists.html, header-footer.html, article.html, profile.html, therapist-public.html, therapist-requests.html, journal-form.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
+  - Клас [issue-cta] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [button-row] використовується в багатьох HTML файлах (7): [chat.html, journal-form.html, 403.html, article.html, profile.html, shared-wall-form.html, error.html]
+  - Клас [contact-intro-title] використовується в багатьох HTML файлах (6): [forgot-password.html, reset-password.html, register.html, contact.html, profile.html, login.html]
+  - Клас [stack-form] використовується в багатьох HTML файлах (12): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, therapist-dashboard.html, login.html]
+  - Клас [mt-sm] використовується в багатьох HTML файлах (8): [about.html, therapist-public.html, edebo-form.html, specialists.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
+  - Клас [form-label] використовується в багатьох HTML файлах (8): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, register.html, contact.html, login.html]
+  - Клас [status-message] використовується в багатьох HTML файлах (10): [forgot-password.html, therapist-public.html, edebo-form.html, reset-password.html, register.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
+  - Клас [status-success] використовується в багатьох HTML файлах (8): [forgot-password.html, therapist-public.html, edebo-form.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
+  - Клас [btn-sm] використовується в багатьох HTML файлах (8): [therapist-requests.html, requests.html, journal-form.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
+  - Клас [issue-article] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [mb-md] використовується в багатьох HTML файлах (8): [about.html, therapist-public.html, therapist-requests.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html]
+  - Клас [issue-text] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html]
+  - Клас [page-title-accent] використовується в багатьох HTML файлах (12): [about.html, article-form.html, admin-articles.html, specialists.html, therapist-requests.html, requests.html, first-steps.html, article.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
+  - Клас [layout-container] використовується в багатьох HTML файлах (7): [new-meanings.html, chat.html, article.html, closeness-crisis.html, profile.html, default.html, my-format.html]
+  - Клас [btn-outline] використовується в багатьох HTML файлах (20): [about.html, comment-tree.html, article-form.html, admin-articles.html, header-footer.html, 403.html, article.html, profile.html, header.html, therapist-requests.html, requests.html, index.html, chat.html, journal-form.html, register.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html, error.html]
+  - Клас [status-error] використовується в багатьох HTML файлах (7): [forgot-password.html, therapist-public.html, reset-password.html, register.html, therapist-dashboard.html, login.html, admin-users.html]
+  - Клас [form-field] використовується в багатьох HTML файлах (10): [forgot-password.html, edebo-form.html, reset-password.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
+  - Клас [form-input] використовується в багатьох HTML файлах (11): [forgot-password.html, article-form.html, edebo-form.html, reset-password.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
+  - Клас [mb-sm] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
+  - Клас [card-primary] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, therapist-requests.html, profile.html, shared-wall-form.html, therapist-dashboard.html, default.html]
+  - Клас [issue-section-title] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+
+📊 СТАТИСТИКА:
+  Всього знайдено класів: 509
+  Класи-пустишки в HTML: 81
+  Мертві стилі в CSS: 150
+  Конфлікти стилів: 51
+  Потенційні дублікати: 35
+======================================================

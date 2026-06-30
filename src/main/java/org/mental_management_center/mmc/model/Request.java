@@ -30,6 +30,11 @@ public class Request {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Додаємо отримувача (щоб зберігати приватність терапевта)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_id")
+    private User recipient;
+
     // Роль того, хто надіслав запит на момент відправки
     private int rolesMask;
 

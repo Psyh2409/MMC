@@ -30,6 +30,12 @@ public interface TherapyAssignmentRepository extends JpaRepository<TherapyAssign
     // Щоб уникнути дублювання запитів від одного клієнта до одного терапевта
     Optional<TherapyAssignment> findByClientIdAndTherapistId(UUID clientId, UUID therapistId);
 
+    // Windsurf: Знаходимо активне призначення клієнта (для отримання його терапевта)
+    @Query("SELECT t FROM TherapyAssignment t " +
+            "JOIN FETCH t.therapist " +
+            "WHERE t.client.id = :clientId AND t.status = 'ACTIVE'")
+    Optional<TherapyAssignment> findActiveByClientId(@Param("clientId") UUID clientId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM TherapyAssignment t WHERE t.client.id = :userId OR t.therapist.id = :userId")
