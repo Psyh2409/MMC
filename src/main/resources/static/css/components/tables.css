@@ -256,3 +256,10 @@
     white-space: normal;
     word-break: break-word;
 }
+
+.action-group-col {
+    display: flex;             /* Вмикає флекс-модель */
+    flex-direction: column;    /* Ставить елементи один під одним */
+    gap: var(--space-xs);      /* Твій токен відступу */
+    align-items: stretch;      /* Це змушує кнопки розтягнутися на 100% ширини колонки */
+}

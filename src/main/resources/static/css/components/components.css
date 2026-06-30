@@ -1004,3 +1004,20 @@ margin-top: var(--space-md);
 #profile-edebo .profile-header {
     margin-bottom: 0.075rem; /* Замість стандартних 40px */
 }
+
+.avatar-sm {
+    width: 2.5rem;   /* Це 40px, якщо твій step = 0.25rem */
+    height: 2.5rem;
+    font-size: 1rem; /* Розмір літери всередині */
+}
+
+.profile-identity {
+    text-align: center;
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+/* Прибираємо margin-bottom у span, бо wrapper сам керує відступами */
+.profile-identity .text-muted {
+    margin-bottom: 0;
+}

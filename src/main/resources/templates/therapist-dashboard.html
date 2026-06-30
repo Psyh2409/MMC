@@ -8,8 +8,10 @@
 
 <section class="standard-container standard-container-wide">
     <div class="dashboard-hero-card">
-        <h1 class="page-title-accent">Робочий кабінет фахівця</h1>
-        <p class="hero-description">Простір для керування терапевтичним процесом, клієнтами та публікаціями.</p>
+        <div class="profile-identity">
+            <h1 class="page-title-accent">Робочий кабінет фахівця</h1>
+            <p class="hero-description">Простір для керування терапевтичним процесом, клієнтами та публікаціями.</p>
+        </div>
     </div>
 
     <div th:if="${success}" class="status-message status-success mt-md" th:text="${success}"></div>
@@ -20,7 +22,7 @@
         <aside class="profile-sidebar">
             <div class="card-primary text-center">
 
-                <div class="avatar-circle avatar-lg mb-sm" style="margin: 0 auto;">
+                <div class="avatar-circle avatar-md mb-sm" style="margin: 0 auto;">
                     <img th:if="${user.avatarFileName != null}"
                          th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
                          alt="Аватар фахівця">
@@ -28,10 +30,10 @@
                           th:text="${user.name != null and user.name.length() > 0 ? #strings.substring(user.name, 0, 1).toUpperCase() : 'Ф'}">Ф</span>
                 </div>
 
-                <h3 class="profile-header-title mt-sm" th:text="${user.name}">Ім'я Фахівця</h3>
-                <span class="text-muted text-sm d-block mb-md">ТЕРАПЕВТ</span>
-
-                <hr class="profile-divider">
+                <div class="profile-identity">
+                    <h3 class="profile-header-title mt-sm" th:text="${user.name}">Ім'я Фахівця</h3>
+                    <span class="text-muted text-sm d-block mb-md" th:text="${user.getPrimaryRoleName()}">Терапевт</span>
+                </div>
 
                 <nav class="stack-form" style="gap: 0.5rem; display: flex; flex-direction: column;">
                     <a th:href="@{/therapist/public/{id}(id=${user.id})}" class="btn-outline text-center">👁️ Публічна візитка</a>
@@ -41,7 +43,7 @@
                 </nav>
             </div>
 
-            <div class="card-primary mt-md text-center" style="border: 1px dashed var(--border-soft); box-shadow: none; background: transparent;">
+            <div class="card-primary mt-md text-center" style="border: 0.0625rem dashed var(--border-soft); box-shadow: none; background: transparent;">
                 <span class="text-muted text-sm d-block mb-sm">📅 Календар сесій</span>
                 <p class="text-xs text-muted">Тут буде ваш планувальник та нагадування про найближчі зустрічі.</p>
             </div>
@@ -50,8 +52,9 @@
         <main class="profile-main-content min-w-0">
 
             <div class="card-primary">
-                <h3 class="profile-header-title">Клієнти та Запити</h3>
-
+                <div class="profile-identity">
+                    <h3 class="profile-header-title">Клієнти та Запити</h3>
+                </div>
                 <div class="table-responsive-wrapper">
                     <table class="data-table table-fluid">
                         <thead>
