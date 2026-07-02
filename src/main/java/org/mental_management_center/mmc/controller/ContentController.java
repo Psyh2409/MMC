@@ -56,6 +56,9 @@ public class ContentController {
 
         model.addAttribute("article", article);
 
+        // Windsurf: Передаємо автора статті для відображення
+        model.addAttribute("author", article.getAuthor());
+
         // 1. Створюємо об'єкт запиту сторінки
         Pageable pageable = PageRequest.of(page, size);
 

@@ -36,12 +36,14 @@ public class ArticleController {
 
     @GetMapping("/admin/articles")
     public String listArticles(Model model) {
-        model.addAttribute("articles", articleService.findAll());
+        // Windsurf: Змінюємо назву змінної для узгодження з шаблоном
+        model.addAttribute("allArticles", articleService.findAll());
         return "admin-articles";
     }
     @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/admin/articles/delete/{id}")
     public String deleteArticle(@PathVariable UUID id) {
+        // Windsurf: Адмін може видаляти будь-які статті (включно з чужими)
         articleService.deleteArticle(id);
         return "redirect:/admin/articles";
     }
@@ -49,10 +51,16 @@ public class ArticleController {
     // 2. ОНОВЛЮЄМО МЕТОД СТВОРЕННЯ (GET)
     @GetMapping("/admin/articles/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("articleForm", new ArticleForm());
+        // ЗМІНА ТУТ: змінюємо назву ключа з "articleForm" на "article", щоб Thymeleaf його побачив.
+        // Сам об'єкт new ArticleForm() залишається без змін!
+        model.addAttribute("article", new ArticleForm());
 
         // Передаємо всі існуючі категорії з бази даних у форму
         model.addAttribute("categories", categoryTranslationRepository.findAll());
+
+        // Передаємо URL, куди форма має відправляти дані після натискання "Зберегти"
+        model.addAttribute("actionUrl", "/admin/articles/save");
+        model.addAttribute("formTitle", "Створення нової статті");
 
         return "article-form";
     }
@@ -62,6 +70,20 @@ public class ArticleController {
     @GetMapping("/admin/articles/edit/{id}")
     public String editArticle(@PathVariable UUID id, Model model) {
         Article article = articleService.findById(id);
+
+        // Windsurf: Адмін може редагувати тільки СВОЇ статті
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email;
+        if (auth.getPrincipal() instanceof OAuth2User oauth2User) {
+            email = oauth2User.getAttribute("email");
+        } else {
+            email = auth.getName();
+        }
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+
+        if (currentUser != null && !article.getAuthor().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("Адмін може редагувати тільки свої статті");
+        }
 
         ArticleForm form = new ArticleForm();
         form.setId(article.getId());

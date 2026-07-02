@@ -39,7 +39,8 @@
                 <div th:if="${success}" class="status-message status-success mb-md" th:text="${success}"></div>
                 <div th:if="${error}" class="status-message status-error mb-md" th:text="${error}"></div>
 
-                <div class="action-group mt-md w-100" th:if="${#authentication.name != therapist.email}">
+                <div class="action-group mt-md w-100"
+                     th:if="${#authentication.name != therapist.email and canRequestTherapy}">
                     <form th:action="@{/therapist/request-therapy/{id}(id=${therapist.id})}" method="post" class="w-100">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <button type="submit" class="btn-primary w-100">Звернутися за консультацією</button>
@@ -59,14 +60,24 @@
             <div class="profile-card">
 
                 <div class="tabs-navigation mb-md">
-                    <button class="tab-button active" onclick="switchPublicTab('articles-tab', this)">📝 Статті фахівця</button>
-                    <button class="tab-button" onclick="switchPublicTab('wall-tab', this)">💬 Публічна стіна</button>
+                    <button class="tab-button active" onclick="window.switchPublicTab('articles-tab', this)">📝 Статті фахівця</button>
+                    <button class="tab-button" onclick="window.switchPublicTab('wall-tab', this)">💬 Публічна стіна</button>
                 </div>
 
                 <div id="articles-tab" class="tab-pane active">
-                    <div class="profile-empty-state mt-md">
+                    <div th:if="${#lists.isEmpty(therapistArticles)}" class="profile-empty-state mt-md">
                         <div class="icon">📝</div>
                         <p>Фахівець ще не додав публікацій.</p>
+                    </div>
+
+                    <div th:unless="${#lists.isEmpty(therapistArticles)}">
+                        <div th:replace="~{fragments/article-components :: articles-list(
+                                articles=${therapistArticles},
+                                title='Публікації фахівця',
+                                basePath='#',
+                                allowEdit=false,
+                                allowDelete=false
+                        )}"></div>
                     </div>
                 </div>
 
@@ -83,19 +94,32 @@
     </div>
 </section>
 <script>
-    function switchPublicTab(tabId, clickedBtn) {
-        // Ховаємо всі вкладки
-        document.getElementById('articles-tab').style.display = 'none';
-        document.getElementById('wall-tab').style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function() {
+        // Windsurf: Обробка форми відправки
+        const actionForm = document.querySelector('.action-group form');
+        if (actionForm) {
+            actionForm.addEventListener('submit', function(e) {
+                let btn = this.querySelector('button');
+                btn.disabled = true;
+                btn.innerText = 'Відправка...';
+            });
+        }
 
-        // Знімаємо клас active з усіх кнопок
-        let buttons = document.querySelectorAll('.tabs-navigation .tab-button');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        // Windsurf: Функція перемикання вкладок
+        window.switchPublicTab = function(tabId, clickedBtn) {
+            // Ховаємо всі вкладки
+            document.getElementById('articles-tab').style.display = 'none';
+            document.getElementById('wall-tab').style.display = 'none';
 
-        // Показуємо потрібну вкладку і робимо кнопку активною
-        document.getElementById(tabId).style.display = 'block';
-        clickedBtn.classList.add('active');
-    }
+            // Знімаємо клас active з усіх кнопок
+            let buttons = document.querySelectorAll('.tabs-navigation .tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Показуємо потрібну вкладку і робимо кнопку активною
+            document.getElementById(tabId).style.display = 'block';
+            clickedBtn.classList.add('active');
+        };
+    });
 </script>
 </body>
 </html>

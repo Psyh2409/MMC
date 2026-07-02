@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title>Мої статті | Терапевт</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <div class="standard-container-wide">
+
+        <div th:replace="~{fragments/article-components :: articles-list(
+                articles=${therapistArticles},
+                title='Мої публікації',
+                basePath='/therapist/articles',
+                allowEdit=true,
+                allowDelete=true
+        )}"></div>
+
+    </div>
+</section>
+
+</body>
+</html>

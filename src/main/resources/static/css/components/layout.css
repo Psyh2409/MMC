@@ -234,6 +234,7 @@ section.standard-container-narrow.mt-md {
     flex-direction: column;
     gap: var(--space-sm);
     padding-left: var(--space-xs);
+    min-width: 0;
 }
 
 /* layout.css - Єдине джерело для .profile-divider */

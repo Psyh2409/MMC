@@ -13,6 +13,10 @@
     <header class="article-header">
         <div class="article-meta">
             <span class="text-muted" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
+
+            <!-- Додаємо ім'я автора сюди. Якщо автора ще немає в базі, виведе "Редакція MMC" -->
+            <span class="text-muted" th:text="${article.author != null ? article.author.name : 'Редакція MMC'}">Автор</span>
+
             <span class="article-category"
                   th:text="${allCategoriesMap != null ? allCategoriesMap[article.category] : article.category}">
                     Категорія

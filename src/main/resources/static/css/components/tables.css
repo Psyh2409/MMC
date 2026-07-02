@@ -24,7 +24,6 @@
     overflow: hidden;
     box-shadow: var(--shadow-main);
     table-layout: auto;
-    min-width: 38rem; /* Захист від стискання */
 }
 
 .data-table-compact {

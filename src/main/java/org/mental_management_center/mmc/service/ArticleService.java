@@ -25,6 +25,11 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    // Windsurf: Отримуємо статті конкретного автора (терапевта)
+    public List<Article> findByAuthorId(UUID authorId) {
+        return articleRepository.findByAuthorIdOrderByPublishedAtDesc(authorId);
+    }
+
     public Article findById(UUID id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Статтю не знайдено"));

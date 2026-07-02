@@ -66,4 +66,12 @@ public class TherapyAssignmentService {
     public List<TherapyAssignment> getAssignmentsByStatus(UUID therapistId, String status) {
         return repository.findByTherapistIdAndStatus(therapistId, status);
     }
+
+    public boolean canRequestTherapy(User client, User therapist) {
+        // Використовуємо твій існуючий метод репозиторію
+        Optional<TherapyAssignment> existing = repository.findByClientIdAndTherapistId(client.getId(), therapist.getId());
+
+        // Якщо existing порожній, значить запиту немає і можна створювати новий
+        return existing.isEmpty();
+    }
 }

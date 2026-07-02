@@ -1,0 +1,104 @@
+<div th:fragment="articles-list(articles, title, basePath, allowEdit, allowDelete)">
+    <div class="section-header">
+        <h2 class="section-title" th:text="${title}">Мої статті</h2>
+        <a th:if="${allowEdit}" th:href="@{${basePath} + '/create'}" class="btn-primary">Створити нову статтю</a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>Заголовок</th>
+            <th>Категорія</th>
+            <th th:if="${allowEdit or allowDelete}" class="actions-column">Дії</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="article : ${articles}" class="clickable-row" th:data-article-id="${article.id}">
+            <td>
+                <span th:text="${article.title}">Назва</span>
+            </td>
+            <td>
+                <span th:if="${article.categoryTranslation != null}" th:text="${article.categoryTranslation.displayName}">Категорія</span>
+                <span th:unless="${article.categoryTranslation != null}" th:text="${article.category}">Категорія</span>
+            </td>
+            <td th:if="${allowEdit or allowDelete}" class="action-group">
+                <!-- Кнопка "Редагувати" з'явиться ТІЛЬКИ якщо email авторизованого користувача збігається з email автора статті -->
+                <a th:if="${allowEdit}" th:href="@{${basePath} + '/edit/' + ${article.id}}" class="btn-outline">Редагувати</a>
+
+                <!-- Кнопка "Видалити" доступна завжди (бо цей фрагмент викликається або в адмінці для модерації, або в кабінеті фахівця для його власних статей) -->
+                <form th:action="@{${basePath} + '/delete/' + ${article.id}}" method="post" class="form-inline-reset">
+                    <button type="submit" class="btn-delete-small">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(articles)}">
+            <td th:colspan="${allowEdit or allowDelete ? 3 : 2}" class="text-muted center">Список статей порожній.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Windsurf: Обробка кліку на рядок таблиці для переходу до статті
+            const clickableRows = document.querySelectorAll('.clickable-row');
+            clickableRows.forEach(function(row) {
+                row.addEventListener('click', function() {
+                    const articleId = this.getAttribute('data-article-id');
+                    if (articleId) {
+                        window.location.href = '/articles/' + articleId;
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+
+<div th:fragment="article-form(article, actionUrl, formTitle, categories)">
+    <h2 class="issue-section-title" th:text="${formTitle}">Форма статті</h2>
+
+    <form th:action="${actionUrl}" th:object="${article}" method="post" enctype="multipart/form-data" class="stack-form">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+            <label for="title" class="form-field">Заголовок</label>
+            <input type="text" id="title" th:field="*{title}" class="form-input" required />
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-field">Короткий опис</label>
+            <textarea id="description" th:field="*{description}" class="form-textarea" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="categorySelector" class="form-field">Категорія</label>
+            <select id="categorySelector" th:field="*{category}" class="form-input" required>
+                <option value="">Оберіть категорію</option>
+                <option th:each="cat : ${categories}" th:value="${cat.categorySlug}" th:text="${cat.displayName}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="categoryNameUa" class="form-field">Назва категорії українською (для нової категорії)</label>
+            <input type="text" id="categoryNameUa" th:field="*{categoryNameUa}" class="form-input" placeholder="Якщо обираєте існуючу категорію, залиште порожнім" />
+        </div>
+
+        <div class="form-group">
+            <label for="tags" class="form-field">Теги (через кому)</label>
+            <input type="text" id="tags" th:field="*{tags}" class="form-input" placeholder="наприклад: тривога, депресія, самопочуття" />
+        </div>
+
+        <div class="form-group">
+            <label for="content" class="form-field">Текст статті</label>
+            <textarea id="content" th:field="*{content}" class="form-textarea" rows="10" required></textarea>
+        </div>
+
+        <div class="media-queue">
+            <label for="asyncMediaFile" class="form-field">Медіафайли</label>
+            <input type="file" id="asyncMediaFile" class="form-input" accept="image/*,video/*" />
+        </div>
+
+        <div class="form-actions left-actions">
+            <button type="submit" id="btnSubmitMainForm" class="btn-primary">Зберегти статтю</button>
+        </div>
+    </form>
+</div>
