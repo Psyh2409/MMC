@@ -15,7 +15,7 @@
 
         <aside class="profile-sidebar">
 
-            <div class="profile-card">
+            <div class="profile-card card-specialist">
                 <div id="avatarContainer" class="avatar-circle avatar-md profile-avatar-clickable">
                     <img th:if="${user.avatarFileName != null}"
                          th:src="@{/api/media/{name}(name=${user.avatarFileName})}"

@@ -17,7 +17,7 @@
     </header>
 
     <div class="article-card">
-        <form th:action="${actionUrl}" th:object="${article}" method="post" enctype="multipart/form-data">
+        <form th:action="${actionUrl}" th:object="${articleForm}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}" />
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
@@ -73,9 +73,10 @@
                 <p class="error-text" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
             </div>
 
-            <div class="form-actions">
+            <div class="form-actions mb-md mt-lg">
                 <button type="submit" class="btn-primary">Опублікувати</button>
-                <a th:href="${basePath}" class="btn-outline">Скасувати</a>
+
+                <button type="button" onclick="window.history.back()" class="btn-outline">Скасувати</button>
             </div>
         </form>
     </div>

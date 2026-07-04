@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Fri Jul 03 01:32:51 EEST 2026
+Дата: Sat Jul 04 14:21:54 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 82:
@@ -10,10 +10,10 @@
   - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-view] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [author-signature] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [avatar-lg] є в HTML [therapist-public.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-accent-capsule] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-admin] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [btn-delete-small] є в HTML [article-components.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-nav-round] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-compact] є в HTML [edebo-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-secondary] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
@@ -56,14 +56,14 @@
   - Клас [manifesto-footer] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [manifesto-page] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [manifesto-quote] є в HTML [my-format.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [mb-md] є в HTML [about.html, therapist-public.html, admin-articles.html, therapist-requests.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mb-md] є в HTML [about.html, therapist-public.html, article-form.html, therapist-requests.html, 403.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [mb-sm] є в HTML [about.html, therapist-public.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [mb-xs] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [ml-sm] є в HTML [403.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [modal-title] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [msg-short] є в HTML [therapist-requests.html, requests.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [msg] є в HTML [requests.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [mt-lg] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mt-lg] є в HTML [article-form.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [mt-sm] є в HTML [about.html, therapist-public.html, edebo-form.html, specialists.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [no-comments] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [notes-header-row] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
@@ -299,48 +299,47 @@
   - Стиль .tab-pane дублюється у декількох файлах: [layout.css, navigation.css, utilities.css]
   - Стиль .text-muted дублюється у декількох файлах: [components.css, typography.css]
 
-🔍 ПОТЕНЦІЙНІ ДУБЛІКАТИ (використовуються в багатьох місцях) - 36:
+🔍 ПОТЕНЦІЙНІ ДУБЛІКАТИ (використовуються в багатьох місцях) - 35:
   - Клас [issue-callout] використовується в багатьох HTML файлах (10): [new-meanings.html, inner-calm.html, therapist-public.html, exit-nearby.html, specialists.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, admin-users.html, dialogue.html]
-  - Клас [action-group] використовується в багатьох HTML файлах (8): [about.html, therapist-public.html, admin-articles.html, specialists.html, article-components.html, article.html, therapist-dashboard.html, my-format.html]
+  - Клас [action-group] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, specialists.html, article-components.html, article.html, therapist-dashboard.html, my-format.html]
   - Клас [standard-container-wide] використовується в багатьох HTML файлах (14): [article-form.html, admin-articles.html, specialists.html, article.html, profile.html, therapy-room.html, therapist-articles.html, therapist-public.html, therapist-requests.html, requests.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
   - Клас [content-section] використовується в багатьох HTML файлах (10): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, article.html, closeness-crisis.html, profile.html, restore-resource.html, default.html, dialogue.html]
   - Клас [standard-container] використовується в багатьох HTML файлах (19): [about.html, article-form.html, reset-password.html, specialists.html, contact.html, article.html, login.html, forgot-password.html, therapist-articles.html, therapist-public.html, therapist-requests.html, requests.html, chat.html, first-steps.html, register.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
   - Клас [mt-md] використовується в багатьох HTML файлах (9): [about.html, therapist-public.html, specialists.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html]
   - Клас [issue-intro] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
   - Клас [text-sm] використовується в багатьох HTML файлах (8): [therapist-public.html, specialists.html, therapist-requests.html, journal-form.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
-  - Клас [btn-primary] використовується в багатьох HTML файлах (37): [admin-articles.html, reset-password.html, specialists.html, article-components.html, contact.html, login.html, new-meanings.html, therapist-requests.html, index.html, chat.html, freedom-choice.html, footer.html, therapist-dashboard.html, admin-users.html, error.html, about.html, article-form.html, edebo-form.html, 403.html, article.html, closeness-crisis.html, profile.html, therapy-room.html, my-format.html, header.html, forgot-password.html, inner-calm.html, therapist-public.html, exit-nearby.html, requests.html, forms.html, journal-form.html, register.html, shared-wall-form.html, restore-resource.html, default.html, dialogue.html]
+  - Клас [btn-primary] використовується в багатьох HTML файлах (36): [reset-password.html, specialists.html, article-components.html, contact.html, login.html, new-meanings.html, therapist-requests.html, index.html, chat.html, freedom-choice.html, footer.html, therapist-dashboard.html, admin-users.html, error.html, about.html, article-form.html, edebo-form.html, 403.html, article.html, closeness-crisis.html, profile.html, therapy-room.html, my-format.html, header.html, forgot-password.html, inner-calm.html, therapist-public.html, exit-nearby.html, requests.html, forms.html, journal-form.html, register.html, shared-wall-form.html, restore-resource.html, default.html, dialogue.html]
   - Клас [heading-lg] використовується в багатьох HTML файлах (8): [article-form.html, first-steps.html, article.html, topic-page.html, profile.html, default.html, my-format.html, articles.html]
   - Клас [layout-stack] використовується в багатьох HTML файлах (6): [about.html, first-steps.html, article.html, topic-page.html, profile.html, articles.html]
   - Клас [issue-shell] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
   - Клас [issue-title] використовується в багатьох HTML файлах (8): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, 403.html, closeness-crisis.html, restore-resource.html, dialogue.html]
-  - Клас [form-group] використовується в багатьох HTML файлах (6): [comment-tree.html, article-form.html, edebo-form.html, article-components.html, article.html, login.html]
   - Клас [text-muted] використовується в багатьох HTML файлах (14): [about.html, comment-tree.html, specialists.html, article-components.html, header-footer.html, article.html, profile.html, therapist-public.html, therapist-requests.html, journal-form.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-cta] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
   - Клас [button-row] використовується в багатьох HTML файлах (7): [chat.html, journal-form.html, 403.html, article.html, profile.html, shared-wall-form.html, error.html]
   - Клас [contact-intro-title] використовується в багатьох HTML файлах (6): [forgot-password.html, reset-password.html, register.html, contact.html, profile.html, login.html]
-  - Клас [stack-form] використовується в багатьох HTML файлах (13): [edebo-form.html, reset-password.html, article-components.html, contact.html, profile.html, login.html, forgot-password.html, therapist-requests.html, forms.html, journal-form.html, register.html, shared-wall-form.html, therapist-dashboard.html]
+  - Клас [stack-form] використовується в багатьох HTML файлах (12): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, therapist-dashboard.html, login.html]
   - Клас [mt-sm] використовується в багатьох HTML файлах (8): [about.html, therapist-public.html, edebo-form.html, specialists.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
   - Клас [form-label] використовується в багатьох HTML файлах (8): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, register.html, contact.html, login.html]
   - Клас [status-message] використовується в багатьох HTML файлах (10): [forgot-password.html, therapist-public.html, edebo-form.html, reset-password.html, register.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
   - Клас [status-success] використовується в багатьох HTML файлах (8): [forgot-password.html, therapist-public.html, edebo-form.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
   - Клас [btn-sm] використовується в багатьох HTML файлах (8): [therapist-requests.html, requests.html, journal-form.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-article] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
-  - Клас [mb-md] використовується в багатьох HTML файлах (9): [about.html, therapist-public.html, admin-articles.html, therapist-requests.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html]
+  - Клас [mb-md] використовується в багатьох HTML файлах (10): [about.html, therapist-public.html, article-form.html, therapist-requests.html, 403.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html, therapy-room.html]
   - Клас [issue-text] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html]
   - Клас [page-title-accent] використовується в багатьох HTML файлах (11): [about.html, article-form.html, specialists.html, therapist-requests.html, requests.html, first-steps.html, article.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
   - Клас [layout-container] використовується в багатьох HTML файлах (7): [new-meanings.html, chat.html, article.html, closeness-crisis.html, profile.html, default.html, my-format.html]
   - Клас [btn-outline] використовується в багатьох HTML файлах (20): [about.html, comment-tree.html, article-form.html, article-components.html, header-footer.html, 403.html, article.html, profile.html, header.html, therapist-requests.html, requests.html, index.html, chat.html, journal-form.html, register.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html, error.html]
   - Клас [status-error] використовується в багатьох HTML файлах (7): [forgot-password.html, therapist-public.html, reset-password.html, register.html, therapist-dashboard.html, login.html, admin-users.html]
-  - Клас [form-field] використовується в багатьох HTML файлах (11): [forgot-password.html, edebo-form.html, reset-password.html, article-components.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
-  - Клас [form-input] використовується в багатьох HTML файлах (12): [forgot-password.html, article-form.html, edebo-form.html, reset-password.html, article-components.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
+  - Клас [form-field] використовується в багатьох HTML файлах (10): [forgot-password.html, edebo-form.html, reset-password.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
+  - Клас [form-input] використовується в багатьох HTML файлах (11): [forgot-password.html, article-form.html, edebo-form.html, reset-password.html, forms.html, journal-form.html, register.html, contact.html, profile.html, shared-wall-form.html, login.html]
   - Клас [mb-sm] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
   - Клас [card-primary] використовується в багатьох HTML файлах (7): [about.html, therapist-public.html, therapist-requests.html, profile.html, shared-wall-form.html, therapist-dashboard.html, default.html]
-  - Клас [issue-section-title] використовується в багатьох HTML файлах (8): [new-meanings.html, inner-calm.html, exit-nearby.html, article-components.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
+  - Клас [issue-section-title] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
 
 📊 СТАТИСТИКА:
   Всього знайдено класів: 509
   Класи-пустишки в HTML: 82
   Мертві стилі в CSS: 155
   Конфлікти стилів: 51
-  Потенційні дублікати: 36
+  Потенційні дублікати: 35
 ======================================================

@@ -8,10 +8,6 @@
 <section>
     <div class="standard-container-wide">
 
-        <div class="action-group mb-md">
-            <a th:href="@{/admin/articles/create}" class="btn-primary">📝 Написати статтю</a>
-        </div>
-
         <div th:replace="~{fragments/article-components :: articles-list(
                 articles=${allArticles},
                 title='Модерація всіх статей',

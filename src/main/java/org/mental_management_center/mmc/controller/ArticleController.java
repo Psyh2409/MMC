@@ -36,7 +36,18 @@ public class ArticleController {
 
     @GetMapping("/admin/articles")
     public String listArticles(Model model) {
-        // Windsurf: Змінюємо назву змінної для узгодження з шаблоном
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = null;
+        if (auth != null && auth.isAuthenticated()) {
+            if (auth.getPrincipal() instanceof OAuth2User oauth2User) {
+                email = oauth2User.getAttribute("email");
+            } else {
+                email = auth.getName();
+            }
+        }
+
+        // Передаємо email поточного користувача у модель
+        model.addAttribute("currentUserEmail", email);
         model.addAttribute("allArticles", articleService.findAll());
         return "admin-articles";
     }
@@ -53,7 +64,7 @@ public class ArticleController {
     public String showCreateForm(Model model) {
         // ЗМІНА ТУТ: змінюємо назву ключа з "articleForm" на "article", щоб Thymeleaf його побачив.
         // Сам об'єкт new ArticleForm() залишається без змін!
-        model.addAttribute("article", new ArticleForm());
+        model.addAttribute("articleForm", new ArticleForm());
 
         // Передаємо всі існуючі категорії з бази даних у форму
         model.addAttribute("categories", categoryTranslationRepository.findAll());
@@ -69,10 +80,15 @@ public class ArticleController {
     @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @GetMapping("/admin/articles/edit/{id}")
     public String editArticle(@PathVariable UUID id, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("User: " + auth.getName());
+        System.out.println("Authorities: " + auth.getAuthorities());
+
         Article article = articleService.findById(id);
 
         // Windsurf: Адмін може редагувати тільки СВОЇ статті
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email;
         if (auth.getPrincipal() instanceof OAuth2User oauth2User) {
             email = oauth2User.getAttribute("email");
@@ -99,6 +115,8 @@ public class ArticleController {
         if (article.getCategoryTranslation() != null) {
             form.setCategoryNameUa(article.getCategoryTranslation().getDisplayName());
         }
+
+        model.addAttribute("actionUrl", "/admin/articles/save");
 
         model.addAttribute("articleForm", form);
 

@@ -30,6 +30,19 @@
     <article class="content-section">
         <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
     </article>
+    <div class="author-signature text-muted mb-md">
+        <hr class="article-divider">
+        <p class="heading-lg">
+            <strong>Автор матеріалу: </strong>
+            <span th:if="${article.author != null}">
+            <span th:text="${article.author.name}">Ім'я автора</span>
+            <span th:text="' (' + ${article.author.email} + ')'">(email@example.com)</span>
+        </span>
+            <span th:unless="${article.author != null}">
+            Редакція MMC
+        </span>
+        </p>
+    </div>
     <hr class="article-divider">
 
     <section class="layout-container">

@@ -144,11 +144,16 @@ public class TherapistController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/articles")
     public String therapistArticles(Principal principal, Model model) {
+
+        String email = principal.getName();
+
         User therapist = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
         // Windsurf: Отримуємо статті цього терапевта
         model.addAttribute("therapistArticles", articleService.findByAuthorId(therapist.getId()));
+
+        model.addAttribute("currentUserEmail", email);
 
         return "therapist-articles";
     }
@@ -157,7 +162,7 @@ public class TherapistController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/articles/create")
     public String showCreateArticleForm(Model model) {
-        model.addAttribute("article", new ArticleForm());
+        model.addAttribute("articleForm", new ArticleForm());
         model.addAttribute("categories", categoryTranslationRepository.findAll());
         model.addAttribute("actionUrl", "/therapist/articles/create");
         model.addAttribute("formTitle", "Створення нової статті");
@@ -194,7 +199,7 @@ public class TherapistController {
             form.setCategoryNameUa(article.getCategoryTranslation().getDisplayName());
         }
 
-        model.addAttribute("article", form);
+        model.addAttribute("articleForm", form);
         model.addAttribute("categories", categoryTranslationRepository.findAll());
         model.addAttribute("actionUrl", "/therapist/articles/edit/" + id);
         model.addAttribute("formTitle", "Редагування статті");
