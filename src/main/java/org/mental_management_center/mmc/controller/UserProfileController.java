@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.SpecialistApplication;
 import org.mental_management_center.mmc.model.TherapyNote;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor
 public class UserProfileController {
 
     private final UserService userService;
@@ -40,28 +42,11 @@ public class UserProfileController {
     private final TherapyNoteRepository therapyNoteRepository;
     private final TherapyRoomService therapyRoomService;
     private final FileStorageService fileStorageService;
-    @Autowired
-    private ChatMessageRepository chatMessageRepository;
-    @Autowired
-    private TherapyAssignmentRepository therapyAssignmentRepository;
-
-    @Autowired
-    private JournalPostRepository journalPostRepository;
-
-    @Autowired
-    private RequestService requestService;
-
-    @Autowired
-    private SpecialistAppRepository specialistAppRepository;
-
-    public UserProfileController(UserService userService, UserRepository userRepository, TherapyNoteService therapyNoteService, TherapyNoteRepository therapyNoteRepository, TherapyRoomService therapyRoomService, FileStorageService fileStorageService) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.therapyNoteService = therapyNoteService;
-        this.therapyNoteRepository = therapyNoteRepository;
-        this.therapyRoomService = therapyRoomService;
-        this.fileStorageService = fileStorageService;
-    }
+    private final ChatMessageRepository chatMessageRepository;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
+    private final JournalPostRepository journalPostRepository;
+    private final RequestService requestService;
+    private final SpecialistAppRepository specialistAppRepository;
 
     @GetMapping("/profile")
     public String showProfile(Model model, Principal principal) {
@@ -74,8 +59,7 @@ public class UserProfileController {
             Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
 
             // Запитуємо порційні дані у сервісу
-            Page<TherapyNote> notesPage = therapyNoteService.getNotesByAuthor(user.getId(), pageable);
-
+            Page<TherapyNote> notesPage = therapyNoteService.getPersonalClientNotes(user.getId(), pageable);
             // Передаємо чистий список для вашого th:each="note : ${myNotes}"
             model.addAttribute("myNotes", notesPage.getContent());
 
@@ -290,7 +274,8 @@ public class UserProfileController {
 
         // Знаходимо користувача, який зараз онлайн
         User currentUser = userService.findByEmail(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));        UUID userId = currentUser.getId();
+                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
+        UUID userId = currentUser.getId();
 
         // 1. Рахуємо дані, які зв'язані безпосередньо в User.java
         int commentsCount = currentUser.getComments().size();

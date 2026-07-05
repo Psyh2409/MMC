@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="'Нотатки: ' + ${client.name} + ' | MMC'">Нотатки клієнта</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <header class="section-header mb-md">
+        <div class="action-group mb-sm">
+            <a th:href="@{/therapist/dashboard}" class="btn-outline">← Повернутися в кабінет</a>
+        </div>
+        <h1 class="page-title-accent">Терапевтичні нотатки</h1>
+        <p class="text-muted heading-md" th:text="'Клієнт: ' + ${client.name} + ' (' + ${client.email} + ')'"></p>
+    </header>
+
+    <div class="card-primary mb-md">
+        <form th:action="@{/therapist/notes/{clientId}/create(clientId=${client.id})}" method="post" class="stack-form">
+            <div class="form-field">
+                <textarea name="content" class="form-textarea" rows="4" placeholder="Запишіть інсайти з сесії, гіпотези, домашні завдання..." required></textarea>
+            </div>
+            <div class="button-row mt-sm form-actions right-actions">
+                <button type="submit" class="btn-primary">Зберегти нотатку</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="layout-stack mt-md gap-sm">
+        <div th:if="${notes == null or notes.isEmpty()}" class="profile-empty-state text-center mt-lg">
+            <div class="icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <p class="text-muted">Історія нотаток щодо цього клієнта наразі порожня.</p>
+        </div>
+
+        <div th:each="note : ${notes}" class="journal-post-card card-secondary mb-sm relative" style="padding: 1rem;">
+
+            <form th:action="@{/therapist/notes/{clientId}/delete/{noteId}(clientId=${client.id}, noteId=${note.id})}" method="post" class="post-actions absolute top-0 right-0 p-sm form-inline-reset">
+                <button type="submit" class="btn-icon delete-icon" title="Видалити нотатку" onclick="return confirm('Видалити цю нотатку?');">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="post-header text-sm text-muted mb-xs">
+                <strong class="text-success" th:text="${note.author.name}">Фахівець</strong> •
+                <span th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+            </div>
+
+            <div class="journal-post-content text-body" th:text="${note.content}" style="white-space: pre-wrap;">
+                Текст нотатки...
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

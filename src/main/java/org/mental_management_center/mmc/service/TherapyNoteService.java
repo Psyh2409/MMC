@@ -67,4 +67,10 @@ public class TherapyNoteService {
             throw new IllegalArgumentException("Нотатку з ID " + noteId + " не знайдено");
         }
     }
+
+    // Метод для UserProfileController, який відфільтрує професійні нотатки
+    public Page<TherapyNote> getPersonalClientNotes(UUID userId, Pageable pageable) {
+        // Шукаємо нотатки, де authorId = userId ТА clientId = userId
+        return repository.findByAuthorIdAndClientId(userId, userId, pageable);
+    }
 }

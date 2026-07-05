@@ -20,7 +20,7 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
             UUID clientId, UUID therapistId, UUID authorId);
 
     // Для профайлу: дістати всі нотатки, які написав КОНКРЕТНИЙ АВТОР
-    @EntityGraph(attributePaths = {"client", "therapist"})
+    @EntityGraph(attributePaths = {"client", "therapist", "author"})
     List<TherapyNote> findByAuthorIdOrderByCreatedAtDesc(UUID authorId);
 
     // Наш новий метод репозиторію, який очікує пагінацію
@@ -32,4 +32,8 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
 
     // Видалення нотаток за therapistId (для видалення користувача-терапевта)
     void deleteByTherapistId(UUID therapistId);
+
+    // Для профайлу: отримуємо тільки особисті клієнтські нотатки
+    @EntityGraph(attributePaths = {"therapist", "client"})
+    Page<TherapyNote> findByAuthorIdAndClientId(UUID authorId, UUID clientId, Pageable pageable);
 }
