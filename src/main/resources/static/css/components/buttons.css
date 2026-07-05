@@ -181,6 +181,14 @@
     justify-content: center; /* Центруємо текст всередині кнопки */
 }
 
+/* Рівномірна ширина кнопок в action-group для таблиць статей */
+.action-group-equal .btn-outline,
+.action-group-equal .btn-primary,
+.action-group-equal button {
+    width: 8rem;
+    flex: 0 0 auto;
+}
+
 /* Вирівнювання контейнера лівих дій у формах */
 .button-row .left-actions {
     display: flex;
