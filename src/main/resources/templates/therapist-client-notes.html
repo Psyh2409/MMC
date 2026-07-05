@@ -53,18 +53,47 @@
                 </button>
             </form>
 
-            <div class="post-header text-sm text-muted mb-xs">
-                <strong class="text-success" th:text="${note.author.name}">Фахівець</strong> •
-                <span th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
-            </div>
+            <details th:id="'details-' + ${note.id}" class="journal-details">
+                <summary class="journal-summary">
+                    <div class="post-header text-sm text-muted mb-xs">
+                        <strong class="text-success" th:text="${note.author.name}">Фахівець</strong> •
+                        <span th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                    </div>
 
-            <div class="journal-post-content text-body" th:text="${note.content}" style="white-space: pre-wrap;">
-                Текст нотатки...
-            </div>
+                    <div class="journal-post-content text-body" th:text="${note.content}" style="white-space: pre-wrap;">
+                        Текст нотатки...
+                    </div>
+                </summary>
+
+                <div class="journal-expand-box">
+                    <form th:id="'editForm-' + ${note.id}" th:action="@{/therapist/notes/{clientId}/edit/{noteId}(clientId=${client.id}, noteId=${note.id})}" method="post">
+                        <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Редагуйте нотатку..."></textarea>
+                        <div class="button-row">
+                            <button type="submit" class="btn-primary">Зберегти зміни</button>
+                            <button type="button" class="btn-outline cancel-edit-btn" th:data-note-id="${note.id}">Скасувати</button>
+                        </div>
+                    </form>
+                </div>
+            </details>
         </div>
     </div>
 
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обробка кліку на кнопку скасування
+        document.querySelectorAll('.cancel-edit-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const noteId = this.getAttribute('data-note-id');
+                const details = document.getElementById('details-' + noteId);
+                if (details) {
+                    details.open = false;
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

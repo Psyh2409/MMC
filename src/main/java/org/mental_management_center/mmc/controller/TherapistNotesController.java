@@ -64,4 +64,13 @@ public class TherapistNotesController {
         therapyNoteService.deleteNote(noteId);
         return "redirect:/therapist/notes/" + clientId;
     }
+
+    // 4. РЕДАГУВАТИ НОТАТКУ
+    @PostMapping("/{clientId}/edit/{noteId}")
+    @PreAuthorize("hasRole('THERAPIST')")
+    public String editNote(@PathVariable UUID clientId, @PathVariable UUID noteId, @RequestParam("content") String content) {
+        // Використовуємо існуючий метод оновлення
+        therapyNoteService.updateNote(noteId, content);
+        return "redirect:/therapist/notes/" + clientId;
+    }
 }

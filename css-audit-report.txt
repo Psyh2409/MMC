@@ -2,10 +2,10 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Mon Jul 06 00:53:13 EEST 2026
+Дата: Mon Jul 06 01:34:09 EEST 2026
 ======================================================
 
-❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 84:
+❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 85:
   - Клас [article-cta-subtitle] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
@@ -15,6 +15,7 @@
   - Клас [btn-accent-capsule] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-admin] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-nav-round] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [cancel-edit-btn] є в HTML [therapist-client-notes.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-compact] є в HTML [edebo-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-secondary] є в HTML [therapist-client-notes.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comment-login-prompt] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
@@ -45,7 +46,7 @@
   - Клас [issue-step-number] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [issue-step-text] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [issue-step] є в HTML [closeness-crisis.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [journal-details] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [journal-details] є в HTML [therapist-client-notes.html, profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [journal-feed-list] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [journal-media-input] є в HTML [journal-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [journal-post-content] є в HTML [therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
@@ -343,8 +344,8 @@
   - Клас [issue-section-title] використовується в багатьох HTML файлах (7): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 511
-  Класи-пустишки в HTML: 84
+  Всього знайдено класів: 513
+  Класи-пустишки в HTML: 85
   Мертві стилі в CSS: 154
   Конфлікти стилів: 51
   Потенційні дублікати: 40
