@@ -3,6 +3,7 @@ package org.mental_management_center.mmc.controller;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.model.Article;
+import org.mental_management_center.mmc.service.PublicPostService;
 import org.mental_management_center.mmc.service.TherapyAssignmentService;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.service.ArticleService;
@@ -29,12 +30,14 @@ public class TherapistController {
     private final TherapyAssignmentService assignmentService;
     private final ArticleService articleService; // Windsurf: Додано для роботи зі статтями
     private final CategoryTranslationRepository categoryTranslationRepository; // Windsurf: Для категорій
+    private final PublicPostService publicPostService;
 
-    public TherapistController(UserService userService, TherapyAssignmentService assignmentService, ArticleService articleService, CategoryTranslationRepository categoryTranslationRepository) {
+    public TherapistController(UserService userService, TherapyAssignmentService assignmentService, ArticleService articleService, CategoryTranslationRepository categoryTranslationRepository, PublicPostService publicPostService) {
         this.userService = userService;
         this.assignmentService = assignmentService;
         this.articleService = articleService;
         this.categoryTranslationRepository = categoryTranslationRepository;
+        this.publicPostService = publicPostService;
     }
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
@@ -66,6 +69,8 @@ public class TherapistController {
 
         // Windsurf: Отримуємо статті цього фахівця для публічного перегляду
         model.addAttribute("therapistArticles", articleService.findByAuthorId(therapist.getId()));
+        // therapist - це той фахівець, чию візитку зараз відкрили
+        model.addAttribute("publicPosts", publicPostService.getPostsByAuthor(therapist.getId(), 0, 20));
 
         return "therapist-public";
     }
@@ -118,6 +123,8 @@ public class TherapistController {
         model.addAttribute("therapist", therapist);
         model.addAttribute("pendingRequests", pendingRequests);
         model.addAttribute("activeAssignments", activeAssignments); // Передаємо список на фронтенд
+        // Витягуємо першу сторінку постів (наприклад, 20 останніх)
+        model.addAttribute("publicPosts", publicPostService.getPostsByAuthor(therapist.getId(), 0, 20));
 
         return "therapist-dashboard";
     }

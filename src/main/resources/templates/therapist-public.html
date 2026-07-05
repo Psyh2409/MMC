@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
 <head>
     <title th:text="${therapist.name} + ' | Профіль фахівця'">Профіль фахівця</title>
 </head>
@@ -81,11 +85,10 @@
                     </div>
                 </div>
 
-                <div id="wall-tab" class="tab-pane" style="display: none;">
-                    <div class="profile-empty-state mt-md">
-                        <div class="icon">💬</div>
-                        <p>Публічна стіна наразі порожня.</p>
-                    </div>
+                <div id="wall-tab" class="tab-pane is-hidden">
+                    <h3 class="heading-md mb-sm">Публічна стіна фахівця</h3>
+
+                    <div th:replace="~{fragments/public-wall-components :: wall-feed(posts=${publicPosts}, isOwner=false)}"></div>
                 </div>
 
             </div>
@@ -93,33 +96,9 @@
 
     </div>
 </section>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Windsurf: Обробка форми відправки
-        const actionForm = document.querySelector('.action-group form');
-        if (actionForm) {
-            actionForm.addEventListener('submit', function(e) {
-                let btn = this.querySelector('button');
-                btn.disabled = true;
-                btn.innerText = 'Відправка...';
-            });
-        }
-
-        // Windsurf: Функція перемикання вкладок
-        window.switchPublicTab = function(tabId, clickedBtn) {
-            // Ховаємо всі вкладки
-            document.getElementById('articles-tab').style.display = 'none';
-            document.getElementById('wall-tab').style.display = 'none';
-
-            // Знімаємо клас active з усіх кнопок
-            let buttons = document.querySelectorAll('.tabs-navigation .tab-button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            // Показуємо потрібну вкладку і робимо кнопку активною
-            document.getElementById(tabId).style.display = 'block';
-            clickedBtn.classList.add('active');
-        };
-    });
-</script>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/public-profile.js}"></script>
+    <script th:src="@{/js/media-links.js}"></script>
+</th:block>
 </body>
 </html>

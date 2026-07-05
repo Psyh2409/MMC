@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{}
+      )}">
 <head>
     <title>Дашборд Фахівця | MMC</title>
 </head>
@@ -22,7 +26,7 @@
         <aside class="profile-sidebar">
             <div class="card-primary text-center">
 
-                <div class="avatar-circle avatar-md mb-sm" style="margin: 0 auto;">
+                <div class="avatar-circle avatar-md mb-sm">
                     <img th:if="${user.avatarFileName != null}"
                          th:src="@{/api/media/{name}(name=${user.avatarFileName})}"
                          alt="Аватар фахівця">
@@ -35,16 +39,16 @@
                     <span class="text-muted text-sm d-block mb-md" th:text="${user.getPrimaryRoleName()}">Терапевт</span>
                 </div>
 
-                <nav class="stack-form" style="gap: 0.5rem; display: flex; flex-direction: column;">
+                <nav class="stack-form" >
                     <a th:href="@{/therapist/public/{id}(id=${user.id})}" class="btn-outline text-center">👁️ Публічна візитка</a>
                     <!-- Windsurf: Замінено вбудований фрагмент на посилання на окрему сторінку -->
                     <a th:href="@{/therapist/articles}" class="btn-outline text-center">📝 Мої статті</a>
-                    <a href="#" class="btn-outline text-center">🌐 Публічна стіна</a>
+                    <a th:href="@{/therapist/public-wall}" class="btn-outline text-center">🌐 Публічна стіна</a>
                     <a th:href="@{/therapist/requests}" class="btn-outline text-center">✉️ Мої звернення</a>
                 </nav>
             </div>
 
-            <div class="card-primary mt-md text-center" style="border: 0.0625rem dashed var(--border-soft); box-shadow: none; background: transparent;">
+            <div class="card-primary mt-md text-center">
                 <span class="text-muted text-sm d-block mb-sm">📅 Календар сесій</span>
                 <p class="text-xs text-muted">Тут буде ваш планувальник та нагадування про найближчі зустрічі.</p>
             </div>
@@ -77,7 +81,7 @@
                                 <span class="text-sm text-wrap-break" th:text="${request.client.email}">email</span>
                             </td>
                             <td>
-                                <span class="text-error text-sm text-nowrap" style="font-weight: 600;">Очікує</span>
+                                <span class="text-error text-sm text-nowrap">Очікує</span>
                             </td>
                             <td class="text-right">
                                 <form th:action="@{/therapist/dashboard/accept/{id}(id=${request.id})}" method="post" class="form-inline-reset">
@@ -95,7 +99,7 @@
                                 <span class="text-sm text-wrap-break" th:text="${assignment.client.email}">email</span>
                             </td>
                             <td>
-                                <span class="text-success text-sm text-nowrap" style="font-weight: 600;">В терапії</span>
+                                <span class="text-success text-sm text-nowrap">В терапії</span>
                             </td>
                             <td>
                                 <div class="action-group action-group-col">
@@ -110,7 +114,7 @@
                         </tr>
 
                         <tr th:if="${(pendingRequests == null or pendingRequests.isEmpty()) and (activeAssignments == null or activeAssignments.isEmpty())}">
-                            <td colspan="4" class="text-center text-muted" style="padding: 2rem 0;">
+                            <td colspan="4" class="text-center text-muted">
                                 ☕ У вас поки немає ані нових запитів, ані активних клієнтів.
                             </td>
                         </tr>

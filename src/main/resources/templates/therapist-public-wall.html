@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.standard-container-wide},
+      ~{::page-scripts}
+      )}">
+<head>
+    <title>Моя публічна стіна | Кабінет фахівця</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+    <header class="section-header mb-md">
+        <div class="action-group mb-sm">
+            <a th:href="@{/therapist/dashboard}" class="btn-outline">← Повернутися в кабінет</a>
+        </div>
+        <h1 class="page-title-accent">Публічна стіна</h1>
+        <p class="text-muted heading-md">Діліться думками, статтями та відео.</p>
+    </header>
+
+    <div th:replace="~{fragments/public-wall-components :: wall-form}"></div>
+    <div th:replace="~{fragments/public-wall-components :: wall-feed(posts=${wallPosts.content}, isOwner=true)}"></div>
+</section>
+
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/media-links.js}"></script>
+    <script th:src="@{/js/public-wall.js}"></script>
+</th:block>
+
+</body>
+</html>

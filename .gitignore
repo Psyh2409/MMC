@@ -43,7 +43,9 @@ uploads/
 #
 #    switch ($file.Extension) {
 #        ".java" {
-#            $found = Select-String -Path $file.FullName -Pattern '(public|private|protected)\s+[\w\<\>\[\]]+\s+\w+\s*\(' -AllMatches
+#            # Оновлений Regex: тепер шукає методи (закінчуються на "(") ТА поля (закінчуються на ";" або "="),
+#            # враховуючи можливі модифікатори static та final.
+#            $found = Select-String -Path $file.FullName -Pattern '(public|private|protected)\s+(?:static\s+)?(?:final\s+)?[\w\<\>\[\]]+\s+\w+\s*(?:\(|;|=(?!=))' -AllMatches
 #            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
 #        }
 #        ".css" {
@@ -51,7 +53,8 @@ uploads/
 #            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
 #        }
 #        ".html" {
-#            $found = Select-String -Path $file.FullName -Pattern '(th:fragment="[^"]+"|id="[^"]+")' -AllMatches
+#            # Оновлений Regex: додано пошук class="[^"]+"
+#            $found = Select-String -Path $file.FullName -Pattern '(th:fragment="[^"]+"|id="[^"]+"|class="[^"]+")' -AllMatches
 #            if ($found) { $buffer = @($found.Matches.Value | ForEach-Object { $_.Trim() }) }
 #        }
 #        ".js" {
