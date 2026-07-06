@@ -87,7 +87,7 @@
             </div>
 
             <div class="post-header row-between text-sm text-muted mb-xs">
-                <span th:text="${post.authorId == currentUser.id ? 'Ви' : 'Співрозмовник'}">Автор</span>
+                <span th:text="${post.authorId == currentUser.id ? 'Ви' : post.authorName}">Автор</span>
                 <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
             </div>
 

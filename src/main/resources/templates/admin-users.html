@@ -138,10 +138,32 @@
                                     onclick="toggleApp(this)">
                                 <span th:text="${u.pendingSpecialist ? '📄 Заявка' : '🎓 Диплом'}"></span>
                             </button>
-                        </div>
-                        <span th:if="${u.isAdmin()}" class="admin-badge-self">Адміністратор (Ви)</span>
-                    </td>
-                </tr>
+                            <button th:if="${u.isClient()}"
+                                    type="button"
+                                    class="btn-outline btn-sm"
+                                    th:data-target="'therapist-info-' + ${u.id}"
+                                    onclick="document.getElementById(this.getAttribute('data-target')).classList.toggle('is-hidden')">
+                                👥 Терапевт
+                            </button>
+
+                            <tr th:if="${u.isClient()}"
+                                th:id="'therapist-info-' + ${u.id}"
+                                class="is-hidden">
+                                <td colspan="7">
+                                    <div class="issue-callout p-sm">
+                                        <div class="ag-edebo">
+                                            <span class="text-muted">Відповідальний фахівець:</span>
+                                            <strong th:text="${u.therapist?.name ?: 'Не закріплено (стара архітектура)'}"></strong>
+
+                                            <th:block th:if="${u.therapist != null}">
+                                                <span th:text="${'   |   ' + u.therapist.email}"></span>
+                                                <span class="text-muted">   |   Дата закріплення: </span>
+                                                <strong th:text="${approvalDates != null ? (approvalDates.get(u.id) ?: 'Невідомо') : 'Невідомо'}"></strong>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
 
                 <tr th:if="${u.specialistApplication != null}"
                     th:id="'app-' + ${u.id}"

@@ -129,15 +129,45 @@ public class UserService {
         return true;
     }
 
-    public void promoteToClient(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Der Benutzer wurde nicht gefunden"));
+    /**
+     * Єдине джерело істини для підвищення до клієнта.
+     * Тепер клієнтом не можна стати "просто так" — обов'язково закріплюється терапевт.
+     */
+    @Transactional
+    public void promoteToClient(UUID userId, User therapist) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-        // Використовуємо наш новий метод додавання біта
+        // Додаємо роль клієнта через ваші бітові операції
         user.addRole(RoleBit.CLIENT);
+
+        // Одразу ж залізобетонно зв'язуємо клієнта з цим терапевтом
+        user.setTherapist(therapist);
+
         userRepository.save(user);
+        logger.info("Користувач {} переведений в статус CLIENT фахівцем {}", user.getEmail(), therapist.getName());
     }
 
+    /**
+     * Метод для розжалування/завершення терапії (інструмент безпеки терапевта)
+     */
+    @Transactional
+    public void demoteClientToReader(UUID userId, User currentTherapist) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Клієнта не знайдено"));
+
+        // Перевірка: чи цей терапевт дійсно відповідальний?
+        if (user.getTherapist() == null || !user.getTherapist().getId().equals(currentTherapist.getId())) {
+            throw new IllegalStateException("Ви не є відповідальним терапевтом цього клієнта!");
+        }
+
+        user.removeRole(RoleBit.CLIENT);
+        user.addRole(RoleBit.READER);
+        user.setTherapist(null); // Стираємо зв'язок
+
+        userRepository.save(user);
+        logger.info("Терапевт {} завершив роботу з клієнтом {}. Роль скинуто до READER", currentTherapist.getName(), user.getEmail());
+    }
     @SuppressWarnings("null")
     @Transactional
     public void deleteUserById(UUID id, String currentAdminEmail) {
@@ -348,4 +378,6 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+
 }

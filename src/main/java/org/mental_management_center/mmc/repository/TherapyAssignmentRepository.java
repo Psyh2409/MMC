@@ -40,4 +40,6 @@ public interface TherapyAssignmentRepository extends JpaRepository<TherapyAssign
     @Transactional
     @Query("DELETE FROM TherapyAssignment t WHERE t.client.id = :userId OR t.therapist.id = :userId")
     void deleteAllAssignmentsRelatedToUser(@Param("userId") UUID userId);
+
+    List<TherapyAssignment> findByStatus(String status);
 }

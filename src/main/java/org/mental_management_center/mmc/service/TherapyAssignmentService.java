@@ -49,6 +49,7 @@ public class TherapyAssignmentService {
     }
 
     // Прийняти запит (змінити статус на ACTIVE)
+    // Прийняти запит (змінити статус на ACTIVE)
     @Transactional
     public void acceptRequest(UUID assignmentId, User therapist) {
         TherapyAssignment assignment = repository.findById(assignmentId)
@@ -57,7 +58,8 @@ public class TherapyAssignmentService {
         assignment.setStatus("ACTIVE");
         assignment.setApprovedByTherapist(therapist); // Записуємо, хто прийняв
 
-        userService.promoteToClient(assignment.getClient().getId());
+        // Передаємо об'єкт терапевта в оновлений єдиний метод
+        userService.promoteToClient(assignment.getClient().getId(), therapist);
 
         repository.save(assignment);
     }
@@ -73,5 +75,18 @@ public class TherapyAssignmentService {
 
         // Якщо existing порожній, значить запиту немає і можна створювати новий
         return existing.isEmpty();
+    }
+
+    public java.util.Map<UUID, String> getActiveApprovalDatesMap() {
+        List<TherapyAssignment> activeAssignments = repository.findByStatus("ACTIVE");
+        java.util.Map<UUID, String> datesMap = new java.util.HashMap<>();
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+        for (TherapyAssignment assignment : activeAssignments) {
+            if (assignment.getUpdatedAt() != null) {
+                datesMap.put(assignment.getClient().getId(), assignment.getUpdatedAt().format(formatter));
+            }
+        }
+        return datesMap;
     }
 }

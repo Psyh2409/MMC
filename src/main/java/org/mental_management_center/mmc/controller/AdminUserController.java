@@ -1,5 +1,6 @@
 package org.mental_management_center.mmc.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.SiteStats;
 import org.mental_management_center.mmc.model.SpecialistApplication;
@@ -8,6 +9,7 @@ import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.SpecialistAppRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.SpecialistService;
+import org.mental_management_center.mmc.service.TherapyAssignmentService;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,18 +31,15 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin") // Цей префікс додається до всіх методів нижче
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class AdminUserController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SiteStatsRepository siteStatsRepository;
-    @Autowired
-    private SpecialistAppRepository specialistAppRepository;
-    @Autowired
-    private SpecialistService specialistService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final SiteStatsRepository siteStatsRepository;
+    private final SpecialistAppRepository specialistAppRepository;
+    private final SpecialistService specialistService;
+    private final TherapyAssignmentService therapyAssignmentService;
 
     // 1. Сторінка списку користувачів (Переїхала з AuthController)
     @GetMapping("/users")
@@ -62,6 +61,8 @@ public class AdminUserController {
         Page<SpecialistApplication> pendingApps = specialistAppRepository.findByStatus("PENDING", PageRequest.of(0, 50));
         model.addAttribute("pendingApplications", pendingApps.getContent());
 
+        java.util.Map<UUID, String> approvalDates = therapyAssignmentService.getActiveApprovalDatesMap();
+        model.addAttribute("approvalDates", approvalDates);
         return "admin-users";
     }
 
@@ -87,14 +88,6 @@ public class AdminUserController {
     public String toggleCommentsStatus(@PathVariable UUID id) {
         userService.toggleCommentsStatus(id);
         return "redirect:/admin/users?success";
-    }
-
-    // 5. Призначення клієнтом (Переїхало з AuthController)
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
-    @PostMapping("/promote/{id}")
-    public String promoteToClient(@PathVariable UUID id) {
-        userService.promoteToClient(id);
-        return "redirect:/admin/users";
     }
 
     // 6. Оновлення нотаток (Переїхало з AuthController)

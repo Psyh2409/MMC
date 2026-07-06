@@ -53,6 +53,11 @@ public class User {
     @Column(name = "roles_mask")
     private int rolesMask = 2; // READER за замовчуванням
 
+    // Відповідальний терапевт для цього клієнта
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "therapist_id")
+    private User therapist;
+
     private String authProvider;
     private String providerId;
 
@@ -104,6 +109,21 @@ public class User {
 
     @OneToMany(mappedBy = "therapist")
     private List<TherapyNote> therapistNotes = new ArrayList<>();
+
+    // Зв'язок із таблицею призначень (вже існує в БД, ми просто додаємо його в код User)
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    private List<TherapyAssignment> assignmentsAsClient = new ArrayList<>();
+
+    // Транзитний метод, який дістає дату з існуючого поля updatedAt
+    @Transient
+    public LocalDateTime getTherapyApprovalDate() {
+        if (assignmentsAsClient == null) return null;
+        return assignmentsAsClient.stream()
+                .filter(a -> "ACTIVE".equals(a.getStatus()))
+                .map(TherapyAssignment::getUpdatedAt)
+                .findFirst()
+                .orElse(null);
+    }
 
     // Твій конструктор (тепер він не заважає Hibernate завдяки @NoArgsConstructor)
     public User(String name, String email, String password, RoleBit initialRole) {

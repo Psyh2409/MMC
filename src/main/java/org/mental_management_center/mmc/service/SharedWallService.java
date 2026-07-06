@@ -2,7 +2,9 @@ package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.SharedWallEntry;
+import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.SharedWallRepository;
+import org.mental_management_center.mmc.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ public class SharedWallService {
 
     private final SharedWallRepository sharedWallRepository;
     private final JournalCryptoService cryptoService; // Інжектимо твій існуючий сервіс!
+    private final UserRepository userRepository;
 
     // 1. Метод збереження нового повідомлення
     public void saveMessage(UUID roomId, UUID authorId, byte[] encryptedContent, String mediaFileName, byte[] encryptedMediaHead) {
@@ -45,6 +48,14 @@ public class SharedWallService {
 
         // Проходимо по кожному повідомленню і розшифровуємо його для фронтенду
         page.getContent().forEach(entry -> {
+
+            // --- ДОДАЄМО БЛОК ПОШУКУ ІМЕНІ АВТОРА ---
+            // Шукаємо юзера за authorId. Якщо знайдено - беремо ім'я, якщо ні (видалений) - "Співрозмовник"
+            String authorName = userRepository.findById(entry.getAuthorId())
+                    .map(User::getName)
+                    .orElse("Співрозмовник");
+            entry.setAuthorName(authorName);
+            // ----------------------------------------
             try {
                 // Перевіряємо, чи є що розшифровувати
                 if (entry.getEncryptedContent() != null && entry.getEncryptedContent().length > 0) {

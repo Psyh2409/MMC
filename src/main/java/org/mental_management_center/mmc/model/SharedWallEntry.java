@@ -47,6 +47,9 @@ public class SharedWallEntry {
     @Transient // Для фронтенду
     private String content;
 
+    @Transient // Додаємо для відображення імені на стіні
+    private String authorName;
+
     // Статус для твоєї сигналізації (блимання)
     @Column(name = "is_read")
     private boolean isRead = false;
