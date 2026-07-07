@@ -72,21 +72,6 @@
 
                     <td>
                         <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
-
-                        <form th:if="${!u.isClient() and !u.isAdmin() and !u.isTherapist()}"
-                              th:action="@{/admin/promote/{id}(id=${u.id})}"
-                              method="post"
-                              class="admin-action-form-inline">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <button type="submit" class="btn-outline">Працювати</button>
-                        </form>
-
-                        <div th:if="${u.isClient()}" class="admin-action-form-inline">
-                            <a th:href="@{/therapy/room/{id}(id=${u.id})}"
-                               class="btn-primary btn-admin"
-                               target="_blank"
-                               onclick="return handleVideoStart(this);">Кабінет</a>
-                        </div>
                     </td>
 
                     <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>

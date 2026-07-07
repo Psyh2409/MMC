@@ -82,11 +82,13 @@ public class TherapyRoomController {
         // 4. ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ (для завантаження нотаток)
         User therapist;
         if (isAuthorizedProfessional) {
-            therapist = currentUser; // Фахівець сам веде сесію
+            therapist = currentUser;
         } else {
-            // Якщо зайшов клієнт, нам треба знати, хто його терапевт.
-            // Для v1.0 це завжди Admin. У v2.0 тут буде щось на кшталт roomOwner.getAssignedTherapist()
-            therapist = userService.findAdmin();
+            // Клієнт бере свого реального терапевта з бази
+            therapist = roomOwner.getTherapist();
+            if (therapist == null) {
+                throw new AccessDeniedException("Терапевт не призначений. Зверніться до підтримки.");
+            }
         }
 
         String roomName = "therapy-room-" + clientUuid;
@@ -188,7 +190,8 @@ public class TherapyRoomController {
             User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
             User client = userService.findById(clientUuid).orElseThrow();
             // Терапевт — або адмін, або поточний юзер
-            User therapist = currentUser.isAdmin() ? currentUser : userService.findAdmin();
+            User therapist = client.getTherapist();
+            if (therapist == null) throw new RuntimeException("Терапевт не знайдений");
 
             if (noteId == null) {
                 // Це перше збереження за сесію — створюємо новий запис
@@ -210,8 +213,7 @@ public class TherapyRoomController {
     public String getRecentNote(@PathVariable UUID clientUuid, Principal principal) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
         User client = userService.findById(clientUuid).orElseThrow();
-        User therapist = currentUser.isAdmin() ? currentUser : userService.findAdmin();
-
+        User therapist = client.getTherapist();
         return therapyNoteService.getLastNoteContent(client.getId(), therapist.getId(), currentUser.getId());
     }
 
