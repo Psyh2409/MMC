@@ -379,5 +379,29 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void toggleSosStatus(UUID userId, boolean status) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setSosRequested(status);
+        userRepository.save(user);
+    }
 
+    @Transactional
+    public void triggerSos(UUID userId, String reason) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setSosRequested(true);
+        user.setSosReason(reason);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void resolveSos(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        user.setSosRequested(false);
+        user.setSosReason(null); // Очищаємо причину
+        userRepository.save(user);
+    }
 }

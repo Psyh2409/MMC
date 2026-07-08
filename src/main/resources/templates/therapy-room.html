@@ -7,7 +7,43 @@
 <body>
 
 <section class="standard-container-wide">
-    <div class="session-toggle-wrapper mb-md" th:classappend="${(!isAdmin and !isTherapist and !isSessionActive) ? 'hidden' : ''}">
+    <div th:if="${currentUser.id.equals(client.id)}" class="mb-md">
+
+        <button type="button" id="init-sos-btn" class="btn-outline">
+            🚨 Запросити Адміністратора
+        </button>
+
+        <form id="sos-request-form"
+              th:action="@{/therapy/room/{id}/sos(id=${client.id})}"
+              method="post"
+              class="request-card-danger hidden">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <p class="text-danger mb-sm"><strong>🚨 Запрошення Адміністратора</strong></p>
+
+            <textarea name="reason" rows="3" class="form-input w-100 mb-sm"
+                      placeholder="Опишіть, будь ласка, з якого питання ви хочете запросити адміністратора в кабінет..." required></textarea>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary btn-danger btn-sm">
+                    Надіслати запрошення
+                </button>
+                <button type="button" id="cancel-sos-btn" class="btn-outline btn-sm">
+                    Скасувати
+                </button>
+            </div>
+        </form>
+    </div>
+<!--    <form th:if="${currentUser.id.equals(client.id)}"-->
+<!--          th:action="@{/therapy/room/{id}/sos(id=${client.id})}"-->
+<!--          method="post"-->
+<!--          class="admin-action-form-inline">-->
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+<!--        <button type="submit" class="btn-primary btn-sm">-->
+<!--            🚨 Запросити Адміністратора-->
+<!--        </button>-->
+<!--    </form>-->
+    <div th:if="${currentUser.isTherapist() or (currentUser.id.equals(client.id) and isSessionActive)}" class="session-toggle-wrapper mb-md">
         <button id="toggle-session-btn" class="btn-primary">
             <span>📹</span> Розгорнути відеосесію
         </button>

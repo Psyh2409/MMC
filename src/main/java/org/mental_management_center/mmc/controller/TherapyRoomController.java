@@ -74,11 +74,6 @@ public class TherapyRoomController {
         // TODO v2.0: Додати перевірку, чи цей Терапевт дійсно закріплений за цим Клієнтом
         // if (currentUser.isTherapist() && !roomOwner.getTherapistId().equals(currentUser.getId())) return "error/403";
 
-        // 2. ПЕРЕВІРКА ДОСТУПУ: В кімнату може зайти або фахівець, або сам власник кімнати (клієнт)
-        if (!isAuthorizedProfessional && !currentUser.getId().equals(clientUuid)) {
-            return "error/403";
-        }
-
         // 4. ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ (для завантаження нотаток)
         User therapist;
         if (isAuthorizedProfessional) {
@@ -292,12 +287,39 @@ public class TherapyRoomController {
         if (user.getId().equals(roomClientUuid)) {
             return true;
         }
-        // 2. Терапевт має доступ ТІЛЬКИ якщо є статус ACTIVE з цим клієнтом
+
+        // 2. ЕКСТРЕНИЙ ДОСТУП ДЛЯ АДМІНА (Тільки якщо клієнт натиснув SOS)
+        if (user.isAdmin()) {
+            User client = userService.findById(roomClientUuid).orElseThrow();
+            if (client.isSosRequested()) {
+                return true; // Двері відчиняються для адміна
+            }
+        }
+
+        // 3. Терапевт має доступ ТІЛЬКИ якщо є статус ACTIVE з цим клієнтом
         if (user.isTherapist()) {
             List<TherapyAssignment> assignments = therapyAssignmentService.getAssignmentsByStatus(user.getId(), "ACTIVE");
             return assignments.stream().anyMatch(a -> a.getClient().getId().equals(roomClientUuid));
         }
-        // 3. Адмін БЕЗ запрошення доступу НЕ МАЄ
+
+        // 4. Усім іншим доступу НЕ МАЄ
         return false;
+    }
+
+    @PostMapping("/room/{clientUuid}/sos")
+    public String triggerSos(@PathVariable UUID clientUuid,
+                             @RequestParam("reason") String reason,
+                             Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        if (!currentUser.getId().equals(clientUuid)) {
+            throw new AccessDeniedException("Тільки власник кабінету може викликати адміністратора.");
+        }
+
+        // Викликаємо єдиний метод сервісу
+        userService.triggerSos(clientUuid, reason);
+
+        return "redirect:/therapy/room/" + clientUuid + "?sos=activated";
     }
 }

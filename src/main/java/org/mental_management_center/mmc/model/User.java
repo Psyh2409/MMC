@@ -85,6 +85,12 @@ public class User {
     @Column(name = "is_pending_specialist", nullable = false, columnDefinition = "boolean default false")
     private boolean pendingSpecialist = false;
 
+    @Column(name = "sos_requested", nullable = false, columnDefinition = "boolean default false")
+    private boolean sosRequested = false;
+
+    @Column(name = "sos_reason", columnDefinition = "text")
+    private String sosReason;
+
     // Зв'язок із заявкою на фахівця. LAZY заощаджує RAM: дані диплома тягнуться з бази тільки тоді, коли ти розгортаєш рядок.
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SpecialistApplication specialistApplication;

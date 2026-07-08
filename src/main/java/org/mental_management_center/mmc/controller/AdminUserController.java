@@ -120,4 +120,10 @@ public class AdminUserController {
         specialistService.approveVerification(id);
         return "redirect:/admin/users?success";
     }
+
+    @PostMapping("/users/{id}/resolve-sos")
+    public String resolveSos(@PathVariable UUID id) {
+        userService.resolveSos(id);
+        return "redirect:/admin/users";
+    }
 }

@@ -257,4 +257,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 3000);
                 }
             }
+
+    // === ЛОГІКА ЗАПРОШЕННЯ АДМІНІСТРАТОРА (SOS) ===
+        const initSosBtn = document.getElementById('init-sos-btn');
+        const sosForm = document.getElementById('sos-request-form');
+        const cancelSosBtn = document.getElementById('cancel-sos-btn');
+
+        if (initSosBtn && sosForm && cancelSosBtn) {
+            // Відкрити форму
+            initSosBtn.addEventListener('click', () => {
+                initSosBtn.classList.add('hidden');
+                sosForm.classList.remove('hidden');
+            });
+
+            // Скасувати і сховати форму
+            cancelSosBtn.addEventListener('click', () => {
+                sosForm.classList.add('hidden');
+                initSosBtn.classList.remove('hidden');
+                sosForm.reset(); // Очищаємо введений текст, якщо клієнт передумав
+            });
+        }
+        // ===============================================
 });
