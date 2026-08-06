@@ -2,11 +2,14 @@ package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.Article;
 import org.mental_management_center.mmc.model.Comment;
+import org.mental_management_center.mmc.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -23,4 +26,9 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
             "LEFT JOIN FETCH r.author " +
             "WHERE c.article = :article AND c.parentComment IS NULL " +
             "ORDER BY c.createdAt DESC")
-    List<Comment> findCommentsWithTreeByArticle(@Param("article") Article article);}
+    List<Comment> findCommentsWithTreeByArticle(@Param("article") Article article);
+
+    @EntityGraph(attributePaths = {"article"})
+    List<Comment> findByAuthorOrderByCreatedAtDesc(User author);
+}
+

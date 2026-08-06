@@ -44,4 +44,5 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> 
     // Видаляємо повідомлення, де користувач є відправником або отримувачем
     void deleteBySenderIdOrRecipientId(java.util.UUID senderId, java.util.UUID recipientId);
 
+    List<ChatMessage> findBySenderIdOrderByTimestampDesc(UUID senderId);
 }

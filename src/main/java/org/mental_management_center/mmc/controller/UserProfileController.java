@@ -1,21 +1,16 @@
 package org.mental_management_center.mmc.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.SpecialistApplication;
-import org.mental_management_center.mmc.model.TherapyNote;
-import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.*;
 import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.PasswordChangeForm;
 import org.mental_management_center.mmc.web.form.ProfileUpdateForm;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +43,7 @@ public class UserProfileController {
     private final JournalPostRepository journalPostRepository;
     private final RequestService requestService;
     private final SpecialistAppRepository specialistAppRepository;
+    private final UserActivityService userActivityService;
 
     @GetMapping("/profile")
     public String showProfile(Model model, Principal principal) {
@@ -79,6 +76,7 @@ public class UserProfileController {
                         .ifPresent(assignment -> model.addAttribute("myTherapist", assignment.getTherapist()));
             }
 
+            // 3. Форма оновлення профілю
             if (!model.containsAttribute("profileUpdateForm")) {
                 ProfileUpdateForm profileUpdateForm = new ProfileUpdateForm();
                 profileUpdateForm.setName(user.getName());
@@ -86,10 +84,13 @@ public class UserProfileController {
                 model.addAttribute("profileUpdateForm", profileUpdateForm);
             }
 
-            // --- БЛОК ЄДЕБО (ТЕПЕР В ПРАВИЛЬНОМУ МІСЦІ) ---
+            // 4. БЛОК ЄДЕБО (ТЕПЕР В ПРАВИЛЬНОМУ МІСЦІ) ---
             Optional<SpecialistApplication> app = specialistAppRepository.findByUserId(user.getId());
             model.addAttribute("specialistApp", app.orElse(null));
-            // ----------------------------------------------
+
+            // 5. ВИТЯГУЄМО АКТИВНІСТЬ КОРИСТУВАЧА (ТЕПЕР УПРАВИЛЬНОМУ БЛОЦІ)
+            List<UserActivity> userActivities = userActivityService.getUserActivities(user);
+            model.addAttribute("activities", userActivities);
         });
 
         if (!model.containsAttribute("passwordChangeForm")) {

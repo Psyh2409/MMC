@@ -36,4 +36,7 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
     // Для профайлу: отримуємо тільки особисті клієнтські нотатки
     @EntityGraph(attributePaths = {"therapist", "client"})
     Page<TherapyNote> findByAuthorIdAndClientId(UUID authorId, UUID clientId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"client", "therapist"})
+    List<TherapyNote> findByAuthorOrderByCreatedAtDesc(User author);
 }

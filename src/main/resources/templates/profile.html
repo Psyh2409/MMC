@@ -138,6 +138,7 @@
                         th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
                     Терапевтичний простір</button>
                 <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
+                <button type="button" class="tab-button" data-target="activity-tab">Моя активність</button>
             </nav>
 
             <div id="therapy-tab" class="tab-pane active"
@@ -233,6 +234,53 @@
                     <div th:replace="~{fragments/journal-form :: journalForm(isEdit=false, postId=null, content='')}"></div>
                     <div id="journalFeed">
                         <div th:replace="~{fragments/journal-form :: journalFeed}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="activity-tab" class="tab-pane is-hidden">
+                <h2 class="heading-md mb-sm">Моя активність</h2>
+
+                <div th:if="${#lists.isEmpty(activities)}" class="profile-empty-state mt-md text-center">
+                    <div class="icon mb-sm">📭</div>
+                    <p class="text-muted">У вас поки немає цифрового сліду на платформі.</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(activities)}" class="layout-stack mt-md gap-sm">
+                    <div th:each="activity : ${activities}" class="card-primary mb-sm">
+
+                        <div class="row-between mb-xs">
+                            <span class="badge badge-reader" th:text="${activity.typeLabel}">Тип активності</span>
+                            <span class="text-xs text-muted" th:text="${#temporals.format(activity.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                        </div>
+
+                        <h3 class="text-sm mb-xs" th:text="${activity.title}">Контекст</h3>
+
+                        <p class="text-muted mt-sm mb-sm text-wrap-break" th:text="${activity.content}">Текст повідомлення чи коментаря</p>
+
+                        <div class="action-group mt-sm border-top-muted pt-sm">
+                            <a th:if="${activity.targetUrl != null}" th:href="${activity.targetUrl}" class="btn-outline btn-sm">
+                                👁️ Перейти / Змінити
+                            </a>
+
+                            <form th:action="@{/profile/activity/export-delete}" method="post" class="d-inline form-inline-reset">
+                                <input type="hidden" name="id" th:value="${activity.id}">
+                                <input type="hidden" name="type" th:value="${activity.type}">
+                                <button type="submit" class="btn-primary btn-sm">
+                                    📥 На пошту та видалити
+                                </button>
+                            </form>
+
+                            <form th:action="@{/profile/activity/delete}" method="post" class="d-inline form-inline-reset"
+                                  onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цей запис без збереження?');">
+                                <input type="hidden" name="id" th:value="${activity.id}">
+                                <input type="hidden" name="type" th:value="${activity.type}">
+                                <button type="submit" class="btn-outline btn-danger btn-sm">
+                                    🗑️ Видалити
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
