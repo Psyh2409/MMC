@@ -38,5 +38,4 @@ public interface RequestRepository extends JpaRepository<Request, UUID>{
 
     // Отримати тільки листи для адміністрації (де немає конкретного фахівця)
     List<Request> findByRecipientIsNull(org.springframework.data.domain.Sort sort);
-
 }

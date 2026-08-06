@@ -4,6 +4,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.RequestRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
@@ -96,14 +97,20 @@ public class RequestService {
         return repository.findByRecipientOrderByCreatedAtDesc(recipient);
     }
 
-    // Метод для АДМІНА: віддає тільки загальні листи
-    public List<Request> getAdminRequests(org.springframework.data.domain.Sort sort) {
-        return repository.findByRecipientIsNull(sort);
-    }
+    public List<Request> getAdminRequests(User currentUser) {
+        List<Request> allRequests = repository.findAll(); // Або твій існуючий метод отримання
 
-    // Якщо сортування у тебе реалізовано без об'єкта Sort, то додай такий:
-    public List<Request> getAdminRequests() {
-        return repository.findByRecipientIsNullOrderByCreatedAtDesc();
+        // Якщо це ТЕСТОВИЙ адмін (є біт 128) - залишаємо тільки тестові запити
+        if (currentUser.hasRole(RoleBit.TEST)) {
+            return allRequests.stream()
+                    .filter(req -> req.getUser() != null && req.getUser().isTest())
+                    .toList();
+        }
+
+        // Якщо це РЕАЛЬНИЙ адмін - відсікаємо тестове сміття
+        return allRequests.stream()
+                .filter(req -> req.getUser() != null && !req.getUser().isTest())
+                .toList();
     }
 }
 

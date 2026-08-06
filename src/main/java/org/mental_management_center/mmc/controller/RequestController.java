@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.Request;
 import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.EmailService;
 import org.mental_management_center.mmc.service.RequestService;
@@ -70,10 +71,14 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    public String showRequests(@RequestParam(name = "sort", required = false) String sort, Model model) {
+    public String showRequests(@RequestParam(name = "sort", required = false) String sort, Principal principal, Model model) {
+        // 1. Визначаємо, хто зараз дивиться таблицю (Реальний чи Тестовий)
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        boolean isTestViewer = currentUser.hasRole(RoleBit.TEST);
+
         List<Request> requests;
 
-        // Використовуємо ТІЛЬКИ безпечні адмінські методи (де recipient == null)
+        // 2. Витягуємо всі звернення так, як у тебе вже було написано
         if ("status".equals(sort)) {
             requests = requestService.getAdminRequestsSortedByUrgency();
         } else if ("name".equals(sort)) {
@@ -84,6 +89,16 @@ public class RequestController {
             // За замовчуванням
             requests = requestService.getAdminRequestsSortedByDate();
         }
+
+        // 3. ФІЛЬТРУЄМО СПИСОК ПЕРЕД ВИВОДОМ НА ЕКРАН
+        requests = requests.stream()
+                .filter(req -> {
+                    // Перевіряємо, чи автор звернення є тестовим
+                    boolean isTestRequest = req.getUser() != null && req.getUser().isTest();
+                    // Тестовий бачить тільки тестові звернення. Реальний - тільки реальні.
+                    return isTestViewer ? isTestRequest : !isTestRequest;
+                })
+                .toList();
 
         model.addAttribute("requests", requests);
         return "requests"; // Твій шаблон адмінки
