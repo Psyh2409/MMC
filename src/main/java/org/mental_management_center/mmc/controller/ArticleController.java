@@ -1,24 +1,23 @@
 package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Article;
+import org.mental_management_center.mmc.model.Comment;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
 import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
-import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
+import org.mental_management_center.mmc.service.ArticleService;
 import org.mental_management_center.mmc.service.FileStorageService;
 import org.mental_management_center.mmc.web.form.ArticleForm;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.service.ArticleService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
@@ -51,7 +50,7 @@ public class ArticleController {
         model.addAttribute("allArticles", articleService.findAll());
         return "admin-articles";
     }
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
+
     @PostMapping("/admin/articles/delete/{id}")
     public String deleteArticle(@PathVariable UUID id) {
         // Windsurf: Адмін може видаляти будь-які статті (включно з чужими)
@@ -77,7 +76,6 @@ public class ArticleController {
     }
 
     // 3. ОНОВЛЮЄМО МЕТОД РЕДАГУВАННЯ (GET)
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @GetMapping("/admin/articles/edit/{id}")
     public String editArticle(@PathVariable UUID id, Model model) {
 
@@ -126,7 +124,6 @@ public class ArticleController {
         return "article-form";
     }
 
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/admin/articles/create")
     public String createArticle(@Valid @ModelAttribute("articleForm") ArticleForm form,
                                 BindingResult result,
@@ -183,5 +180,76 @@ public class ArticleController {
             System.out.println("КРИТИЧНО: Користувач не знайдений або не має прав ADMIN: " + email);
             return "redirect:/login?error=access_denied";
         }
+    }
+
+    // 1. Публічний перегляд статті та розрахунок сторінки за commentId
+    @GetMapping("/articles/{id}")
+    public String getArticle(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) UUID commentId,
+            Model model) {
+
+        Article article = articleService.findById(id);
+
+        // Якщо прийшов запит на конкретний коментар — розраховуємо його сторінку
+        if (commentId != null) {
+            Comment targetComment = commentRepository.findById(commentId).orElse(null);
+            if (targetComment != null) {
+                // Якщо це відповідь (дочірній коментар), піднімаємося до кореневого
+                Comment rootComment = targetComment;
+                while (rootComment.getParentComment() != null) {
+                    rootComment = rootComment.getParentComment();
+                }
+
+                long newerCount = commentRepository.countRootCommentsNewerThan(id, rootComment.getCreatedAt());
+                page = (int) (newerCount / size);
+            }
+        }
+
+        var commentsPage = articleService.getCommentsForArticle(article, page, size);
+
+        model.addAttribute("article", article);
+        model.addAttribute("comments", commentsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", commentsPage.getTotalPages());
+        model.addAttribute("pageSize", size);
+
+        return "article";
+    }
+
+    // 2. Обробка відправки форми коментаря
+    @PostMapping("/articles/{id}/comments")
+    public String addComment(
+            @PathVariable UUID id,
+            @RequestParam String content,
+            @RequestParam(required = false) UUID parentId,
+            org.springframework.security.core.Authentication auth) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        String email = (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2)
+                ? oauth2.getAttribute("email")
+                : auth.getName();
+
+        User author = userRepository.findByEmail(email).orElseThrow();
+        Article article = articleService.findById(id);
+
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setArticle(article);
+        comment.setAuthor(author);
+        comment.setCreatedAt(java.time.LocalDateTime.now());
+
+        if (parentId != null) {
+            commentRepository.findById(parentId).ifPresent(comment::setParentComment);
+        }
+
+        commentRepository.save(comment);
+
+        return "redirect:/articles/" + id + "#comment-" + comment.getId();
     }
 }

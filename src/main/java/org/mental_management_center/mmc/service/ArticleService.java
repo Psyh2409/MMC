@@ -3,16 +3,21 @@ package org.mental_management_center.mmc.service;
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Article;
 import org.mental_management_center.mmc.model.CategoryTranslation;
+import org.mental_management_center.mmc.model.Comment;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ArticleRepository;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
+import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.web.form.ArticleForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final CategoryTranslationRepository categoryTranslationRepository; // ІН'ЄКЦІЯ РЕПОЗИТОРІЮ
+    private final CommentRepository commentRepository;
 
     public List<Article> findAll() {
         return articleRepository.findAll();
@@ -116,5 +122,11 @@ public class ArticleService {
                 .replaceAll("[^a-z0-9\\s-]", "") // Видаляємо все, крім букв, цифр і пробілів (слеш і двокрапка зникнуть)
                 .replaceAll("\\s+", "-")         // Замінюємо пробіли на дефіси
                 .replaceAll("-+", "-");          // Прибираємо подвійні дефіси
+    }
+
+    // Отримання пагінованих коментарів першого рівня для статті
+    public Page<Comment> getCommentsForArticle(Article article, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return commentRepository.findTopLevelCommentsByArticle(article, pageable);
     }
 }

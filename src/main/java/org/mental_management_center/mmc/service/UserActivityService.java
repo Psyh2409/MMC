@@ -36,7 +36,7 @@ public class UserActivityService {
             String articleTitle = (comment.getArticle() != null) ? comment.getArticle().getTitle() : "Видалена стаття";
 
             String commentUrl = (comment.getArticle() != null)
-                    ? "/articles/" + comment.getArticle().getId() + "#comment-" + comment.getId()
+                    ? "/articles/" + comment.getArticle().getId() + "?commentId=" + comment.getId() + "#comment-" + comment.getId()
                     : "";
 
             activities.add(UserActivity.builder()

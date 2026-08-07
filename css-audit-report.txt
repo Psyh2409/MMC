@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Fri Aug 07 20:38:21 EEST 2026
+Дата: Sat Aug 08 00:40:24 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 89:
@@ -96,7 +96,7 @@
   - Клас [wall-media-input] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
 
-⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 153:
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 156:
   - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -105,13 +105,15 @@
   - Стиль .05em є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .0625rem є в CSS [layout.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .075rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .08 є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1 є в CSS [layout.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .125rem є в CSS [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .125rem є в CSS [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .15 є в CSS [components.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1875rem є в CSS [navigation.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1rem є в CSS [navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .2 є в CSS [cards.css, navigation.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .22rem є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .25 є в CSS [layout.css, cards.css, navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .25rem є в CSS [layout.css, offline-banner.css, navigation.css, components.css, typography.css, buttons.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .25s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -119,6 +121,7 @@
   - Стиль .2s є в CSS [cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3 є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3125rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .35rem є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .375rem є в CSS [utilities.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3rem є в CSS [typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3s є в CSS [layout.css, cards.css, navigation.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -133,7 +136,7 @@
   - Стиль .65rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .7 є в CSS [cards.css, tables.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .75 є в CSS [cards.css, components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .75rem є в CSS [navigation.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .75rem є в CSS [navigation.css, components.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .7rem є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .8 є в CSS [components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .85 є в CSS [layout.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -255,7 +258,7 @@
   - Стиль .02 дублюється у декількох файлах: [cards.css, forms.css]
   - Стиль .0625rem дублюється у декількох файлах: [layout.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .1 дублюється у декількох файлах: [layout.css, components.css, forms.css, buttons.css]
-  - Стиль .125rem дублюється у декількох файлах: [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css]
+  - Стиль .125rem дублюється у декількох файлах: [tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .15 дублюється у декількох файлах: [components.css, variables.css]
   - Стиль .1rem дублюється у декількох файлах: [navigation.css, components.css, forms.css]
   - Стиль .2 дублюється у декількох файлах: [cards.css, navigation.css, components.css, typography.css]
@@ -272,7 +275,7 @@
   - Стиль .6 дублюється у декількох файлах: [layout.css, cards.css, components.css, typography.css]
   - Стиль .7 дублюється у декількох файлах: [cards.css, tables.css, buttons.css]
   - Стиль .75 дублюється у декількох файлах: [cards.css, components.css]
-  - Стиль .75rem дублюється у декількох файлах: [navigation.css, components.css, typography.css]
+  - Стиль .75rem дублюється у декількох файлах: [navigation.css, components.css, typography.css, buttons.css]
   - Стиль .8 дублюється у декількох файлах: [components.css, typography.css]
   - Стиль .85 дублюється у декількох файлах: [layout.css, forms.css]
   - Стиль .85rem дублюється у декількох файлах: [layout.css, tables.css, navigation.css, components.css, forms.css, buttons.css]
@@ -350,9 +353,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 517
+  Всього знайдено класів: 523
   Класи-пустишки в HTML: 89
-  Мертві стилі в CSS: 153
+  Мертві стилі в CSS: 156
   Конфлікти стилів: 51
   Потенційні дублікати: 43
 ======================================================

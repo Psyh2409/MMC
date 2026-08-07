@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
             countQuery = "SELECT COUNT(c) FROM Comment c WHERE c.article = :article AND c.parentComment IS NULL")
     Page<Comment> findTopLevelCommentsByArticle(@Param("article") Article article, Pageable pageable);
 
-    // FETCH JOIN каже Hibernate: "Витягни автора відразу, не чекай!"
     @Query("SELECT c FROM Comment c " +
             "LEFT JOIN FETCH c.author " +
             "LEFT JOIN FETCH c.replies r " +
@@ -30,5 +30,10 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     @EntityGraph(attributePaths = {"article"})
     List<Comment> findByAuthorOrderByCreatedAtDesc(User author);
+
+    // ВИПРАВЛЕНО: Використовуємо parentComment замість parent та > замість < для DESC сортування
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.article.id = :articleId AND c.parentComment IS NULL AND c.createdAt > :createdAt")
+    long countRootCommentsNewerThan(@Param("articleId") UUID articleId, @Param("createdAt") LocalDateTime createdAt);
+
 }
 
