@@ -25,10 +25,25 @@
                     <span id="private-badge" class="badge hidden">0</span>
                 </button>
             </div>
-            <div id="chat-messages" class="chat-window">
-            </div>
 
-            <div id="private-messages" class="chat-window hidden">
+            <!-- Контейнер-обгортка із жорсткою прив'язкою координат -->
+            <div class="chat-viewport-container">
+
+                <!-- Вікна повідомлень -->
+                <div id="chat-messages" class="chat-window"></div>
+                <div id="private-messages" class="chat-window hidden"></div>
+
+                <!-- Плаваюча кнопка з векторною жирною стрілкою -->
+                <button type="button"
+                        id="scroll-bottom-btn"
+                        class="btn-scroll-bottom hidden"
+                        title="Перейти до найновіших повідомлень"
+                        onclick="jumpToLatestMessages()">
+                    <svg class="scroll-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 4v14M19 13l-7 7-7-7"/>
+                    </svg>
+                </button>
+
             </div>
 
             <div id="reply-preview" class="reply-preview-bar hidden">

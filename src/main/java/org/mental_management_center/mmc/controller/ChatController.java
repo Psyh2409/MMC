@@ -179,4 +179,20 @@ public class ChatController {
 
         return ResponseEntity.ok(messages);
     }
+
+    @GetMapping("/api/chat/messages/{messageId}/page")
+    public ResponseEntity<Integer> getPageForMessage(
+            @PathVariable UUID messageId,
+            @RequestParam UUID chatRoomId) {
+
+        return chatMessageRepository.findById(messageId)
+                .map(message -> {
+                    // Рахуємо, скільки повідомлень новіші за це
+                    long newerCount = chatMessageRepository.countMessagesAfter(chatRoomId, message.getTimestamp());
+                    // Обчислюємо номер сторінки (0-індексація, по 20 на сторінку)
+                    int page = (int) (newerCount / 20);
+                    return ResponseEntity.ok(page);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,4 +46,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> 
     void deleteBySenderIdOrRecipientId(java.util.UUID senderId, java.util.UUID recipientId);
 
     List<ChatMessage> findBySenderIdOrderByTimestampDesc(UUID senderId);
+
+    @Query("SELECT COUNT(m) FROM ChatMessage m WHERE m.recipientId = :chatRoomId AND m.timestamp > :timestamp")
+    long countMessagesAfter(@Param("chatRoomId") UUID chatRoomId, @Param("timestamp") LocalDateTime timestamp);
 }

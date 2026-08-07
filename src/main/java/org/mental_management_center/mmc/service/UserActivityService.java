@@ -69,12 +69,14 @@ public class UserActivityService {
         for (ChatMessage msg : chatMessages) {
             boolean isPrivate = (msg.getChatType() == ChatMessage.ChatType.PRIVATE);
 
+            String anchor = "#msg-item-" + msg.getId();
+
             // Визначаємо з ким відкривати чат, якщо це приватне повідомлення
             // (Якщо повідомлення відправлене мною, адресат - recipientId. Якщо мені - senderId.
             // Оскільки ми тягнемо findBySenderId, адресат завжди recipientId).
             String targetUrl = isPrivate
-                    ? "/chat?tab=private&recipient=" + msg.getRecipientId()
-                    : "/chat";
+                    ? "/chat?tab=private&recipient=" + msg.getRecipientId() + anchor
+                    : "/chat" + anchor;
 
             activities.add(UserActivity.builder()
                     .id(msg.getId())

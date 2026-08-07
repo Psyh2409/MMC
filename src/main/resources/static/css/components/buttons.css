@@ -203,4 +203,43 @@
     margin: 0; /* Прибираємо системні відступи лейблів, через які кнопка "підстрибує" */
 }
 
+/* Контейнер чату має бути відносно позиціонованим для точного розміщення кнопки */
+/* Обгортка вікна чату з позиціонуванням */
+.chat-viewport-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Плаваюча кнопка, приварена до нижнього правого кута чату */
+.btn-scroll-bottom {
+    position: absolute;
+    bottom: var(--space-md, 1rem);
+    right: var(--space-lg, 1.5rem);
+    z-index: 10;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-accent-primary, var(--color-surface));
+    border: 0.125rem solid var(--color-border, transparent);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-scroll-bottom:hover {
+    transform: scale(1.08);
+}
+
+/* Векторна стрілка з керованою товщиною лінії */
+.scroll-arrow-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    stroke-width: 0.22rem; /* Контроль товщини стрілки */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
 

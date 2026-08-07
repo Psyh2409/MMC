@@ -87,6 +87,7 @@ function connect() {
     if (pubArea) {
         pubArea.addEventListener('scroll', () => {
             if (pubArea.scrollTop === 0) loadMoreMessages();
+            checkScrollPosition('chat-messages'); // <--- ДОДАНО: відстеження для кнопки
         });
     }
 
@@ -94,6 +95,7 @@ function connect() {
     if (privArea) {
         privArea.addEventListener('scroll', () => {
             if (privArea.scrollTop === 0) loadMoreMessages();
+            checkScrollPosition('private-messages'); // <--- ДОДАНО: відстеження для привату
         });
     }
 }
@@ -155,31 +157,76 @@ function handleIncomingMessage(message, type) {
     }
 }
 
+// ==========================================
+// 1. ПУБЛІЧНИЙ ЧАТ (Із розрахунком сторінки)
+// ==========================================
 function loadPublicHistory() {
-    publicPage = 0;
-    fetch(`/chat/${PUBLIC_ID}/messages?page=0`) // Тягнемо тільки перші 20 штук!
-        .then(response => response.json())
+    const hash = window.location.hash;
+    let targetId = null;
+
+    if (hash && hash.startsWith('#msg-item-')) {
+        targetId = hash.replace('#msg-item-', '');
+    }
+
+    // Якщо є конкретне повідомлення — дізнаємося його сторінку на бекенді
+    if (targetId) {
+        fetch(`/api/chat/messages/${targetId}/page?chatRoomId=${PUBLIC_ID}`)
+            .then(res => res.ok ? res.json() : 0)
+            .then(targetPage => {
+                fetchPublicMessagesUpToPage(targetPage);
+            })
+            .catch(error => {
+                console.error('Помилка визначення сторінки публічного повідомлення:', error);
+                fetchPublicMessagesUpToPage(0);
+            });
+    } else {
+        fetchPublicMessagesUpToPage(0);
+    }
+}
+
+function fetchPublicMessagesUpToPage(page) {
+    publicPage = page;
+    fetch(`/chat/${PUBLIC_ID}/messages?page=${page}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Помилка мережі при завантаженні публічного чату');
+            return response.json();
+        })
         .then(messages => {
-            // Сервер віддає найновіші першими. Перевертаємо для хронологічного порядку.
             publicMessages = messages.reverse();
             renderAllMessages('chat-messages', 'public', publicMessages);
-            scrollToBottom('chat-messages');
+
+            // Якщо якір є на сторінці — скролимо до нього, інакше — в самий кінець
+            if (!scrollToTargetMessage()) {
+                scrollToBottom('chat-messages');
+            }
+
+            // Одразу перевіряємо стан кнопка після рендерингу
+            checkScrollPosition('chat-messages');
+        })
+        .catch(error => {
+            console.error('Помилка завантаження публічної історії:', error);
         });
 }
 
+// ==========================================
+// 2. ПРИВАТНИЙ ЧАТ (Пряме завантаження всієї історії)
+// ==========================================
 function loadPrivateHistory() {
-    // Жодних заглушок! Стукаємо прямо в твій старий, надійний ендпоінт
-    fetch('/api/chat/history/private')
-        .then(response => response.json())
-        .then(messages => {
-            // Зберігаємо повідомлення в масив
-            privateMessages = messages;
+    privatePage = 0; // Скидаємо лічильник сторінок для приватної історії
 
-            // Відмальовуємо їх на екрані
+    fetch('/api/chat/history/private')
+        .then(response => {
+            if (!response.ok) throw new Error('Помилка мережі при завантаженні приватної історії');
+            return response.json();
+        })
+        .then(messages => {
+            privateMessages = messages;
             renderAllMessages('private-messages', 'private', privateMessages);
 
-            // Прокручуємо вниз до останнього повідомлення
-            scrollToBottom('private-messages');
+            // Оскільки всі приватні повідомлення вже в DOM, якір знайдеться миттєво
+            if (!scrollToTargetMessage()) {
+                scrollToBottom('private-messages');
+            }
         })
         .catch(error => {
             console.error('Помилка завантаження приватної історії:', error);
@@ -374,7 +421,6 @@ function showMessage(message, targetId, chatType) {
     chatArea.appendChild(messageElement);
 }
 
-//document.addEventListener('DOMContentLoaded', connect);
 document.getElementById('messageForm').addEventListener('submit', sendMessage);
 document.getElementById('messageInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -485,6 +531,61 @@ function initChatState() {
         // Миттєво перемикаємо на приватну вкладку до завантаження повідомлень
         switchChat('private');
     }
+}
+
+// Автоматична прокрутка до конкретного повідомлення за наявності якоря в URL
+function scrollToTargetMessage() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#msg-item-')) {
+        const targetEl = document.querySelector(hash);
+        if (targetEl) {
+            requestAnimationFrame(() => {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+            return true; // Успішно знайшли і проскролили
+        }
+    }
+    return false; // Якір відсутній або елемент ще не завантажився
+}
+
+// Перевірка позиції скролу та номера сторінки
+function checkScrollPosition(chatAreaId) {
+    const chatElement = document.getElementById(chatAreaId);
+    const btn = document.getElementById('scroll-bottom-btn');
+    if (!chatElement || !btn) return;
+
+    const distanceFromBottom = chatElement.scrollHeight - chatElement.scrollTop - chatElement.clientHeight;
+
+    const isScrolledUp = distanceFromBottom > 150;
+    const isOldPage = (activeTab === 'public' && publicPage > 0);
+
+    // Показуємо кнопку, якщо відскролили вгору АБО знаходимося на старій сторінці історії
+    if (isScrolledUp || isOldPage) {
+        btn.classList.remove('hidden');
+    } else {
+        btn.classList.add('hidden');
+    }
+}
+
+// Стрибок до найновіших повідомлень (Миттєвий 1-й клік)
+function jumpToLatestMessages() {
+    const chatAreaId = activeTab === 'public' ? 'chat-messages' : 'private-messages';
+
+    // 1. Обов'язково скидаємо якір з URL, щоб не триматися за старе повідомлення
+    if (window.location.hash) {
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    }
+
+    // 2. Якщо ми на старій сторінці — завантажуємо 0-у сторінку й опускаємо вниз
+    if (activeTab === 'public' && publicPage !== 0) {
+        loadPublicHistory();
+    } else {
+        // Якщо на 0-й сторінці просто відскролили вгору — плавно скролимо вниз
+        scrollToBottom(chatAreaId);
+    }
+
+    const btn = document.getElementById('scroll-bottom-btn');
+    if (btn) btn.classList.add('hidden');
 }
 
 // ЄДИНИЙ БЛОК ІНІЦІАЛІЗАЦІЇ ДОКУМЕНТА (Без таймерів і милиць)
