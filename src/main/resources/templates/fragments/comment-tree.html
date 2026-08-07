@@ -1,4 +1,4 @@
-<div th:fragment="commentNode(comment, depth)" class="comment-card-nested">
+<div th:fragment="commentNode(comment, depth)" class="comment-card-nested" th:id="'comment-' + ${comment.id}">
     <div class="comment-header">
 
             <div class="avatar-circle avatar-xs">
