@@ -258,8 +258,8 @@
 
                         <p class="text-muted mt-sm mb-sm text-wrap-break" th:text="${activity.content}">Текст повідомлення чи коментаря</p>
 
-                        <div class="action-group mt-sm border-top-muted pt-sm">
-                            <a th:if="${activity.targetUrl != null}" th:href="${activity.targetUrl}" class="btn-outline btn-sm">
+                        <div class="action-group mt-sm pt-sm">
+                            <a th:href="@{${activity.targetUrl}}" class="btn-outline btn-sm">
                                 👁️ Перейти / Змінити
                             </a>
 
@@ -275,7 +275,7 @@
                                   onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цей запис без збереження?');">
                                 <input type="hidden" name="id" th:value="${activity.id}">
                                 <input type="hidden" name="type" th:value="${activity.type}">
-                                <button type="submit" class="btn-outline btn-danger btn-sm">
+                                <button type="submit" class="btn-primary btn-sm">
                                     🗑️ Видалити
                                 </button>
                             </form>

@@ -18,6 +18,11 @@ import java.util.UUID;
 @Table(name = "chat_messages")
 public class ChatMessage {
 
+    // Додаємо Enum для чіткої типізації
+    public enum ChatType {
+        PUBLIC, PRIVATE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -34,7 +39,7 @@ public class ChatMessage {
     @Column(name = "sender_name")
     private String senderName;
 
-    @Column(name = "sender_avatar")
+    @Transient
     private String senderAvatar; // UUID аватарки відправника для чату
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -45,6 +50,11 @@ public class ChatMessage {
 
     @Enumerated(EnumType.STRING)
     private MessageStatus status;
+
+    // НОВЕ ПОЛЕ: Явний тип чату
+    @Enumerated(EnumType.STRING)
+    @Column(name = "chat_type", nullable = false)
+    private ChatType chatType;
 
 
 }

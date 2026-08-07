@@ -35,6 +35,10 @@ public class UserActivityService {
         for (Comment comment : comments) {
             String articleTitle = (comment.getArticle() != null) ? comment.getArticle().getTitle() : "Видалена стаття";
 
+            String commentUrl = (comment.getArticle() != null)
+                    ? "/articles/" + comment.getArticle().getId() + "#comment-" + comment.getId()
+                    : "";
+
             activities.add(UserActivity.builder()
                     .id(comment.getId())
                     .type(UserActivity.ActivityType.COMMENT)
@@ -42,7 +46,7 @@ public class UserActivityService {
                     .title(articleTitle)
                     .content(comment.getContent()) // Якщо в майбутньому коментарі будуть шифруватись, тут викликатимемо decrypt
                     .createdAt(comment.getCreatedAt())
-                    .targetUrl("/article/" + (comment.getArticle() != null ? comment.getArticle().getId() : ""))
+                    .targetUrl(commentUrl)
                     .build());
         }
 
@@ -63,7 +67,14 @@ public class UserActivityService {
         // 3. Збираємо ЧАТИ (Публічні та Приватні)
         List<ChatMessage> chatMessages = chatMessageRepository.findBySenderIdOrderByTimestampDesc(user.getId());
         for (ChatMessage msg : chatMessages) {
-            boolean isPrivate = (msg.getRecipientId() != null);
+            boolean isPrivate = (msg.getChatType() == ChatMessage.ChatType.PRIVATE);
+
+            // Визначаємо з ким відкривати чат, якщо це приватне повідомлення
+            // (Якщо повідомлення відправлене мною, адресат - recipientId. Якщо мені - senderId.
+            // Оскільки ми тягнемо findBySenderId, адресат завжди recipientId).
+            String targetUrl = isPrivate
+                    ? "/chat?tab=private&recipient=" + msg.getRecipientId()
+                    : "/chat";
 
             activities.add(UserActivity.builder()
                     .id(msg.getId())
@@ -72,7 +83,7 @@ public class UserActivityService {
                     .title(isPrivate ? "Приватний чат" : "Загальна кімната")
                     .content(msg.getContent())
                     .createdAt(msg.getTimestamp())
-                    .targetUrl("/chat")
+                    .targetUrl(targetUrl)
                     .build());
         }
 

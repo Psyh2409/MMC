@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-drop-sender-avatar
+      author: mmc-dev
+      changes:
+        - dropColumn:
+            tableName: chat_messages
+            columnName: sender_avatar

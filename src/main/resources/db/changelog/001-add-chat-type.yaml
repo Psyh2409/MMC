@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-add-chat-type
+      author: mmc-dev
+      changes:
+        # 1. Створюємо нову колонку (поки без NOT NULL, щоб БД не сварилася на старі дані)
+        - addColumn:
+            tableName: chat_messages
+            columns:
+              - column:
+                  name: chat_type
+                  type: VARCHAR(20)
+
+        # 2. Одразу ж безпечно оновлюємо всі існуючі повідомлення в базі
+        - sql:
+            sql: >
+              UPDATE chat_messages 
+              SET chat_type = 'PUBLIC' 
+              WHERE recipient_id = '11111111-1111-1111-1111-111111111111';
+              
+              UPDATE chat_messages 
+              SET chat_type = 'PRIVATE' 
+              WHERE chat_type IS NULL;
+
+        # 3. Коли всі дані заповнені, замикаємо колонку жорстким обмеженням (безпека даних)
+        - addNotNullConstraint:
+            tableName: chat_messages
+            columnName: chat_type

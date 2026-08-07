@@ -374,7 +374,7 @@ function showMessage(message, targetId, chatType) {
     chatArea.appendChild(messageElement);
 }
 
-document.addEventListener('DOMContentLoaded', connect);
+//document.addEventListener('DOMContentLoaded', connect);
 document.getElementById('messageForm').addEventListener('submit', sendMessage);
 document.getElementById('messageInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -473,11 +473,48 @@ const chatObserver = new MutationObserver((mutations) => {
     }
 });
 
-// Вішаємо спостерігача на обидві вкладки чату
+// НОВА НАДІЙНА ФУНКЦІЯ ІНІЦІАЛІЗАЦІЇ СТАНУ
+function initChatState() {
+    const tabMeta = document.querySelector('meta[name="chat-active-tab"]');
+    const recipientMeta = document.querySelector('meta[name="chat-active-recipient"]');
+
+    if (tabMeta && tabMeta.content === 'private') {
+        if (recipientMeta && recipientMeta.content) {
+            currentRecipientId = recipientMeta.content;
+        }
+        // Миттєво перемикаємо на приватну вкладку до завантаження повідомлень
+        switchChat('private');
+    }
+}
+
+// ЄДИНИЙ БЛОК ІНІЦІАЛІЗАЦІЇ ДОКУМЕНТА (Без таймерів і милиць)
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Одразу перемикаємо вкладку, якщо сервер наказав це зробити
+    initChatState();
+
+    // 2. Підключаємо сокети і тягнемо історію
+    connect();
+
+    // 3. Безпечно вішаємо обробники подій на форму (захист від NullPointerException)
+    const form = document.getElementById('messageForm');
+    const input = document.getElementById('messageInput');
+
+    if (form) {
+        form.addEventListener('submit', sendMessage);
+    }
+
+    if (input) {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (form) form.dispatchEvent(new Event('submit'));
+            }
+        });
+    }
+
+    // 4. Підключення медіа-фасадів (якщо вони є)
     const pubArea = document.getElementById('chat-messages');
     const privArea = document.getElementById('private-messages');
-
     if (pubArea) chatObserver.observe(pubArea, { childList: true, subtree: true });
     if (privArea) chatObserver.observe(privArea, { childList: true, subtree: true });
 });

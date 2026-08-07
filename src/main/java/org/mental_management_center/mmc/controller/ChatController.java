@@ -17,7 +17,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -51,17 +50,16 @@ public class ChatController {
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setSenderName(user.getName());
         chatMessage.setStatus(MessageStatus.DELIVERED);
-        chatMessage.setRecipientId(PUBLIC_CHAT_ID);
-
-        // 🎯 ФІКС: Тепер і публічний чат знає про аватарки!
+        chatMessage.setRecipientId(PUBLIC_CHAT_ID);// Поки залишаємо для зворотної сумісності фронту
         chatMessage.setSenderAvatar(user.getAvatarFileName());
+        chatMessage.setChatType(ChatMessage.ChatType.PUBLIC);
 
         return chatMessageRepository.save(chatMessage);
     }
 
     // 2. ПРИВАТНІ ПОВІДОМЛЕННЯ
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessage chatMessage, java.security.Principal principal) {
+    public void processMessage(@Payload ChatMessage chatMessage, Principal principal) {
         User user = userRepository.findById(chatMessage.getSenderId()).orElse(null);
 
         if (user == null || !user.isEnabled() || !user.isChatEnabled()) {
@@ -71,9 +69,8 @@ public class ChatController {
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setStatus(MessageStatus.DELIVERED);
         chatMessage.setSenderName(user.getName());
-
-        // Тут аватар уже був, залишаємо
         chatMessage.setSenderAvatar(user.getAvatarFileName());
+        chatMessage.setChatType(ChatMessage.ChatType.PRIVATE);
 
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
 
@@ -128,11 +125,21 @@ public class ChatController {
     }
 
     @GetMapping("/chat")
-    public String chatPage(java.security.Principal principal, org.springframework.ui.Model model) {
+    public String chatPage(
+            @RequestParam(value = "tab", defaultValue = "public") String tab,
+            @RequestParam(value = "recipient", required = false) String recipient,
+            java.security.Principal principal,
+            org.springframework.ui.Model model) {
+
         if (principal != null) {
             User user = userRepository.findByEmail(principal.getName()).orElse(null);
             model.addAttribute("user", user);
         }
+
+        // Передаємо вказівки для фронтенду
+        model.addAttribute("activeTab", tab);
+        model.addAttribute("activeRecipient", recipient != null ? recipient : PUBLIC_CHAT_ID.toString());
+
         return "chat";
     }
 
@@ -163,6 +170,13 @@ public class ChatController {
         Pageable pageable = PageRequest.of(page, 20);
         Slice<ChatMessage> messageSlice = chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(chatRoomId, pageable);
 
-        return ResponseEntity.ok(messageSlice.getContent());
+        List<ChatMessage> messages = messageSlice.getContent();
+
+        messages.forEach(msg -> {
+            userRepository.findById(msg.getSenderId())
+                    .ifPresent(u -> msg.setSenderAvatar(u.getAvatarFileName()));
+        });
+
+        return ResponseEntity.ok(messages);
     }
 }
