@@ -253,4 +253,68 @@ public class ArticleController {
 
         return "redirect:/articles/" + id + "#comment-" + comment.getId();
     }
+
+    // 3. Редагувати коментар (Тільки автор коментаря)
+    @PostMapping("/articles/comments/{commentId}/edit")
+    public String editComment(
+            @PathVariable UUID commentId,
+            @RequestParam String content,
+            Authentication auth) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        String email = (auth.getPrincipal() instanceof OAuth2User oauth2)
+                ? oauth2.getAttribute("email")
+                : auth.getName();
+
+        User currentUser = userRepository.findByEmail(email).orElseThrow();
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Коментар не знайдено"));
+
+        // ЗАХИСТ: Редагувати може тільки автор коментаря
+        if (!comment.getAuthor().getId().equals(currentUser.getId())) {
+            throw new org.springframework.security.access.AccessDeniedException("Немає прав для редагування");
+        }
+
+        comment.setContent(content);
+        commentRepository.save(comment);
+
+        return "redirect:/articles/" + comment.getArticle().getId() + "#comment-" + comment.getId();
+    }
+
+    // 4. Видалити коментар (Адмін, Автор статті, або Автор коментаря)
+    @PostMapping("/articles/comments/{commentId}/delete")
+    public String deleteComment(
+            @PathVariable UUID commentId,
+            Authentication auth) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        String email = (auth.getPrincipal() instanceof OAuth2User oauth2)
+                ? oauth2.getAttribute("email")
+                : auth.getName();
+
+        User currentUser = userRepository.findByEmail(email).orElseThrow();
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Коментар не знайдено"));
+
+        UUID articleId = comment.getArticle().getId();
+        User articleAuthor = comment.getArticle().getAuthor();
+
+        boolean isCommentAuthor = comment.getAuthor().getId().equals(currentUser.getId());
+        boolean isArticleAuthor = articleAuthor != null && articleAuthor.getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.isAdmin();
+
+        // ЗАХИСТ: Перевірка матриці прав
+        if (isCommentAuthor || isArticleAuthor || isAdmin) {
+            commentRepository.delete(comment);
+            return "redirect:/articles/" + articleId;
+        } else {
+            throw new org.springframework.security.access.AccessDeniedException("Немає прав для видалення");
+        }
+    }
 }
