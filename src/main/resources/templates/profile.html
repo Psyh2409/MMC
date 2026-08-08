@@ -32,7 +32,7 @@
                 <h3 class="profile-header-title" th:text="${user.name}">Ім'я</h3>
 
                 <div th:if="${user.isTherapist()}" class="mt-md">
-                    <a th:href="@{/therapist/dashboard}" class="btn-primary" >
+                    <a th:href="@{/therapist/dashboard}" class="btn-primary">
                         💼 Мій кабінет
                     </a>
                     <p></p>
@@ -46,7 +46,8 @@
                 </div>
                 <div th:if="${user.isTherapist() and user.specialistApplication != null}" class="text-muted p-sm">
                     <span th:text="${user.specialistApplication.specialty}"></span>
-                   <br> 🎓 <span th:text="${user.specialistApplication.diplomaSeries + ' ' + user.specialistApplication.diplomaNumber}"></span>
+                    <br> 🎓 <span
+                        th:text="${user.specialistApplication.diplomaSeries + ' ' + user.specialistApplication.diplomaNumber}"></span>
                 </div>
                 <hr class="profile-divider">
                 <h4 class="profile-section-title">Кольорова тема</h4>
@@ -88,25 +89,30 @@
                 <hr class="profile-divider">
 
                 <h4 class="profile-section-title">Зміна пароля</h4>
-                <div th:if="${passwordSuccess}" class="status-message status-success" th:text="${passwordSuccess}"></div>
+                <div th:if="${passwordSuccess}" class="status-message status-success"
+                     th:text="${passwordSuccess}"></div>
 
-                <form th:action="@{/profile/password}" th:object="${passwordChangeForm}" method="post" class="stack-form">
+                <form th:action="@{/profile/password}" th:object="${passwordChangeForm}" method="post"
+                      class="stack-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <div class="form-field">
                         <div class="password-container">
-                            <input type="password" th:field="*{currentPassword}" class="form-input" placeholder="Поточний пароль">
+                            <input type="password" th:field="*{currentPassword}" class="form-input"
+                                   placeholder="Поточний пароль">
                             <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
                         </div>
                     </div>
                     <div class="form-field">
                         <div class="password-container">
-                            <input type="password" th:field="*{newPassword}" class="form-input" placeholder="Новий пароль">
+                            <input type="password" th:field="*{newPassword}" class="form-input"
+                                   placeholder="Новий пароль">
                             <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
                         </div>
                     </div>
                     <div class="form-field">
                         <div class="password-container">
-                            <input type="password" th:field="*{confirmNewPassword}" class="form-input" placeholder="Підтвердіть новий">
+                            <input type="password" th:field="*{confirmNewPassword}" class="form-input"
+                                   placeholder="Підтвердіть новий">
                             <button type="button" class="btn-toggle-password" title="Показати/приховати">👁️</button>
                         </div>
                     </div>
@@ -120,11 +126,15 @@
 
                     <div id="deactivationVault" class="tab-pane">
                         <p class="text-muted text-sm mt-sm">
-                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої коментарі, нотатки та повідомлення на платформі.
+                            З міркувань безпеки, щоб видалити акаунт, ви повинні спочатку власноруч видалити всі свої
+                            коментарі, нотатки та повідомлення на платформі.
                         </p>
 
-                        <form th:action="@{/profile/request-deactivation}" method="post" class="mt-sm" onsubmit="return confirm('Ви впевнені, що хочете надіслати запит на деактивацію? Цю дію неможливо скасувати.');">
-                            <button type="submit" id="submitDeactivateBtn" class="btn-primary w-100">Запросити деактивацію</button>
+                        <form th:action="@{/profile/request-deactivation}" method="post" class="mt-sm"
+                              onsubmit="return confirm('Ви впевнені, що хочете надіслати запит на деактивацію? Цю дію неможливо скасувати.');">
+                            <button type="submit" id="submitDeactivateBtn" class="btn-primary w-100">Запросити
+                                деактивацію
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -136,7 +146,8 @@
             <nav class="tabs-navigation">
                 <button type="button" class="tab-button active" data-target="therapy-tab"
                         th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
-                    Терапевтичний простір</button>
+                    Терапевтичний простір
+                </button>
                 <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
                 <button type="button" class="tab-button" data-target="activity-tab">Моя активність</button>
             </nav>
@@ -185,21 +196,30 @@
                                 <details class="journal-details">
                                     <summary class="journal-summary">
                                         <div class="note-header">
-                                            <span class="text-muted" th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
-                                            <span class="note-person" th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
+                                            <span class="text-muted"
+                                                  th:text="${#temporals.format(note.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                            <span class="note-person"
+                                                  th:text="${user.id == note.therapist.id ? note.client.name : note.therapist.name}">Співрозмовник</span>
                                         </div>
                                         <p class="content-section" th:text="${note.content}">Зміст нотатки...</p>
                                     </summary>
 
                                     <div class="journal-expand-box">
-                                        <form th:id="'editForm-' + ${note.id}" th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
-                                            <textarea name="content" class="comment-textarea" rows="4" th:text="${note.content}" placeholder="Напишіть ваші думки..."></textarea>
+                                        <form th:id="'editForm-' + ${note.id}"
+                                              th:action="@{/profile/notes/{id}/edit(id=${note.id})}" method="post">
+                                            <textarea name="content" class="comment-textarea" rows="4"
+                                                      th:text="${note.content}"
+                                                      placeholder="Напишіть ваші думки..."></textarea>
                                             <div class="button-row">
                                                 <button type="submit" class="btn-primary">Зберегти зміни</button>
-                                                <button type="submit" th:form="'deleteForm-' + ${note.id}" class="btn-outline">Видалити нотатку</button>
+                                                <button type="submit" th:form="'deleteForm-' + ${note.id}"
+                                                        class="btn-outline">Видалити нотатку
+                                                </button>
                                             </div>
                                         </form>
-                                        <form th:id="'deleteForm-' + ${note.id}" th:action="@{/profile/notes/delete/{id}(id=${note.id})}" method="post" onsubmit="return confirm('Ви впевнені?');" class="hidden-element"></form>
+                                        <form th:id="'deleteForm-' + ${note.id}"
+                                              th:action="@{/profile/notes/delete/{id}(id=${note.id})}" method="post"
+                                              onsubmit="return confirm('Ви впевнені?');" class="hidden-element"></form>
                                     </div>
                                 </details>
                             </div>
@@ -208,13 +228,16 @@
                         <div th:if="${totalNotesPages > 1}" class="button-row pagination-row">
                             <button th:if="${currentNotesPage > 0}"
                                     th:onclick="'window.loadNotesPage(' + (${currentNotesPage} - 1) + ')'"
-                                    class="btn-outline btn-sm">Попередня</button>
+                                    class="btn-outline btn-sm">Попередня
+                            </button>
 
-                            <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentNotesPage} + 1) + ' з ' + ${totalNotesPages}">Сторінка 1</span>
+                            <span class="text-muted text-sm"
+                                  th:text="'Сторінка ' + (${currentNotesPage} + 1) + ' з ' + ${totalNotesPages}">Сторінка 1</span>
 
                             <button th:if="${hasMoreNotes}"
                                     th:onclick="'window.loadNotesPage(' + (${currentNotesPage} + 1) + ')'"
-                                    class="btn-outline btn-sm">Наступна</button>
+                                    class="btn-outline btn-sm">Наступна
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -241,50 +264,80 @@
             <div id="activity-tab" class="tab-pane is-hidden">
                 <h2 class="heading-md mb-sm">Моя активність</h2>
 
-                <div th:if="${#lists.isEmpty(activities)}" class="profile-empty-state mt-md text-center">
-                    <div class="icon mb-sm">📭</div>
-                    <p class="text-muted">У вас поки немає цифрового сліду на платформі.</p>
-                </div>
+                <!-- Контейнер-обгортка для оновлення через AJAX -->
+                <div id="activityFeedContainer">
 
-                <div th:unless="${#lists.isEmpty(activities)}" class="layout-stack mt-md gap-sm">
-                    <div th:each="activity : ${activities}" class="card-primary mb-sm">
-
-                        <div class="row-between mb-xs">
-                            <span class="badge badge-reader" th:text="${activity.typeLabel}">Тип активності</span>
-                            <span class="text-xs text-muted" th:text="${#temporals.format(activity.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                    <!-- САМЕ ЦЕЙ ФРАГМЕНТ БУДЕ ПОВЕРТАТИ СЕРВЕР -->
+                    <div th:fragment="activityFeed">
+                        <div th:if="${#lists.isEmpty(activities)}" class="profile-empty-state mt-md text-center">
+                            <div class="icon mb-sm">📭</div>
+                            <p class="text-muted">У вас поки немає цифрового сліду на платформі.</p>
                         </div>
 
-                        <h3 class="text-sm mb-xs" th:text="${activity.title}">Контекст</h3>
+                        <div th:unless="${#lists.isEmpty(activities)}" class="layout-stack mt-md gap-sm">
+                            <div th:each="activity : ${activities}" class="card-primary mb-sm">
 
-                        <p class="text-muted mt-sm mb-sm text-wrap-break" th:text="${activity.content}">Текст повідомлення чи коментаря</p>
+                                <div class="row-between mb-xs">
+                                    <span class="badge badge-reader"
+                                          th:text="${activity.typeLabel}">Тип активності</span>
+                                    <span class="text-xs text-muted"
+                                          th:text="${#temporals.format(activity.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                                </div>
 
-                        <div class="action-group mt-sm pt-sm">
-                            <a th:href="@{${activity.targetUrl}}" class="btn-outline btn-sm">
-                                👁️ Перейти / Змінити
-                            </a>
+                                <h3 class="text-sm mb-xs" th:text="${activity.title}">Контекст</h3>
 
-                            <form th:action="@{/profile/activity/export-delete}" method="post" class="d-inline form-inline-reset">
-                                <input type="hidden" name="id" th:value="${activity.id}">
-                                <input type="hidden" name="type" th:value="${activity.type}">
-                                <button type="submit" class="btn-primary btn-sm">
-                                    📥 На пошту та видалити
+                                <p class="text-muted mt-sm mb-sm text-wrap-break" th:text="${activity.content}">Текст
+                                    повідомлення чи коментаря</p>
+
+                                <div class="action-group mt-sm pt-sm">
+                                    <a th:href="@{${activity.targetUrl}}" class="btn-outline btn-sm">
+                                        👁️ Перейти / Змінити
+                                    </a>
+
+                                    <form th:action="@{/profile/activity/export-delete}" method="post"
+                                          class="d-inline form-inline-reset">
+                                        <input type="hidden" name="id" th:value="${activity.id}">
+                                        <input type="hidden" name="type" th:value="${activity.type}">
+                                        <button type="submit" class="btn-primary btn-sm">
+                                            📥 На пошту та видалити
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/profile/activity/delete}" method="post"
+                                          class="d-inline form-inline-reset"
+                                          onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цей запис без збереження?');">
+                                        <input type="hidden" name="id" th:value="${activity.id}">
+                                        <input type="hidden" name="type" th:value="${activity.type}">
+                                        <button type="submit" class="btn-primary btn-sm">
+                                            🗑️ Видалити
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- БЛОК ПАГІНАЦІЇ АКТИВНОСТІ -->
+                            <div th:if="${totalActivityPages > 1}" class="button-row pagination-row">
+                                <button th:if="${currentActivityPage > 0}"
+                                        th:onclick="'window.loadActivityPage(' + (${currentActivityPage} - 1) + ')'"
+                                        class="btn-outline btn-sm">Попередня
                                 </button>
-                            </form>
 
-                            <form th:action="@{/profile/activity/delete}" method="post" class="d-inline form-inline-reset"
-                                  onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цей запис без збереження?');">
-                                <input type="hidden" name="id" th:value="${activity.id}">
-                                <input type="hidden" name="type" th:value="${activity.type}">
-                                <button type="submit" class="btn-primary btn-sm">
-                                    🗑️ Видалити
+                                <span th:unless="${currentActivityPage > 0}"></span>
+
+                                <span class="text-xs text-muted"
+                                      th:text="'Сторінка ' + (${currentActivityPage} + 1) + ' з ' + ${totalActivityPages}">
+                                </span>
+
+                                <button th:if="${currentActivityPage + 1 < totalActivityPages}"
+                                        th:onclick="'window.loadActivityPage(' + (${currentActivityPage} + 1) + ')'"
+                                        class="btn-outline btn-sm">Наступна
                                 </button>
-                            </form>
+
+                                <span th:unless="${currentActivityPage + 1 < totalActivityPages}"></span>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 </section>
@@ -292,6 +345,7 @@
 <th:block th:fragment="page-scripts">
     <script src="/js/media-links.js" defer></script>
     <script src="/js/journal.js" defer></script>
+    <script src="/js/public-profile.js" defer></script>
 </th:block>
 </body>
 </html>

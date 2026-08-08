@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +45,10 @@ public class UserProfileController {
     private final UserActivityService userActivityService;
 
     @GetMapping("/profile")
-    public String showProfile(Model model, Principal principal) {
+    public String showProfile(
+            @RequestParam(defaultValue = "0") int activityPage,
+            Model model,
+            Principal principal) {
         if (principal == null) return "redirect:/login";
 
         userService.findByEmail(principal.getName()).ifPresent(user -> {
@@ -89,8 +91,7 @@ public class UserProfileController {
             model.addAttribute("specialistApp", app.orElse(null));
 
             // 5. ВИТЯГУЄМО АКТИВНІСТЬ КОРИСТУВАЧА (ТЕПЕР УПРАВИЛЬНОМУ БЛОЦІ)
-            List<UserActivity> userActivities = userActivityService.getUserActivities(user);
-            model.addAttribute("activities", userActivities);
+            populateActivityModel(user, activityPage, model);
         });
 
         if (!model.containsAttribute("passwordChangeForm")) {
@@ -307,4 +308,29 @@ public class UserProfileController {
         redirectAttributes.addFlashAttribute("successMessage", "Ваш профіль повністю очищено. Заявку на деактивацію відправлено адміністратору.");
         return "redirect:/profile";
     }
+
+    // Приватний метод для уникнення дублювання
+    private void populateActivityModel(User user, int page, Model model) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<UserActivity> activityPageData = userActivityService.getUserActivitiesPaged(user, pageable);
+
+        model.addAttribute("activities", activityPageData.getContent());
+        model.addAttribute("currentActivityPage", activityPageData.getNumber());
+        model.addAttribute("totalActivityPages", activityPageData.getTotalPages());
+    }
+
+    @GetMapping("/profile/activity/feed")
+    public String getActivityFeed(
+            @RequestParam(defaultValue = "0") int page,
+            Model model,
+            Principal principal) {
+
+        User user = userService.findByEmail(principal.getName()).orElseThrow();
+
+        // Викликаємо той самий приватний метод
+        populateActivityModel(user, page, model);
+
+        return "profile :: activityFeed";
+    }
+
 }

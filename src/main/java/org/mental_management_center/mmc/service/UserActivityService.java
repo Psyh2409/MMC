@@ -8,6 +8,9 @@ import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.PublicPostRepository;
 import org.mental_management_center.mmc.repository.TherapyNoteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,5 +114,18 @@ public class UserActivityService {
         activities.sort(Comparator.comparing(UserActivity::getCreatedAt).reversed());
 
         return activities;
+    }
+
+    public Page<UserActivity> getUserActivitiesPaged(User user, Pageable pageable) {
+        // Отримуємо повний відсортований список активностей
+        List<UserActivity> allActivities = getUserActivities(user);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allActivities.size());
+        // Захист від виходу за межі списку
+        if (start > allActivities.size()) {
+            return new PageImpl<>(List.of(), pageable, allActivities.size());
+        }
+        List<UserActivity> pagedContent = allActivities.subList(start, end);
+        return new PageImpl<>(pagedContent, pageable, allActivities.size());
     }
 }

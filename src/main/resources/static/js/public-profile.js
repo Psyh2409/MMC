@@ -33,3 +33,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+/**
+ * Завантаження сторінки активності користувача через AJAX
+ * @param {number} page - номер сторінки для завантаження
+ */
+window.loadActivityPage = function(page) {
+    fetch('/profile/activity/feed?page=' + page)
+        .then(response => response.text())
+        .then(html => {
+            const container = document.getElementById('activityFeedContainer');
+            if (container) {
+                container.innerHTML = html;
+                document.getElementById('activity-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        })
+        .catch(error => console.error('Помилка завантаження активності:', error));
+};
