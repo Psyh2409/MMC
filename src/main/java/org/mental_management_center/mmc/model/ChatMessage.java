@@ -56,5 +56,10 @@ public class ChatMessage {
     @Column(name = "chat_type", nullable = false)
     private ChatType chatType;
 
+    @Column(name = "is_deleted_by_admin")
+    private boolean deletedByAdmin = false;
+
+    @Column(name = "deletion_reason")
+    private String deletionReason;
 
 }

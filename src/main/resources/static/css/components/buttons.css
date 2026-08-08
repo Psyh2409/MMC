@@ -291,3 +291,36 @@
     margin-top: var(--space-sm);
     flex-wrap: wrap;
 }
+
+/* Контейнер для іконок дій у шапці повідомлення */
+.message-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Іконка видалення (сміттєвий бак) */
+.btn-icon-delete {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease-in-out;
+}
+
+.btn-icon-delete:hover {
+    color: var(--status-error);
+}
+
+.btn-icon-delete svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    stroke: currentColor;
+    stroke-width: 0.125rem;
+    fill: none;
+}

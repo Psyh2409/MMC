@@ -15,6 +15,9 @@ let lastDatePrivate = null;
 let publicMessages = [];
 let privateMessages = [];
 // НАДІЙНИЙ КЕШ ДЛЯ ЗБЕРЕЖЕННЯ КОНТЕКСТУ ПОВІДОМЛЕНЬ
+// Перевірка прав адміністратора
+const adminMeta = document.querySelector('meta[name="is-admin"]');
+const isAdmin = adminMeta && adminMeta.content === 'true';
 const messageCache = new Map();
 
 // Утиліта для захисту від XSS атак (екранування HTML-тегів у тексті)
@@ -403,7 +406,6 @@ function sendMessage(event) {
     }
 }
 
-// ДОДАНО ПАРАМЕТР type (public/private) ДЛЯ ПРАВИЛЬНИХ ДАТ
 function showMessage(message, targetId, chatType) {
     if (!message || !message.id) return;
 
@@ -429,7 +431,7 @@ function showMessage(message, targetId, chatType) {
         ? `<img src="/api/media/${escapeHtml(message.senderAvatar)}" alt="Avatar">`
         : displayName.charAt(0).toUpperCase();
 
-    // Блок контексту відповіді
+    // 1. Блок контексту відповіді
     let replyContextHtml = '';
     if (message.parentId) {
         const parentMessage = messageCache.get(message.parentId.toLowerCase());
@@ -454,7 +456,7 @@ function showMessage(message, targetId, chatType) {
         }
     }
 
-    // Іконка редагування для власних повідомлень (розміщується в шапці)
+    // 2. Іконка редагування (Тільки у шапці СВОЇХ повідомлень)
     const editIconHtml = isMe ? `
         <button type="button" class="btn-icon-edit" onclick="prepareEditMessage('${message.id}')" title="Редагувати">
             <svg viewBox="0 0 24 24">
@@ -464,15 +466,29 @@ function showMessage(message, targetId, chatType) {
         </button>
     ` : '';
 
-    // Нижні кнопки дій (розділені за типом чату)
+    // 3. SVG-іконка кошика у шапці: ТІЛЬКИ для ЧУЖИХ повідомлень І ТІЛЬКИ для Адміністратора
+    // Відображається ТІЛЬКИ у публічному чаті (chatType === 'public'), ТІЛЬКИ для чужих повідомлень (!isMe) та ТІЛЬКИ для Адміністратора
+        const headerDeleteSvgHtml = (!isMe && chatType === 'public' && typeof isAdmin !== 'undefined' && isAdmin) ? `
+        <button type="button" class="btn-icon-delete" onclick="deleteMessage('${message.id}')" title="Видалити як адміністратор">
+            <svg viewBox="0 0 24 24">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        </button>
+    ` : '';
+
+    // 4. Текстова кнопка видалення знизу: ТІЛЬКИ для СВОЇХ повідомлень
+    const textDeleteBtnHtml = isMe ? `
+        <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
+            Видалити
+        </button>
+    ` : '';
+
+    // 5. Формування кнопок дій під повідомленням
     let actionsHtml = '';
     if (chatType === 'private') {
         if (isMe) {
-            actionsHtml = `
-                <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
-                    Видалити
-                </button>
-            `;
+            actionsHtml = textDeleteBtnHtml;
         } else {
             actionsHtml = `
                 <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'private', '${message.senderId}')">
@@ -486,9 +502,7 @@ function showMessage(message, targetId, chatType) {
                 <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'public')">
                     Відповісти
                 </button>
-                <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
-                    Видалити
-                </button>
+                ${textDeleteBtnHtml}
             `;
         } else {
             actionsHtml = `
@@ -504,7 +518,7 @@ function showMessage(message, targetId, chatType) {
 
     const safeContent = escapeHtml(message.content);
 
-    // Збірка HTML картки повідомлення без інлайнових стилів
+    // 6. Фінальний HTML картки
     messageElement.innerHTML = `
         <div class="message-header">
             <div class="message-author-info">
@@ -513,7 +527,10 @@ function showMessage(message, targetId, chatType) {
                     <strong>${displayName}</strong>
                 </div>
             </div>
-            ${editIconHtml}
+            <div class="message-header-actions">
+                ${editIconHtml}
+                ${headerDeleteSvgHtml}
+            </div>
         </div>
 
         ${replyContextHtml}

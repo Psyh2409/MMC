@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/001-add-chat-type.yaml
   - include:
       file: db/changelog/002-drop-sender-avatar.yaml
+  - include:
+      file: db/changelog/003-add-deleted-status-columns.yaml

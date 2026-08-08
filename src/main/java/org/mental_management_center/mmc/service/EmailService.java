@@ -212,4 +212,39 @@ public class EmailService {
             logger.error("Помилка відправки відповіді фахівця: {}", e.getMessage());
         }
     }
+
+    /**
+     * Надсилання архівної копії активності користувачу перед видаленням
+     */
+    public void sendActivityExport(String toEmail, String typeLabel, String title, String content) {
+        try {
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo(toEmail);
+            email.setSubject("🌿 Архів вашого запису — Mental Management Center");
+
+            String body = String.format(
+                    "Вітаємо!\n\n" +
+                            "Ви запросили збереження вашого запису перед його видаленням з платформи Mental Management Center.\n\n" +
+                            "--- ДЕТАЛІ ЗАПИСУ ---\n" +
+                            "Тип: %s\n" +
+                            "Контекст / Заголовок: %s\n" +
+                            "Вміст:\n\"%s\"\n" +
+                            "---------------------\n\n" +
+                            "Цей запис було успішно вилучено з вашого цифрового сліду на платформі.\n\n" +
+                            "З повагою,\nКоманда Mental Management Center 🌿",
+                    typeLabel != null ? typeLabel : "Активність",
+                    title != null ? title : "Особистий запис",
+                    content != null ? content : ""
+            );
+
+            email.setText(body);
+            email.setFrom(adminMail);
+
+            mailSender.send(email);
+            logger.info("Архів активності успішно надіслано на пошту: {}", toEmail);
+        } catch (MailException e) {
+            logger.error("Не вдалося надіслати архів активності: {}", e.getMessage());
+            throw new RuntimeException("Помилка SMTP при відправці архіву: " + e.getMessage(), e);
+        }
+    }
 }

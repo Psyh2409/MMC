@@ -1,43 +1,30 @@
-// Глобальна функція для перемикання вкладок
+// 1. Глобальна функція для перемикання вкладок у профілі
 window.switchPublicTab = function(tabId, clickedBtn) {
-    // Ховаємо всі вкладки
-    document.querySelectorAll('.profile-card .tab-pane').forEach(tab => {
+    // Ховаємо всі вкладки у головній секції профілю
+    document.querySelectorAll('.profile-main-content .tab-pane, .tab-pane').forEach(tab => {
         tab.classList.add('is-hidden');
         tab.classList.remove('active');
     });
 
-    // Знімаємо підсвітку з усіх кнопок
+    // Знімаємо активний стан з усіх кнопок навігації
     document.querySelectorAll('.tabs-navigation .tab-button').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Показуємо потрібну вкладку
+    // Показуємо цільову вкладку
     const targetTab = document.getElementById(tabId);
     if (targetTab) {
         targetTab.classList.remove('is-hidden');
         targetTab.classList.add('active');
     }
-    clickedBtn.classList.add('active');
+
+    // Підсвічуємо відповідну кнопку
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
 };
 
-// Захист від подвійного кліку при запиті до фахівця
-document.addEventListener('DOMContentLoaded', function() {
-    const actionForm = document.querySelector('.action-group form');
-    if (actionForm) {
-        actionForm.addEventListener('submit', function(e) {
-            let btn = this.querySelector('button');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = 'Відправка...';
-            }
-        });
-    }
-});
-
-/**
- * Завантаження сторінки активності користувача через AJAX
- * @param {number} page - номер сторінки для завантаження
- */
+// 2. Глобальна функція асинхронної пагінації активностей (AJAX)
 window.loadActivityPage = function(page) {
     fetch('/profile/activity/feed?page=' + page)
         .then(response => response.text())
@@ -45,8 +32,27 @@ window.loadActivityPage = function(page) {
             const container = document.getElementById('activityFeedContainer');
             if (container) {
                 container.innerHTML = html;
-                document.getElementById('activity-tab').scrollIntoView({ behavior: 'smooth' });
+                const activityTab = document.getElementById('activity-tab');
+                if (activityTab) {
+                    activityTab.scrollIntoView({ behavior: 'smooth' });
+                }
             }
         })
         .catch(error => console.error('Помилка завантаження активності:', error));
 };
+
+// 3. Автоматична активація вкладки за наявності якоря в URL (#activity-tab)
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash;
+    if (hash) {
+        const tabId = hash.replace('#', '');
+        const targetTab = document.getElementById(tabId);
+
+        if (targetTab) {
+            const matchingBtn = document.querySelector(`.tabs-navigation .tab-button[data-target="${tabId}"]`) ||
+                                document.querySelector(`.tabs-navigation .tab-button[onclick*="'${tabId}'"]`);
+
+            window.switchPublicTab(tabId, matchingBtn);
+        }
+    }
+});

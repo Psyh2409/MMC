@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sat Aug 08 18:16:11 EEST 2026
+Дата: Sat Aug 08 23:48:29 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 91:
@@ -98,7 +98,7 @@
   - Клас [wall-media-input] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
 
-⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 159:
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 161:
   - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -173,6 +173,7 @@
   - Стиль .btn-cancel-inline є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-copy-uuid є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-deactivate-submit є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-icon-delete є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-icon-edit є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-link-muted є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-success є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -215,6 +216,7 @@
   - Стиль .message-author-info є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-box є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-header є в CSS [components.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .message-header-actions є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-in є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-item є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-me є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -359,9 +361,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 528
+  Всього знайдено класів: 530
   Класи-пустишки в HTML: 91
-  Мертві стилі в CSS: 159
+  Мертві стилі в CSS: 161
   Конфлікти стилів: 52
   Потенційні дублікати: 43
 ======================================================

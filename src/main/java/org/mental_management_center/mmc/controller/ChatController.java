@@ -145,19 +145,27 @@ public class ChatController {
 
     @DeleteMapping("/api/chat/messages/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable UUID id, Principal principal) {
-        System.out.println("🔥 СПРОБА ВИДАЛЕННЯ ПОВІДОМЛЕННЯ. ID: " + id); // Додай цей рядок
-        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        // Знаходимо користувача та повідомлення
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         ChatMessage message = chatMessageRepository.findById(id).orElse(null);
 
-        // Перевіряємо, чи існує повідомлення і чи є цей користувач його автором (або адміном)
-        if (message != null && message.getSenderId().equals(user.getId())) {
+        if (message == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean isOwner = message.getSenderId().equals(user.getId());
+        boolean isAdminPublicDelete = user.isAdmin() && message.getChatType() == ChatMessage.ChatType.PUBLIC;
+
+        // БЕЗПЕКА ТА КОНФІДЕНЦІЙНІСТЬ:
+        // 1. Власник може видалити будь-яке своє повідомлення.
+        // 2. Адміністратор може видалити чуже повідомлення ТІЛЬКИ в публічному чаті.
+        if (isOwner || isAdminPublicDelete) {
             chatMessageRepository.delete(message);
             return ResponseEntity.ok().build();
         } else {
-            // Якщо намагається видалити чуже або не знайдено
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }

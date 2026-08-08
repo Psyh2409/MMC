@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-deleted-status-columns
+      author: mmc-dev
+      changes:
+        # 1. Поля для таблиці чату
+        - addColumn:
+            tableName: chat_messages
+            columns:
+              - column:
+                  name: is_deleted_by_admin
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: deletion_reason
+                  type: VARCHAR(255)
+
+        # 2. Поля для таблиці коментарів
+        - addColumn:
+            tableName: comments
+            columns:
+              - column:
+                  name: is_deleted_by_admin
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: is_deleted_by_author
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: deletion_reason
+                  type: VARCHAR(255)

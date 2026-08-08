@@ -52,4 +52,13 @@ public class Comment {
     @OrderBy("createdAt ASC") // Твоє сортування на місці
     @Builder.Default          // Твій білдер на місці
     private List<Comment> replies = new ArrayList<>();
+
+    @Column(name = "is_deleted_by_admin")
+    private boolean deletedByAdmin = false;
+
+    @Column(name = "is_deleted_by_author")
+    private boolean deletedByAuthor = false;
+
+    @Column(name = "deletion_reason")
+    private String deletionReason;
 }

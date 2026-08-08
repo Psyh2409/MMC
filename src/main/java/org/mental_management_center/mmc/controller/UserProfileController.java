@@ -43,6 +43,8 @@ public class UserProfileController {
     private final RequestService requestService;
     private final SpecialistAppRepository specialistAppRepository;
     private final UserActivityService userActivityService;
+    private final EmailService emailService;
+    private final CommentRepository commentRepository;
 
     @GetMapping("/profile")
     public String showProfile(
@@ -333,4 +335,121 @@ public class UserProfileController {
         return "profile :: activityFeed";
     }
 
+    @Transactional
+    @PostMapping("/profile/activity/delete")
+    public String deleteActivity(
+            @RequestParam UUID id,
+            @RequestParam String type,
+            Principal principal) {
+
+        if (principal == null) return "redirect:/login";
+
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        deleteUserActivityItem(id, type, currentUser);
+
+        return "redirect:/profile#activity-tab";
+    }
+
+    @Transactional
+    @PostMapping("/profile/activity/export-delete")
+    public String exportAndDeleteActivity(
+            @RequestParam UUID id,
+            @RequestParam String type,
+            Principal principal) {
+
+        if (principal == null) return "redirect:/login";
+
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+        // 1. Надсилаємо лист з архівом
+        exportActivityToEmail(id, type, currentUser);
+
+        // 2. Видаляємо запис
+        deleteUserActivityItem(id, type, currentUser);
+
+        return "redirect:/profile#activity-tab";
+    }
+
+    // --- ПРИВАТНІ ДОПОМІЖНІ МЕТОДИ ---
+
+    private void exportActivityToEmail(UUID id, String type, User currentUser) {
+        String title = "Особистий запис";
+        String content = "";
+        String typeLabel = type;
+        String upperType = type != null ? type.toUpperCase() : "";
+
+        // 1. ОБРОБКА ЧАТІВ (Публічний та Приватний)
+        if (upperType.contains("CHAT")) {
+            ChatMessage msg = chatMessageRepository.findById(id).orElse(null);
+            if (msg != null && msg.getSenderId().equals(currentUser.getId())) {
+                content = msg.getContent();
+                String dateStr = msg.getTimestamp() != null
+                        ? msg.getTimestamp().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+                        : "";
+                title = "Повідомлення у чаті від " + dateStr;
+                typeLabel = upperType.contains("PRIVATE") ? "Приватне повідомлення" : "Повідомлення у публічному чаті";
+            }
+        }
+        // 2. ОБРОБКА КОМЕНТАРІВ ПІД СТАТТЯМИ
+        else if (upperType.contains("COMMENT")) {
+            Comment comment = commentRepository.findById(id).orElse(null);
+            if (comment != null && comment.getAuthor() != null && comment.getAuthor().getId().equals(currentUser.getId())) {
+                content = comment.getContent();
+                title = (comment.getArticle() != null) ? comment.getArticle().getTitle() : "Коментар до статті";
+                typeLabel = "Коментар під статтею";
+            }
+        }
+        // 3. ОБРОБКА НОТАТОК (Усі можливі варіації назв типів)
+        else if (upperType.contains("NOTE") || upperType.contains("THERAPY") || upperType.contains("JOURNAL")) {
+            TherapyNote note = therapyNoteRepository.findById(id).orElse(null);
+            if (note != null) {
+                boolean isClient = note.getClient() != null && note.getClient().getId().equals(currentUser.getId());
+                boolean isTherapist = note.getTherapist() != null && note.getTherapist().getId().equals(currentUser.getId());
+
+                if (isClient || isTherapist) {
+                    content = note.getContent();
+                    String dateStr = note.getCreatedAt() != null
+                            ? note.getCreatedAt().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+                            : "";
+                    title = "Нотатка з терапії від " + dateStr;
+                    typeLabel = "Нотатка з терапії";
+                }
+            }
+        }
+
+        if (content != null && !content.isBlank()) {
+            emailService.sendActivityExport(currentUser.getEmail(), typeLabel, title, content);
+        }
+    }
+
+    private void deleteUserActivityItem(UUID id, String type, User currentUser) {
+        String upperType = type != null ? type.toUpperCase() : "";
+
+        // 1. ВИДАЛЕННЯ ЧАТІВ
+        if (upperType.contains("CHAT")) {
+            ChatMessage msg = chatMessageRepository.findById(id).orElse(null);
+            if (msg != null && msg.getSenderId().equals(currentUser.getId())) {
+                chatMessageRepository.delete(msg);
+            }
+        }
+        // 2. ВИДАЛЕННЯ КОМЕНТАРІВ
+        else if (upperType.contains("COMMENT")) {
+            Comment comment = commentRepository.findById(id).orElse(null);
+            if (comment != null && comment.getAuthor() != null && comment.getAuthor().getId().equals(currentUser.getId())) {
+                commentRepository.delete(comment);
+            }
+        }
+        // 3. ВИДАЛЕННЯ НОТАТОК
+        else if (upperType.contains("NOTE") || upperType.contains("THERAPY") || upperType.contains("JOURNAL")) {
+            TherapyNote note = therapyNoteRepository.findById(id).orElse(null);
+            if (note != null) {
+                boolean isClient = note.getClient() != null && note.getClient().getId().equals(currentUser.getId());
+                boolean isTherapist = note.getTherapist() != null && note.getTherapist().getId().equals(currentUser.getId());
+
+                if (isClient || isTherapist) {
+                    therapyNoteRepository.delete(note);
+                }
+            }
+        }
+    }
 }
