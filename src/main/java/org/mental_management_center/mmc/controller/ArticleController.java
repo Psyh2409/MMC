@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,6 @@ public class ArticleController {
     private final ArticleService articleService;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
-    // Якщо в тебе Lombok @RequiredArgsConstructor, просто додай:
     private final CommentRepository commentRepository;
     private final CategoryTranslationRepository categoryTranslationRepository;
 
@@ -183,6 +183,7 @@ public class ArticleController {
     }
 
     // 1. Публічний перегляд статті та розрахунок сторінки за commentId
+    @Transactional(readOnly = true)
     @GetMapping("/articles/{id}")
     public String getArticle(
             @PathVariable UUID id,
