@@ -235,11 +235,13 @@ function loadPrivateHistory() {
 
 function prepareReply(messageId, senderName, type, recipientId) {
     currentParentId = messageId;
+
     if (type === 'private' && recipientId) {
         currentRecipientId = recipientId;
         switchChat('private');
     } else {
         currentRecipientId = PUBLIC_ID;
+        switchChat('public'); // Перемикаємо контекст і вкладку на публічну
     }
 
     const parentMessage = messageCache.get(messageId.toLowerCase());
@@ -250,16 +252,43 @@ function prepareReply(messageId, senderName, type, recipientId) {
     const replyToText = document.getElementById('reply-to-text');
 
     replyToText.innerHTML = `Вам відповідь для <strong>${escapeHtml(senderName)}</strong> на: <span class="preview-text-snippet">"${shortSnippet}"</span>`;
-    replyPreview.classList.remove('hidden');
+    if (replyPreview) replyPreview.classList.remove('hidden');
 
     document.getElementById('messageInput').focus();
 }
 
-function cancelReply() {
-    currentParentId = null;
-    const replyPreview = document.getElementById('reply-preview');
-    if (replyPreview) replyPreview.classList.add('hidden');
-}
+    let editingMessageId = null;
+
+    function prepareEditMessage(messageId) {
+        const message = messageCache.get(messageId.toLowerCase());
+        if (!message) return;
+
+        editingMessageId = messageId;
+        const messageInput = document.getElementById('messageInput');
+        if (!messageInput) return;
+
+        messageInput.value = message.content;
+        messageInput.focus();
+
+        // Використовуємо плашку прев'ю, яка у вас вже є
+        const replyPreview = document.getElementById('reply-preview');
+        const replyToText = document.getElementById('reply-to-text');
+        if (replyPreview && replyToText) {
+            replyToText.innerHTML = `✏️ <strong>Редагування повідомлення</strong>`;
+            replyPreview.classList.remove('hidden');
+        }
+    }
+
+//    function cancelEdit() {
+//        editingMessageId = null;
+//        cancelReply(); // ховаємо плашку і скидаємо parentId
+//    }
+//
+//function cancelReply() {
+//    currentParentId = null;
+//    const replyPreview = document.getElementById('reply-preview');
+//    if (replyPreview) replyPreview.classList.add('hidden');
+//}
 
 // НОВА ФУНКЦІЯ: ВИДАЛЕННЯ ПОВІДОМЛЕННЯ
 function deleteMessage(messageId) {
@@ -301,7 +330,49 @@ function sendMessage(event) {
     if (!messageInput) return;
     const messageContent = messageInput.value.trim();
 
-    if (messageContent && stompClient) {
+    if (!messageContent) return;
+
+    // РЕЖИМ РЕДАГУВАННЯ: Якщо редагуємо існуюче повідомлення
+    if (editingMessageId) {
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (csrfToken && csrfHeader) {
+            headers[csrfHeader] = csrfToken;
+        }
+
+        fetch(`/api/chat/messages/${editingMessageId}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({ content: messageContent })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Помилка оновлення');
+            return response.json();
+        })
+        .then(updatedMsg => {
+            // 1. Оновлюємо текст у DOM
+            const msgElement = document.getElementById(`msg-item-${editingMessageId}`);
+            if (msgElement) {
+                const textEl = msgElement.querySelector('.message-text');
+                if (textEl) textEl.innerText = updatedMsg.content;
+            }
+
+            // 2. Оновлюємо кеш
+            messageCache.set(editingMessageId.toLowerCase(), updatedMsg);
+
+            // 3. Скидаємо стан
+            messageInput.value = '';
+            cancelEdit();
+        })
+        .catch(error => console.error('Помилка редагування:', error));
+
+        return; // Виходимо, щоб не відправляти нове повідомлення
+    }
+
+    // СТАНДАРТНА ВІДПРАВКА НОВОГО ПОВІДОМЛЕННЯ (твій існуючий код)
+    if (stompClient) {
         let finalRecipient = currentRecipientId;
         let destination = "/app/chat";
 
@@ -336,17 +407,14 @@ function sendMessage(event) {
 function showMessage(message, targetId, chatType) {
     if (!message || !message.id) return;
 
-    // Нормалізуємо UUID, щоб кеш працював залізобетонно
     messageCache.set(message.id.toLowerCase(), message);
 
     const chatArea = document.getElementById(targetId);
     if (!chatArea) return;
 
-    // Передаємо chatType для правильної дати
     checkAndDisplayDate(message, chatArea, chatType);
 
     const messageElement = document.createElement('div');
-    // НАДАЄМО ID ДЛЯ ВИДАЛЕННЯ
     messageElement.id = `msg-item-${message.id}`;
 
     const isMe = message.senderId && currentUser &&
@@ -361,62 +429,101 @@ function showMessage(message, targetId, chatType) {
         ? `<img src="/api/media/${escapeHtml(message.senderAvatar)}" alt="Avatar">`
         : displayName.charAt(0).toUpperCase();
 
+    // Блок контексту відповіді
     let replyContextHtml = '';
-        if (message.parentId) {
-            // Завжди шукаємо в нижньому регістрі!
-            const parentMessage = messageCache.get(message.parentId.toLowerCase());
+    if (message.parentId) {
+        const parentMessage = messageCache.get(message.parentId.toLowerCase());
+        if (parentMessage) {
+            const parentSender = (parentMessage.senderId && currentUser && (parentMessage.senderId.toString().toLowerCase() === currentUser.toString().toLowerCase())) ? 'Я' : escapeHtml(parentMessage.senderName);
+            const cleanText = escapeHtml(parentMessage.content);
+            const shortText = cleanText.length > 50 ? cleanText.substring(0, 50) + '...' : cleanText;
 
-            if (parentMessage) {
-                const parentSender = (parentMessage.senderId && currentUser && (parentMessage.senderId.toString().toLowerCase() === currentUser.toString().toLowerCase())) ? 'Я' : escapeHtml(parentMessage.senderName);
-                const cleanText = escapeHtml(parentMessage.content);
-                const shortText = cleanText.length > 50 ? cleanText.substring(0, 50) + '...' : cleanText;
-
-                replyContextHtml = `
-                    <div class="message-reply-context">
-                        <small>💬 У відповідь для <strong class="context-author">${parentSender}</strong>:</small>
-                        <blockquote class="reply-quote">${shortText}</blockquote>
-                    </div>
-                `;
-            } else {
-                replyContextHtml = `
-                    <div class="message-reply-context">
-                        <small>💬 Відповідь на повідомлення:</small>
-                        <blockquote class="reply-quote" style="opacity: 0.6;">[Повідомлення недоступне в поточній сесії]</blockquote>
-                    </div>
-                `;
-            }
+            replyContextHtml = `
+                <div class="message-reply-context">
+                    <small>💬 У відповідь для <strong class="context-author">${parentSender}</strong>:</small>
+                    <blockquote class="reply-quote">${shortText}</blockquote>
+                </div>
+            `;
+        } else {
+            replyContextHtml = `
+                <div class="message-reply-context">
+                    <small>💬 Відповідь на повідомлення:</small>
+                    <blockquote class="reply-quote">[Повідомлення недоступне в поточній сесії]</blockquote>
+                </div>
+            `;
         }
+    }
+
+    // Іконка редагування для власних повідомлень (розміщується в шапці)
+    const editIconHtml = isMe ? `
+        <button type="button" class="btn-icon-edit" onclick="prepareEditMessage('${message.id}')" title="Редагувати">
+            <svg viewBox="0 0 24 24">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+        </button>
+    ` : '';
+
+    // Нижні кнопки дій (розділені за типом чату)
+    let actionsHtml = '';
+    if (chatType === 'private') {
+        if (isMe) {
+            actionsHtml = `
+                <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
+                    Видалити
+                </button>
+            `;
+        } else {
+            actionsHtml = `
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'private', '${message.senderId}')">
+                    Відповісти
+                </button>
+            `;
+        }
+    } else {
+        if (isMe) {
+            actionsHtml = `
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'public')">
+                    Відповісти
+                </button>
+                <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
+                    Видалити
+                </button>
+            `;
+        } else {
+            actionsHtml = `
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'public')">
+                    Відповісти публічно
+                </button>
+                <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'private', '${message.senderId}')">
+                    Написати приватно
+                </button>
+            `;
+        }
+    }
 
     const safeContent = escapeHtml(message.content);
 
-    // ВІЗУАЛЬНИЙ БЛОК ДІЙ (ТУТ ДОДАНО КНОПКУ ВИДАЛЕННЯ ДЛЯ ВЛАСНИХ ПОВІДОМЛЕНЬ)
+    // Збірка HTML картки повідомлення без інлайнових стилів
     messageElement.innerHTML = `
-            <div class="message-header">
+        <div class="message-header">
+            <div class="message-author-info">
                 <div class="avatar-circle avatar-xs">${avatarHtml}</div>
                 <div class="message-meta">
                     <strong>${displayName}</strong>
                 </div>
             </div>
+            ${editIconHtml}
+        </div>
 
-            ${replyContextHtml}
+        ${replyContextHtml}
 
-            <div class="message-text">${safeContent}</div>
+        <div class="message-text">${safeContent}</div>
 
-            <div class="message-actions" style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap;">
-                            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'public')">
-                                Відповісти публічно
-                            </button>
-                            ${!isMe ? `
-                            <button type="button" class="btn-outline btn-sm" onclick="prepareReply('${message.id}', '${escapeHtml(message.senderName)}', 'private', '${message.senderId}')">
-                                Написати приватно
-                            </button>
-                            ` : `
-                            <button type="button" class="btn-outline btn-sm" onclick="deleteMessage('${message.id}')" title="Видалити повідомлення">
-                                Видалити
-                            </button>
-                            `}
-                        </div>
-        `;
+        <div class="message-actions">
+            ${actionsHtml}
+        </div>
+    `;
 
     chatArea.appendChild(messageElement);
 }
@@ -619,3 +726,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pubArea) chatObserver.observe(pubArea, { childList: true, subtree: true });
     if (privArea) chatObserver.observe(privArea, { childList: true, subtree: true });
 });
+
+// Єдина функція повного скасування будь-якого стану (відповіді або редагування)
+function cancelAction() {
+    currentParentId = null;
+    editingMessageId = null;
+
+    const replyPreview = document.getElementById('reply-preview');
+    if (replyPreview) {
+        replyPreview.classList.add('hidden');
+    }
+
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput) {
+        messageInput.value = '';
+    }
+}
+
+// Аліаси для зворотної сумісності
+function cancelReply() {
+    cancelAction();
+}
+
+function cancelEdit() {
+    cancelAction();
+}

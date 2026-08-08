@@ -195,4 +195,40 @@ public class ChatController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/api/chat/messages/{id}")
+    public ResponseEntity<ChatMessage> updateMessage(
+            @PathVariable UUID id,
+            @RequestBody java.util.Map<String, String> payload,
+            Principal principal) {
+
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        ChatMessage message = chatMessageRepository.findById(id).orElse(null);
+        if (message == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // БЕЗПЕКА: Перевіряємо, чи є поточний користувач автором повідомлення
+        if (!message.getSenderId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        String newContent = payload.get("content");
+        if (newContent == null || newContent.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        message.setContent(newContent);
+        ChatMessage savedMessage = chatMessageRepository.save(message);
+
+        return ResponseEntity.ok(savedMessage);
+    }
 }

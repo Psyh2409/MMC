@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sat Aug 08 15:33:16 EEST 2026
+Дата: Sat Aug 08 17:09:27 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 89:
@@ -96,7 +96,7 @@
   - Клас [wall-media-input] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
 
-⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 156:
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 157:
   - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -142,7 +142,7 @@
   - Стиль .85 є в CSS [layout.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .85rem є в CSS [layout.css, tables.css, navigation.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .875em є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .875rem є в CSS [cards.css, tables.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .875rem є в CSS [cards.css, tables.css, components.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .8em є в CSS [tables.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .8rem є в CSS [forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .9 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -171,6 +171,7 @@
   - Стиль .btn-cancel-inline є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-copy-uuid є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-deactivate-submit є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .btn-icon-edit є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-link-muted є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .btn-success є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .card-elevated є в CSS [cards.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -279,7 +280,7 @@
   - Стиль .8 дублюється у декількох файлах: [components.css, typography.css]
   - Стиль .85 дублюється у декількох файлах: [layout.css, forms.css]
   - Стиль .85rem дублюється у декількох файлах: [layout.css, tables.css, navigation.css, components.css, forms.css, buttons.css]
-  - Стиль .875rem дублюється у декількох файлах: [cards.css, tables.css, components.css, typography.css]
+  - Стиль .875rem дублюється у декількох файлах: [cards.css, tables.css, components.css, typography.css, buttons.css]
   - Стиль .8em дублюється у декількох файлах: [tables.css, typography.css]
   - Стиль .8rem дублюється у декількох файлах: [forms.css, typography.css]
   - Стиль .95rem дублюється у декількох файлах: [navigation.css, forms.css]
@@ -353,9 +354,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 523
+  Всього знайдено класів: 524
   Класи-пустишки в HTML: 89
-  Мертві стилі в CSS: 156
+  Мертві стилі в CSS: 157
   Конфлікти стилів: 51
   Потенційні дублікати: 43
 ======================================================

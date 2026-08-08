@@ -243,3 +243,51 @@
     stroke-linejoin: round;
 }
 
+/* Шапка картки повідомлення з рознесенням по краях */
+.message-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
+}
+
+/* Блок автора (аватар + ім'я) */
+.message-author-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Кнопка-іконка редагування у правому кутку шапки */
+.btn-icon-edit {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease-in-out;
+}
+
+.btn-icon-edit:hover {
+    color: var(--accent-primary);
+}
+
+.btn-icon-edit svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    stroke: currentColor;
+    stroke-width: 0.125rem;
+    fill: none;
+}
+
+/* Нижній блок дій для кнопок */
+.message-actions {
+    display: flex;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    flex-wrap: wrap;
+}
