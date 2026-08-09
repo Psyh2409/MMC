@@ -14,6 +14,9 @@
                 <p class="hero-description">Керуйте ролями, доступами та внутрішніми нотатками.</p>
             </div>
             <div class="hero-global-actions">
+                <!-- Посилання на панель модерації скарг (Тільки для ROLE_ADMIN) -->
+                <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                   th:href="@{/admin/reports}" class="btn-outline"><span class="hide-btn-icon">🚩 </span>Скарги та модерація</a>
                 <a th:href="@{/admin/articles}" class="btn-outline"><span class="hide-btn-icon">📝 </span>Статті</a>
                 <a th:href="@{/requests}" class="btn-outline"><span class="hide-btn-icon">📂 </span>Звернення</a>
             </div>

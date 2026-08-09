@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(title, mainContent, pageScripts)">
 <head>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+    <link rel="icon" type="image/svg+xml"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script>
@@ -37,7 +38,23 @@
 <body class="page-shell">
 
 <div th:replace="~{fragments/header :: header-fragment}"></div>
-
+<!-- Домінуюче критичне сповіщення -->
+<div id="criticalAlertModal" class="modal-backdrop is-hidden">
+    <div class="modal-card critical-alert-card">
+        <header class="modal-header">
+            <h3 id="criticalAlertTitle" class="heading-md text-danger">⚠️ Важливе сповіщення</h3>
+        </header>
+        <div class="modal-body mb-sm">
+            <p id="criticalAlertMessage" class="text-main">Текст повідомлення...</p>
+        </div>
+        <footer class="modal-footer">
+            <a id="criticalAlertLink" href="#" class="btn-primary btn-sm is-hidden">Перейти</a>
+            <button type="button" id="criticalAlertReadBtn" class="btn-outline btn-sm" onclick="closeCriticalModal()">
+                Зрозуміло
+            </button>
+        </footer>
+    </div>
+</div>
 <main class="page-main">
     <div th:replace="${mainContent}"></div>
 </main>
@@ -68,5 +85,6 @@
 <div th:replace="~{fragments/delete-comment-modal :: #deleteCommentModal}"></div>
 <!-- Загальні скрипти -->
 <script src="/js/report.js" defer></script>
+<script src="/js/notifications.js" defer></script>
 </body>
 </html>

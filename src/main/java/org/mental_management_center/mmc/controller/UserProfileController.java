@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.mental_management_center.mmc.dto.UserActivityDto;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.*;
 import org.mental_management_center.mmc.service.*;
@@ -314,7 +315,7 @@ public class UserProfileController {
     // Приватний метод для уникнення дублювання
     private void populateActivityModel(User user, int page, Model model) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<UserActivity> activityPageData = userActivityService.getUserActivitiesPaged(user, pageable);
+        Page<UserActivityDto> activityPageData = userActivityService.getUserActivitiesPaged(user, pageable);
 
         model.addAttribute("activities", activityPageData.getContent());
         model.addAttribute("currentActivityPage", activityPageData.getNumber());

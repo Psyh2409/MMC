@@ -1,0 +1,121 @@
+/* ==========================================================================
+   MMC DESIGN SYSTEM - NOTIFICATIONS COMPONENT (ATOMIC TOKEN EDITION)
+   ========================================================================== */
+
+/* 1. Контейнер дзвіночка у навігації */
+.notification-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-icon-notification {
+    background: transparent;
+    border: none;
+    color: var(--text-navigation);
+    cursor: pointer;
+    position: relative;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon-notification:hover {
+    color: var(--text-navigation-hover);
+}
+
+.icon-bell {
+    width: calc(var(--step) * 5.5);
+    height: calc(var(--step) * 5.5);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 0.125rem;
+}
+
+/* 2. Бейдж кількості непрочитаних сповіщень */
+.notification-badge {
+    position: absolute;
+    top: calc(var(--step) * 0.5);
+    right: calc(var(--step) * 0.5);
+    background-color: var(--status-error);
+    color: var(--text-on-accent);
+    font-size: calc(var(--step) * 2.75);
+    font-weight: bold;
+    border-radius: var(--radius-full);
+    padding: calc(var(--step) * 0.5) calc(var(--step) * 1.5);
+    min-width: calc(var(--step) * 4.5);
+    text-align: center;
+    line-height: 1;
+}
+
+.notification-badge.is-hidden {
+    display: none;
+}
+
+/* 3. Анімація привернення уваги (без жорстких кольорів) */
+.btn-icon-notification.has-unread .icon-bell {
+    animation: bell-ring 1.5s ease infinite;
+}
+
+@keyframes bell-ring {
+    0%, 100% { transform: rotate(0deg); }
+    20%, 60% { transform: rotate(15deg); }
+    40%, 80% { transform: rotate(-15deg); }
+}
+
+/* 4. Випадаючий список сповіщень */
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: calc(var(--step) * 80);
+    max-height: calc(var(--step) * 88);
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--space-xs) var(--space-md) var(--shadow-main);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.dropdown-header {
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    background-color: var(--bg-elevated);
+}
+
+/* 5. Домінуюча картка "Червоного повідомлення" від Адміністратора */
+.critical-alert-card {
+    border: 0.125rem solid var(--status-error);
+    box-shadow: 0 0 var(--space-md) var(--status-error-bg);
+}
+
+.text-danger {
+    color: var(--status-error);
+}
+
+/* Адаптивність для мобільних екранів */
+@media (max-width: 48rem) {
+    .notification-wrapper {
+        position: fixed;
+        bottom: var(--space-md);
+        right: var(--space-md);
+        z-index: 1050;
+        background-color: var(--bg-surface);
+        border: 0.0625rem solid var(--border-soft);
+        border-radius: var(--radius-full);
+        box-shadow: 0 var(--space-xs) var(--space-md) var(--shadow-main);
+        padding: var(--space-xs);
+    }
+
+    .notification-dropdown {
+        position: fixed;
+        top: auto;
+        bottom: calc(var(--space-md) * 3);
+        right: var(--space-sm);
+        left: var(--space-sm);
+        width: auto;
+        max-height: 50vh;
+    }
+}

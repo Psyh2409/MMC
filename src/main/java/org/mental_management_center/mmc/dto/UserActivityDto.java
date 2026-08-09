@@ -1,4 +1,4 @@
-package org.mental_management_center.mmc.model;
+package org.mental_management_center.mmc.dto;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserActivity {
+public class UserActivityDto {
 
     private UUID id;            // ID оригінального коментаря / поста / чату
     private ActivityType type;  // Тип активності (COMMENT, PUBLIC_POST, PUBLIC_CHAT, PRIVATE_CHAT, THERAPIST_NOTE)

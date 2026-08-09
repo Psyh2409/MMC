@@ -38,6 +38,29 @@
                     </a>
                 </span>
 
+                <!-- Дзвіночок сповіщень (Тільки для авторизованих користувачів) -->
+                <div th:if="${#authorization.expression('isAuthenticated()')}" class="notification-wrapper">
+                    <button type="button" id="notificationBell" class="btn-icon-notification" onclick="toggleNotificationDropdown()" title="Сповіщення">
+                        <svg viewBox="0 0 24 24" class="icon-bell">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+
+                        <!-- Бейдж кількості непрочитаних -->
+                        <span id="notificationBadge" class="notification-badge is-hidden">0</span>
+                    </button>
+
+                    <!-- Випадаючий список сповіщень -->
+                    <div id="notificationDropdown" class="notification-dropdown is-hidden">
+                        <header class="dropdown-header">
+                            <strong class="text-sm">Сповіщення</strong>
+                        </header>
+                        <div id="notificationList" class="dropdown-body">
+                            <p class="text-muted text-sm p-xs text-center">Немає нових сповіщень</p>
+                        </div>
+                    </div>
+                </div>
+
                 <button id="theme-toggle" class="btn-theme-toggle" title="Змінити тему" aria-label="Перемкнути тему">
                     🌙
                 </button>

@@ -2,8 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
@@ -20,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
-import java.security.PrivateKey;
 import java.security.Principal;
+import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 
@@ -34,6 +33,7 @@ public class TherapyRoomController {
     private final TherapyRoomService therapyRoomService;
     private final SharedWallService sharedWallService;
     private final TherapyAssignmentService therapyAssignmentService;
+    private final NotificationService notificationService;
 
     @Value("${app.jitsi.app-id}")
     private String appId;
@@ -46,12 +46,14 @@ public class TherapyRoomController {
                                  TherapyNoteService therapyNoteService,
                                  TherapyRoomService therapyRoomService,
                                  SharedWallService sharedWallService,
-                                 TherapyAssignmentService therapyAssignmentService) {
+                                 TherapyAssignmentService therapyAssignmentService,
+                                 NotificationService notificationService) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
         this.therapyRoomService = therapyRoomService;
         this.sharedWallService = sharedWallService;
         this.therapyAssignmentService = therapyAssignmentService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/room/{clientUuid}")
@@ -260,14 +262,27 @@ public class TherapyRoomController {
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
 
-        // Перевіряємо доступ через наш новий "Замок"
+        // Перевіряємо доступ через наш "Замок"
         if (!hasAccessToRoom(currentUser, clientUuid)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 Доступ заборонено
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         // Тільки терапевт може фізично "вмикати світло" в кімнаті
         if (currentUser.isTherapist()) {
             therapyRoomService.activateRoom(clientUuid);
+
+            // --- КРИТИЧНЕ СПОВІЩЕННЯ ДЛЯ КЛІЄНТА ---
+            // О оскільки userService.findById повертає User напряму, прибираємо .orElse(null)
+            User client = userService.findById(clientUuid);
+            if (client != null) {
+                notificationService.createNotification(
+                        client,
+                        "🩺 Запрошення на терапевтичну сесію",
+                        currentUser.getName() + " очікує на вас у терапевтичному кабінеті.",
+                        "/therapy/room/" + clientUuid,
+                        Notification.NotificationType.THERAPY_CALL
+                );
+            }
         }
 
         return ResponseEntity.ok().build();

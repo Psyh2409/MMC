@@ -3,6 +3,7 @@ package org.mental_management_center.mmc.service;
 //import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import org.mental_management_center.mmc.dto.UserActivityDto;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.CommentRepository;
@@ -30,8 +31,8 @@ public class UserActivityService {
 
     // readOnly = true підказує Hibernate, що ми нічого не змінюємо, це прискорює транзакцію
     @Transactional(readOnly = true)
-    public List<UserActivity> getUserActivities(User user) {
-        List<UserActivity> activities = new ArrayList<>();
+    public List<UserActivityDto> getUserActivities(User user) {
+        List<UserActivityDto> activities = new ArrayList<>();
 
         // 1. Збираємо КОМЕНТАРІ
         List<Comment> comments = commentRepository.findByAuthorOrderByCreatedAtDesc(user);
@@ -42,9 +43,9 @@ public class UserActivityService {
                     ? "/articles/" + comment.getArticle().getId() + "?commentId=" + comment.getId() + "#comment-" + comment.getId()
                     : "";
 
-            activities.add(UserActivity.builder()
+            activities.add(UserActivityDto.builder()
                     .id(comment.getId())
-                    .type(UserActivity.ActivityType.COMMENT)
+                    .type(UserActivityDto.ActivityType.COMMENT)
                     .typeLabel("Коментар до статті")
                     .title(articleTitle)
                     .content(comment.getContent()) // Якщо в майбутньому коментарі будуть шифруватись, тут викликатимемо decrypt
@@ -56,9 +57,9 @@ public class UserActivityService {
         // 2. Збираємо ПУБЛІЧНІ ПОСТИ
         List<PublicPost> posts = publicPostRepository.findByAuthorOrderByCreatedAtDesc(user);
         for (PublicPost post : posts) {
-            activities.add(UserActivity.builder()
+            activities.add(UserActivityDto.builder()
                     .id(post.getId())
-                    .type(UserActivity.ActivityType.PUBLIC_POST)
+                    .type(UserActivityDto.ActivityType.PUBLIC_POST)
                     .typeLabel("Допис у стрічці")
                     .title("Публічна стіна")
                     .content(post.getContent())
@@ -81,9 +82,9 @@ public class UserActivityService {
                     ? "/chat?tab=private&recipient=" + msg.getRecipientId() + anchor
                     : "/chat" + anchor;
 
-            activities.add(UserActivity.builder()
+            activities.add(UserActivityDto.builder()
                     .id(msg.getId())
-                    .type(isPrivate ? UserActivity.ActivityType.PRIVATE_CHAT : UserActivity.ActivityType.PUBLIC_CHAT)
+                    .type(isPrivate ? UserActivityDto.ActivityType.PRIVATE_CHAT : UserActivityDto.ActivityType.PUBLIC_CHAT)
                     .typeLabel(isPrivate ? "Приватне повідомлення" : "Повідомлення в загальному чаті")
                     .title(isPrivate ? "Приватний чат" : "Загальна кімната")
                     .content(msg.getContent())
@@ -98,9 +99,9 @@ public class UserActivityService {
             for (TherapyNote note : notes) {
                 String clientName = (note.getClient() != null) ? note.getClient().getName() : "Невідомий клієнт";
 
-                activities.add(UserActivity.builder()
+                activities.add(UserActivityDto.builder()
                         .id(note.getId())
-                        .type(UserActivity.ActivityType.THERAPIST_NOTE)
+                        .type(UserActivityDto.ActivityType.THERAPIST_NOTE)
                         .typeLabel("Нотатка терапевта")
                         .title("Сесія з: " + clientName)
                         .content(note.getContent())
@@ -111,21 +112,21 @@ public class UserActivityService {
         }
 
         // Фінальний штрих: сортуємо загальний масив за датою (від найновіших до найстаріших)
-        activities.sort(Comparator.comparing(UserActivity::getCreatedAt).reversed());
+        activities.sort(Comparator.comparing(UserActivityDto::getCreatedAt).reversed());
 
         return activities;
     }
 
-    public Page<UserActivity> getUserActivitiesPaged(User user, Pageable pageable) {
+    public Page<UserActivityDto> getUserActivitiesPaged(User user, Pageable pageable) {
         // Отримуємо повний відсортований список активностей
-        List<UserActivity> allActivities = getUserActivities(user);
+        List<UserActivityDto> allActivities = getUserActivities(user);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allActivities.size());
         // Захист від виходу за межі списку
         if (start > allActivities.size()) {
             return new PageImpl<>(List.of(), pageable, allActivities.size());
         }
-        List<UserActivity> pagedContent = allActivities.subList(start, end);
+        List<UserActivityDto> pagedContent = allActivities.subList(start, end);
         return new PageImpl<>(pagedContent, pageable, allActivities.size());
     }
 }

@@ -4,16 +4,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Article;
 import org.mental_management_center.mmc.model.Comment;
+import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.ArticleService;
+import org.mental_management_center.mmc.service.NotificationService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -25,6 +29,7 @@ public class CommentController {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ArticleService articleService;
+    private final NotificationService notificationService;
 
     // 1. Створення коментаря під статтею
     @Transactional
@@ -57,9 +62,40 @@ public class CommentController {
             commentRepository.findById(parentId).ifPresent(comment::setParentComment);
         }
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
-        return "redirect:/articles/" + id + "#comment-" + comment.getId();
+        // --- БЛОК СПОВІЩЕНЬ ---
+        User articleAuthor = article.getAuthor();
+
+        // 1. Сповіщення для автора статті (якщо коментує не він сам)
+        if (articleAuthor != null && !articleAuthor.getId().equals(author.getId())) {
+            notificationService.createNotification(
+                    articleAuthor,
+                    "Новий коментар до статті",
+                    author.getName() + " залишив(ла) коментар під вашою статтею «" + article.getTitle() + "»",
+                    "/articles/" + id + "#comment-" + savedComment.getId(),
+                    Notification.NotificationType.STANDARD
+            );
+        }
+
+        // 2. Сповіщення для автора батьківського коментаря (якщо це відповідь у гілці)
+        if (comment.getParentComment() != null) {
+            User parentCommentAuthor = comment.getParentComment().getAuthor();
+            if (parentCommentAuthor != null
+                    && !parentCommentAuthor.getId().equals(author.getId())
+                    && (articleAuthor == null || !parentCommentAuthor.getId().equals(articleAuthor.getId()))) {
+
+                notificationService.createNotification(
+                        parentCommentAuthor,
+                        "Відповідь на ваш коментар",
+                        author.getName() + " відповів(ла) на ваш коментар під статтею «" + article.getTitle() + "»",
+                        "/articles/" + id + "#comment-" + savedComment.getId(),
+                        Notification.NotificationType.STANDARD
+                );
+            }
+        }
+
+        return "redirect:/articles/" + id + "#comment-" + savedComment.getId();
     }
 
     // 2. Редагування коментаря (Тільки автор)
@@ -123,7 +159,6 @@ public class CommentController {
 
         UUID articleId = (comment.getArticle() != null) ? comment.getArticle().getId() : null;
 
-        // 3 суб'єкти
         boolean isCommenter = comment.getAuthor() != null && comment.getAuthor().getId().equals(currentUser.getId());
         boolean isAuthor = comment.getArticle() != null && comment.getArticle().getAuthor() != null
                 && comment.getArticle().getAuthor().getId().equals(currentUser.getId());
@@ -133,7 +168,6 @@ public class CommentController {
             throw new AccessDeniedException("Немає прав для видалення цього коментаря");
         }
 
-        // Встановлення відповідного прапорця
         if (isCommenter) {
             comment.setDeletedByCommenter(true);
             comment.setDeletionReason("Видалено коментатором");

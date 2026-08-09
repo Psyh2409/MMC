@@ -16,6 +16,7 @@
 
 /* 4. СКЛАДНІ ВУЗЛИ (Components) <-- ТУТ ЙОГО МІСЦЕ */
 @import "components/components.css"; /* Чат, Коментарі, Дерево вкладеності */
+@import "components/notifications.css"; /* Дзвіночок, Список та Червоне сповіщення */
 
 /* 5. УТИЛІТИ (Фінальні штрихи) — ВСТАВЛЯЙ СЮДИ */
 @import "components/utilities.css";

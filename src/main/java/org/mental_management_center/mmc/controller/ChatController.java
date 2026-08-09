@@ -1,12 +1,14 @@
 package org.mental_management_center.mmc.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.model.ChatMessage;
 import org.mental_management_center.mmc.model.MessageStatus;
+import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mental_management_center.mmc.service.NotificationService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,18 +28,17 @@ import java.util.UUID;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
 
     private static final UUID PUBLIC_CHAT_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-    @Autowired
-    private ChatMessageRepository chatMessageRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final ChatMessageRepository chatMessageRepository;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    // 1. ПУБЛІЧНИЙ ЧАТ
+    // 1. ПУБЛІЧНИЙ ЧАТ (із підтримкою сповіщень про відповіді)
     @MessageMapping("/chat.public")
     @SendTo("/topic/public")
     public ChatMessage processPublicMessage(@Payload ChatMessage chatMessage) {
@@ -50,11 +51,31 @@ public class ChatController {
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setSenderName(user.getName());
         chatMessage.setStatus(MessageStatus.DELIVERED);
-        chatMessage.setRecipientId(PUBLIC_CHAT_ID);// Поки залишаємо для зворотної сумісності фронту
+        chatMessage.setRecipientId(PUBLIC_CHAT_ID);
         chatMessage.setSenderAvatar(user.getAvatarFileName());
         chatMessage.setChatType(ChatMessage.ChatType.PUBLIC);
 
-        return chatMessageRepository.save(chatMessage);
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+
+        // --- БЛОК СПОВІЩЕНЬ ПРО ВІДПОВІДЬ У ПУБЛІЧНОМУ ЧАТІ ---
+        if (chatMessage.getParentId() != null) {
+            chatMessageRepository.findById(chatMessage.getParentId()).ifPresent(parentMsg -> {
+                userRepository.findById(parentMsg.getSenderId()).ifPresent(parentAuthor -> {
+                    // Перевіряємо: надсилаємо сповіщення, тільки якщо це не відповідь самому собі
+                    if (!parentAuthor.getId().equals(user.getId())) {
+                        notificationService.createNotification(
+                                parentAuthor,
+                                "Відповідь у публічному чаті",
+                                user.getName() + " відповів(ла) на ваше повідомлення",
+                                "/chat?tab=public",
+                                Notification.NotificationType.STANDARD
+                        );
+                    }
+                });
+            });
+        }
+
+        return savedMessage;
     }
 
     // 2. ПРИВАТНІ ПОВІДОМЛЕННЯ
@@ -90,6 +111,24 @@ public class ChatController {
                     "/queue/messages",
                     savedMessage
             );
+        }
+
+        // --- БЛОК СПОВІЩЕНЬ (ВСТАВЛЕНО В КІНЦІ МЕТОДУ) ---
+        UUID recipientId = chatMessage.getRecipientId();
+        // Перевіряємо: повідомлення існує, це не публічний чат і відправник не пише сам собі
+        if (recipientId != null
+                && !recipientId.equals(PUBLIC_CHAT_ID)
+                && !recipientId.equals(chatMessage.getSenderId())) {
+
+            userRepository.findById(recipientId).ifPresent(recipient -> {
+                notificationService.createNotification(
+                        recipient,
+                        "Нове повідомлення в чаті",
+                        chatMessage.getSenderName() + ": " + chatMessage.getContent(),
+                        "/chat?tab=private&recipient=" + chatMessage.getSenderId(),
+                        Notification.NotificationType.STANDARD
+                );
+            });
         }
     }
 
