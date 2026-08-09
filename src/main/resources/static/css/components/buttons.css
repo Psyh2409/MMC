@@ -324,3 +324,11 @@
     stroke-width: 0.125rem;
     fill: none;
 }
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-xs, 0.5rem);
+    margin-top: var(--space-xs, 0.5rem);
+}

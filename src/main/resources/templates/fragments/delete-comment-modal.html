@@ -1,0 +1,23 @@
+<div id="deleteCommentModal" class="modal-backdrop is-hidden">
+    <div class="modal-card">
+        <header class="modal-header">
+            <h3 class="heading-md">Видалення коментаря</h3>
+            <button type="button" class="btn-icon-close" onclick="closeDeleteCommentModal()">✕</button>
+        </header>
+
+        <form id="deleteCommentForm" action="" method="post" class="stack-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="form-group">
+                <label for="deletionReasonInput" class="form-label">Вкажіть причину видалення:</label>
+                <textarea id="deletionReasonInput" name="reason" class="form-control" rows="3"
+                          placeholder="Спам, порушення правил спільноти або за власним бажанням..." required></textarea>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn-outline btn-sm" onclick="closeDeleteCommentModal()">Скасувати</button>
+                <button type="submit" class="btn-primary btn-sm">Підтвердити видалення</button>
+            </footer>
+        </form>
+    </div>
+</div>

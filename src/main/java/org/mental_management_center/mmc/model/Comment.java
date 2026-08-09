@@ -53,11 +53,14 @@ public class Comment {
     @Builder.Default          // Твій білдер на місці
     private List<Comment> replies = new ArrayList<>();
 
-    @Column(name = "is_deleted_by_admin")
-    private boolean deletedByAdmin = false;
+    @Column(name = "is_deleted_by_admin", nullable = false)
+    private boolean isDeletedByAdmin = false;
 
-    @Column(name = "is_deleted_by_author")
-    private boolean deletedByAuthor = false;
+    @Column(name = "is_deleted_by_author", nullable = false)
+    private boolean isDeletedByAuthor = false; // Автор статті
+
+    @Column(name = "is_deleted_by_commenter", nullable = false)
+    private boolean isDeletedByCommenter = false; // Коментатор
 
     @Column(name = "deletion_reason")
     private String deletionReason;

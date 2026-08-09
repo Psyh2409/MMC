@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-reports-table
+      author: mmc-dev
+      changes:
+        - createTable:
+            tableName: reports
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: reporter_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_reports_reporter
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: target_type
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: report_type
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(32)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: resolved_at
+                  type: TIMESTAMP
+              - column:
+                  name: admin_comment
+                  type: VARCHAR(500)

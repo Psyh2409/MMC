@@ -466,13 +466,22 @@ function showMessage(message, targetId, chatType) {
         </button>
     ` : '';
 
-    // 3. SVG-іконка кошика у шапці: ТІЛЬКИ для ЧУЖИХ повідомлень І ТІЛЬКИ для Адміністратора
-    // Відображається ТІЛЬКИ у публічному чаті (chatType === 'public'), ТІЛЬКИ для чужих повідомлень (!isMe) та ТІЛЬКИ для Адміністратора
-        const headerDeleteSvgHtml = (!isMe && chatType === 'public' && typeof isAdmin !== 'undefined' && isAdmin) ? `
+    // 3. SVG-іконка кошика у шапці: ТІЛЬКИ для ЧУЖИХ повідомлень І ТІЛЬКИ для Адміністратора в публічному чаті
+    const headerDeleteSvgHtml = (!isMe && chatType === 'public' && typeof isAdmin !== 'undefined' && isAdmin) ? `
         <button type="button" class="btn-icon-delete" onclick="deleteMessage('${message.id}')" title="Видалити як адміністратор">
             <svg viewBox="0 0 24 24">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        </button>
+    ` : '';
+
+    // === ДОДАНО ТУТ: 3.1. SVG-іконка прапорця скарги (ТІЛЬКИ для ЧУЖИХ повідомлень) ===
+    const reportSvgHtml = !isMe ? `
+        <button type="button" class="btn-icon-delete" onclick="openReportModal('${message.id}', 'CHAT_MESSAGE')" title="Поскаржитися на повідомлення">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
             </svg>
         </button>
     ` : '';
@@ -516,9 +525,21 @@ function showMessage(message, targetId, chatType) {
         }
     }
 
-    const safeContent = escapeHtml(message.content);
+    // Перевірка на Soft Delete адміністратором
+        const isDeletedByAdmin = message.deletedByAdmin || message.isDeletedByAdmin;
+
+        // Якщо повідомлення видалено адміном — виводимо системну плашку, інакше — звичайний текст
+        const safeContent = isDeletedByAdmin
+            ? `<span class="text-muted font-italic">🚫 Повідомлення видалено адміністратором</span>`
+            : escapeHtml(message.content);
+
+        // Якщо повідомлення видалено, приховуємо кнопки дій (редагування, відповіді)
+        if (isDeletedByAdmin) {
+            actionsHtml = '';
+        }
 
     // 6. Фінальний HTML картки
+    // === ЗМІНЕНО ТУТ: у блок message-header-actions додано ${reportSvgHtml} ===
     messageElement.innerHTML = `
         <div class="message-header">
             <div class="message-author-info">
@@ -530,6 +551,7 @@ function showMessage(message, targetId, chatType) {
             <div class="message-header-actions">
                 ${editIconHtml}
                 ${headerDeleteSvgHtml}
+                ${reportSvgHtml}
             </div>
         </div>
 

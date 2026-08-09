@@ -62,5 +62,11 @@
     }
 </script>
 <th:block th:replace="${pageScripts} ?: ~{}"></th:block>
+<!-- Універсальне модальне вікно скарг -->
+<div th:replace="~{fragments/report-modal :: #reportModal}"></div>
+<!-- Модальні вікна -->
+<div th:replace="~{fragments/delete-comment-modal :: #deleteCommentModal}"></div>
+<!-- Загальні скрипти -->
+<script src="/js/report.js" defer></script>
 </body>
 </html>

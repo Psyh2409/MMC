@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-add-commenter-deleted-column
+      author: mmc-dev
+      changes:
+        - addColumn:
+            tableName: comments
+            columns:
+              - column:
+                  name: is_deleted_by_commenter
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

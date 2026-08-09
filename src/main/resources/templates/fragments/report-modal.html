@@ -1,0 +1,46 @@
+<div id="reportModal" class="modal-backdrop is-hidden">
+    <div class="modal-card">
+        <header class="modal-header">
+            <h3 class="heading-md">Поскаржитися на матеріал</h3>
+            <button type="button" class="btn-icon-close" onclick="closeReportModal()">✕</button>
+        </header>
+
+        <form id="reportForm" onsubmit="submitReport(event)" class="stack-form">
+            <input type="hidden" id="reportTargetId" name="targetId">
+            <input type="hidden" id="reportTargetType" name="targetType">
+
+            <div class="form-group">
+                <label class="form-label">Оберіть причину скарги:</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="reasonPreset" value="Спам або реклама" required checked>
+                        <span>Спам або небажана реклама</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="reasonPreset" value="Образи або мова ворожнечі">
+                        <span>Образи, агресія або мова ворожнечі</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="reasonPreset" value="Порушення конфіденційності">
+                        <span>Порушення приватності або розголошення даних</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="reasonPreset" value="CUSTOM">
+                        <span>Інша причина (вказати детальніше)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reportCustomReason" class="form-label">Додаткові деталі (необов'язково):</label>
+                <textarea id="reportCustomReason" name="customReason" class="form-control" rows="3"
+                          placeholder="Опишіть ситуацію детальніше..."></textarea>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn-outline btn-sm" onclick="closeReportModal()">Скасувати</button>
+                <button type="submit" class="btn-primary btn-sm">Надіслати скаргу</button>
+            </footer>
+        </form>
+    </div>
+</div>

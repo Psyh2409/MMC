@@ -1012,3 +1012,20 @@ margin-top: var(--space-md);
 .therapy-room-actions .btn-outline {
     flex: 1;
 }
+
+/* Прев'ю медіафайлів у панелі скарг */
+.report-media-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs, 0.5rem);
+    margin-top: 0.5rem;
+}
+
+.report-media-thumb {
+    max-width: 16rem;
+    max-height: 12rem;
+    border-radius: var(--radius-sm, 0.25rem);
+    border: 0.0625rem solid var(--border-color);
+    object-fit: cover;
+    display: block;
+}

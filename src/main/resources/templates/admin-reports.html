@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section.reports-management},
+      ~{::page-scripts}
+      )}">
+<head>
+    <title>Панель модерації скарг | Admin</title>
+</head>
+<body>
+<section class="standard-container standard-container-wide reports-management">
+    <header class="page-header mb-md">
+        <h1 class="page-title-accent">Панель модерації скарг</h1>
+        <p class="text-muted">Централізований журнал розгляду скарг та оскаржень користувачів.</p>
+    </header>
+
+    <div class="layout-stack">
+        <div th:if="${#lists.isEmpty(reports)}" class="card-primary p-md text-center">
+            <p class="text-muted">Активних скарг немає. Усі звернення опрацьовано!</p>
+        </div>
+
+        <div th:each="report : ${reports}" class="card-primary mb-sm p-sm">
+            <div class="message-header mb-xs">
+                <div>
+                    <span class="badge-accent" th:text="${report.reportType}">COMPLAINT</span>
+                    <strong class="ml-xs" th:text="${report.reporter != null ? report.reporter.name : 'Анонім'}">Заявник</strong>
+                    <small class="text-muted ml-xs" th:text="${#temporals.format(report.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                </div>
+                <span class="text-muted text-sm" th:text="'Тип: ' + ${report.targetType}">Target</span>
+            </div>
+
+            <div class="form-group mb-xs">
+                <label class="form-label">Причина скарги:</label>
+                <blockquote class="reply-quote" th:text="${report.reason}">Текст причини...</blockquote>
+            </div>
+
+            <div class="form-group mb-sm">
+                <label class="form-label">Вміст матеріалу, на який скаржаться:</label>
+                <div class="p-xs bg-surface border-radius-sm report-text-content"
+                     th:text="${previews.get(report.id) ?: '[Матеріал недоступний або видалений]'}">
+                    Текст матеріалу...
+                </div>
+            </div>
+
+            <div class="button-row">
+                <!-- Затвердити скаргу і видалити матеріал -->
+                <form th:action="@{/admin/reports/{id}/approve(id=${report.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn-primary btn-sm">Затвердити (Видалити)</button>
+                </form>
+
+                <!-- Відхилити скаргу -->
+                <form th:action="@{/admin/reports/{id}/reject(id=${report.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn-outline btn-sm">Відхилити скаргу</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Пагінація -->
+        <div th:if="${totalPages > 1}" class="button-row pagination-row mt-md">
+            <a th:if="${currentPage > 0}" th:href="@{/admin/reports(page=${currentPage - 1})}" class="btn-outline btn-sm">Попередня</a>
+            <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentPage} + 1) + ' з ' + ${totalPages}"></span>
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/admin/reports(page=${currentPage + 1})}" class="btn-outline btn-sm">Наступна</a>
+        </div>
+    </div>
+</section>
+
+<th:block th:fragment="page-scripts">
+    <script src="/js/report.js" defer></script>
+    <script src="/js/media-links.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.applyMediaFacades === 'function') {
+                window.applyMediaFacades();
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>

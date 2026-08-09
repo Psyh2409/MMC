@@ -17,46 +17,79 @@
     </div>
 
     <!-- Текст коментаря -->
-    <p th:id="'comment-text-' + ${comment.id}" th:text="${comment.content}" class="comment-text">Текст коментаря</p>
+    <!-- Вміст коментаря -->
+    <div class="comment-text">
+        <p th:if="${comment.deletedByAdmin}" class="text-muted font-italic mb-0">
+            🚫 Коментар видалено адміністратором
+        </p>
+        <p th:if="${comment.deletedByAuthor and !comment.deletedByAdmin}" class="text-muted font-italic mb-0">
+            🚫 Коментар видалено автором статті
+        </p>
+        <p th:if="${comment.deletedByCommenter and !comment.deletedByAdmin and !comment.deletedByAuthor}" class="text-muted font-italic mb-0">
+            🚫 Коментар видалено коментатором
+        </p>
 
-    <!-- Контейнери для динамічних форм -->
-    <div th:id="'reply-form-container-' + ${comment.id}" class="form-group"></div>
-    <div th:id="'edit-form-container-' + ${comment.id}" class="form-group"></div>
+        <p th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}"
+           th:text="${comment.content}"
+           class="mb-0">
+            Текст коментаря
+        </p>
+    </div>
 
-    <!-- Блок дій під коментарем -->
-    <div class="action-group mt-xs">
+    <!-- Блок дій (видимий тільки якщо не видалено жодною з трьох ролей) -->
+    <div th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}" class="comment-actions">
+
+        <!-- Відповісти -->
         <button th:if="${#authorization.expression('isAuthenticated()')}"
                 type="button"
-                class="btn-outline btn-sm reply-action-btn"
-                th:data-comment-id="${comment.id}">
+                class="btn-outline btn-sm btn-reply-action"
+                th:data-id="${comment.id}">
             Відповісти
         </button>
 
-        <!-- ВИПРАВЛЕНО: Використовуємо th:data-comment-id замість th:onclick -->
+        <!-- Редагувати (Тільки коментатор) -->
         <button th:if="${#authorization.expression('isAuthenticated()') and comment.author != null and comment.author.email == #authentication.name}"
                 type="button"
-                class="btn-outline btn-sm edit-comment-btn"
-                th:data-comment-id="${comment.id}">
+                class="btn-outline btn-sm btn-edit-action"
+                th:data-id="${comment.id}">
             Редагувати
         </button>
 
-        <!-- Кнопка Видалити -->
-        <form th:if="${#authorization.expression('isAuthenticated()') and (
-                (comment.author != null and comment.author.email == #authentication.name) or
-                (article.author != null and article.author.email == #authentication.name) or
-                #authorization.expression('hasRole(''ROLE_ADMIN'')')
-              )}"
-              th:action="@{/articles/comments/{commentId}/delete(commentId=${comment.id})}"
+        <!-- Поскаржитися (Тільки для не-адмінів на чужі коментарі) -->
+        <button th:if="${#authorization.expression('isAuthenticated()') and !#authorization.expression('hasRole(''ADMIN'')') and comment.author != null and comment.author.email != #authentication.name}"
+                type="button"
+                class="btn-outline btn-sm btn-report-action"
+                th:data-id="${comment.id}"
+                data-type="COMMENT">
+            Поскаржитися
+        </button>
+
+        <!-- Видалення власними руками (Commenter -> пряме видалення без модалки) -->
+        <form th:if="${#authorization.expression('isAuthenticated()') and comment.author != null and comment.author.email == #authentication.name}"
+              th:action="@{/articles/comments/{id}/delete(id=${comment.id})}"
               method="post"
               class="d-inline"
-              onsubmit="return confirm('Ви впевнені, що хочете видалити цей коментар?');">
+              onsubmit="return confirm('Видалити свій коментар?');">
             <button type="submit" class="btn-outline btn-sm">Видалити</button>
         </form>
+
+        <!-- Модерація чужого коментаря (Author / Admin -> через модалку) -->
+        <button th:if="${#authorization.expression('isAuthenticated()') and (comment.author == null or comment.author.email != #authentication.name) and (
+                (comment.article != null and comment.article.author != null and comment.article.author.email == #authentication.name) or
+                #authorization.expression('hasRole(''ADMIN'')')
+            )}"
+                type="button"
+                class="btn-outline btn-sm btn-delete-comment-action"
+                th:data-id="${comment.id}">
+            Модерувати (Видалити)
+        </button>
     </div>
 
-    <div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
-        <div th:each="reply : ${comment.replies}">
-            <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
-        </div>
+</div>
+
+<div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
+    <div th:each="reply : ${comment.replies}">
+        <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
     </div>
+</div>
 </div>
