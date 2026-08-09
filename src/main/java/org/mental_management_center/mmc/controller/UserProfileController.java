@@ -318,6 +318,7 @@ public class UserProfileController {
 
         model.addAttribute("activities", activityPageData.getContent());
         model.addAttribute("currentActivityPage", activityPageData.getNumber());
+        model.addAttribute("activityPage", activityPageData.getNumber()); // Додано аліас для зручності
         model.addAttribute("totalActivityPages", activityPageData.getTotalPages());
     }
 
@@ -335,11 +336,13 @@ public class UserProfileController {
         return "profile :: activityFeed";
     }
 
+    // Пряме видалення
     @Transactional
     @PostMapping("/profile/activity/delete")
     public String deleteActivity(
             @RequestParam UUID id,
             @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
             Principal principal) {
 
         if (principal == null) return "redirect:/login";
@@ -347,27 +350,28 @@ public class UserProfileController {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
         deleteUserActivityItem(id, type, currentUser);
 
-        return "redirect:/profile#activity-tab";
+        // Перенаправляємо на ту ж сторінку пагінації
+        return "redirect:/profile?activityPage=" + page + "#activity-tab";
     }
 
+    // Експорт на пошту та видалення
     @Transactional
     @PostMapping("/profile/activity/export-delete")
     public String exportAndDeleteActivity(
             @RequestParam UUID id,
             @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
             Principal principal) {
 
         if (principal == null) return "redirect:/login";
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
 
-        // 1. Надсилаємо лист з архівом
         exportActivityToEmail(id, type, currentUser);
-
-        // 2. Видаляємо запис
         deleteUserActivityItem(id, type, currentUser);
 
-        return "redirect:/profile#activity-tab";
+        // Перенаправляємо на ту ж сторінку пагінації
+        return "redirect:/profile?activityPage=" + page + "#activity-tab";
     }
 
     // --- ПРИВАТНІ ДОПОМІЖНІ МЕТОДИ ---

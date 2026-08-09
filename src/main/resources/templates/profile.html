@@ -298,6 +298,8 @@
                                           class="d-inline form-inline-reset">
                                         <input type="hidden" name="id" th:value="${activity.id}">
                                         <input type="hidden" name="type" th:value="${activity.type}">
+                                        <!-- Передаємо поточний номер сторінки -->
+                                        <input type="hidden" name="page" th:value="${currentActivityPage}">
                                         <button type="submit" class="btn-primary btn-sm">
                                             📥 На пошту та видалити
                                         </button>
@@ -308,6 +310,8 @@
                                           onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цей запис без збереження?');">
                                         <input type="hidden" name="id" th:value="${activity.id}">
                                         <input type="hidden" name="type" th:value="${activity.type}">
+                                        <!-- Передаємо поточний номер сторінки -->
+                                        <input type="hidden" name="page" th:value="${currentActivityPage}">
                                         <button type="submit" class="btn-primary btn-sm">
                                             🗑️ Видалити
                                         </button>
