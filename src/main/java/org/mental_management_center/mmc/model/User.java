@@ -120,6 +120,11 @@ public class User {
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<TherapyAssignment> assignmentsAsClient = new ArrayList<>();
 
+    // Прапорець згоди на отримання сповіщень на пошту
+    @Column(name = "email_notifications_enabled", nullable = false)
+    @Builder.Default
+    private boolean emailNotificationsEnabled = false;
+
     // Транзитний метод, який дістає дату з існуючого поля updatedAt
     @Transient
     public LocalDateTime getTherapyApprovalDate() {

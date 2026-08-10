@@ -11,6 +11,8 @@ public class ProfileUpdateForm {
 
     private String phone;
 
+    private boolean emailNotificationsEnabled;
+
     public String getName() {
         return name;
     }
@@ -25,5 +27,13 @@ public class ProfileUpdateForm {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public boolean isEmailNotificationsEnabled() {
+        return emailNotificationsEnabled;
+    }
+
+    public void setEmailNotificationsEnabled(boolean emailNotificationsEnabled) {
+        this.emailNotificationsEnabled = emailNotificationsEnabled;
     }
 }

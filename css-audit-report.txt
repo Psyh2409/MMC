@@ -2,10 +2,10 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Mon Aug 10 19:34:02 EEST 2026
+Дата: Mon Aug 10 22:32:37 EEST 2026
 ======================================================
 
-❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 105:
+❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 107:
   - Клас [article-cta-subtitle] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
@@ -25,6 +25,7 @@
   - Клас [cancel-edit-btn] є в HTML [therapist-client-notes.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-compact] є в HTML [edebo-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [card-secondary] є в HTML [therapist-client-notes.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [checkbox-label] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comment-login-prompt] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comment-meta] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comment-text] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
@@ -37,6 +38,7 @@
   - Клас [danger-zone] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [delete-icon] є в HTML [therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [font-italic] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [form-checkbox] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-control] є в HTML [report-modal.html, delete-comment-modal.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-input-label] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-text-muted] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
@@ -357,14 +359,14 @@
   - Клас [is-hidden] використовується в багатьох HTML файлах (10): [header.html, therapist-public.html, therapist-requests.html, requests.html, report-modal.html, public-wall-components.html, delete-comment-modal.html, base.html, profile.html, admin-users.html]
   - Клас [issue-title] використовується в багатьох HTML файлах (8): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, 403.html, closeness-crisis.html, restore-resource.html, dialogue.html]
   - Клас [heading-md] використовується в багатьох HTML файлах (7): [therapist-public.html, therapist-client-notes.html, therapist-public-wall.html, report-modal.html, delete-comment-modal.html, base.html, profile.html]
-  - Клас [form-group] використовується в багатьох HTML файлах (7): [article-form.html, edebo-form.html, report-modal.html, admin-reports.html, article.html, delete-comment-modal.html, login.html]
+  - Клас [form-group] використовується в багатьох HTML файлах (8): [article-form.html, edebo-form.html, report-modal.html, admin-reports.html, article.html, delete-comment-modal.html, profile.html, login.html]
   - Клас [text-muted] використовується в багатьох HTML файлах (19): [about.html, comment-tree.html, specialists.html, article-components.html, therapist-client-notes.html, header-footer.html, public-wall-components.html, article.html, profile.html, header.html, therapist-public.html, therapist-requests.html, therapist-public-wall.html, journal-form.html, admin-reports.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-cta] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
   - Клас [button-row] використовується в багатьох HTML файлах (10): [therapist-client-notes.html, chat.html, journal-form.html, 403.html, public-wall-components.html, admin-reports.html, article.html, profile.html, shared-wall-form.html, error.html]
   - Клас [contact-intro-title] використовується в багатьох HTML файлах (6): [forgot-password.html, reset-password.html, register.html, contact.html, profile.html, login.html]
   - Клас [stack-form] використовується в багатьох HTML файлах (16): [edebo-form.html, reset-password.html, therapist-client-notes.html, report-modal.html, contact.html, public-wall-components.html, profile.html, login.html, forgot-password.html, therapist-requests.html, forms.html, journal-form.html, register.html, delete-comment-modal.html, shared-wall-form.html, therapist-dashboard.html]
   - Клас [mt-sm] використовується в багатьох HTML файлах (11): [about.html, therapist-public.html, edebo-form.html, specialists.html, therapist-client-notes.html, 403.html, public-wall-components.html, profile.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
-  - Клас [form-label] використовується в багатьох HTML файлах (11): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, report-modal.html, register.html, contact.html, admin-reports.html, delete-comment-modal.html, login.html]
+  - Клас [form-label] використовується в багатьох HTML файлах (12): [forgot-password.html, edebo-form.html, reset-password.html, therapist-requests.html, forms.html, report-modal.html, register.html, contact.html, admin-reports.html, delete-comment-modal.html, profile.html, login.html]
   - Клас [status-message] використовується в багатьох HTML файлах (10): [forgot-password.html, therapist-public.html, edebo-form.html, reset-password.html, register.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
   - Клас [status-success] використовується в багатьох HTML файлах (8): [forgot-password.html, therapist-public.html, edebo-form.html, contact.html, profile.html, therapist-dashboard.html, login.html, admin-users.html]
   - Клас [btn-sm] використовується в багатьох HTML файлах (15): [comment-tree.html, report-modal.html, public-wall-components.html, article.html, base.html, profile.html, therapy-room.html, therapist-requests.html, requests.html, journal-form.html, admin-reports.html, delete-comment-modal.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
@@ -384,8 +386,8 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 563
-  Класи-пустишки в HTML: 105
+  Всього знайдено класів: 565
+  Класи-пустишки в HTML: 107
   Мертві стилі в CSS: 163
   Конфлікти стилів: 57
   Потенційні дублікати: 45

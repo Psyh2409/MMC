@@ -247,4 +247,22 @@ public class EmailService {
             throw new RuntimeException("Помилка SMTP при відправці архіву: " + e.getMessage(), e);
         }
     }
+
+    public void sendNotificationEmail(String toEmail, String title, String message, String targetUrl) {
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(toEmail);
+            mailMessage.setSubject("MMC | " + title);
+
+            String fullMessage = message;
+            if (targetUrl != null && !targetUrl.isBlank()) {
+                fullMessage += "\n\nПерейти до перегляду: " + publicBaseUrl + targetUrl;
+            }
+            mailMessage.setText(fullMessage);
+
+            mailSender.send(mailMessage);
+        } catch (Exception e) {
+            logger.error("Помилка надсилання сповіщення на email {}: {}", toEmail, e.getMessage());
+        }
+    }
 }

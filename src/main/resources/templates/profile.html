@@ -57,6 +57,7 @@
                 <div class="ptsr-mode-container">
                     <button type="button" id="ptsr-link" class="btn-primary">Монохромна тема</button>
                 </div>
+
             </div>
 
             <div th:replace="~{fragments/edebo-form :: edeboFormFragment}"></div>
@@ -71,6 +72,19 @@
                     <div class="form-field">
                         <label class="form-input-label">Email (Логін)</label>
                         <input type="email" th:value="${user.email}" class="form-input-readonly" readonly disabled>
+                    </div>
+
+                    <!-- Чекбокс згоди на Email-сповіщення -->
+                    <div class="form-group mt-sm">
+                        <label class="form-label checkbox-label">
+                            <input type="checkbox"
+                                   th:field="*{emailNotificationsEnabled}"
+                                   class="form-checkbox" />
+                            <span>Отримувати сповіщення на електронну пошту (після вибору натисніть "Зберегти")</span>
+                        </label>
+                        <small class="helper-text text-muted">
+                            Дублювати важливі сповіщення (відповіді на коментарі, нові повідомлення та запрошення на сесії) на ваш Email.
+                        </small>
                     </div>
 
                     <div class="form-field">

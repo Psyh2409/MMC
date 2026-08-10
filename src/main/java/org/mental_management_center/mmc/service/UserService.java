@@ -1,13 +1,12 @@
 package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
+import org.mental_management_center.mmc.model.RoleBit;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.RoleBit; // Наш новий енам
 import org.mental_management_center.mmc.model.VerificationToken;
 import org.mental_management_center.mmc.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 
 @SuppressWarnings("null")
 @Service
@@ -216,10 +215,11 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProfileDetails(String email, String newName, String newPhone) {
+    public void updateProfileDetails(String email, String newName, String newPhone, boolean emailNotificationsEnabled) {
         User user = userRepository.findByEmail(email).orElseThrow();
         user.setName(newName);
-        user.setPhone(newPhone); // 🎯 Зберігаємо телефон
+        user.setPhone(newPhone);
+        user.setEmailNotificationsEnabled(emailNotificationsEnabled);
         userRepository.save(user);
     }
 

@@ -86,6 +86,8 @@ public class UserProfileController {
                 ProfileUpdateForm profileUpdateForm = new ProfileUpdateForm();
                 profileUpdateForm.setName(user.getName());
                 profileUpdateForm.setPhone(user.getPhone());
+                // 🎯 ФІКС: Зчитуємо прапорець з бази даних
+                profileUpdateForm.setEmailNotificationsEnabled(user.isEmailNotificationsEnabled());
                 model.addAttribute("profileUpdateForm", profileUpdateForm);
             }
 
@@ -175,13 +177,19 @@ public class UserProfileController {
         if (result.hasErrors()) return "profile";
 
         try {
-            userService.updateProfileDetails(principal.getName(), profileUpdateForm.getName(), profileUpdateForm.getPhone());
+            userService.updateProfileDetails(
+                    principal.getName(),
+                    profileUpdateForm.getName(),
+                    profileUpdateForm.getPhone(),
+                    profileUpdateForm.isEmailNotificationsEnabled());
 
             userService.findByEmail(principal.getName()).ifPresent(user -> {
                 model.addAttribute("user", user);
                 ProfileUpdateForm refreshedForm = new ProfileUpdateForm();
                 refreshedForm.setName(user.getName());
                 refreshedForm.setPhone(user.getPhone());
+                // 🎯 ФІКС: Оновлюємо форму актуальним станом з бази
+                refreshedForm.setEmailNotificationsEnabled(user.isEmailNotificationsEnabled());
                 model.addAttribute("profileUpdateForm", refreshedForm);
             });
             model.addAttribute("profileSuccess", "Профіль успішно оновлено.");

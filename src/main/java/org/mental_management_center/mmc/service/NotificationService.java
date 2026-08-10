@@ -18,6 +18,7 @@ import java.util.UUID;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final EmailService emailService;
 
     @Transactional
     public void createNotification(User recipient, String title, String message, String targetUrl, Notification.NotificationType type) {
@@ -31,6 +32,12 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
+
+        // Якщо користувач дав згоду — дублюємо на Email через ендпоінт автогасіння
+        if (recipient.isEmailNotificationsEnabled()) {
+            String redirectUrl = "/api/notifications/open/" + notification.getId();
+            emailService.sendNotificationEmail(recipient.getEmail(), title, message, redirectUrl);
+        }
     }
 
     @Transactional(readOnly = true)

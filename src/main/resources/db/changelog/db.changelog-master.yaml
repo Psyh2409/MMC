@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/005-add-commenter-deleted-column.yaml
   - include:
       file: db/changelog/006-create-notifications-table.yaml
+  - include:
+      file: db/changelog/007-add-email-notifications-column.yaml
