@@ -38,7 +38,7 @@ public class ChatController {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    // 1. ПУБЛІЧНИЙ ЧАТ (із підтримкою сповіщень про відповіді)
+    // 1. ПУБЛІЧНИЙ ЧАТ (з відображенням тексту відповіді у сповіщенні)
     @MessageMapping("/chat.public")
     @SendTo("/topic/public")
     public ChatMessage processPublicMessage(@Payload ChatMessage chatMessage) {
@@ -61,12 +61,12 @@ public class ChatController {
         if (chatMessage.getParentId() != null) {
             chatMessageRepository.findById(chatMessage.getParentId()).ifPresent(parentMsg -> {
                 userRepository.findById(parentMsg.getSenderId()).ifPresent(parentAuthor -> {
-                    // Перевіряємо: надсилаємо сповіщення, тільки якщо це не відповідь самому собі
+                    // Перевіряємо: сповіщаємо, тільки якщо це не відповідь самому собі
                     if (!parentAuthor.getId().equals(user.getId())) {
                         notificationService.createNotification(
                                 parentAuthor,
                                 "Відповідь у публічному чаті",
-                                user.getName() + " відповів(ла) на ваше повідомлення",
+                                user.getName() + ": " + chatMessage.getContent(), // Додано текст повідомлення
                                 "/chat?tab=public",
                                 Notification.NotificationType.STANDARD
                         );
@@ -78,7 +78,7 @@ public class ChatController {
         return savedMessage;
     }
 
-    // 2. ПРИВАТНІ ПОВІДОМЛЕННЯ
+    // 2. ПРИВАТНІ ПОВІДОМЛЕННЯ (з уточненням типу чату в заголовку)
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage, Principal principal) {
         User user = userRepository.findById(chatMessage.getSenderId()).orElse(null);
@@ -113,9 +113,8 @@ public class ChatController {
             );
         }
 
-        // --- БЛОК СПОВІЩЕНЬ (ВСТАВЛЕНО В КІНЦІ МЕТОДУ) ---
+        // --- БЛОК СПОВІЩЕНЬ ПРО ПРИВАТНЕ ПОВІДОМЛЕННЯ ---
         UUID recipientId = chatMessage.getRecipientId();
-        // Перевіряємо: повідомлення існує, це не публічний чат і відправник не пише сам собі
         if (recipientId != null
                 && !recipientId.equals(PUBLIC_CHAT_ID)
                 && !recipientId.equals(chatMessage.getSenderId())) {
@@ -123,7 +122,7 @@ public class ChatController {
             userRepository.findById(recipientId).ifPresent(recipient -> {
                 notificationService.createNotification(
                         recipient,
-                        "Нове повідомлення в чаті",
+                        "Відповідь в приватному чаті", // Уточнено заголовок
                         chatMessage.getSenderName() + ": " + chatMessage.getContent(),
                         "/chat?tab=private&recipient=" + chatMessage.getSenderId(),
                         Notification.NotificationType.STANDARD

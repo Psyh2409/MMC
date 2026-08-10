@@ -1,6 +1,6 @@
 let currentCriticalNotificationId = null;
 
-// Фонове опитування бекенду (раз на 12 секунд)
+// Фонове опитування бекенду (кожні 12 секунд)
 function pollNotifications() {
     fetch('/api/notifications/summary')
         .then(response => {
@@ -12,17 +12,15 @@ function pollNotifications() {
 
             updateBellBadge(summary.unreadCount);
 
-            // Перевірка на критичні сповіщення
             if (summary.criticalAdminAlert) {
-                showCriticalModal(summary.criticalAdminAlert, '⚠️ Червоне повідомлення від Адміністрації');
+                showCriticalModal(summary.criticalAdminAlert, 'Важливе сповіщення від Адміністратора');
             } else if (summary.criticalTherapyCall) {
-                showCriticalModal(summary.criticalTherapyCall, '🩺 Запрошення на терапевтичну сесію');
+                showCriticalModal(summary.criticalTherapyCall, 'Запрошення на терапевтичну сесію');
             }
         })
         .catch(err => console.debug('[Notifications] Опитування активне...'));
 }
 
-// Оновлення лічильника на дзвіночку
 function updateBellBadge(unreadCount) {
     const badge = document.getElementById('notificationBadge');
     const bellBtn = document.getElementById('notificationBell');
@@ -39,59 +37,30 @@ function updateBellBadge(unreadCount) {
     }
 }
 
-// Відображення домінуючої критичної модалки
-function showCriticalModal(item, defaultTitle) {
-    const modal = document.getElementById('criticalAlertModal');
-    const titleEl = document.getElementById('criticalAlertTitle');
-    const messageEl = document.getElementById('criticalAlertMessage');
-    const linkEl = document.getElementById('criticalAlertLink');
-
-    if (!modal) return;
-
-    currentCriticalNotificationId = item.id;
-    titleEl.textContent = item.title || defaultTitle;
-    messageEl.textContent = item.message;
-
-    if (item.targetUrl) {
-        linkEl.href = item.targetUrl;
-        linkEl.classList.remove('is-hidden');
-    } else {
-        linkEl.classList.add('is-hidden');
-    }
-
-    modal.classList.remove('is-hidden');
-}
-
-// Закриття критичної модалки з повагою до прочитання
-function closeCriticalModal() {
-    const modal = document.getElementById('criticalAlertModal');
-    if (modal) {
-        modal.classList.add('is-hidden');
-    }
-
-    if (currentCriticalNotificationId) {
-        const csrfInput = document.querySelector('input[name="_csrf"]');
-        const csrfToken = csrfInput ? csrfInput.value : '';
-
-        fetch(`/api/notifications/${currentCriticalNotificationId}/read`, {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': csrfToken }
-        });
-    }
-}
-
-// Перемикач випадаючого списку
+// При відкритті списку одразу ховаємо бейдж
 function toggleNotificationDropdown() {
     const dropdown = document.getElementById('notificationDropdown');
+    const badge = document.getElementById('notificationBadge');
+    const bellBtn = document.getElementById('notificationBell');
+
     if (!dropdown) return;
 
     const isHidden = dropdown.classList.toggle('is-hidden');
     if (!isHidden) {
+        if (badge) badge.classList.add('is-hidden');
+        if (bellBtn) bellBtn.classList.remove('has-unread');
         loadNotificationsFeed();
     }
 }
 
-// Завантаження списку сповіщень при відкритті
+// Обрізання тексту до перших 5 слів
+function getSnippet(text) {
+    if (!text) return '';
+    const words = text.trim().split(/\s+/);
+    if (words.length <= 5) return text;
+    return words.slice(0, 5).join(' ') + '...';
+}
+
 function loadNotificationsFeed() {
     const listContainer = document.getElementById('notificationList');
     if (!listContainer) return;
@@ -105,16 +74,111 @@ function loadNotificationsFeed() {
             }
 
             listContainer.innerHTML = slice.content.map(item => `
-                <div class="p-xs border-bottom ${item.isRead ? 'text-muted' : 'font-bold'}">
-                    <small class="text-muted">${item.title}</small>
-                    <p class="text-sm mb-0">${item.message}</p>
-                </div>
+                <a href="${item.targetUrl || '#'}"
+                   class="notification-item-link ${item.isRead ? 'text-muted' : 'font-bold'}"
+                   onclick="handleNotificationClick(event, '${item.id}', '${item.targetUrl}')">
+                    <div class="text-xs text-muted mb-xs">${item.title}</div>
+                    <div class="text-sm">${getSnippet(item.message)}</div>
+                </a>
             `).join('');
         });
 }
 
-// Запуск фонового опитування при завантаженні сторінки
+// Перехід по сповіщенню з маркуванням як прочитане
+function handleNotificationClick(event, id, targetUrl) {
+    event.preventDefault();
+    const csrfToken = getCsrfToken();
+
+    fetch(`/api/notifications/${id}/read`, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrfToken }
+    }).finally(() => {
+        if (targetUrl && targetUrl !== 'null' && targetUrl !== '#') {
+            window.location.href = targetUrl;
+        } else {
+            loadNotificationsFeed();
+        }
+    });
+}
+
+function showCriticalModal(item, defaultTitle) {
+    const modal = document.getElementById('criticalAlertModal');
+    const titleEl = document.getElementById('criticalAlertTitle');
+    const messageEl = document.getElementById('criticalAlertMessage');
+    const linkEl = document.getElementById('criticalAlertLink');
+
+    if (!modal) return;
+
+    currentCriticalNotificationId = item.id;
+    if (titleEl) titleEl.textContent = item.title || defaultTitle;
+    if (messageEl) messageEl.textContent = item.message;
+
+    if (linkEl && item.targetUrl) {
+        linkEl.onclick = (e) => {
+            e.preventDefault();
+            closeCriticalModalAndNavigate(item.targetUrl);
+        };
+        linkEl.classList.remove('is-hidden');
+    }
+
+    modal.classList.remove('is-hidden');
+}
+
+function closeCriticalModalAndNavigate(targetUrl) {
+    closeCriticalModal();
+    if (targetUrl) {
+        window.location.href = targetUrl;
+    }
+}
+
+function closeCriticalModal() {
+    const modal = document.getElementById('criticalAlertModal');
+    if (modal) {
+        modal.classList.add('is-hidden');
+    }
+
+    if (currentCriticalNotificationId) {
+        const csrfToken = getCsrfToken();
+        fetch(`/api/notifications/${currentCriticalNotificationId}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        });
+        currentCriticalNotificationId = null;
+    }
+}
+
+function getCsrfToken() {
+    const csrfMeta = document.querySelector('meta[name="_csrf"]');
+    return csrfMeta ? csrfMeta.getAttribute('content') : '';
+}
+
+// Автоматичне закриття вікна при кліку в будь-якій точці екрана поза сповіщеннями
+document.addEventListener('click', (event) => {
+    const wrapper = document.querySelector('.notification-wrapper');
+    const dropdown = document.getElementById('notificationDropdown');
+
+    if (dropdown && !dropdown.classList.contains('is-hidden')) {
+        // Якщо клік відбувся поза блоком .notification-wrapper — ховаємо список
+        if (wrapper && !wrapper.contains(event.target)) {
+            dropdown.classList.add('is-hidden');
+        }
+    }
+});
+
+// Автоматичне закриття при відведенні курсора миші за межі випадаючого вікна
 document.addEventListener('DOMContentLoaded', () => {
+    const wrapper = document.querySelector('.notification-wrapper');
+    const dropdown = document.getElementById('notificationDropdown');
+
+    if (wrapper) {
+        wrapper.addEventListener('mouseleave', () => {
+            if (dropdown && !dropdown.classList.contains('is-hidden')) {
+                dropdown.classList.add('is-hidden');
+            }
+        });
+    }
+
+    // Фонове опитування бекенду
     pollNotifications();
-    setInterval(pollNotifications, 12000); // Опитування кожні 12 секунд
+    setInterval(pollNotifications, 12000);
 });

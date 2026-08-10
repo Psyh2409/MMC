@@ -9,41 +9,46 @@
     align-items: center;
 }
 
+/* 1. Контейнер дзвіночка у навігації */
 .btn-icon-notification {
     background: transparent;
     border: none;
-    color: var(--text-navigation);
+    color: var(--text-primary); /* Основний контрастний колір теми */
     cursor: pointer;
     position: relative;
     padding: var(--space-xs);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
+/* Чіткий Hover: дзвоник підсвічується акцентним кольором теми */
 .btn-icon-notification:hover {
-    color: var(--text-navigation-hover);
+    color: var(--text-secondary); /* Акцентний токен із variables.css */
+    transform: scale(1.08);
 }
 
 .icon-bell {
     width: calc(var(--step) * 5.5);
     height: calc(var(--step) * 5.5);
     fill: none;
-    stroke: currentColor;
+    stroke: currentColor; /* Завжди успадковує color від кнопки */
     stroke-width: 0.125rem;
 }
 
-/* 2. Бейдж кількості непрочитаних сповіщень */
+/* 2. Бейдж кількості непрочитаних сповіщень (У кольорах теми) */
 .notification-badge {
     position: absolute;
     top: calc(var(--step) * 0.5);
     right: calc(var(--step) * 0.5);
-    background-color: var(--status-error);
-    color: var(--text-on-accent);
+    background-color: var(--bg-surface-elevated, var(--border-soft));
+    color: var(--text-primary);
+    border: 0.0625rem solid var(--border-soft);
     font-size: calc(var(--step) * 2.75);
     font-weight: bold;
     border-radius: var(--radius-full);
-    padding: calc(var(--step) * 0.5) calc(var(--step) * 1.5);
+    padding: calc(var(--step) * 0.25) calc(var(--step) * 1.25);
     min-width: calc(var(--step) * 4.5);
     text-align: center;
     line-height: 1;
@@ -53,7 +58,7 @@
     display: none;
 }
 
-/* 3. Анімація привернення уваги (без жорстких кольорів) */
+/* 3. Анімація м'якого дриґання дзвіночка */
 .btn-icon-notification.has-unread .icon-bell {
     animation: bell-ring 1.5s ease infinite;
 }
@@ -64,7 +69,7 @@
     40%, 80% { transform: rotate(-15deg); }
 }
 
-/* 4. Випадаючий список сповіщень */
+/* 4. Випадаючий список сповіщень (Десктоп) */
 .notification-dropdown {
     position: absolute;
     top: 100%;
@@ -77,30 +82,66 @@
     box-shadow: 0 var(--space-xs) var(--space-md) var(--shadow-main);
     z-index: 1000;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
+/* Шапка випадаючого вікна з лівим відступом */
 .dropdown-header {
-    padding: var(--space-xs) var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
     border-bottom: 0.0625rem solid var(--border-soft);
-    background-color: var(--bg-elevated);
+    background-color: var(--bg-surface-elevated, var(--border-soft));
+    box-sizing: border-box;
 }
 
-/* 5. Домінуюча картка "Червоного повідомлення" від Адміністратора */
+.dropdown-body {
+    padding: var(--space-xs) var(--space-sm);
+    box-sizing: border-box;
+}
+
+.dropdown-body p {
+    padding: var(--space-sm) var(--space-md);
+    margin: 0;
+}
+
+/* Елемент списку сповіщень з відступом */
+.notification-item-link {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 0.0625rem solid var(--border-soft);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.notification-item-link:hover {
+    background-color: var(--bg-surface-elevated, var(--border-soft));
+}
+
+/* 5. Домінуюча картка виклику на сесію (Пульсація) */
 .critical-alert-card {
-    border: 0.125rem solid var(--status-error);
-    box-shadow: 0 0 var(--space-md) var(--status-error-bg);
+    border: 0.125rem solid var(--border-soft);
+    box-shadow: 0 0 var(--space-md) var(--shadow-main);
+    animation: pulse-wave 2s infinite ease-in-out;
 }
 
-.text-danger {
-    color: var(--status-error);
+@keyframes pulse-wave {
+    0%, 100% {
+        box-shadow: 0 0 var(--space-xs) var(--shadow-main);
+    }
+    50% {
+        box-shadow: 0 0 var(--space-lg) var(--border-soft);
+    }
 }
 
-/* Адаптивність для мобільних екранів */
+/* 6. Мобільна адаптація (Верхній правий кут під шапкою) */
 @media (max-width: 48rem) {
+    /* Опускаємо дзвоник на 1rem нижче хедера */
     .notification-wrapper {
         position: fixed;
-        bottom: var(--space-md);
+        top: calc(var(--step) * 14 + 1rem);
         right: var(--space-md);
+        bottom: auto;
         z-index: 1050;
         background-color: var(--bg-surface);
         border: 0.0625rem solid var(--border-soft);
@@ -109,13 +150,15 @@
         padding: var(--space-xs);
     }
 
+    /* Випадаюче вікно зсуваємо синхронно з дзвоником */
     .notification-dropdown {
         position: fixed;
-        top: auto;
-        bottom: calc(var(--space-md) * 3);
-        right: var(--space-sm);
-        left: var(--space-sm);
+        top: calc(var(--step) * 26 + 1rem);
+        bottom: auto;
+        left: var(--space-md);
+        right: var(--space-md);
         width: auto;
-        max-height: 50vh;
+        max-height: 55vh;
+        box-sizing: border-box;
     }
 }

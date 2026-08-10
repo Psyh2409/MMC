@@ -2,13 +2,11 @@ package org.mental_management_center.mmc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.SharedWallEntry;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.SharedWallRepository;
-import org.mental_management_center.mmc.service.FileStorageService;
-import org.mental_management_center.mmc.service.JournalCryptoService;
-import org.mental_management_center.mmc.service.SharedWallService;
-import org.mental_management_center.mmc.service.UserService;
+import org.mental_management_center.mmc.service.*;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
@@ -39,8 +37,9 @@ public class SharedWallController {
     private final FileStorageService fileStorageService;
     private final JournalCryptoService cryptoService;
     private final SharedWallRepository sharedWallRepository;
+    private final NotificationService notificationService;
 
-    // 1. Збереження повідомлення
+    // 1. Збереження повідомлення (з повним збереженням AES-шифрування та додаванням сповіщень)
     @PostMapping("/add")
     @ResponseBody
     public ResponseEntity<Void> addWallEntry(@PathVariable UUID roomId,
@@ -77,10 +76,44 @@ public class SharedWallController {
             if (hasText) {
                 encryptedText = cryptoService.encryptAndCompress(content);
             } else {
-                encryptedText = cryptoService.encryptAndCompress(hasText ? content.trim() : "[MEDIA_ONLY]");
+                encryptedText = cryptoService.encryptAndCompress("[MEDIA_ONLY]");
             }
 
+            // 1. Збереження в базі даних (оригінальний алгоритм без змін)
             sharedWallService.saveMessage(roomId, currentUser.getId(), encryptedText, mediaFileName, encryptedHead);
+
+            // 2. БЛОК СПОВІЩЕНЬ ДЛЯ ПАРТНЕРА ПО ТЕРАПІЇ
+            try {
+                User roomClient = userService.findById(roomId);
+                User recipient = null;
+
+                if (currentUser.getId().equals(roomId)) {
+                    // Клієнт додає запис -> сповіщаємо його терапевта
+                    recipient = roomClient.getTherapist();
+                } else if (currentUser.isTherapist()) {
+                    // Терапевт додає запис -> сповіщаємо клієнта кабінету
+                    recipient = roomClient;
+                }
+
+                if (recipient != null && !recipient.getId().equals(currentUser.getId())) {
+                    String messagePreview = hasText
+                            ? currentUser.getName() + ": " + content.trim()
+                            : currentUser.getName() + " додав(ла) медіафайл на стіну";
+
+                    notificationService.createNotification(
+                            recipient,
+                            "Нове повідомлення на Спільній стіні",
+                            messagePreview,
+                            "/therapy/room/" + roomId,
+                            Notification.NotificationType.STANDARD
+                    );
+                }
+            } catch (Exception notifEx) {
+                log.error("Помилка надсилання сповіщення для стіни: {}", notifEx.getMessage());
+                // Вкладений try-catch гарантує, що якщо сповіщення не створиться,
+                // основне збереження поста не скасується
+            }
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Помилка збереження запису на стіні: {}", e.getMessage());

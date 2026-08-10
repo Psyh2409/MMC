@@ -12,11 +12,12 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
-    // Кількість непрочитаних для бейджа
-    long countByUserIdAndIsReadFalse(UUID userId);
+    // Кількість непрочитаних звичайних сповіщень
+    long countByUserIdAndIsReadFalseAndTypeNot(UUID userId, Notification.NotificationType type);
 
-    // Слайсова пагінація ("Завантажити ще") без виконання COUNT(*)
-    Slice<Notification> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+    // Слайсова пагінація: вибираємо ТІЛЬКИ непрочитані (isRead = false) та виключаємо сесії
+    Slice<Notification> findByUserIdAndIsReadFalseAndTypeNotOrderByCreatedAtDesc(
+            UUID userId, Notification.NotificationType type, Pageable pageable);
 
     // Пошук активних критичних викликів (ADMIN_ALERT чи THERAPY_CALL)
     List<Notification> findByUserIdAndTypeAndIsReadFalseOrderByCreatedAtDesc(

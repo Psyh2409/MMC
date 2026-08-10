@@ -19,7 +19,6 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    // Створення сповіщення для користувача
     @Transactional
     public void createNotification(User recipient, String title, String message, String targetUrl, Notification.NotificationType type) {
         Notification notification = Notification.builder()
@@ -34,17 +33,16 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    // Отримання зведеної інформації для фонового опитування
     @Transactional(readOnly = true)
     public NotificationDto.Summary getSummaryForUser(User user) {
-        long unreadCount = notificationRepository.countByUserIdAndIsReadFalse(user.getId());
+        // Рахуємо непрочитані, ігноруючи THERAPY_CALL у бейджу дзвіночка
+        long unreadCount = notificationRepository
+                .countByUserIdAndIsReadFalseAndTypeNot(user.getId(), Notification.NotificationType.THERAPY_CALL);
 
-        // Пошук критичного повідомлення від адміна
         List<Notification> adminAlerts = notificationRepository
                 .findByUserIdAndTypeAndIsReadFalseOrderByCreatedAtDesc(user.getId(), Notification.NotificationType.ADMIN_ALERT);
         NotificationDto.Item adminItem = adminAlerts.isEmpty() ? null : NotificationDto.Item.fromEntity(adminAlerts.get(0));
 
-        // Пошук критичного виклику на сесію
         List<Notification> therapyCalls = notificationRepository
                 .findByUserIdAndTypeAndIsReadFalseOrderByCreatedAtDesc(user.getId(), Notification.NotificationType.THERAPY_CALL);
         NotificationDto.Item therapyItem = therapyCalls.isEmpty() ? null : NotificationDto.Item.fromEntity(therapyCalls.get(0));
@@ -52,15 +50,17 @@ public class NotificationService {
         return new NotificationDto.Summary(unreadCount, adminItem, therapyItem);
     }
 
-    // Отримання порції сповіщень (Слайсова пагінація)
+    // Отримання порції ТІЛЬКИ непрочитаних сповіщень для випадаючого списку
     @Transactional(readOnly = true)
     public Slice<NotificationDto.Item> getUserNotificationsSlice(User user, int page, int size) {
         return notificationRepository
-                .findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, size))
+                .findByUserIdAndIsReadFalseAndTypeNotOrderByCreatedAtDesc(
+                        user.getId(),
+                        Notification.NotificationType.THERAPY_CALL,
+                        PageRequest.of(page, size))
                 .map(NotificationDto.Item::fromEntity);
     }
 
-    // Відмітити сповіщення як прочитане
     @Transactional
     public void markAsRead(UUID notificationId, User user) {
         notificationRepository.findById(notificationId).ifPresent(notification -> {

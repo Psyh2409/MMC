@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Mon Aug 10 01:20:49 EEST 2026
+Дата: Mon Aug 10 19:34:02 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 105:
@@ -36,7 +36,6 @@
   - Клас [d-inline] є в HTML [comment-tree.html, admin-reports.html, profile.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [danger-zone] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [delete-icon] є в HTML [therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [dropdown-body] є в HTML [header.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [font-italic] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-control] є в HTML [report-modal.html, delete-comment-modal.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-input-label] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
@@ -103,6 +102,7 @@
   - Клас [sync-indicator] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [text-body] є в HTML [therapist-client-notes.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [text-center] є в HTML [header.html, therapist-public.html, therapist-client-notes.html, therapist-requests.html, public-wall-components.html, admin-reports.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [text-danger] є в HTML [base.html, therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [text-error] є в HTML [therapist-requests.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [text-main] є в HTML [base.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [text-sm] є в HTML [header.html, therapist-public.html, specialists.html, therapist-client-notes.html, therapist-requests.html, journal-form.html, public-wall-components.html, admin-reports.html, article.html, profile.html, shared-wall-form.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
@@ -112,7 +112,7 @@
   - Клас [wall-media-input] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
 
-⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 162:
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 163:
   - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -121,7 +121,7 @@
   - Стиль .05em є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .0625rem є в CSS [layout.css, notifications.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .075rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .08 є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .08 є в CSS [notifications.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1 є в CSS [layout.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .125rem є в CSS [notifications.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .15 є в CSS [components.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -130,11 +130,11 @@
   - Стиль .1s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .2 є в CSS [cards.css, navigation.css, components.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .22rem є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .25 є в CSS [layout.css, cards.css, navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .25 є в CSS [layout.css, notifications.css, cards.css, navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .25rem є в CSS [layout.css, cards.css, offline-banner.css, navigation.css, components.css, typography.css, buttons.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .25s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .2rem є в CSS [components.css, forms.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
-  - Стиль .2s є в CSS [cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .2s є в CSS [notifications.css, cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3 є в CSS [cards.css, typography.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .3125rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .35rem є в CSS [buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -240,6 +240,7 @@
   - Стиль .message-out є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .message-reply-context є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .new-category-input є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .notification-item-link є в CSS [notifications.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .offline-content є в CSS [offline-banner.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .offline-wrapper є в CSS [offline-banner.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .play-btn є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -276,18 +277,19 @@
   - Стиль .youtube-facade є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .youtube-iframe є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
 
-⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 56:
+⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 57:
   - Стиль .02 дублюється у декількох файлах: [cards.css, forms.css]
   - Стиль .0625rem дублюється у декількох файлах: [layout.css, notifications.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
+  - Стиль .08 дублюється у декількох файлах: [notifications.css, buttons.css]
   - Стиль .1 дублюється у декількох файлах: [layout.css, components.css, forms.css, buttons.css]
   - Стиль .125rem дублюється у декількох файлах: [notifications.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .15 дублюється у декількох файлах: [components.css, variables.css]
   - Стиль .1rem дублюється у декількох файлах: [navigation.css, components.css, forms.css]
   - Стиль .2 дублюється у декількох файлах: [cards.css, navigation.css, components.css, typography.css]
-  - Стиль .25 дублюється у декількох файлах: [layout.css, cards.css, navigation.css, components.css, forms.css]
+  - Стиль .25 дублюється у декількох файлах: [layout.css, notifications.css, cards.css, navigation.css, components.css, forms.css]
   - Стиль .25rem дублюється у декількох файлах: [layout.css, cards.css, offline-banner.css, navigation.css, components.css, typography.css, buttons.css, variables.css]
   - Стиль .2rem дублюється у декількох файлах: [components.css, forms.css, typography.css]
-  - Стиль .2s дублюється у декількох файлах: [cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css]
+  - Стиль .2s дублюється у декількох файлах: [notifications.css, cards.css, tables.css, navigation.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .3 дублюється у декількох файлах: [cards.css, typography.css]
   - Стиль .375rem дублюється у декількох файлах: [utilities.css, components.css]
   - Стиль .3s дублюється у декількох файлах: [layout.css, cards.css, navigation.css, components.css]
@@ -382,9 +384,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 562
+  Всього знайдено класів: 563
   Класи-пустишки в HTML: 105
-  Мертві стилі в CSS: 162
-  Конфлікти стилів: 56
+  Мертві стилі в CSS: 163
+  Конфлікти стилів: 57
   Потенційні дублікати: 45
 ======================================================

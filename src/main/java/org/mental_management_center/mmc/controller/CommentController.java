@@ -31,7 +31,7 @@ public class CommentController {
     private final ArticleService articleService;
     private final NotificationService notificationService;
 
-    // 1. Створення коментаря під статтею
+    // 1. Створення коментаря під статтею (з відображенням автора та тексту)
     @Transactional
     @PostMapping("/articles/{id}/comments")
     public String addComment(
@@ -72,7 +72,7 @@ public class CommentController {
             notificationService.createNotification(
                     articleAuthor,
                     "Новий коментар до статті",
-                    author.getName() + " залишив(ла) коментар під вашою статтею «" + article.getTitle() + "»",
+                    author.getName() + ": " + comment.getContent(), // Формат: "Ім'я: Текст коментаря"
                     "/articles/" + id + "#comment-" + savedComment.getId(),
                     Notification.NotificationType.STANDARD
             );
@@ -88,7 +88,7 @@ public class CommentController {
                 notificationService.createNotification(
                         parentCommentAuthor,
                         "Відповідь на ваш коментар",
-                        author.getName() + " відповів(ла) на ваш коментар під статтею «" + article.getTitle() + "»",
+                        author.getName() + ": " + comment.getContent(), // Формат: "Ім'я: Текст відповіді"
                         "/articles/" + id + "#comment-" + savedComment.getId(),
                         Notification.NotificationType.STANDARD
                 );
