@@ -41,8 +41,9 @@ window.loadActivityPage = function(page) {
         .catch(error => console.error('Помилка завантаження активності:', error));
 };
 
-// 3. Автоматична активація вкладки за наявності якоря в URL (#activity-tab)
+// 3. Автоматична активація вкладок та обробка форм при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', function() {
+    // Активація вкладки за наявності якоря в URL (#activity-tab)
     const hash = window.location.hash;
     if (hash) {
         const tabId = hash.replace('#', '');
@@ -54,5 +55,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
             window.switchPublicTab(tabId, matchingBtn);
         }
+    }
+
+    // 4. МИТТЄВЕ АСИНХРОННЕ ЗБЕРЕЖЕННЯ НАЛАШТУВАНЬ EMAIL-СПОВІЩЕНЬ (AJAX)
+    const emailCheckbox = document.getElementById('emailNotificationsCheckbox');
+
+    if (emailCheckbox) {
+        emailCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+
+            // Зчитуємо мета-теги Spring Security CSRF для захисту
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+            const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : 'X-CSRF-TOKEN';
+
+            // Надсилаємо фоновий POST-запит на бекенд
+            fetch('/api/profile/email-notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [csrfHeader]: csrfToken
+                },
+                body: new URLSearchParams({ enabled: isChecked })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Помилка сервера при збереженні');
+                }
+            })
+            .catch(err => {
+                console.error('[Profile] Не вдалося зберегти налаштування сповіщень:', err);
+                // Повертаємо стан чекбокса назад у разі мережевої помилки
+                this.checked = !isChecked;
+            });
+        });
     }
 });

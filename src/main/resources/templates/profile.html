@@ -74,13 +74,14 @@
                         <input type="email" th:value="${user.email}" class="form-input-readonly" readonly disabled>
                     </div>
 
-                    <!-- Чекбокс згоди на Email-сповіщення -->
+                    <!-- Чекбокс згоди на Email-сповіщення з миттєвим збереженням -->
                     <div class="form-group mt-sm">
                         <label class="form-label checkbox-label">
                             <input type="checkbox"
-                                   th:field="*{emailNotificationsEnabled}"
+                                   id="emailNotificationsCheckbox"
+                                   th:checked="${user.emailNotificationsEnabled}"
                                    class="form-checkbox" />
-                            <span>Отримувати сповіщення на електронну пошту (після вибору натисніть "Зберегти")</span>
+                            <span>Отримувати сповіщення на електронну пошту</span>
                         </label>
                         <small class="helper-text text-muted">
                             Дублювати важливі сповіщення (відповіді на коментарі, нові повідомлення та запрошення на сесії) на ваш Email.
