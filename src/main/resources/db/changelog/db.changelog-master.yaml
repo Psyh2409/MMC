@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/006-create-notifications-table.yaml
   - include:
       file: db/changelog/007-add-email-notifications-column.yaml
+  - include:
+      file: db/changelog/008-create-shared-wall-comments.yaml

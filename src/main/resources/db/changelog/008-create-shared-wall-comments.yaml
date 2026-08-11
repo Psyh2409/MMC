@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-shared-wall-comments
+      author: Serhii
+      changes:
+        - createTable:
+            tableName: shared_wall_comments
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: wall_entry_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sw_comments_entry
+                    referencedTableName: shared_wall_entries
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: parent_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_sw_comments_parent
+                    referencedTableName: shared_wall_comments
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sw_comments_author
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: encrypted_content
+                  type: BLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_sw_comments_entry_id
+            tableName: shared_wall_comments
+            columns:
+              - column:
+                  name: wall_entry_id

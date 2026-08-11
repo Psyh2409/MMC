@@ -1,0 +1,27 @@
+<div class="card-surface p-md">
+    <h2 class="section-title">📩 Мої звернення та відповіді</h2>
+
+    <div th:if="${#lists.isEmpty(userRequests)}" class="text-muted p-md">
+        У вас поки немає активних звернень.
+    </div>
+
+    <div th:each="req : ${userRequests}" class="request-item-card mb-md p-sm" th:id="'req-' + ${req.id}">
+        <div class="request-header">
+            <span class="badge" th:classappend="${req.status.name() == 'NEW' ? 'badge-warning' : 'badge-success'}"
+                  th:text="${req.status.name() == 'NEW' ? 'Очікує відповіді' : 'Оброблено'}">
+            </span>
+            <span class="text-muted" th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+        </div>
+
+        <div class="request-body mt-xs">
+            <strong>Ваше питання:</strong>
+            <p class="text-main" th:text="${req.message}">Текст питання...</p>
+        </div>
+
+        <!-- Блок відповіді (якщо відповідь надано) -->
+        <div th:if="${req.reply != null}" class="request-reply-box mt-sm p-sm">
+            <strong class="text-accent">💬 Відповідь адміністрації/фахівця:</strong>
+            <p class="text-main mt-xs" th:text="${req.reply}">Текст відповіді...</p>
+        </div>
+    </div>
+</div>

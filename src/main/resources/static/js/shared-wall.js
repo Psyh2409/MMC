@@ -295,3 +295,152 @@ function handleEditFormSubmit(form, postId, roomId, postCard) {
         alert('Не вдалося оновити пост');
     });
 }
+
+// ==========================================================================
+// МОДУЛЬ КОМЕНТАРІВ ДЛЯ СПІЛЬНОЇ СТІНИ (AJAX)
+// ==========================================================================
+
+// 1. Розгортання / Згортання блоку коментарів
+window.toggleCommentsBlock = function(btn) {
+    const postId = btn.getAttribute('data-post-id');
+    const roomId = btn.getAttribute('data-room-id');
+    const container = document.getElementById('comments-container-' + postId);
+
+    if (!container) {
+        console.error('[MMC SharedWall] Контейнер коментарів не знайдено:', postId);
+        return;
+    }
+
+    // Перемикаємо видимість
+    const isNowHidden = container.classList.toggle('is-hidden');
+
+    // Якщо блок тільки що розгорнули і він порожній — завантажуємо 1-шу сторінку коментарів
+    if (!isNowHidden && container.children.length === 0) {
+        window.fetchCommentsPage(roomId, postId, 0, container);
+    }
+};
+
+// 2. Довантаження наступної сторінки коментарів (пагінація)
+window.loadMoreComments = function(btn) {
+    const postId = btn.getAttribute('data-post-id');
+    const roomId = btn.getAttribute('data-room-id');
+    const page = btn.getAttribute('data-page');
+    const container = document.getElementById('comments-container-' + postId);
+
+    if (container) {
+        window.fetchCommentsPage(roomId, postId, page, container);
+    }
+};
+
+// Допоміжна функція запиту фрагмента коментарів
+window.fetchCommentsPage = function(roomId, postId, page, container) {
+    const url = `/api/room/${roomId}/wall/post/${postId}/comments?page=${page}`;
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Помилка завантаження коментарів');
+        return response.text();
+    })
+    .then(htmlFragment => {
+        container.innerHTML = htmlFragment;
+    })
+    .catch(error => {
+        console.error('[MMC SharedWall Error]:', error);
+        container.innerHTML = '<div class="text-error text-xs p-xs">Не вдалося завантажити коментарі.</div>';
+    });
+};
+
+// 3. Відправка нового коментаря
+window.submitComment = function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new URLSearchParams(new FormData(form));
+
+    const roomId = formData.get('roomId');
+    const postId = formData.get('postId');
+    const container = document.getElementById('comments-container-' + postId);
+
+    // Отримуємо CSRF-токени
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || '';
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content') || 'X-CSRF-TOKEN';
+
+    fetch(`/api/room/${roomId}/wall/post/${postId}/comments/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            [csrfHeader]: csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Помилка збереження коментаря');
+        return response.text(); // Бекенд повертає оновлений HTML-фрагмент коментарів
+    })
+    .then(updatedHtmlFragment => {
+            if (container) {
+                container.innerHTML = updatedHtmlFragment;
+
+                // 1. Оновлюємо лічильник на кнопці
+                const newCount = container.querySelector('#dynamic-count')?.value;
+                if (newCount) {
+                    const btn = document.querySelector(`button[data-post-id="${postId}"]`);
+                    if (btn) btn.innerHTML = `💬 Коментарі (${newCount})`;
+                }
+
+                // 2. Змушуємо YouTube-лінки перетворитися на відео в нових коментарях
+                if (typeof window.parseMediaLinks === 'function') window.parseMediaLinks();
+                else if (typeof parseMediaLinks === 'function') parseMediaLinks();
+            }
+    })
+    .catch(error => {
+        console.error('[MMC SharedWall Error]:', error);
+        alert("Не вдалося відправити коментар.");
+    });
+};
+
+// Розгортання форми відповіді на коментар
+window.toggleReplyForm = function(btn) {
+    const commentId = btn.getAttribute('data-comment-id');
+    const form = document.getElementById('replyForm-' + commentId);
+    if (form) {
+        form.classList.toggle('is-hidden');
+    }
+};
+
+// 4. Видалення коментаря (AJAX)
+window.deleteComment = function(btn) {
+    if (!confirm('Ви впевнені, що хочете видалити цей коментар?')) return;
+
+    const commentId = btn.getAttribute('data-comment-id');
+    const postId = btn.getAttribute('data-post-id');
+    const roomId = btn.getAttribute('data-room-id');
+    const container = document.getElementById('comments-container-' + postId);
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || '';
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content') || 'X-CSRF-TOKEN';
+
+    fetch(`/api/room/${roomId}/wall/post/${postId}/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+            [csrfHeader]: csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Помилка видалення на сервері');
+
+        // Після успішного видалення просто перемальовуємо першу сторінку коментарів
+        window.fetchCommentsPage(roomId, postId, 0, container);
+    })
+    .catch(error => {
+        console.error('[MMC SharedWall Error]:', error);
+        alert("Не вдалося видалити коментар.");
+    });
+};

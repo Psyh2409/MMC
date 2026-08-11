@@ -58,6 +58,9 @@ public class SharedWallEntry {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Transient
+    private long commentsCount = 0;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

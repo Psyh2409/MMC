@@ -3,7 +3,7 @@
       th:replace="~{layout/base :: main-layout(
       ~{::title},
       ~{::section},
-      ~{}
+      ~{::page-scripts}
       )}">
 <head>
     <title>Дашборд Фахівця | MMC</title>
@@ -39,9 +39,8 @@
                     <span class="text-muted text-sm d-block mb-md" th:text="${user.getPrimaryRoleName()}">Терапевт</span>
                 </div>
 
-                <nav class="stack-form" >
+                <nav class="stack-form">
                     <a th:href="@{/therapist/public/{id}(id=${user.id})}" class="btn-outline text-center">👁️ Публічна візитка</a>
-                    <!-- Windsurf: Замінено вбудований фрагмент на посилання на окрему сторінку -->
                     <a th:href="@{/therapist/articles}" class="btn-outline text-center">📝 Мої статті</a>
                     <a th:href="@{/therapist/public-wall}" class="btn-outline text-center">🌐 Публічна стіна</a>
                     <a th:href="@{/therapist/requests}" class="btn-outline text-center">✉️ Мої звернення</a>
@@ -70,63 +69,73 @@
                             <th class="col-actions text-right">Дії</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody th:if="${activeAssignments != null and !activeAssignments.isEmpty()}">
+                        <th:block th:each="assignment : ${activeAssignments}">
+                            <!-- 1. Основний рядок клієнта -->
+                            <tr>
+                                <td>
+                                    <strong class="text-wrap-break" th:text="${assignment.client.name}">Ім'я</strong>
+                                </td>
+                                <td>
+                                    <span class="text-sm text-wrap-break" th:text="${assignment.client.email}">email</span>
+                                </td>
+                                <td>
+                                    <span class="text-success text-sm text-nowrap">В терапії</span>
+                                </td>
+                                <td>
+                                    <div class="action-group action-group-col">
+                                        <a th:href="@{/therapy/room/{clientId}(clientId=${assignment.client.id})}" class="btn-primary btn-sm text-nowrap w-100">
+                                            🎥 Кабінет
+                                        </a>
+                                        <a th:href="@{/therapist/notes/{clientId}(clientId=${assignment.client.id})}" class="btn-outline btn-sm text-nowrap w-100">
+                                            📝 Нотатки
+                                        </a>
+                                        <!-- Надійна кнопка, що викликає просту JS-функцію -->
+                                        <button type="button"
+                                                class="btn-outline btn-sm text-nowrap w-100 mt-xs"
+                                                th:attr="data-target='msg-row-' + ${assignment.client.id}"
+                                                onclick="toggleClientMessageRow(this)">
+                                            💬 Лист
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-                        <tr th:each="request : ${pendingRequests}">
-                            <td>
-                                <strong class="text-wrap-break" th:text="${request.client.name}">Ім'я</strong><br>
-                                <span class="text-xs text-muted" th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy')}">Дата</span>
-                            </td>
-                            <td>
-                                <span class="text-sm text-wrap-break" th:text="${request.client.email}">email</span>
-                            </td>
-                            <td>
-                                <span class="text-error text-sm text-nowrap">Очікує</span>
-                            </td>
-                            <td class="text-right">
-                                <form th:action="@{/therapist/dashboard/accept/{id}(id=${request.id})}" method="post" class="form-inline-reset">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn-primary btn-sm text-nowrap">Прийняти</button>
-                                </form>
-                            </td>
-                        </tr>
+                            <!-- 2. Розгортаємий рядок форми -->
+                            <tr th:id="'msg-row-' + ${assignment.client.id}" class="is-hidden reply-row">
+                                <td colspan="4">
+                                    <div class="reply-expanded-box p-sm">
+                                        <form th:action="@{/therapist/notify-client}" method="post" class="stack-form">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                            <input type="hidden" name="recipientId" th:value="${assignment.client.id}">
 
-                        <tr th:each="assignment : ${activeAssignments}">
-                            <td>
-                                <strong class="text-wrap-break" th:text="${assignment.client.name}">Ім'я</strong>
-                            </td>
-                            <td>
-                                <span class="text-sm text-wrap-break" th:text="${assignment.client.email}">email</span>
-                            </td>
-                            <td>
-                                <span class="text-success text-sm text-nowrap">В терапії</span>
-                            </td>
-                            <td>
-                                <div class="action-group action-group-col">
-                                    <a th:href="@{/therapy/room/{clientId}(clientId=${assignment.client.id})}" class="btn-primary btn-sm text-nowrap w-100">
-                                        🎥 Кабінет
-                                    </a>
-                                    <a th:href="@{/therapist/notes/{clientId}(clientId=${assignment.client.id})}" class="btn-outline btn-sm text-nowrap w-100">
-                                        📝 Нотатки
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                                            <div class="form-field mb-xs">
+                                                <label class="form-label text-xs">
+                                                    Нагадування для <span th:text="${assignment.client.name}">Клієнта</span>:
+                                                </label>
+                                                <textarea name="message" class="form-input textarea-input" rows="2" placeholder="Введіть текст звернення..." required></textarea>
+                                            </div>
 
-                        <tr th:if="${(pendingRequests == null or pendingRequests.isEmpty()) and (activeAssignments == null or activeAssignments.isEmpty())}">
-                            <td colspan="4" class="text-center text-muted">
-                                ☕ У вас поки немає ані нових запитів, ані активних клієнтів.
-                            </td>
-                        </tr>
-
+                                            <div class="text-right mt-xs">
+                                                <button type="submit" class="btn-primary btn-sm">🚀 Надіслати</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </main>
     </div>
 </section>
+
+<!-- Чисте підключення зовнішнього скрипта без інлайнового JS -->
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/therapist-dashboard.js}" defer></script>
+</th:block>
 
 </body>
 </html>

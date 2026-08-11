@@ -2,9 +2,11 @@ package org.mental_management_center.mmc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mental_management_center.mmc.dto.SharedWallCommentDto;
 import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.SharedWallEntry;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.SharedWallCommentRepository;
 import org.mental_management_center.mmc.repository.SharedWallRepository;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.core.io.Resource;
@@ -24,6 +26,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -38,6 +41,7 @@ public class SharedWallController {
     private final JournalCryptoService cryptoService;
     private final SharedWallRepository sharedWallRepository;
     private final NotificationService notificationService;
+    private final SharedWallCommentRepository commentRepository;
 
     // 1. Збереження повідомлення (з повним збереженням AES-шифрування та додаванням сповіщень)
     @PostMapping("/add")
@@ -372,4 +376,67 @@ public class SharedWallController {
         byte[] hashBytes = digest.digest();
         return HexFormat.of().formatHex(hashBytes);
     }
-}
+
+    // Отримання фрагмента коментарів (AJAX пагінація)
+    @GetMapping("/post/{postId}/comments")
+    public String getPostComments(@PathVariable UUID roomId,
+                                  @PathVariable UUID postId,
+                                  Model model,
+                                  Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+        List<SharedWallCommentDto> commentsTree = sharedWallService.getCommentsForPost(postId, currentUser);
+
+        model.addAttribute("comments", commentsTree);
+        model.addAttribute("postId", postId);
+        model.addAttribute("roomId", roomId);
+        return "fragments/shared-wall-form :: commentsFeed";
+    }
+
+    @PostMapping("/post/{postId}/comments/add")
+    public String addComment(@PathVariable UUID roomId,
+                             @PathVariable UUID postId,
+                             @RequestParam(required = false) UUID parentId,
+                             @RequestParam String content,
+                             Model model,
+                             Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+        // Зберігаємо
+        sharedWallService.addCommentToPost(postId, parentId, currentUser, content);
+
+        // Дістаємо оновлене дерево
+        List<SharedWallCommentDto> commentsTree = sharedWallService.getCommentsForPost(postId, currentUser);
+        long newCount = commentRepository.countByWallEntryId(postId);
+
+        model.addAttribute("comments", commentsTree);
+        model.addAttribute("postId", postId);
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("newCount", newCount); // 🟢 Передаємо новий лічильник для JS
+
+        return "fragments/shared-wall-form :: commentsFeed";
+    }
+
+    // ====================================================================================
+    // ---------------------- ДОДАТИ НОВИЙ МЕТОД ДЛЯ ВИДАЛЕННЯ ----------------------------
+    // ====================================================================================
+    @DeleteMapping("/post/{postId}/comments/{commentId}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteComment(@PathVariable UUID roomId,
+                                              @PathVariable UUID postId,
+                                              @PathVariable UUID commentId,
+                                              Principal principal) {
+
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+        try {
+            sharedWallService.deleteComment(commentId, currentUser);
+            return ResponseEntity.ok().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (Exception e) {
+            log.error("Помилка видалення коментаря: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+} // 👈 Кінець класу SharedWallController

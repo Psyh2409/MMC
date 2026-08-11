@@ -1,13 +1,12 @@
 package org.mental_management_center.mmc.controller;
 
+import jakarta.validation.Valid;
+import org.mental_management_center.mmc.model.Article;
+import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.Article;
-import org.mental_management_center.mmc.service.PublicPostService;
-import org.mental_management_center.mmc.service.TherapyAssignmentService;
-import org.mental_management_center.mmc.service.UserService;
-import org.mental_management_center.mmc.service.ArticleService;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
+import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.ArticleForm;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.validation.Valid;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,13 +29,18 @@ public class TherapistController {
     private final ArticleService articleService; // Windsurf: Додано для роботи зі статтями
     private final CategoryTranslationRepository categoryTranslationRepository; // Windsurf: Для категорій
     private final PublicPostService publicPostService;
+    private final NotificationService notificationService;
+    private final EmailService emailService;
 
-    public TherapistController(UserService userService, TherapyAssignmentService assignmentService, ArticleService articleService, CategoryTranslationRepository categoryTranslationRepository, PublicPostService publicPostService) {
+
+    public TherapistController(UserService userService, TherapyAssignmentService assignmentService, ArticleService articleService, CategoryTranslationRepository categoryTranslationRepository, PublicPostService publicPostService, NotificationService notificationService, EmailService emailService) {
         this.userService = userService;
         this.assignmentService = assignmentService;
         this.articleService = articleService;
         this.categoryTranslationRepository = categoryTranslationRepository;
         this.publicPostService = publicPostService;
+        this.notificationService = notificationService;
+        this.emailService = emailService;
     }
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
@@ -281,5 +284,46 @@ public class TherapistController {
 
         articleService.deleteArticle(id);
         return "redirect:/therapist/articles";
+    }
+
+    // Обробка відправки швидкого сповіщення клієнту з дашборду фахівця
+    @PostMapping("/notify-client")
+    @PreAuthorize("hasAnyRole('THERAPIST', 'ADMIN')")
+    public String notifyClientFromDashboard(
+            @RequestParam UUID recipientId,
+            @RequestParam String message,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+
+        User therapist = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+
+        User client = userService.findById(recipientId);
+        if (client == null) {
+            redirectAttributes.addFlashAttribute("error", "Клієнта не знайдено.");
+            return "redirect:/therapist/dashboard";
+        }
+
+        // 1. Створюємо сповіщення у Дзвоник для клієнта
+        notificationService.createNotification(
+                client,
+                "Повідомлення від терапевта",
+                therapist.getName() + ": " + message.trim(),
+                "/therapy/room/" + client.getId(), // Прямий перехід у терапевтичну кімнату
+                Notification.NotificationType.STANDARD
+        );
+
+        // 2. Якщо клієнт надав згоду на Email-сповіщення (Opt-In model)
+        if (client.isEmailNotificationsEnabled() && client.getEmail() != null) {
+            emailService.sendNotificationEmail(
+                    client.getEmail(),
+                    "🌿 Нове повідомлення від фахівця | MMC",
+                    "Ваш терапевт " + therapist.getName() + " залишив повідомлення:\n\n\"" + message.trim() + "\"\n\nПерейти до кабінету: /therapy/room/" + client.getId(),
+                    "/therapy/room/" + client.getId()
+            );
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Повідомлення клієнту успішно надіслано!");
+        return "redirect:/therapist/dashboard";
     }
 }
