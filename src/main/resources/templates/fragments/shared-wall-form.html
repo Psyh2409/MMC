@@ -120,7 +120,7 @@
             <!-- 🟢 КНОПКА З ЛІЧИЛЬНИКОМ -->
             <div class="comments-section-wrapper mt-sm pt-xs border-top-subtle">
                 <div class="row-between">
-                    <button type="button" class="btn-link-muted text-sm" th:data-post-id="${post.id}" th:data-room-id="${roomId}" onclick="window.toggleCommentsBlock(this)">
+                    <button type="button" class="btn-primary text-sm" th:data-post-id="${post.id}" th:data-room-id="${roomId}" onclick="window.toggleCommentsBlock(this)">
                         💬 Коментарі (<span th:text="${post.commentsCount}">0</span>)
                     </button>
                 </div>
@@ -128,6 +128,24 @@
             </div>
 
         </div>
+    </div>
+    <!-- Блок пагінації основної стіни (Попередня / Наступна сторінка постів) -->
+    <div th:if="${totalPages > 1}" class="button-row pagination-row mt-md">
+        <button th:if="${currentPage > 0}"
+                th:data-room="${roomId}"
+                th:data-page="${currentPage - 1}"
+                th:data-size="5"
+                onclick="window.loadWallPage(this)"
+                class="btn-outline btn-sm">Попередня</button>
+
+        <span class="text-muted text-sm" th:text="'Сторінка ' + (${currentPage} + 1) + ' з ' + ${totalPages}"></span>
+
+        <button th:if="${hasMore}"
+                th:data-room="${roomId}"
+                th:data-page="${currentPage + 1}"
+                th:data-size="5"
+                onclick="window.loadWallPage(this)"
+                class="btn-outline btn-sm">Наступна</button>
     </div>
 </div>
 
@@ -149,7 +167,7 @@
 
             <!-- Кнопки керування (красиві, як у статтях) -->
             <div class="comment-actions action-group mt-xs pt-xs">
-                <button type="button" class="btn-link-muted text-xs" th:data-comment-id="${comment.id}" onclick="window.toggleReplyForm(this)">
+                <button type="button" class="btn-outline text-xs" th:data-comment-id="${comment.id}" onclick="window.toggleReplyForm(this)">
                     ↳ Відповісти
                 </button>
                 <button th:if="${comment.isMine}" type="button" class="btn-icon delete-icon ml-sm" th:data-comment-id="${comment.id}" th:data-post-id="${postId}" th:data-room-id="${roomId}" onclick="window.deleteComment(this)" title="Видалити">

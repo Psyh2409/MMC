@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.mental_management_center.mmc.dto.NotificationDto;
 import org.mental_management_center.mmc.dto.UserActivityDto;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.*;
@@ -47,6 +48,7 @@ public class UserProfileController {
     private final UserActivityService userActivityService;
     private final EmailService emailService;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
 
     @GetMapping("/profile")
     public String showProfile(
@@ -481,5 +483,25 @@ public class UserProfileController {
         });
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/profile/notifications-feed")
+    public String getNotificationsFeed(Principal principal,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       Model model) {
+
+        // Отримуємо користувача універсальним способом (як для Form Login, так і для OAuth2)
+        User user = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+        // Витягуємо сторінку з історією
+        Page<NotificationDto.Item> notificationsPage = notificationService.getAllUserNotificationsPage(user, page, 10);
+
+        model.addAttribute("notificationsPage", notificationsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", notificationsPage.getTotalPages());
+
+        // Повертаємо виключно HTML-фрагмент
+        return "fragments/notifications-tab :: notificationsFeed";
     }
 }

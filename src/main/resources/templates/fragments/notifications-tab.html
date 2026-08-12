@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="notificationsFeed" id="notificationsFeed">
+
+    <!-- Порожній стан -->
+    <div th:if="${#lists.isEmpty(notificationsPage.content)}" class="profile-empty-state text-center mt-md">
+        <div class="icon mb-sm">🔕</div>
+        <p class="text-muted">У вас поки немає збережених сповіщень.</p>
+    </div>
+
+    <!-- Список сповіщень -->
+    <div th:unless="${#lists.isEmpty(notificationsPage.content)}" class="layout-stack mt-md gap-sm">
+        <div th:each="item : ${notificationsPage.content}"
+             class="card-primary mb-sm"
+             th:classappend="${!item.isRead} ? 'notification-unread' : ''">
+
+            <div class="row-between mb-xs">
+                <span class="badge"
+                      th:classappend="${!item.isRead} ? 'badge-accent' : 'badge-reader'"
+                      th:text="${!item.isRead} ? 'Нове' : 'Прочитане'">Статус</span>
+                <span class="text-xs text-muted"
+                      th:text="${#temporals.format(item.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+            </div>
+
+            <h3 class="text-sm mb-xs" th:text="${item.title}">Заголовок</h3>
+            <p class="text-muted mt-sm mb-sm text-wrap-break" th:text="${item.message}">Зміст</p>
+
+            <div class="action-group mt-sm pt-sm" th:if="${item.targetUrl != null and !#strings.isEmpty(item.targetUrl)}">
+                <!-- Перенаправлення через існуючий API-контролер для маркування "прочитано" -->
+                <a th:href="@{'/api/notifications/open/' + ${item.id}}" class="btn-outline btn-sm">
+                    👁️ Перейти
+                </a>
+            </div>
+        </div>
+
+        <!-- Пагінація Page X of Y -->
+        <div th:if="${totalPages > 1}" class="button-row pagination-row mt-md">
+            <button th:if="${currentPage > 0}"
+                    th:onclick="'window.loadNotificationsPage(' + (${currentPage} - 1) + ')'"
+                    class="btn-outline btn-sm">Попередня</button>
+            <span th:unless="${currentPage > 0}"></span>
+
+            <span class="text-xs text-muted" th:text="'Сторінка ' + (${currentPage} + 1) + ' з ' + ${totalPages}">Сторінка</span>
+
+            <button th:if="${currentPage + 1 < totalPages}"
+                    th:onclick="'window.loadNotificationsPage(' + (${currentPage} + 1) + ')'"
+                    class="btn-outline btn-sm">Наступна</button>
+            <span th:unless="${currentPage + 1 < totalPages}"></span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

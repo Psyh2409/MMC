@@ -93,3 +93,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+window.loadNotificationsPage = function(page) {
+    const container = document.getElementById('notificationsFeedContainer');
+    if (!container) return;
+
+    fetch(`/profile/notifications-feed?page=${page}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Помилка завантаження');
+            return response.text();
+        })
+        .then(html => {
+            container.innerHTML = html;
+        })
+        .catch(err => console.error('[Notifications] Помилка завантаження архіву:', err));
+};

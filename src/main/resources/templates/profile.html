@@ -80,11 +80,12 @@
                             <input type="checkbox"
                                    id="emailNotificationsCheckbox"
                                    th:checked="${user.emailNotificationsEnabled}"
-                                   class="form-checkbox" />
+                                   class="form-checkbox"/>
                             <span>Отримувати сповіщення на електронну пошту</span>
                         </label>
                         <small class="helper-text text-muted">
-                            Дублювати важливі сповіщення (відповіді на коментарі, нові повідомлення та запрошення на сесії) на ваш Email.
+                            Дублювати важливі сповіщення (відповіді на коментарі, нові повідомлення та запрошення на
+                            сесії) на ваш Email.
                         </small>
                     </div>
 
@@ -157,16 +158,18 @@
         </aside>
 
         <main class="profile-main-content">
-
             <nav class="tabs-navigation">
                 <button type="button" class="tab-button active" data-target="therapy-tab"
                         th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
-                    Терапевтичний простір
+                    Робочий простір
                 </button>
                 <button type="button" class="tab-button" data-target="journal-tab">Захищений щоденник</button>
                 <button type="button" class="tab-button" data-target="activity-tab">Моя активність</button>
+                <button type="button" class="tab-button" data-target="notifications-tab"
+                        onclick="window.loadNotificationsPage(0)">
+                    Сповіщення
+                </button>
             </nav>
-
             <div id="therapy-tab" class="tab-pane active"
                  th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
 
@@ -355,6 +358,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div id="notifications-tab" class="tab-pane is-hidden">
+                <h2 class="heading-md mb-sm text-center">Архів сповіщень</h2>
+                <div id="notificationsFeedContainer">
+                    <!-- Сюди завантажується HTML-фрагмент через AJAX -->
                 </div>
             </div>
         </main>

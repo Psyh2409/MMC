@@ -182,20 +182,26 @@
    ========================================================================== */
 .tabs-navigation {
     display: flex;
-    gap: var(--space-md);
-    border-bottom: 0.125rem solid var(--border-color); /* Чітка лінія під вкладками */
+    gap: var(--space-xs);
+    justify-content: center;
+    border-bottom: 0.125rem solid var(--border-color);
     margin-bottom: var(--space-md);
+    flex-wrap: wrap;
 }
 
-.tab-button {
-    background: transparent; /* Ніякого фону, щоб не зливалося */
+.tab-button { 
+    background: transparent;
     border: none;
-    color: var(--text-muted); /* Тьмяний текст для неактивних */
-    padding: var(--space-sm) 0; /* Відступи тільки зверху/знизу */
-    font-size: 1rem;
-    font-weight: 600;
+    color: var(--text-muted);
+    padding: var(--space-sm) var(--space-xs);
+    font-size: 1rem; font-weight: 600;
     cursor: pointer;
-    border-bottom: 0.1875rem solid transparent; /* Місце під активну лінію */
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    flex: 0 1 calc(25% - var(--space-xs));
+    border-bottom: 0.1875rem solid transparent;
+    margin-bottom: -0.125rem;
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -204,10 +210,10 @@
 }
 
 .tab-button.active {
-    color: var(--primary-color); /* Яскравий акцентний колір теми */
-    border-bottom-color: var(--primary-color); /* Підкреслення кольором теми */
-    background: transparent;
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
 }
+
 /* Керування станом вкладок через каскад */
 .tab-pane {
     display: none;
@@ -217,7 +223,7 @@
     display: block;
 }
 
-@media (max-width: 48em) {
+@media (max-width: 60rem) {
     /* Гарантуємо, що падінги не роздувають загальну ширину елементів */
     *, *::before, *::after {
         box-sizing: border-box;
@@ -261,5 +267,12 @@
         /* 2. Ховаємо довгу частину копірайту, залишаючи тільки "© 2026 MMC" */
         .hide-mobile {
             display: none;
+        }
+
+    .tabs-navigation .tab-button {
+            flex: 1 1 calc(50% - var(--space-xs));
+            text-align: center;
+            padding: var(--space-sm) var(--space-xs);
+            min-width: calc(50% - var(--space-xs));
         }
 }

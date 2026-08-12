@@ -7,6 +7,7 @@ import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.NotificationRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.NotificationService;
+import org.mental_management_center.mmc.service.UserService;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class NotificationApiController {
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private final UserService userService;
 
     // Ендпоінт фонового опитування (раз на 10-15 сек)
     @GetMapping("/summary")

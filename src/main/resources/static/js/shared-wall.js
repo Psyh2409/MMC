@@ -348,6 +348,9 @@ window.fetchCommentsPage = function(roomId, postId, page, container) {
     })
     .then(htmlFragment => {
         container.innerHTML = htmlFragment;
+        if (typeof window.applyMediaFacades === 'function') {
+            window.applyMediaFacades();
+        }
     })
     .catch(error => {
         console.error('[MMC SharedWall Error]:', error);
@@ -366,7 +369,6 @@ window.submitComment = function(event) {
     const postId = formData.get('postId');
     const container = document.getElementById('comments-container-' + postId);
 
-    // Отримуємо CSRF-токени
     const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || '';
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content') || 'X-CSRF-TOKEN';
 
@@ -379,24 +381,26 @@ window.submitComment = function(event) {
         },
         body: formData
     })
+    // ОЦЕЙ БЛОК .then() ОТРИМУЄ ВІДПОВІДЬ ВІД СЕРВЕРА
     .then(response => {
         if (!response.ok) throw new Error('Помилка збереження коментаря');
-        return response.text(); // Бекенд повертає оновлений HTML-фрагмент коментарів
+        return response.text();
     })
+    // А ОЦЕЙ БЛОК .then() ВСТАВЛЯЄ ЇЇ В HTML
     .then(updatedHtmlFragment => {
             if (container) {
                 container.innerHTML = updatedHtmlFragment;
 
-                // 1. Оновлюємо лічильник на кнопці
                 const newCount = container.querySelector('#dynamic-count')?.value;
                 if (newCount) {
                     const btn = document.querySelector(`button[data-post-id="${postId}"]`);
                     if (btn) btn.innerHTML = `💬 Коментарі (${newCount})`;
                 }
 
-                // 2. Змушуємо YouTube-лінки перетворитися на відео в нових коментарях
-                if (typeof window.parseMediaLinks === 'function') window.parseMediaLinks();
-                else if (typeof parseMediaLinks === 'function') parseMediaLinks();
+                // 🟢 ДОДАНО: Викликаємо правильну функцію з media-links.js
+                if (typeof window.applyMediaFacades === 'function') {
+                    window.applyMediaFacades();
+                }
             }
     })
     .catch(error => {
@@ -443,4 +447,30 @@ window.deleteComment = function(btn) {
         console.error('[MMC SharedWall Error]:', error);
         alert("Не вдалося видалити коментар.");
     });
+};
+
+window.loadWallPage = function(btn) {
+    const roomId = btn.getAttribute('data-room');
+    const page = btn.getAttribute('data-page');
+    const container = document.getElementById('sharedWallContainer');
+
+    if (!container) return;
+
+    fetch(`/api/room/${roomId}/wall/fragment?page=${page}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Помилка завантаження сторінки стіни');
+        return response.text();
+    })
+    .then(html => {
+        container.innerHTML = html;
+        if (typeof window.applyMediaFacades === 'function') {
+                        window.applyMediaFacades();
+        }
+    })
+    .catch(err => console.error('[MMC Wall Pagination Error]:', err));
 };

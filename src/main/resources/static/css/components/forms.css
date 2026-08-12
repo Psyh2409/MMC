@@ -564,3 +564,9 @@
     display: inline-flex;
     align-items: center;
 }
+
+.danger-zone .btn-primary {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}

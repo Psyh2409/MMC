@@ -5,6 +5,7 @@ import org.mental_management_center.mmc.dto.NotificationDto;
 import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.NotificationRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,12 @@ public class NotificationService {
                 notificationRepository.save(notification);
             }
         });
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDto.Item> getAllUserNotificationsPage(User user, int page, int size) {
+        return notificationRepository
+                .findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, size))
+                .map(NotificationDto.Item::fromEntity);
     }
 }
