@@ -22,4 +22,7 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
 
     // Пошук існуючої скарги/оскарження для конкретного об'єкта
     Optional<Report> findByTargetIdAndReportType(UUID targetId, Report.ReportType reportType);
+
+    // Підрахунок кількості скарг за певним статусом
+    long countByStatus(Report.ReportStatus status);
 }

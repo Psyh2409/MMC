@@ -30,12 +30,31 @@ function copyToClipboard(text) {
 }
 
 function toggleApp(element) {
-            const row = element.closest('tr');
-            const targetId = row.getAttribute('data-target');
-            if (!targetId) return;
+    const row = element.closest('tr');
+    const targetId = row.getAttribute('data-target');
+    if (!targetId) return;
 
-            const appRow = document.getElementById(targetId);
-            if (appRow) {
-                appRow.classList.toggle('is-hidden');
-            }
-        }
+    const appRow = document.getElementById(targetId);
+    if (appRow) {
+        appRow.classList.toggle('is-hidden');
+    }
+}
+
+function openBanModal(buttonElement, title) {
+    event.stopPropagation(); // Щоб не розгорталась форма повідомлення
+    const modal = document.getElementById('banReasonModal');
+    const form = document.getElementById('banReasonForm');
+    const titleEl = document.getElementById('banModalTitle');
+
+    // Встановлюємо URL з кнопки прямо у форму
+    form.action = buttonElement.getAttribute('data-action');
+    titleEl.textContent = title;
+
+    modal.classList.remove('is-hidden');
+}
+
+function closeBanModal() {
+    const modal = document.getElementById('banReasonModal');
+    modal.classList.add('is-hidden');
+    document.getElementById('banReasonForm').reset();
+}

@@ -41,8 +41,6 @@ html, body {
     min-height: 100vh; /* Щоб збігалося з shell */
     overflow: auto;    /* Окремий скрол для контенту */
     box-sizing: border-box;
-
-    padding-top: var(--space-xl);
     padding-bottom: calc(var(--space-xl) * 4);
     padding-left: 0;
     padding-right: 0;

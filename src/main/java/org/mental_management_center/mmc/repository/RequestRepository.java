@@ -1,9 +1,10 @@
 package org.mental_management_center.mmc.repository;
 
+import org.mental_management_center.mmc.model.Request;
+import org.mental_management_center.mmc.model.RequestStatus;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.mental_management_center.mmc.model.Request;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -38,4 +39,7 @@ public interface RequestRepository extends JpaRepository<Request, UUID>{
 
     // Отримати тільки листи для адміністрації (де немає конкретного фахівця)
     List<Request> findByRecipientIsNull(org.springframework.data.domain.Sort sort);
+
+    // Підрахунок кількості звернень за певним статусом
+    long countByStatus(RequestStatus status);
 }

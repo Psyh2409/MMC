@@ -14,11 +14,23 @@
                 <p class="hero-description">Керуйте ролями, доступами та внутрішніми нотатками.</p>
             </div>
             <div class="hero-global-actions">
-                <!-- Посилання на панель модерації скарг (Тільки для ROLE_ADMIN) -->
                 <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
-                   th:href="@{/admin/reports}" class="btn-outline"><span class="hide-btn-icon">🚩 </span>Скарги та модерація</a>
+                   th:href="@{/admin/reports}" class="btn-outline relative">
+                    <span class="hide-btn-icon">🚩 </span>Скарги та модерація
+                    <!-- Бейдж, який пульсує, якщо є нові скарги -->
+                    <span th:if="${pendingReportsCount != null and pendingReportsCount > 0}"
+                          class="admin-alert-badge breath-alert"
+                          th:text="${pendingReportsCount}"></span>
+                </a>
                 <a th:href="@{/admin/articles}" class="btn-outline"><span class="hide-btn-icon">📝 </span>Статті</a>
-                <a th:href="@{/requests}" class="btn-outline"><span class="hide-btn-icon">📂 </span>Звернення</a>
+
+                <a th:href="@{/requests}" class="btn-outline relative">
+                    <span class="hide-btn-icon">📂 </span>Звернення
+                    <!-- Бейдж, який пульсує, якщо є нові звернення -->
+                    <span th:if="${newRequestsCount != null and newRequestsCount > 0}"
+                          class="admin-alert-badge breath-alert"
+                          th:text="${newRequestsCount}"></span>
+                </a>
             </div>
         </div>
 
@@ -59,13 +71,14 @@
             <tbody>
             <th:block th:each="u : ${allUsers}">
 
-                <tr th:attr="data-role=${u.primaryRoleName}"
-                    th:data-target="${u.specialistApplication != null ? 'app-' + u.id : null}">
+                <tr class="clickable-row"
+                    th:attr="data-role=${u.primaryRoleName}, data-target='admin-msg-' + ${u.id}"
+                    onclick="toggleApp(this)">
                     <td class="uuid-cell">
                         <th:block th:if="${u != null and u.id != null}">
                             <span class="uuid-text" th:text="${u.id}">ID</span>
                             <button type="button" class="btn-outline"
-                                    th:attr="onclick=|copyToClipboard('${u.id}')|">
+                                    th:attr="onclick=|event.stopPropagation(); copyToClipboard('${u.id}')|">
                                 📋
                             </button>
                         </th:block>
@@ -80,12 +93,14 @@
                                 <em th:text="${u.sosReason}"></em>
 
                                 <div class="admin-action-form-inline mt-sm">
-                                    <a th:href="@{/therapy/room/{id}(id=${u.id})}" class="btn-primary btn-sm">
+                                    <a th:href="@{/therapy/room/{id}(id=${u.id})}" class="btn-primary btn-sm"
+                                       onclick="event.stopPropagation();">
                                         Увійти в кабінет
                                     </a>
-                                    <form th:action="@{/admin/users/{id}/resolve-sos(id=${u.id})}" method="post" class="d-inline">
+                                    <form th:action="@{/admin/users/{id}/resolve-sos(id=${u.id})}" method="post"
+                                          class="d-inline">
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                        <button type="submit" class="btn-outline btn-sm">Вирішено (Вимкнути)</button>
+                                        <button type="submit" class="btn-outline btn-sm" onclick="event.stopPropagation();">Вирішено (Вимкнути)</button>
                                     </form>
                                 </div>
                             </div>
@@ -103,71 +118,75 @@
                                       placeholder="Додайте коментар..."
                                       class="admin-notes"></textarea>
                             <br>
-                            <button type="submit" class="btn-primary">Зберегти</button>
+                            <button type="submit" class="btn-primary" onclick="event.stopPropagation();">Зберегти</button>
                         </form>
                     </td>
 
                     <td>
                         <div class="admin-controls-wrapper" th:if="${!u.isAdmin()}">
-                            <form th:action="@{/admin/toggle-status/{id}(id=${u.id})}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="submit" class="btn-primary btn-sm" th:data-active="${u.enabled}">
-                                    <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn-primary btn-sm"
+                                    th:data-action="@{/admin/toggle-status/{id}(id=${u.id})}"
+                                    th:data-title="${u.enabled} ? 'Заблокувати доступ до сайту' : 'Розблокувати доступ до сайту'"
+                                    onclick="event.stopPropagation(); openBanModal(this, this.getAttribute('data-title'))">
+                                <span th:text="${u.enabled} ? '🌐 Сайт: OK' : '🚫 Сайт: БАН'"></span>
+                            </button>
 
-                            <form th:action="@{/admin/toggle-chat/{id}(id=${u.id})}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="submit" class="btn-primary btn-sm" th:data-active="${u.chatEnabled}">
-                                    <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn-primary btn-sm"
+                                    th:data-action="@{/admin/toggle-chat/{id}(id=${u.id})}"
+                                    th:data-title="${u.chatEnabled} ? 'Заблокувати доступ до чату' : 'Розблокувати доступ до чату'"
+                                    onclick="event.stopPropagation(); openBanModal(this, this.getAttribute('data-title'))">
+                                <span th:text="${u.chatEnabled} ? '💬 Чат: OK' : '🔇 Чат: БАН'"></span>
+                            </button>
 
-                            <form th:action="@{/admin/toggle-comments/{id}(id=${u.id})}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="submit" class="btn-primary btn-sm" th:data-active="${u.commentsEnabled}">
-                                    <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn-primary btn-sm"
+                                    th:data-action="@{/admin/toggle-comments/{id}(id=${u.id})}"
+                                    th:data-title="${u.commentsEnabled} ? 'Заблокувати доступ до коментарів' : 'Розблокувати доступ до коментарів'"
+                                    onclick="event.stopPropagation(); openBanModal(this, this.getAttribute('data-title'))">
+                                <span th:text="${u.commentsEnabled} ? '📝 Ком: OK' : '🔕 Ком: БАН'"></span>
+                            </button>
 
-                            <form th:action="@{/admin/delete/{id}(id=${u.id})}" method="post"
-                                  class="form-delete-account" onsubmit="return confirm('Видалити назавжди?')">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="submit" class="btn-outline btn-sm">Видалити</button>
-                            </form>
+                            <button type="button" class="btn-outline btn-sm"
+                                    th:data-action="@{/admin/delete/{id}(id=${u.id})}"
+                                    data-title="Видалити акаунт"
+                                    onclick="event.stopPropagation(); if(confirm('Видалити назавжди?')) openBanModal(this, 'Видалити акаунт')">
+                                Видалити
+                            </button>
 
                             <button th:if="${u.specialistApplication != null}"
                                     type="button"
                                     class="btn-outline btn-sm"
-                                    onclick="toggleApp(this)">
+                                    onclick="event.stopPropagation(); toggleApp(this)">
                                 <span th:text="${u.pendingSpecialist ? '📄 Заявка' : '🎓 Диплом'}"></span>
                             </button>
                             <button th:if="${u.isClient()}"
                                     type="button"
                                     class="btn-outline btn-sm"
                                     th:data-target="'therapist-info-' + ${u.id}"
-                                    onclick="document.getElementById(this.getAttribute('data-target')).classList.toggle('is-hidden')">
+                                    onclick="event.stopPropagation(); document.getElementById(this.getAttribute('data-target')).classList.toggle('is-hidden')">
                                 👥 Терапевт
                             </button>
+                        </div>
+                    </td>
+                </tr>
 
-                            <tr th:if="${u.isClient()}"
-                                th:id="'therapist-info-' + ${u.id}"
-                                class="is-hidden">
-                                <td colspan="7">
-                                    <div class="issue-callout p-sm">
-                                        <div class="ag-edebo">
-                                            <span class="text-muted">Відповідальний фахівець:</span>
-                                            <strong th:text="${u.therapist?.name ?: 'Не закріплено (стара архітектура)'}"></strong>
+                <tr th:if="${u.isClient()}"
+                    th:id="'therapist-info-' + ${u.id}"
+                    class="is-hidden">
+                    <td colspan="7">
+                        <div class="issue-callout p-sm">
+                            <div class="ag-edebo">
+                                <span class="text-muted">Відповідальний фахівець:</span>
+                                <strong th:text="${u.therapist?.name ?: 'Не закріплено (стара архітектура)'}"></strong>
 
-                                            <th:block th:if="${u.therapist != null}">
-                                                <span th:text="${'   |   ' + u.therapist.email}"></span>
-                                                <span class="text-muted">   |   Дата закріплення: </span>
-                                                <strong th:text="${approvalDates != null ? (approvalDates.get(u.id) ?: 'Невідомо') : 'Невідомо'}"></strong>
-                                            </th:block>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                <th:block th:if="${u.therapist != null}">
+                                    <span th:text="${'   |   ' + u.therapist.email}"></span>
+                                    <span class="text-muted">   |   Дата закріплення: </span>
+                                    <strong th:text="${approvalDates != null ? (approvalDates.get(u.id) ?: 'Невідомо') : 'Невідомо'}"></strong>
+                                </th:block>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
 
                 <tr th:if="${u.specialistApplication != null}"
                     th:id="'app-' + ${u.id}"
@@ -179,18 +198,77 @@
                                 <strong th:text="${u.specialistApplication.lastName + '   ' + u.specialistApplication.firstName + '   ' + (u.specialistApplication.noMiddleName ? '  ' : u.specialistApplication.middleName)}"></strong>
                                 <span th:text="${'   |   ' + u.specialistApplication.educationLevel + '   |   ' + u.specialistApplication.specialty + '   |   ' + u.specialistApplication.diplomaSeries + '   ' + u.specialistApplication.diplomaNumber}"></span>
 
-                                <form th:if="${u.pendingSpecialist}" th:action="@{/admin/verify-specialist/{id}(id=${u.id})}" method="post" class="admin-action-form-inline">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn-primary btn-sm">Підтвердити фахівця</button>
+                                <form th:if="${u.pendingSpecialist}"
+                                      th:action="@{/admin/verify-specialist/{id}(id=${u.id})}" method="post"
+                                      class="admin-action-form-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}"
+                                           th:value="${_csrf.token}">
+                                    <button type="submit" class="btn-primary btn-sm">Підтвердити фахівця
+                                    </button>
                                 </form>
                                 <span th:unless="${u.pendingSpecialist}" class="badge badge-therapist">ВЕРИФІКОВАНО</span>
                             </div>
                         </div>
                     </td>
                 </tr>
+
+                <tr th:id="'admin-msg-' + ${u.id}" class="is-hidden">
+                    <td colspan="7">
+                        <div class="reply-expanded-box p-sm">
+                            <strong class="text-main mb-xs d-block">Надіслати повідомлення
+                                користувачу</strong>
+                            <form th:action="@{/admin/users/{id}/send-message(id=${u.id})}" method="post"
+                                  class="stack-form">
+                                <input type="hidden" th:name="${_csrf.parameterName}"
+                                       th:value="${_csrf.token}">
+
+                                <textarea name="message" class="form-textarea" rows="3"
+                                          placeholder="Текст повідомлення..." required></textarea>
+
+                                <div class="row-between mt-xs">
+                                    <!-- Чекбокс опціональної відповіді -->
+                                    <label class="form-label checkbox-label text-sm">
+                                        <input type="checkbox" name="requireReply" value="true"
+                                               class="form-checkbox" checked>
+                                        <span>Вимагати відповідь (Додасть кнопку переходу в Контакти)</span>
+                                    </label>
+
+                                    <div class="action-group">
+                                        <!-- Кнопка скасування, яка імітує клік по рядку для згортання -->
+                                        <button type="button" class="btn-outline btn-sm"
+                                                th:data-target="'admin-msg-' + ${u.id}"
+                                                onclick="document.getElementById(this.getAttribute('data-target')).classList.add('is-hidden')">
+                                            Скасувати
+                                        </button>
+                                        <button type="submit" class="btn-primary btn-sm">Надіслати</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
             </th:block>
             </tbody>
         </table>
+    </div>
+    <!-- Універсальне модальне вікно для вказання причини бану -->
+    <div id="banReasonModal" class="modal-backdrop is-hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="heading-md" id="banModalTitle">Вкажіть причину обмеження</h3>
+                <button class="btn-icon-close" onclick="closeBanModal()">×</button>
+            </div>
+            <form id="banReasonForm" method="post" class="stack-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="form-group">
+                    <textarea name="reason" class="form-textarea" rows="3" placeholder="Причина бану..." required></textarea>
+                </div>
+                <div class="modal-footer mt-sm">
+                    <button type="button" class="btn-outline btn-sm" onclick="closeBanModal()">Скасувати</button>
+                    <button type="submit" class="btn-primary btn-sm">Застосувати</button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 <th:block th:fragment="page-scripts">

@@ -125,6 +125,48 @@
     animation: pulse-wave 2s infinite ease-in-out;
 }
 
+/* Базовий стиль бейджа (Темо-незалежний) */
+.admin-alert-badge {
+    position: absolute;
+    top: calc(var(--step) * -1.5);
+    right: calc(var(--step) * -1.5);
+    background-color: var(--text-primary);
+    color: var(--bg-surface);
+    border-radius: var(--radius-full);
+    padding: calc(var(--step) * 0.25) calc(var(--step) * 1);
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 var(--space-xs) var(--space-sm) var(--shadow-main);
+    pointer-events: none;
+}
+
+/* Анімація "Дихання" (Зміна прозорості та масштабу без прив'язки до кольору) */
+.breath-alert {
+    animation: breath-focus 2s infinite ease-in-out;
+}
+
+@keyframes breath-focus {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.8;
+    }
+}
+
+/* Стиль для домінуючого повідомлення адміна в профайлі */
+.admin-alert-card {
+    border-left: 0.25rem solid var(--text-primary);
+    background-color: var(--bg-surface-elevated, var(--border-soft));
+}
+
+/* Збереження форматування (абзаців та перенесень рядків) у тексті */
+.text-pre-wrap {
+    white-space: pre-wrap;
+}
+
 @keyframes pulse-wave {
     0%, 100% {
         box-shadow: 0 0 var(--space-xs) var(--shadow-main);

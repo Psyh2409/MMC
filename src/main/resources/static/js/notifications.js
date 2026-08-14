@@ -73,14 +73,20 @@ function loadNotificationsFeed() {
                 return;
             }
 
-            listContainer.innerHTML = slice.content.map(item => `
-                <a href="${item.targetUrl || '#'}"
-                   class="notification-item-link ${item.isRead ? 'text-muted' : 'font-bold'}"
-                   onclick="handleNotificationClick(event, '${item.id}', '${item.targetUrl}')">
-                    <div class="text-xs text-muted mb-xs">${item.title}</div>
-                    <div class="text-sm">${getSnippet(item.message)}</div>
-                </a>
-            `).join('');
+            listContainer.innerHTML = slice.content.map(item => {
+                const isAdminAlert = item.type === 'ADMIN_ALERT';
+                const displayMessage = isAdminAlert ? item.message : getSnippet(item.message);
+                const extraClass = isAdminAlert ? 'text-pre-wrap' : '';
+
+                return `
+                    <a href="${item.targetUrl || '#'}"
+                       class="notification-item-link ${item.isRead ? 'text-muted' : 'font-bold'}"
+                       onclick="handleNotificationClick(event, '${item.id}', '${item.targetUrl}')">
+                        <div class="text-xs text-muted mb-xs">${item.title}</div>
+                        <div class="text-sm ${extraClass}">${displayMessage}</div>
+                    </a>
+                `;
+            }).join('');
         });
 }
 

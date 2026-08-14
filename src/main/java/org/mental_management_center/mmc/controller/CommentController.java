@@ -50,6 +50,11 @@ public class CommentController {
 
         User author = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Користувача не знайдено"));
+        
+        if (!author.isCommentsEnabled()) {
+            throw new AccessDeniedException("Ваш доступ до коментарів заблоковано");
+        }
+        
         Article article = articleService.findById(id);
 
         Comment comment = new Comment();
