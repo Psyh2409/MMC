@@ -30,7 +30,7 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false)
+    @JoinColumn(name = "article_id", nullable = true)
     private Article article;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -49,8 +49,8 @@ public class Comment {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @OrderBy("createdAt ASC") // Твоє сортування на місці
-    @Builder.Default          // Твій білдер на місці
+    @OrderBy("createdAt ASC")
+    @Builder.Default
     private List<Comment> replies = new ArrayList<>();
 
     @Column(name = "is_deleted_by_admin", nullable = false)
@@ -64,4 +64,8 @@ public class Comment {
 
     @Column(name = "deletion_reason")
     private String deletionReason;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "public_post_id", nullable = true)
+    private PublicPost publicPost;
 }

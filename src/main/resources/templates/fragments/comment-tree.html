@@ -39,11 +39,12 @@
     <!-- Блок дій (видимий тільки якщо не видалено жодною з трьох ролей) -->
     <div th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}" class="comment-actions">
 
-        <!-- Відповісти -->
+        <!-- Відповісти (з точним URL для JS) -->
         <button th:if="${#authorization.expression('isAuthenticated()')}"
                 type="button"
                 class="btn-outline btn-sm btn-reply-action"
-                th:data-id="${comment.id}">
+                th:data-id="${comment.id}"
+                th:data-url="${comment.article != null ? '/articles/' + comment.article.id + '/comments' : (comment.publicPost != null ? '/public-posts/' + comment.publicPost.id + '/comments' : '')}">
             Відповісти
         </button>
 
@@ -73,9 +74,10 @@
             <button type="submit" class="btn-outline btn-sm">Видалити</button>
         </form>
 
-        <!-- Модерація чужого коментаря (Author / Admin -> через модалку) -->
+        <!-- Модерація чужого коментаря (Автор статті/поста або Адмін) -->
         <button th:if="${#authorization.expression('isAuthenticated()') and (comment.author == null or comment.author.email != #authentication.name) and (
                 (comment.article != null and comment.article.author != null and comment.article.author.email == #authentication.name) or
+                (comment.publicPost != null and comment.publicPost.author != null and comment.publicPost.author.email == #authentication.name) or
                 #authorization.expression('hasRole(''ADMIN'')')
             )}"
                 type="button"
@@ -85,11 +87,11 @@
         </button>
     </div>
 
-</div>
-
-<div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
-    <div th:each="reply : ${comment.replies}">
-        <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
+    <div th:if="${comment.replies != null and !comment.replies.isEmpty()}" class="replies-container">
+        <div th:each="reply : ${comment.replies}">
+            <div th:replace="~{fragments/comment-tree :: commentNode(${reply}, ${depth + 1})}"></div>
+        </div>
     </div>
+
 </div>
 </div>

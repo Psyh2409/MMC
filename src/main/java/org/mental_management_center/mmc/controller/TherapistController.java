@@ -1,27 +1,27 @@
 package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
-import org.mental_management_center.mmc.model.Article;
-import org.mental_management_center.mmc.model.Notification;
-import org.mental_management_center.mmc.model.TherapyAssignment;
-import org.mental_management_center.mmc.model.User;
+import lombok.RequiredArgsConstructor;
+import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
+import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.ArticleForm;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("/therapist")
+@RequiredArgsConstructor
 public class TherapistController {
 
     private final UserService userService;
@@ -31,22 +31,13 @@ public class TherapistController {
     private final PublicPostService publicPostService;
     private final NotificationService notificationService;
     private final EmailService emailService;
-
-
-    public TherapistController(UserService userService, TherapyAssignmentService assignmentService, ArticleService articleService, CategoryTranslationRepository categoryTranslationRepository, PublicPostService publicPostService, NotificationService notificationService, EmailService emailService) {
-        this.userService = userService;
-        this.assignmentService = assignmentService;
-        this.articleService = articleService;
-        this.categoryTranslationRepository = categoryTranslationRepository;
-        this.publicPostService = publicPostService;
-        this.notificationService = notificationService;
-        this.emailService = emailService;
-    }
+    private final CommentRepository commentRepository;
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
     // Гостя автоматично перекине на /login
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/public/{id}")
+    @Transactional(readOnly = true)
     public String showPublicProfile(@PathVariable UUID id, Model model, Principal principal) {
         User therapist = Optional.ofNullable(userService.findById(id))
                 .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
@@ -74,6 +65,17 @@ public class TherapistController {
         model.addAttribute("therapistArticles", articleService.findByAuthorId(therapist.getId()));
         // therapist - це той фахівець, чию візитку зараз відкрили
         model.addAttribute("publicPosts", publicPostService.getPostsByAuthor(therapist.getId(), 0, 20));
+
+        // Завантаження коментарів для публічної стіни відвідувачів
+        Page<PublicPost> postsPage = publicPostService.getPostsByAuthor(therapist.getId(), 0, 50);
+        model.addAttribute("wallPosts", postsPage);
+
+        Map<UUID, List<Comment>> postCommentsMap = new HashMap<>();
+        for (PublicPost post : postsPage.getContent()) {
+            List<Comment> comments = commentRepository.findCommentsWithTreeByPublicPost(post);
+            postCommentsMap.put(post.getId(), comments);
+        }
+        model.addAttribute("postCommentsMap", postCommentsMap);
 
         return "therapist-public";
     }
@@ -326,4 +328,5 @@ public class TherapistController {
         redirectAttributes.addFlashAttribute("success", "Повідомлення клієнту успішно надіслано!");
         return "redirect:/therapist/dashboard";
     }
+
 }

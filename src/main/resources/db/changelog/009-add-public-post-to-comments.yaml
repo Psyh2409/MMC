@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-add-public-post-to-comments
+      author: mmc
+      changes:
+        - dropNotNullConstraint:
+            tableName: comments
+            columnName: article_id
+            columnDataType: UUID
+        - addColumn:
+            tableName: comments
+            columns:
+              - column:
+                  name: public_post_id
+                  type: UUID
+        - addForeignKeyConstraint:
+            baseTableName: comments
+            baseColumnNames: public_post_id
+            constraintName: fk_comments_public_post
+            referencedTableName: public_posts
+            referencedColumnNames: id
+            onDelete: CASCADE

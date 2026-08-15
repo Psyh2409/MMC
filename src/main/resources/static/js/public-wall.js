@@ -49,3 +49,30 @@ function togglePublicPostEdit(postId) {
         editBox.classList.toggle('is-hidden');
     }
 }
+
+// Автоматичне перемикання на вкладку Стіни та скрол до коментаря
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#comment-')) {
+
+        // 1. Шукаємо кнопку/посилання, яка відкриває вкладку Стіни
+        // (Шукаємо по типових селекторах. Якщо у вас інший ID вкладки - він його знайде)
+        const wallTabTrigger = document.querySelector('[href="#wall-tab"], [data-target="#wall-tab"], #wall-tab-btn, button[onclick*="wall"]');
+
+        if (wallTabTrigger) {
+            wallTabTrigger.click(); // Відкриваємо стіну
+        }
+
+        // 2. Чекаємо мить (щоб вкладка встигла відкритися) і скролимо до коментаря
+        setTimeout(() => {
+            const commentEl = document.querySelector(hash);
+            if (commentEl) {
+                commentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Опціонально: додаємо стиль, щоб підсвітити новий/відредагований коментар
+                commentEl.style.transition = "background-color 1s ease";
+                commentEl.style.backgroundColor = "var(--bg-surface-hover)";
+                setTimeout(() => commentEl.style.backgroundColor = "transparent", 2000);
+            }
+        }, 300);
+    }
+});

@@ -2,11 +2,9 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.Article;
-import org.mental_management_center.mmc.model.Comment;
-import org.mental_management_center.mmc.model.Notification;
-import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.CommentRepository;
+import org.mental_management_center.mmc.repository.PublicPostRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.ArticleService;
 import org.mental_management_center.mmc.service.NotificationService;
@@ -30,6 +28,7 @@ public class CommentController {
     private final UserRepository userRepository;
     private final ArticleService articleService;
     private final NotificationService notificationService;
+    private final PublicPostRepository publicPostRepository;
 
     // 1. Створення коментаря під статтею (з відображенням автора та тексту)
     @Transactional
@@ -103,35 +102,43 @@ public class CommentController {
         return "redirect:/articles/" + id + "#comment-" + savedComment.getId();
     }
 
-    // 2. Редагування коментаря (Тільки автор)
+    // 2. УНІВЕРСАЛЬНЕ РЕДАГУВАННЯ (і для статей, і для стіни)
     @Transactional
     @PostMapping("/articles/comments/{commentId}/edit")
     public String editComment(
             @PathVariable("commentId") UUID commentId,
             @RequestParam String content,
-            Authentication auth) {
+            Authentication auth,
+            HttpServletRequest request) { // ДОДАЛИ HttpServletRequest
 
-        if (auth == null || !auth.isAuthenticated()) {
-            return "redirect:/login";
-        }
+        if (auth == null || !auth.isAuthenticated()) return "redirect:/login";
 
-        String email = (auth.getPrincipal() instanceof OAuth2User oauth2)
+        String email = (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2)
                 ? oauth2.getAttribute("email")
                 : auth.getName();
 
-        User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Користувача не знайдено"));
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Коментар не знайдено"));
+        User currentUser = userRepository.findByEmail(email).orElseThrow();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
 
         if (!comment.getAuthor().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("Немає прав для редагування");
+            throw new org.springframework.security.access.AccessDeniedException("Немає прав");
         }
 
         comment.setContent(content);
         commentRepository.save(comment);
 
-        return "redirect:/articles/" + comment.getArticle().getId() + "#comment-" + comment.getId();
+        // Безпечний редирект залежно від того, де залишено коментар
+        if (comment.getArticle() != null) {
+            return "redirect:/articles/" + comment.getArticle().getId() + "#comment-" + comment.getId();
+        } else if (comment.getPublicPost() != null) {
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.isBlank()) {
+                int hashIndex = referer.indexOf('#');
+                String cleanReferer = (hashIndex != -1) ? referer.substring(0, hashIndex) : referer;
+                return "redirect:" + cleanReferer + "#comment-" + comment.getId();
+            }
+        }
+        return "redirect:/";
     }
 
     // 3. М'яке видалення коментаря (Автор коментаря, Автор статті або Адмін)
@@ -165,8 +172,9 @@ public class CommentController {
         UUID articleId = (comment.getArticle() != null) ? comment.getArticle().getId() : null;
 
         boolean isCommenter = comment.getAuthor() != null && comment.getAuthor().getId().equals(currentUser.getId());
-        boolean isAuthor = comment.getArticle() != null && comment.getArticle().getAuthor() != null
-                && comment.getArticle().getAuthor().getId().equals(currentUser.getId());
+        // Змінюємо перевірку isAuthor:
+        boolean isAuthor = (comment.getArticle() != null && comment.getArticle().getAuthor() != null && comment.getArticle().getAuthor().getId().equals(currentUser.getId()))
+                || (comment.getPublicPost() != null && comment.getPublicPost().getAuthor() != null && comment.getPublicPost().getAuthor().getId().equals(currentUser.getId()));
         boolean isAdmin = currentUser.isAdmin();
 
         if (!isCommenter && !isAuthor && !isAdmin) {
@@ -192,5 +200,77 @@ public class CommentController {
 
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/articles");
+    }
+
+    // 1. СТВОРЕННЯ КОМЕНТАРЯ (Змінили URL, щоб Spring Security не блокував звичайних юзерів)
+    @Transactional
+    @PostMapping("/public-posts/{postId}/comments")
+    public String addPublicPostComment(
+            @PathVariable("postId") UUID postId,
+            @RequestParam String content,
+            @RequestParam(required = false) UUID parentId,
+            Authentication auth,
+            HttpServletRequest request) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        String email = (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2)
+                ? oauth2.getAttribute("email")
+                : auth.getName();
+
+        User author = userRepository.findByEmail(email).orElseThrow();
+        PublicPost post = publicPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Пост не знайдено"));
+
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setPublicPost(post);
+        comment.setAuthor(author);
+        comment.setCreatedAt(java.time.LocalDateTime.now());
+
+        if (parentId != null) {
+            commentRepository.findById(parentId).ifPresent(comment::setParentComment);
+        }
+
+        Comment savedComment = commentRepository.save(comment);
+
+        // --- СПОВІЩЕННЯ ДЛЯ ТЕРАПЕВТА (АВТОРА ПОСТА) ---
+        User postAuthor = post.getAuthor();
+        if (postAuthor != null && !postAuthor.getId().equals(author.getId())) {
+            notificationService.createNotification(
+                    postAuthor,
+                    "Новий коментар на вашій стіні",
+                    author.getName() + ": " + comment.getContent(),
+                    "/therapist/public-wall#comment-" + savedComment.getId(),
+                    Notification.NotificationType.STANDARD
+            );
+        }
+
+        // --- СПОВІЩЕННЯ ДЛЯ АВТОРА БАТЬКІВСЬКОГО КОМЕНТАРЯ ---
+        if (comment.getParentComment() != null) {
+            User parentCommentAuthor = comment.getParentComment().getAuthor();
+            if (parentCommentAuthor != null
+                    && !parentCommentAuthor.getId().equals(author.getId())
+                    && (postAuthor == null || !parentCommentAuthor.getId().equals(postAuthor.getId()))) {
+
+                notificationService.createNotification(
+                        parentCommentAuthor,
+                        "Відповідь на ваш коментар",
+                        author.getName() + ": " + comment.getContent(),
+                        "/therapist/public-wall#comment-" + savedComment.getId(),
+                        Notification.NotificationType.STANDARD
+                );
+            }
+        }
+        // Надійний редирект назад
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isBlank()) {
+            int hashIndex = referer.indexOf('#');
+            String cleanReferer = (hashIndex != -1) ? referer.substring(0, hashIndex) : referer;
+            return "redirect:" + cleanReferer + "#comment-" + savedComment.getId();
+        }
+        return "redirect:/";
     }
 }

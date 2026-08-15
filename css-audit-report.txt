@@ -2,10 +2,10 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sat Aug 15 16:16:57 EEST 2026
+Дата: Sun Aug 16 00:28:18 EEST 2026
 ======================================================
 
-❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 123:
+❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 126:
   - Клас [article-cta-subtitle] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
@@ -17,6 +17,7 @@
   - Клас [border-danger] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [border-radius-sm] є в HTML [admin-reports.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [border-top-subtle] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [border-top] є в HTML [public-wall-components.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-accent-capsule] є в HTML [header-footer.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-delete-comment-action] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [btn-edit-action] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
@@ -37,6 +38,7 @@
   - Клас [comments-feed-box] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comments-list] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [comments-section-wrapper] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [comments-tree-wrapper] є в HTML [public-wall-components.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [contact-direct-email] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [contact-direct-info] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [controls] є в HTML [logo.html], але В CSS ЙОГО НЕМАЄ!
@@ -89,7 +91,7 @@
   - Клас [msg] є в HTML [requests.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [mt-lg] є в HTML [article-form.html, therapist-client-notes.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [mt-sm] є в HTML [about.html, edebo-form.html, specialists.html, therapist-client-notes.html, 403.html, public-wall-components.html, profile.html, user-requests.html, therapist-public.html, notifications-tab.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [mt-xs] є в HTML [shared-wall-form.html, therapist-dashboard.html, admin-users.html, user-requests.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [mt-xs] є в HTML [public-wall-components.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html, user-requests.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [no-comments] є в HTML [article.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [notes-header-row] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [oauth-button-google] є в HTML [login.html], але В CSS ЙОГО НЕМАЄ!
@@ -97,8 +99,9 @@
   - Клас [p-xs] є в HTML [header.html, admin-reports.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [page-header] є в HTML [admin-reports.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [parse-media-links] є в HTML [public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [post-comments-section] є в HTML [public-wall-components.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [post-header] є в HTML [therapist-client-notes.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [pt-sm] є в HTML [notifications-tab.html, profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [pt-sm] є в HTML [notifications-tab.html, public-wall-components.html, profile.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [pt-xs] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [reply-form] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [reply-row] є в HTML [requests.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
@@ -409,8 +412,8 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 587
-  Класи-пустишки в HTML: 123
+  Всього знайдено класів: 590
+  Класи-пустишки в HTML: 126
   Мертві стилі в CSS: 166
   Конфлікти стилів: 57
   Потенційні дублікати: 49

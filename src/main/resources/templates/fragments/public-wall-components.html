@@ -82,7 +82,26 @@
                 </div>
             </div>
         </div>
+        <!-- Секція коментарів під постом стіни -->
+        <div class="post-comments-section mt-md pt-sm border-top">
+            <!-- Форма нового коментаря -->
+            <form th:if="${#authorization.expression('isAuthenticated()')}"
+                  th:action="@{/public-posts/{postId}/comments(postId=${post.id})}"
+                  method="post" class="stack-form mb-sm">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <textarea name="content" class="form-textarea" rows="2" placeholder="Залишити коментар..." required></textarea>
+                <div class="text-right mt-xs">
+                    <button type="submit" class="btn-primary btn-sm">Залишити коментар</button>
+                </div>
+            </form>
 
+            <!-- Дерево коментарів -->
+            <div th:if="${postCommentsMap != null and postCommentsMap.get(post.id) != null}" class="comments-tree-wrapper">
+                <div th:each="comment : ${postCommentsMap.get(post.id)}">
+                    <div th:replace="~{fragments/comment-tree :: commentNode(${comment}, 0)}"></div>
+                </div>
+            </div>
+        </div>
         <div th:if="${isOwner}" th:id="'post-edit-' + ${post.id}" class="is-hidden mt-sm">
             <form th:action="@{/therapist/public-wall/edit/{id}(id=${post.id})}" method="post" class="stack-form">
                 <textarea name="content" class="form-textarea" rows="4" required th:text="${post.content}"></textarea>
