@@ -5,9 +5,12 @@
     <div class="site-footer-inner">
         <div class="footer-left">
             <div sec:authorize="hasRole('ADMIN')">
-                <a th:href="@{/admin/users}" class="btn-outline">
-                    <span class="hide-btn-icon">⚙️ </span>Адмінка
-                </a>
+                <div class="admin-badge-wrapper">
+                    <a th:href="@{/admin/users}" class="btn-outline">
+                        <span class="hide-btn-icon">⚙️ </span>Адмінка
+                    </a>
+                    <span id="footerAdminBadge" class="admin-alert-badge breath-alert is-hidden">0</span>
+                </div>
             </div>
 
             <div sec:authorize="isAnonymous()">

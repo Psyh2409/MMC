@@ -126,18 +126,26 @@
 }
 
 /* Базовий стиль бейджа (Темо-незалежний) */
+/* Обгортка, яка утримує кнопку і дозволяє бейджу виступати за межі */
+.admin-badge-wrapper {
+    position: relative;
+    display: inline-flex;
+}
+
+/* Оновлені координати бейджа, щоб він ідеально сидів на кутку обгортки */
 .admin-alert-badge {
     position: absolute;
-    top: calc(var(--step) * -1.5);
-    right: calc(var(--step) * -1.5);
+    top: calc(var(--space-xs) * -1.5);
+    right: calc(var(--space-xs) * -1.5);
     background-color: var(--text-primary);
     color: var(--bg-surface);
     border-radius: var(--radius-full);
-    padding: calc(var(--step) * 0.25) calc(var(--step) * 1);
+    padding: calc(var(--space-xs) * 0.5) var(--space-sm);
     font-size: 0.8rem;
-    font-weight: bold;
+    font-weight: 700;
     box-shadow: 0 var(--space-xs) var(--space-sm) var(--shadow-main);
     pointer-events: none;
+    z-index: 10; /* Гарантуємо, що бейдж буде поверх усього */
 }
 
 /* Анімація "Дихання" (Зміна прозорості та масштабу без прив'язки до кольору) */

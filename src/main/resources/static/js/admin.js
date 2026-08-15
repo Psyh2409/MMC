@@ -58,3 +58,31 @@ function closeBanModal() {
     modal.classList.add('is-hidden');
     document.getElementById('banReasonForm').reset();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkAdminAlerts();
+});
+
+function checkAdminAlerts() {
+    const badge = document.getElementById('footerAdminBadge');
+    // Якщо бейджа немає на сторінці (користувач не адмін), перериваємо виконання
+    if (!badge) return;
+
+    fetch('/api/admin/alerts-count')
+        .then(response => {
+            if (!response.ok) throw new Error('Помилка авторизації або сервера');
+            return response.json();
+        })
+        .then(count => {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('is-hidden');
+            } else {
+                badge.classList.add('is-hidden');
+            }
+        })
+        .catch(error => {
+            // Тихо ігноруємо помилки мережі, щоб не засмічувати консоль
+            console.debug('[MMC Admin] Не вдалося завантажити лічильник:', error);
+        });
+}

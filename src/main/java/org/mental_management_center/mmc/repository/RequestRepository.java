@@ -42,4 +42,8 @@ public interface RequestRepository extends JpaRepository<Request, UUID>{
 
     // Підрахунок кількості звернень за певним статусом
     long countByStatus(RequestStatus status);
+
+    // Рахує всі звернення, де статус NEW або NULL, і які призначені адміну
+    @Query("SELECT COUNT(r) FROM Request r WHERE (r.status = 'NEW' OR r.status IS NULL) AND r.recipient IS NULL")
+    long countUnprocessedAdminRequests();
 }

@@ -14,23 +14,27 @@
                 <p class="hero-description">Керуйте ролями, доступами та внутрішніми нотатками.</p>
             </div>
             <div class="hero-global-actions">
-                <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
-                   th:href="@{/admin/reports}" class="btn-outline relative">
-                    <span class="hide-btn-icon">🚩 </span>Скарги та модерація
-                    <!-- Бейдж, який пульсує, якщо є нові скарги -->
+                <!-- Скарги: Обгортка для кнопки та бейджа -->
+                <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="admin-badge-wrapper">
+                    <a th:href="@{/admin/reports}" class="btn-outline">
+                        <span class="hide-btn-icon">🚩 </span>Скарги та модерація
+                    </a>
                     <span th:if="${pendingReportsCount != null and pendingReportsCount > 0}"
                           class="admin-alert-badge breath-alert"
                           th:text="${pendingReportsCount}"></span>
-                </a>
+                </div>
+
                 <a th:href="@{/admin/articles}" class="btn-outline"><span class="hide-btn-icon">📝 </span>Статті</a>
 
-                <a th:href="@{/requests}" class="btn-outline relative">
-                    <span class="hide-btn-icon">📂 </span>Звернення
-                    <!-- Бейдж, який пульсує, якщо є нові звернення -->
+                <!-- Звернення: Обгортка для кнопки та бейджа -->
+                <div class="admin-badge-wrapper">
+                    <a th:href="@{/requests}" class="btn-outline">
+                        <span class="hide-btn-icon">📂 </span>Звернення
+                    </a>
                     <span th:if="${newRequestsCount != null and newRequestsCount > 0}"
                           class="admin-alert-badge breath-alert"
                           th:text="${newRequestsCount}"></span>
-                </a>
+                </div>
             </div>
         </div>
 

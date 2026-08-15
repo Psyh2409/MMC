@@ -32,4 +32,6 @@ public interface SpecialistAppRepository extends JpaRepository<SpecialistApplica
     // Витягнути всі заявки зі статусом APPROVED
     @Query("SELECT s FROM SpecialistApplication s JOIN FETCH s.user WHERE s.status = :status")
     List<SpecialistApplication> findAllByStatusWithUser(@Param("status") String status);
+
+    long countByStatus(String status);
 }

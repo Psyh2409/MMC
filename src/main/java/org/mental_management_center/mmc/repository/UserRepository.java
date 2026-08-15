@@ -45,4 +45,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     // Отримати тільки тестових користувачів (де біт 128 ВСТАНОВЛЕНИЙ)
     @Query(value = "SELECT * FROM users WHERE (roles_mask & 128) != 0", nativeQuery = true)
     List<User> findTestUsers();
+
+    long countBySosRequestedTrue();
 }

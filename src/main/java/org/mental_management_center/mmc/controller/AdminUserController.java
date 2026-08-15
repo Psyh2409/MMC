@@ -51,8 +51,8 @@ public class AdminUserController {
         model.addAttribute("allUsers", visibleUsers);
         model.addAttribute("countUsers", userRepository.countByRoleMask(RoleBit.READER.getMask()));
         model.addAttribute("countClients", userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
-        model.addAttribute("pendingReportsCount", reportRepository.countByStatus(Report.ReportStatus.PENDING));
-        model.addAttribute("newRequestsCount", requestRepository.countByStatus(RequestStatus.NEW));
+        model.addAttribute("pendingReportsCount", reportRepository.countByStatus(org.mental_management_center.mmc.model.Report.ReportStatus.PENDING));
+        model.addAttribute("newRequestsCount", requestRepository.countUnprocessedAdminRequests());
 
         UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
         SiteStats siteStats = siteStatsRepository.findById(statsId).orElse(new SiteStats());
