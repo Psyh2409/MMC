@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/008-create-shared-wall-comments.yaml
   - include:
       file: db/changelog/009-add-public-post-to-comments.yaml
+  - include:
+      file: db/changelog/010-add-custom-author-to-articles.yaml

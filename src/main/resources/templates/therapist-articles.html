@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
 <head>
-    <title>Мої статті | Терапевт</title>
+    <title>Мої статті | Кабінет фахівця</title>
 </head>
 <body>
-
 <section class="standard-container standard-container-wide">
-    <div class="standard-container-wide">
+    <div class="mt-md">
 
+        <!-- Переуживаний компонент списку статей -->
         <div th:replace="~{fragments/article-components :: articles-list(
                 articles=${therapistArticles},
                 title='Мої публікації',
                 basePath='/therapist/articles',
                 allowEdit=true,
                 allowDelete=true
-        )}"></div>
+            )}"></div>
 
     </div>
 </section>
 
+<!-- Підключаємо необхідний скрипт для обробки кліків по рядках -->
+<th:block th:fragment="page-scripts">
+    <script src="/js/article.js" defer></script>
+</th:block>
 </body>
 </html>

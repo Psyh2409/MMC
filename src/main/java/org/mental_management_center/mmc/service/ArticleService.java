@@ -82,6 +82,7 @@ public class ArticleService {
             article.setTitle(form.getTitle());
             article.setDescription(form.getDescription());
             article.setCategory(slug);
+            article.setCustomAuthor(form.getCustomAuthor());
 
             // ЗОЛОТЕ ПРАВИЛО: Оновлюємо картинку ТІЛЬКИ якщо завантажено НОВИЙ файл!
             // Якщо інтернет-сторінка відправила порожній файл, старий шлях залишається недоторканим.

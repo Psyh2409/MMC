@@ -17,7 +17,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.hibernate.Hibernate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -125,60 +124,42 @@ public class ArticleController {
         return "article-form";
     }
 
-    @PostMapping("/admin/articles/create")
-    public String createArticle(@Valid @ModelAttribute("articleForm") ArticleForm form,
-                                BindingResult result,
-                                @RequestParam(value = "mediaFile", required = false) MultipartFile mediaFile,
-                                Model model) { // <--- 1. ДОДАНО ПАРАМЕТР Model
-
-        // --- ДІАГНОСТИКА: ЩО ПРИЙШЛО З ФОРМИ ---
-        System.out.println("=== СТАРТ ЗБЕРЕЖЕННЯ СТАТТІ ===");
-        System.out.println("Title: " + form.getTitle());
-        System.out.println("Category: " + form.getCategory());
-        System.out.println("Has Errors? " + result.hasErrors());
-        // ---------------------------------------
+    // Оновлений ендпоінт збереження (збігається з actionUrl = "/admin/articles/save")
+    @PostMapping("/admin/articles/save")
+    public String saveArticle(@Valid @ModelAttribute("articleForm") ArticleForm form,
+                              BindingResult result,
+                              @RequestParam(value = "mediaFile", required = false) MultipartFile mediaFile,
+                              Model model) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             return "redirect:/login";
         }
 
-        String email;
-        // Універсальний спосіб отримання email
-        if (auth.getPrincipal() instanceof OAuth2User oauth2User) {
-            email = oauth2User.getAttribute("email");
-        } else {
-            email = auth.getName(); // Для звичайного Form Login (Username)
-        }
-
-        System.out.println("DEBUG: Спроба публікації від: " + email);
+        String email = (auth.getPrincipal() instanceof OAuth2User oauth2User)
+                ? oauth2User.getAttribute("email")
+                : auth.getName();
 
         User currentUser = userRepository.findByEmail(email).orElse(null);
 
         if (currentUser != null && currentUser.isAdmin()) {
             if (result.hasErrors()) {
-
-                // ПРИМУСОВИЙ ВИВІД ПОМИЛОК В КОНСОЛЬ
-                result.getFieldErrors().forEach(e ->
-                        System.err.println("ПОМИЛКА В ПОЛІ " + e.getField() + ": " + e.getDefaultMessage()));
-
-                // <--- 2. ДОДАНО: Повертаємо категорії на форму, щоб список не зникав!
+                // Якщо є помилки валідації — повертаємо категорії назад у форму
                 model.addAttribute("categories", categoryTranslationRepository.findAll());
+                model.addAttribute("actionUrl", "/admin/articles/save");
+                model.addAttribute("formTitle", "Створення нової статті");
                 return "article-form";
             }
 
             String savedFileName = null;
-            // Перевіряємо, чи користувач дійсно прикріпив файл
             if (mediaFile != null && !mediaFile.isEmpty()) {
-                // Зберігаємо файл на диск і отримуємо його унікальне ім'я (тепер уже хеш)
                 savedFileName = fileStorageService.storeFile(mediaFile);
             }
 
-            // Передаємо ім'я файлу в сервіс
+            // Зберігаємо статтю через сервіс
             articleService.saveFromForm(form, currentUser, savedFileName);
             return "redirect:/admin/articles";
         } else {
-            System.out.println("КРИТИЧНО: Користувач не знайдений або не має прав ADMIN: " + email);
             return "redirect:/login?error=access_denied";
         }
     }

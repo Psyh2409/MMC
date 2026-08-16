@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
 <head>
     <title>Управління статтями | Адмінка</title>
 </head>
@@ -18,5 +22,9 @@
 
     </div>
 </section>
+
+<th:block th:fragment="page-scripts">
+    <script src="/js/article.js" defer></script>
+</th:block>
 </body>
 </html>

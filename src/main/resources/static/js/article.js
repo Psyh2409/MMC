@@ -90,3 +90,30 @@ window.cancelEditForm = function() {
         existingEditForm.remove();
     }
 };
+
+// Функція копіювання посилання на статтю
+window.copyArticleLink = function(btn) {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Скопійовано! ✓';
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+        }, 2000);
+    }).catch(err => console.error('Помилка копіювання:', err));
+};
+
+// Перехід до статті при кліку на рядок таблиці (з ігноруванням кнопок дій)
+document.addEventListener('click', (e) => {
+    const row = e.target.closest('.clickable-row');
+    const isActionClick = e.target.closest('.action-group') || e.target.closest('a') || e.target.closest('button');
+
+    if (row && !isActionClick) {
+        const articleId = row.getAttribute('data-article-id');
+        if (articleId) {
+            window.location.href = '/articles/' + articleId;
+        }
+    }
+});

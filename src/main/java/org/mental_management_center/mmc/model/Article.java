@@ -1,14 +1,14 @@
 package org.mental_management_center.mmc.model;
 
-import lombok.*;
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.*;
+import lombok.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -68,6 +68,17 @@ public class Article {
     // Усередині класу Article.java додаємо поле для відносного шляху медіа
     @Column(name = "image_path", length = 512)
     private String imagePath;
+
+    @Column(name = "custom_author_name")
+    private String customAuthor;
+
+    // Метод для автоматичного вибору імені автора в шаблонах
+    public String getDisplayAuthorName() {
+        if (customAuthor != null && !customAuthor.isBlank()) {
+            return customAuthor;
+        }
+        return (author != null && author.getName() != null) ? author.getName() : "Анонім";
+    }
 
     // Сеттер для автоматичного стиснення при встановленні тексту
     public void setContent(String content) {

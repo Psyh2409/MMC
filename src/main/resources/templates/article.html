@@ -14,8 +14,8 @@
         <div class="article-meta">
             <span class="text-muted" th:text="${#temporals.format(article.publishedAt, 'dd MMMM yyyy')}">01 січня 2024</span>
 
-            <!-- Додаємо ім'я автора сюди. Якщо автора ще немає в базі, виведе "Редакція MMC" -->
-            <span class="text-muted" th:text="${article.author != null ? article.author.name : 'Редакція MMC'}">Автор</span>
+            <!-- Автоматичне виведення кастомного або системного автора -->
+            <span class="text-muted" th:text="${article.displayAuthorName}">Автор</span>
 
             <span class="article-category"
                   th:text="${allCategoriesMap != null ? allCategoriesMap[article.category] : article.category}">
@@ -30,19 +30,35 @@
     <article class="content-section">
         <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
     </article>
+
+    <!-- Підпис автора внизу статті -->
     <div class="author-signature text-muted mb-md">
         <hr class="article-divider">
         <p class="heading-lg">
             <strong>Автор матеріалу: </strong>
-            <span th:if="${article.author != null}">
-            <span th:text="${article.author.name}">Ім'я автора</span>
-            <span th:text="' (' + ${article.author.email} + ')'">(email@example.com)</span>
-        </span>
-            <span th:unless="${article.author != null}">
-            Редакція MMC
-        </span>
+            <span th:if="${article.customAuthor != null and !#strings.isEmpty(article.customAuthor)}"
+                  th:text="${article.customAuthor}">Кастомний автор</span>
+
+            <span th:unless="${article.customAuthor != null and !#strings.isEmpty(article.customAuthor)}">
+                <span th:if="${article.author != null}">
+                    <span th:text="${article.author.name}">Ім'я автора</span>
+                    <span th:text="' (' + ${article.author.email} + ')'">(email@example.com)</span>
+                </span>
+                <span th:unless="${article.author != null}">Редакція MMC</span>
+            </span>
         </p>
     </div>
+
+    <!-- Лаконічний блок "Поділитися" -->
+    <div class="share-block card-primary mb-lg p-md">
+        <p class="heading-md mb-sm">Сподобався матеріал? Поділіться з тими, кому це важливо:</p>
+        <div class="action-group">
+            <button type="button" class="btn-outline btn-sm" onclick="window.copyArticleLink(this)">
+                📋 Скопіювати посилання
+            </button>
+        </div>
+    </div>
+
     <hr class="article-divider">
 
     <section class="layout-container">
@@ -54,17 +70,15 @@
                 <input type="hidden" name="parentId" id="parentIdInput" value="">
 
                 <textarea name="content" class="comment-textarea" rows="3" required placeholder="Поділіться своїми думками..."></textarea>
-                <button type="submit" class="btn-primary">
-                    Відправити
-                </button>
-                <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-outline">
-                    Скасувати
-                </button>
+                <div class="button-row mt-xs">
+                    <button type="submit" class="btn-primary">Відправити</button>
+                    <button type="button" id="cancel-reply-btn" onclick="resetReplyForm()" class="btn-outline">Скасувати</button>
+                </div>
             </form>
         </div>
 
         <div th:unless="${#authorization.expression('isAuthenticated()')}" class="comment-login-prompt">
-            <p><a th:href="@{/login}"  class="helper-link">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
+            <p><a th:href="@{/login}" class="helper-link">Увійдіть</a> або зареєструйтесь, щоб приєднатися до обговорення.</p>
         </div>
 
         <div class="layout-stack" id="comments-container">
@@ -90,17 +104,14 @@
         </div>
     </section>
 
-
-    <footer class="article-footer">
-        <div class="share-block">
-            <p>Сподобався матеріал? Поділіться з тими, кому це важливо.</p>
-        </div>
+    <footer class="article-footer mt-lg">
         <div class="action-group">
             <a href="/articles" class="btn-primary">← До всіх статей</a>
             <a href="/contact" class="btn-primary">Обговорити запит</a>
         </div>
     </footer>
 </section>
+
 <th:block th:fragment="page-scripts">
     <script src="/js/media-links.js" defer></script>
     <script src="/js/article.js" defer></script>

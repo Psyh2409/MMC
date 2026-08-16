@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.PublicPostRepository;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class CommentController {
@@ -220,7 +222,13 @@ public class CommentController {
                 ? oauth2.getAttribute("email")
                 : auth.getName();
 
-        User author = userRepository.findByEmail(email).orElseThrow();
+        User author = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Користувача не знайдено"));
+
+        if (!author.isCommentsEnabled()) {
+            throw new org.springframework.security.access.AccessDeniedException("Ваш доступ до коментарів заблоковано");
+        }
+
         PublicPost post = publicPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Пост не знайдено"));
 
@@ -236,19 +244,26 @@ public class CommentController {
 
         Comment savedComment = commentRepository.save(comment);
 
-        // --- СПОВІЩЕННЯ ДЛЯ ТЕРАПЕВТА (АВТОРА ПОСТА) ---
+        // Власник публічної стіни (терапевт)
         User postAuthor = post.getAuthor();
+
+        // ЄДИНИЙ ПУБЛІЧНИЙ URL ДЛЯ ВСІХ РОЛЕЙ (Терапевт, Клієнт, Читач)
+        String targetPublicUrl = (postAuthor != null)
+                ? "/therapist/public/" + postAuthor.getId() + "#comment-" + savedComment.getId()
+                : "/#comment-" + savedComment.getId();
+
+        // 1. Сповіщення для терапевта (якщо коментує не він сам)
         if (postAuthor != null && !postAuthor.getId().equals(author.getId())) {
             notificationService.createNotification(
                     postAuthor,
                     "Новий коментар на вашій стіні",
                     author.getName() + ": " + comment.getContent(),
-                    "/therapist/public-wall#comment-" + savedComment.getId(),
+                    targetPublicUrl,
                     Notification.NotificationType.STANDARD
             );
         }
 
-        // --- СПОВІЩЕННЯ ДЛЯ АВТОРА БАТЬКІВСЬКОГО КОМЕНТАРЯ ---
+        // 2. Сповіщення для автора батьківського коментаря (відповідь у гілці)
         if (comment.getParentComment() != null) {
             User parentCommentAuthor = comment.getParentComment().getAuthor();
             if (parentCommentAuthor != null
@@ -259,18 +274,20 @@ public class CommentController {
                         parentCommentAuthor,
                         "Відповідь на ваш коментар",
                         author.getName() + ": " + comment.getContent(),
-                        "/therapist/public-wall#comment-" + savedComment.getId(),
+                        targetPublicUrl,
                         Notification.NotificationType.STANDARD
                 );
             }
         }
-        // Надійний редирект назад
+
+        // Безпечний повернення на сторінку, з якої робився запит
         String referer = request.getHeader("Referer");
         if (referer != null && !referer.isBlank()) {
             int hashIndex = referer.indexOf('#');
             String cleanReferer = (hashIndex != -1) ? referer.substring(0, hashIndex) : referer;
             return "redirect:" + cleanReferer + "#comment-" + savedComment.getId();
         }
-        return "redirect:/";
+
+        return "redirect:" + targetPublicUrl;
     }
 }

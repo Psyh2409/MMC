@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-add-custom-author-to-articles
+      author: mmc
+      changes:
+        - addColumn:
+            tableName: articles
+            columns:
+              - column:
+                  name: custom_author_name
+                  type: VARCHAR(255)

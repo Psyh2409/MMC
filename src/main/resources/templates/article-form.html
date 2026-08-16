@@ -73,6 +73,13 @@
                 <p class="error-text" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
             </div>
 
+            <!-- Поле підпису автора (Видиме тільки для Адміністратора) -->
+            <div class="form-group" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <label for="customAuthor">Автор матеріалу (для класичних праць або сторонніх авторів):</label>
+                <input type="text" id="customAuthor" th:field="*{customAuthor}" class="form-input" placeholder="Наприклад: Зигмунд Фройд, Карл Густав Юнг">
+                <span class="helper-text">Залиште порожнім, щоб підписати статтю вашим системним ім'ям.</span>
+            </div>
+
             <div class="form-actions mb-md mt-lg">
                 <button type="submit" class="btn-primary">Опублікувати</button>
 

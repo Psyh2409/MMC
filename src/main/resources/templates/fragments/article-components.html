@@ -8,6 +8,10 @@
         <thead>
         <tr>
             <th>Заголовок</th>
+
+            <!-- Колонка "Автор" видима ТІЛЬКИ для Адміністратора -->
+            <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Автор</th>
+
             <th>Категорія</th>
             <th th:if="${allowEdit or allowDelete}" class="actions-column">Дії</th>
         </tr>
@@ -17,42 +21,35 @@
             <td>
                 <span th:text="${article.title}">Назва</span>
             </td>
+
+            <!-- Значення Автора видиме ТІЛЬКИ для Адміністратора -->
+            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <span th:text="${article.displayAuthorName}">Автор</span>
+            </td>
+
             <td>
                 <span th:if="${article.categoryTranslation != null}" th:text="${article.categoryTranslation.displayName}">Категорія</span>
                 <span th:unless="${article.categoryTranslation != null}" th:text="${article.category}">Категорія</span>
             </td>
             <td th:if="${allowEdit or allowDelete}" class="action-group action-group-equal">
-                <!-- Кнопка "Редагувати" з'явиться ТІЛЬКИ якщо email авторизованого користувача збігається з email автора статті -->
-<!--                <a th:if="${allowEdit}" th:href="@{${basePath} + '/edit/' + ${article.id}}" class="btn-outline">Редагувати</a>-->
-
-                <a th:if="${allowEdit and article.author != null and currentUserEmail == article.author.email}"
+                <!-- Кнопка "Редагувати" з'явиться ТІЛЬКИ якщо email авторизованого користувача збігається з email автора статті або це Адмін -->
+                <a th:if="${allowEdit and (article.author != null and currentUserEmail == article.author.email or #authorization.expression('hasRole(''ADMIN'')'))}"
                    th:href="@{${basePath} + '/edit/' + ${article.id}}"
                    class="btn-outline">Редагувати</a>
 
-                <!-- Кнопка "Видалити" доступна завжди (бо цей фрагмент викликається або в адмінці для модерації, або в кабінеті фахівця для його власних статей) -->
+                <!-- Кнопка "Видалити" -->
                 <form th:action="@{${basePath} + '/delete/' + ${article.id}}" method="post" class="form-inline-reset">
                     <button type="submit" class="btn-primary">Видалити</button>
                 </form>
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(articles)}">
-            <td th:colspan="${allowEdit or allowDelete ? 3 : 2}" class="text-muted center">Список статей порожній.</td>
+            <!-- Динамічне обчислення ширини таблиці залежно від ролі та наявності дій -->
+            <td th:colspan="${#authorization.expression('hasRole(''ADMIN'')') ? (allowEdit or allowDelete ? 4 : 3) : (allowEdit or allowDelete ? 3 : 2)}"
+                class="text-muted center">
+                Список статей порожній.
+            </td>
         </tr>
         </tbody>
     </table>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Windsurf: Обробка кліку на рядок таблиці для переходу до статті
-            const clickableRows = document.querySelectorAll('.clickable-row');
-            clickableRows.forEach(function(row) {
-                row.addEventListener('click', function() {
-                    const articleId = this.getAttribute('data-article-id');
-                    if (articleId) {
-                        window.location.href = '/articles/' + articleId;
-                    }
-                });
-            });
-        });
-    </script>
 </div>

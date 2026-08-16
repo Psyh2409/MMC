@@ -28,4 +28,6 @@ public class ArticleForm {
 
     @NotBlank(message = "Текст статті не може бути порожнім")
     private String content;
+
+    private String customAuthor;
 }
