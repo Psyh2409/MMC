@@ -6,6 +6,7 @@ import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ public class TherapyRoomController {
     private final SharedWallService sharedWallService;
     private final TherapyAssignmentService therapyAssignmentService;
     private final NotificationService notificationService;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
 
     @Value("${app.jitsi.app-id}")
     private String appId;
@@ -47,76 +49,74 @@ public class TherapyRoomController {
                                  TherapyRoomService therapyRoomService,
                                  SharedWallService sharedWallService,
                                  TherapyAssignmentService therapyAssignmentService,
-                                 NotificationService notificationService) {
+                                 NotificationService notificationService, TherapyAssignmentRepository therapyAssignmentRepository) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
         this.therapyRoomService = therapyRoomService;
         this.sharedWallService = sharedWallService;
         this.therapyAssignmentService = therapyAssignmentService;
         this.notificationService = notificationService;
+        this.therapyAssignmentRepository = therapyAssignmentRepository;
     }
 
-    @GetMapping("/room/{clientUuid}")
-    public String getTherapyRoom(@PathVariable UUID clientUuid, Principal principal, Model model) {
+    @GetMapping("/room/{assignmentId}")
+    public String getTherapyRoom(@PathVariable UUID assignmentId, Principal principal, Model model) {
         if (principal == null) return "redirect:/login";
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        User roomOwner = userService.findById(clientUuid).orElseThrow();
 
-        // 1. ПЕРЕВІРКА РОЛЕЙ: Чи є поточний юзер фахівцем (Адмін для v1.0 або Терапевт для v2.0)
-        // Якщо доступу немає — викидаємо помилку (щоб ніхто не зміг підібрати ID)
-        if (!hasAccessToRoom(currentUser, clientUuid)) {
+        // 1. Отримуємо договір (зв'язок) замість просто профілю клієнта
+        TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new AccessDeniedException("Терапевтичний кабінет не знайдено."));
+
+        User roomClient = assignment.getClient();
+        User roomTherapist = assignment.getTherapist();
+
+        // 2. ПЕРЕВІРКА РОЛЕЙ: Доступ мають ТІЛЬКИ учасники цього конкретного договору
+        boolean isClient = currentUser.getId().equals(roomClient.getId());
+        boolean isTherapist = currentUser.getId().equals(roomTherapist.getId());
+
+        if (!isClient && !isTherapist) {
             throw new AccessDeniedException("Конфіденційно: Ви не маєте доступу до цього кабінету.");
         }
 
-        // Для фронтенду передаємо, чи є людина терапевтом (щоб показати йому кнопки відео)
-        boolean isAuthorizedProfessional = currentUser.isTherapist();
-        model.addAttribute("isTherapist", isAuthorizedProfessional);
-        // Адміна звідси випиляли повністю.
-        // TODO v2.0: Додати перевірку, чи цей Терапевт дійсно закріплений за цим Клієнтом
-        // if (currentUser.isTherapist() && !roomOwner.getTherapistId().equals(currentUser.getId())) return "error/403";
-
-        // 4. ВИЗНАЧАЄМО ТЕРАПЕВТА ДЛЯ БАЗИ ДАНИХ (для завантаження нотаток)
-        User therapist;
-        if (isAuthorizedProfessional) {
-            therapist = currentUser;
-        } else {
-            // Клієнт бере свого реального терапевта з бази
-            therapist = roomOwner.getTherapist();
-            if (therapist == null) {
-                throw new AccessDeniedException("Терапевт не призначений. Зверніться до підтримки.");
-            }
+        if (!"ACTIVE".equals(assignment.getStatus())) {
+            throw new AccessDeniedException("Ця терапевтична сесія не активна.");
         }
 
-        String roomName = "therapy-room-" + clientUuid;
+        boolean isAuthorizedProfessional = currentUser.isTherapist();
+        model.addAttribute("isTherapist", isAuthorizedProfessional);
+
+        // 3. ІЗОЛЯЦІЯ РЕСУРСІВ: Унікальна назва прив'язана до ID договору
+        String roomName = "therapy-room-" + assignment.getId();
 
         // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
-        String lastNote = therapyNoteService.getLastNoteContent(roomOwner.getId(), therapist.getId(), currentUser.getId());
+        String lastNote = therapyNoteService.getLastNoteContent(roomClient.getId(), roomTherapist.getId(), currentUser.getId());
 
         String jitsiJwt = generateJitsiJwt(currentUser, roomName);
 
-        model.addAttribute("client", roomOwner);
+        model.addAttribute("client", roomClient);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("lastNoteContent", lastNote);
         model.addAttribute("roomName", roomName);
         model.addAttribute("isAdmin", currentUser.isAdmin());
-        model.addAttribute("isTherapist", currentUser.isTherapist()); // Передаємо у в'юху для можливих UI-рішень
+        model.addAttribute("isTherapist", isAuthorizedProfessional);
         model.addAttribute("jitsiJwt", jitsiJwt);
-        model.addAttribute("isSessionActive", therapyRoomService.isRoomActive(clientUuid));
+        // Стан кімнати також відстежуємо за assignmentId
+        model.addAttribute("isSessionActive", therapyRoomService.isRoomActive(assignment.getId()));
 
         // ====================================================================
-        // 2. НОВИЙ БЛОК: ЗАВАНТАЖЕННЯ ПЕРШОЇ СТОРІНКИ СТІНИ ДЛЯ СТАРТУ
+        // ЗАВАНТАЖЕННЯ ПЕРШОЇ СТОРІНКИ СТІНИ (Абсолютно ізольовано)
         // ====================================================================
-        // Беремо перші 5 повідомлень (page 0, size 5)
-        var messagesPage = sharedWallService.getWallMessages(clientUuid, PageRequest.of(0, 5));
+        var messagesPage = sharedWallService.getWallMessages(assignment.getId(), PageRequest.of(0, 5));
 
         model.addAttribute("posts", messagesPage.getContent());
         model.addAttribute("currentPage", 0);
         model.addAttribute("totalPages", messagesPage.getTotalPages());
         model.addAttribute("pageSize", 5);
         model.addAttribute("hasMore", messagesPage.hasNext());
-        model.addAttribute("isWall", true); // Маячок для фронтенду
-        model.addAttribute("roomId", clientUuid);
+        model.addAttribute("isWall", true);
+        model.addAttribute("roomId", assignment.getId());
 
         return "therapy-room";
     }

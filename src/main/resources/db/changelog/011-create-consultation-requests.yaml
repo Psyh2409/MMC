@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-create-consultation-requests
+      author: Mental_Management_Center_Dev
+      changes:
+        - createTable:
+            tableName: consultation_requests
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: therapist_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message
+                  type: TEXT
+              - column:
+                  name: status
+                  type: VARCHAR(30)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: consultation_requests
+            baseColumnNames: client_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_consultation_requests_client
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: consultation_requests
+            baseColumnNames: therapist_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_consultation_requests_therapist
+            onDelete: CASCADE
+        - createIndex:
+            indexName: idx_consultation_requests_client
+            tableName: consultation_requests
+            columns:
+              - column:
+                  name: client_id
+        - createIndex:
+            indexName: idx_consultation_requests_therapist
+            tableName: consultation_requests
+            columns:
+              - column:
+                  name: therapist_id

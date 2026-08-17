@@ -3,11 +3,7 @@ package org.mental_management_center.mmc.controller;
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.*;
-import org.mental_management_center.mmc.service.EmailService;
-import org.mental_management_center.mmc.service.NotificationService;
-import org.mental_management_center.mmc.service.SpecialistService;
-import org.mental_management_center.mmc.service.TherapyAssignmentService;
-import org.mental_management_center.mmc.service.UserService;
+import org.mental_management_center.mmc.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin") // Цей префікс додається до всіх методів нижче
@@ -38,6 +32,7 @@ public class AdminUserController {
     private final EmailService emailService;
     private final ReportRepository reportRepository;
     private final RequestRepository requestRepository;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
 
     // 1. Сторінка списку користувачів (Переїхала з AuthController)
     @GetMapping("/users")
@@ -46,6 +41,16 @@ public class AdminUserController {
         User currentUser = userRepository.findByEmail(principal.getName()).orElseThrow();
         // 3. Отримуємо відфільтрований список (тільки реальні АБО тільки тестові)
         List<User> visibleUsers = userService.getVisibleUsers(currentUser);
+
+        // НОВИЙ БЛОК: Збираємо активних терапевтів для кожного клієнта
+        Map<UUID, List<TherapyAssignment>> activeTherapistsMap = new HashMap<>();
+        for (User u : visibleUsers) {
+            if (u.isClient()) {
+                // Використовуємо ваш новий метод findActiveByClientId
+                activeTherapistsMap.put(u.getId(), therapyAssignmentRepository.findActiveByClientId(u.getId()));
+            }
+        }
+        model.addAttribute("activeTherapistsMap", activeTherapistsMap);
         // 4. Сортуємо цей список за спаданням дати створення (те, що раніше робив Sort.by)
         visibleUsers.sort(Comparator.comparing(User::getCreatedAt).reversed());
         model.addAttribute("allUsers", visibleUsers);

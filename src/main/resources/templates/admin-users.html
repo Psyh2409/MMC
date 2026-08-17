@@ -178,15 +178,27 @@
                     class="is-hidden">
                     <td colspan="7">
                         <div class="issue-callout p-sm">
-                            <div class="ag-edebo">
-                                <span class="text-muted">Відповідальний фахівець:</span>
-                                <strong th:text="${u.therapist?.name ?: 'Не закріплено (стара архітектура)'}"></strong>
+                            <div class="layout-stack gap-xs">
 
-                                <th:block th:if="${u.therapist != null}">
-                                    <span th:text="${'   |   ' + u.therapist.email}"></span>
-                                    <span class="text-muted">   |   Дата закріплення: </span>
-                                    <strong th:text="${approvalDates != null ? (approvalDates.get(u.id) ?: 'Невідомо') : 'Невідомо'}"></strong>
+                                <!-- Перебираємо всі призначення клієнта (Мультитерапія) -->
+                                <th:block th:each="assignment : ${activeTherapistsMap.get(u.id)}">
+                                    <div class="ag-edebo">
+                                        <span class="badge badge-therapist">Фахівець</span>
+                                        <strong th:text="${assignment.therapist.name}" class="ml-xs"></strong>
+
+                                        <span th:text="${'   |   ' + assignment.therapist.email}"></span>
+                                        <span class="text-muted">   |   Дата закріплення: </span>
+
+                                        <!-- Форматуємо дату безпосередньо з об'єкта призначення -->
+                                        <strong th:text="${assignment.updatedAt != null ? #temporals.format(assignment.updatedAt, 'dd.MM.yyyy HH:mm') : 'Невідомо'}"></strong>
+                                    </div>
                                 </th:block>
+
+                                <!-- Заглушка, якщо у клієнта немає активних терапевтів -->
+                                <div th:if="${activeTherapistsMap.get(u.id) == null or activeTherapistsMap.get(u.id).isEmpty()}" class="text-muted">
+                                    Немає закріплених фахівців
+                                </div>
+
                             </div>
                         </div>
                     </td>

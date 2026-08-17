@@ -1,6 +1,7 @@
 package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.TherapyAssignment;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,9 @@ import java.util.UUID;
 
 @Repository
 public interface TherapyAssignmentRepository extends JpaRepository<TherapyAssignment, UUID> {
+
+    @EntityGraph(attributePaths = {"client", "therapist"})
+    Optional<TherapyAssignment> findById(UUID id);
 
     // Щоб клієнт бачив свої запити/сесії
     List<TherapyAssignment> findByClientId(UUID clientId);
@@ -30,11 +34,11 @@ public interface TherapyAssignmentRepository extends JpaRepository<TherapyAssign
     // Щоб уникнути дублювання запитів від одного клієнта до одного терапевта
     Optional<TherapyAssignment> findByClientIdAndTherapistId(UUID clientId, UUID therapistId);
 
-    // Windsurf: Знаходимо активне призначення клієнта (для отримання його терапевта)
+    // Windsurf: Знаходимо активні призначення клієнта (для отримання його терапевтів)
     @Query("SELECT t FROM TherapyAssignment t " +
             "JOIN FETCH t.therapist " +
             "WHERE t.client.id = :clientId AND t.status = 'ACTIVE'")
-    Optional<TherapyAssignment> findActiveByClientId(@Param("clientId") UUID clientId);
+    List<TherapyAssignment> findActiveByClientId(@Param("clientId") UUID clientId);
 
     @Modifying
     @Transactional
@@ -42,4 +46,6 @@ public interface TherapyAssignmentRepository extends JpaRepository<TherapyAssign
     void deleteAllAssignmentsRelatedToUser(@Param("userId") UUID userId);
 
     List<TherapyAssignment> findByStatus(String status);
+
+    List<TherapyAssignment> findByClientIdAndStatus(UUID clientId, String status);
 }

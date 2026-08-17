@@ -173,20 +173,33 @@
             <div id="therapy-tab" class="tab-pane active"
                  th:if="${user.isClient() or user.isTherapist() or user.isAdmin()}">
 
-                <div class="card-primary mb-md" th:if="${user.isClient()}">
-                    <div class="invitation-text">
-                        <h3>Терапевтичний кабінет</h3>
-                        <p>Ваша спільна стіна з фахівцем для роботи та матеріалів.</p>
+                <!-- Секція активних терапевтичних кабінетів -->
+                <div class="card-primary mb-md">
+                    <div class="profile-section-title mb-sm">
+                        <h3 class="heading-md">Ваші фахівці</h3>
                     </div>
-                    <!-- Windsurf: Контейнер для кнопок (розставляє по боках через CSS) -->
-                    <div class="therapy-room-actions">
-                        <a th:href="${therapyRoomUrl}" class="btn-primary">Перейти в кабінет</a>
-                        <!-- Windsurf: Показуємо кнопку тільки якщо у клієнта є активний терапевт -->
-                        <a th:if="${myTherapist != null}"
-                           th:href="@{/therapist/public/{id}(id=${myTherapist.id})}"
-                           class="btn-outline">
-                            👁️ Профіль фахівця
-                        </a>
+
+                    <div th:if="${activeAssignments == null or activeAssignments.isEmpty()}" class="profile-empty-state text-center">
+                        <div class="icon">🌿</div>
+                        <p class="text-muted mt-sm">У вас наразі немає активних сесій з фахівцями.</p>
+                    </div>
+
+                    <div th:unless="${activeAssignments == null or activeAssignments.isEmpty()}" class="layout-stack gap-sm">
+                        <div th:each="assignment : ${activeAssignments}" class="issue-callout p-sm row-between align-center">
+                            <div class="profile-identity">
+                                <span class="text-sm text-muted d-block mb-xs">Терапевт:</span>
+                                <strong class="text-main" th:text="${assignment.therapist.name}">Ім'я Фахівця</strong>
+                            </div>
+                            <div class="action-group">
+                                <!-- ВАЖЛИВО: посилання веде на ID призначення (договору), а не клієнта -->
+                                <a th:href="@{/therapy/room/{id}(id=${assignment.id})}" class="btn-primary btn-sm">
+                                    🎥 Увійти в кабінет
+                                </a>
+                                <a th:href="@{/therapist/public/{id}(id=${assignment.therapist.id})}" class="btn-outline btn-sm">
+                                    👁️ Профіль фахівця
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

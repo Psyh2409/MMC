@@ -332,3 +332,8 @@
     gap: var(--space-xs, 0.5rem);
     margin-top: var(--space-xs, 0.5rem);
 }
+
+.btn-7rem {
+    min-width: 7rem; /* Задає кнопкам однакову ширину, незалежно від довжини слова */
+    text-align: center;
+}

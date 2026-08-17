@@ -32,6 +32,8 @@ public class TherapistController {
     private final NotificationService notificationService;
     private final EmailService emailService;
     private final CommentRepository commentRepository;
+    private final ConsultationRequestService consultationRequestService;
+    private final TherapyAssignmentService therapyAssignmentService;
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
     // Гостя автоматично перекине на /login
@@ -83,31 +85,22 @@ public class TherapistController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/request-therapy/{therapistId}")
     public String requestTherapy(@PathVariable UUID therapistId,
+                                 @RequestParam(value = "message", required = false) String message,
                                  Principal principal,
                                  RedirectAttributes redirectAttributes) {
 
-        // Знаходимо того, хто клікнув (Клієнт)
         User client = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-        // Знаходимо фахівця, до якого клікнули
-        User therapist = Optional.ofNullable(userService.findById(therapistId))
-                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
-
-        // Захист від дурня: не можна подати запит самому собі
-        if (client.getId().equals(therapist.getId())) {
-            redirectAttributes.addFlashAttribute("error", "Ви не можете надіслати запит самому собі.");
-            return "redirect:/therapist/public/" + therapistId;
-        }
-
         try {
-            assignmentService.sendRequest(client, therapist);
+            consultationRequestService.createRequest(client, therapistId, message);
             redirectAttributes.addFlashAttribute("success", "Ваш запит успішно відправлено! Очікуйте на підтвердження фахівця.");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Сталася помилка при надсиланні запиту.");
         }
 
-        // Повертаємо користувача назад на сторінку візитки
         return "redirect:/therapist/public/" + therapistId;
     }
 
@@ -119,35 +112,50 @@ public class TherapistController {
 
         model.addAttribute("user", therapist);
 
-        // Дістаємо всі запити, які чекають на відповідь
+        // 1. Вхідні заявки на консультацію (новий механізм 1:N)
+        List<ConsultationRequest> pendingConsultationRequests = consultationRequestService.getPendingRequestsForTherapist(therapist.getId());
+
+        // 2. Існуючі запити (для зворотної сумісності)
         List<TherapyAssignment> pendingRequests = assignmentService.getPendingRequestsForTherapist(therapist.getId());
 
-        // НОВЕ: Дістаємо активних клієнтів, щоб передати їх в HTML сторінку
+        // 3. Активні клієнти в терапії
         List<TherapyAssignment> activeAssignments = assignmentService.getAssignmentsByStatus(therapist.getId(), "ACTIVE");
 
         model.addAttribute("therapist", therapist);
+        model.addAttribute("pendingConsultationRequests", pendingConsultationRequests);
         model.addAttribute("pendingRequests", pendingRequests);
-        model.addAttribute("activeAssignments", activeAssignments); // Передаємо список на фронтенд
-        // Витягуємо першу сторінку постів (наприклад, 20 останніх)
+        model.addAttribute("activeAssignments", activeAssignments);
         model.addAttribute("publicPosts", publicPostService.getPostsByAuthor(therapist.getId(), 0, 20));
 
         return "therapist-dashboard";
     }
 
-    // 2. Обробка натискання кнопки "Прийняти"
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/dashboard/accept/{id}")
-    public String acceptRequest(@PathVariable UUID id, Principal principal, RedirectAttributes redirectAttributes) {
+    @PostMapping("/dashboard/requests/{id}/accept")
+    public String acceptConsultationRequest(@PathVariable UUID id, Principal principal, RedirectAttributes redirectAttributes) {
         try {
-            // Знаходимо терапевта, який зараз натиснув кнопку
-            User therapist = userService.findByEmail(principal.getName()).orElseThrow();
+            User therapist = userService.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-            // Передаємо id запиту ТА терапевта в сервіс
-            assignmentService.acceptRequest(id, therapist);
-
-            redirectAttributes.addFlashAttribute("success", "Клієнта успішно додано до вашої практики!");
+            consultationRequestService.acceptRequest(id, therapist);
+            redirectAttributes.addFlashAttribute("success", "Заявку успішно прийнято! Клієнта додано до вашої практики.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Помилка при прийнятті запиту: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Помилка при прийнятті заявки: " + e.getMessage());
+        }
+        return "redirect:/therapist/dashboard";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/dashboard/requests/{id}/reject")
+    public String rejectConsultationRequest(@PathVariable UUID id, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            User therapist = userService.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+            consultationRequestService.rejectRequest(id, therapist);
+            redirectAttributes.addFlashAttribute("success", "Заявку відхилено.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Помилка при відхиленні заявки: " + e.getMessage());
         }
         return "redirect:/therapist/dashboard";
     }
@@ -329,4 +337,33 @@ public class TherapistController {
         return "redirect:/therapist/dashboard";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/dashboard/requests/{id}/block")
+    public String blockConsultationRequest(@PathVariable UUID id, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            User therapist = userService.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+            consultationRequestService.blockRequest(id, therapist);
+            redirectAttributes.addFlashAttribute("success", "Заявку заблоковано остаточно.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Помилка: " + e.getMessage());
+        }
+        return "redirect:/therapist/dashboard";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/dashboard/clients/{clientId}/terminate")
+    public String terminateTherapy(@PathVariable UUID clientId, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            User therapist = userService.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
+            therapyAssignmentService.terminateTherapy(clientId, therapist);
+            redirectAttributes.addFlashAttribute("success", "Терапію успішно завершено.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Помилка при завершенні терапії: " + e.getMessage());
+        }
+        return "redirect:/therapist/dashboard";
+    }
 }

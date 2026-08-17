@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.dto.NotificationDto;
 import org.mental_management_center.mmc.dto.UserActivityDto;
 import org.mental_management_center.mmc.model.*;
@@ -26,10 +27,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class UserProfileController {
@@ -57,14 +60,19 @@ public class UserProfileController {
             Principal principal) {
         if (principal == null) return "redirect:/login";
 
+        log.info("DEBUG: showProfile called for user: {}", principal.getName());
+
         userService.findByEmail(principal.getName()).ifPresent(user -> {
+            log.info("DEBUG: User found: {}, ID: {}, isClient: {}", user.getName(), user.getId(), user.isClient());
             model.addAttribute("user", user);
 
             // КРОК 1: Створюємо конфігурацію пагінації вручну
             Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
 
+            log.info("DEBUG: Before getPersonalClientNotes");
             // Запитуємо порційні дані у сервісу
             Page<TherapyNote> notesPage = therapyNoteService.getPersonalClientNotes(user.getId(), pageable);
+            log.info("DEBUG: After getPersonalClientNotes, notes count: {}", notesPage.getContent().size());
             // Передаємо чистий список для вашого th:each="note : ${myNotes}"
             model.addAttribute("myNotes", notesPage.getContent());
 
@@ -75,17 +83,22 @@ public class UserProfileController {
 
             // 2. Логіка запрошення (сповіщення)
             if (user.isClient()) {
+                log.info("DEBUG: User is client, setting therapy room URL");
                 model.addAttribute("therapyRoomUrl", "/therapy/room/" + user.getId());
                 boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
                 model.addAttribute("hasInvitation", isSessionActive);
 
-                // Windsurf: Знаходимо активного терапевта клієнта для кнопки "Профіль фахівця"
-                therapyAssignmentRepository.findActiveByClientId(user.getId())
-                        .ifPresent(assignment -> model.addAttribute("myTherapist", assignment.getTherapist()));
+                // Windsurf: Знаходимо активних терапевтів клієнта для кнопки "Профіль фахівця"
+                List<TherapyAssignment> activeAssignments = therapyAssignmentRepository.findActiveByClientId(user.getId());
+                if (!activeAssignments.isEmpty()) {
+                    // Беремо першого терапевта для кнопки (або можна показати список)
+                    model.addAttribute("activeAssignments", activeAssignments);
+                }
             }
 
             // 3. Форма оновлення профілю
             if (!model.containsAttribute("profileUpdateForm")) {
+                log.info("DEBUG: Creating profileUpdateForm");
                 ProfileUpdateForm profileUpdateForm = new ProfileUpdateForm();
                 profileUpdateForm.setName(user.getName());
                 profileUpdateForm.setPhone(user.getPhone());
@@ -95,11 +108,15 @@ public class UserProfileController {
             }
 
             // 4. БЛОК ЄДЕБО (ТЕПЕР В ПРАВИЛЬНОМУ МІСЦІ) ---
+            log.info("DEBUG: Before specialistAppRepository.findByUserId");
             Optional<SpecialistApplication> app = specialistAppRepository.findByUserId(user.getId());
             model.addAttribute("specialistApp", app.orElse(null));
+            log.info("DEBUG: After specialistAppRepository.findByUserId");
 
             // 5. ВИТЯГУЄМО АКТИВНІСТЬ КОРИСТУВАЧА (ТЕПЕР УПРАВИЛЬНОМУ БЛОЦІ)
+            log.info("DEBUG: Before populateActivityModel");
             populateActivityModel(user, activityPage, model);
+            log.info("DEBUG: After populateActivityModel");
         });
 
         if (!model.containsAttribute("passwordChangeForm")) {
@@ -167,9 +184,12 @@ public class UserProfileController {
                 boolean isSessionActive = therapyRoomService.isRoomActive(user.getId());
                 model.addAttribute("hasInvitation", isSessionActive);
 
-                // Windsurf: Знаходимо активного терапевта клієнта для кнопки "Профіль фахівця"
-                therapyAssignmentRepository.findActiveByClientId(user.getId())
-                        .ifPresent(assignment -> model.addAttribute("myTherapist", assignment.getTherapist()));
+                // Windsurf: Знаходимо активних терапевтів клієнта для кнопки "Профіль фахівця"
+                List<TherapyAssignment> activeAssignments = therapyAssignmentRepository.findActiveByClientId(user.getId());
+                if (!activeAssignments.isEmpty()) {
+                    // Беремо першого терапевта для кнопки (або можна показати список)
+                    model.addAttribute("myTherapist", activeAssignments.get(0).getTherapist());
+                }
             }
         });
 

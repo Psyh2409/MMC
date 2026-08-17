@@ -45,8 +45,20 @@
 
                 <div class="action-group mt-md w-100"
                      th:if="${#authentication.name != therapist.email and canRequestTherapy}">
-                    <form th:action="@{/therapist/request-therapy/{id}(id=${therapist.id})}" method="post" class="w-100">
+
+                    <form th:action="@{/therapist/request-therapy/{id}(id=${therapist.id})}" method="post" class="stack-form w-100">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                        <!-- Нове поле для опціонального повідомлення з використанням системних токенів -->
+                        <div class="form-field mb-sm">
+                            <label for="message" class="form-label text-sm text-muted">Повідомлення для фахівця (опціонально):</label>
+                            <textarea id="message"
+                                      name="message"
+                                      class="form-input textarea-input"
+                                      rows="3"
+                                      placeholder="Коротко опишіть ваш запит або зручний час для первинного контакту..."></textarea>
+                        </div>
+
                         <button type="submit" class="btn-primary w-100">Звернутися за консультацією</button>
                     </form>
                 </div>

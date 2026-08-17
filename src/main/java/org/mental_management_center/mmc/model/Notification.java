@@ -52,7 +52,8 @@ public class Notification {
     private LocalDateTime createdAt;
 
     public enum NotificationType {
-        STANDARD,      // Звичайне (коментар, відповідь, чат)
+        STANDARD, // Звичайне (коментар, відповідь, чат)
+        THERAPY_REQUEST, // Запит на терапевтичну роботу
         THERAPY_CALL,  // Запрошення на терапевтичну сесію від фахівця
         ADMIN_ALERT    // Домінуюче "Червоне повідомлення" від адміністратора
     }
