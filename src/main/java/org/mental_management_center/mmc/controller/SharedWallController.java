@@ -8,6 +8,7 @@ import org.mental_management_center.mmc.model.SharedWallEntry;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.SharedWallCommentRepository;
 import org.mental_management_center.mmc.repository.SharedWallRepository;
+import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,16 @@ public class SharedWallController {
     private final SharedWallRepository sharedWallRepository;
     private final NotificationService notificationService;
     private final SharedWallCommentRepository commentRepository;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
+
+    // Універсальний метод перевірки доступу для Стіни
+    private boolean hasAccessToWall(User user, UUID assignmentId) {
+        if (user.isAdmin()) return true;
+        return therapyAssignmentRepository.findById(assignmentId)
+                .map(a -> "ACTIVE".equals(a.getStatus()) &&
+                        (a.getClient().getId().equals(user.getId()) || a.getTherapist().getId().equals(user.getId())))
+                .orElse(false);
+    }
 
     // 1. Збереження повідомлення (з повним збереженням AES-шифрування та додаванням сповіщень)
     @PostMapping("/add")
@@ -53,10 +64,10 @@ public class SharedWallController {
 
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
 
-        if (!currentUser.getId().equals(roomId)) {
-            boolean isClientVisible = userService.getVisibleUsers(currentUser).stream()
-                    .anyMatch(u -> u.getId().equals(roomId));
-            if (!isClientVisible) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        // roomId тут фактично є assignmentId (ID договору)
+        if (!hasAccessToWall(currentUser, roomId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            // Для методу /fragment та /media використовуйте: throw new SecurityException("Доступ заборонено");
         }
 
         boolean hasText = content != null && !content.trim().isEmpty();
@@ -134,13 +145,10 @@ public class SharedWallController {
         User currentUser = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
 
-        if (!currentUser.getId().equals(roomId)) {
-            boolean isClientVisible = userService.getVisibleUsers(currentUser).stream()
-                    .anyMatch(u -> u.getId().equals(roomId));
-
-            if (!isClientVisible) {
-                throw new SecurityException("Доступ заборонено: спроба перетину середовищ!");
-            }
+        // roomId тут фактично є assignmentId (ID договору)
+        if (!hasAccessToWall(currentUser, roomId)) {
+            throw new SecurityException("Доступ заборонено");
+            // Для методу /fragment та /media використовуйте: throw new SecurityException("Доступ заборонено");
         }
 
         // Жорстко фіксуємо 5 записів на сторінку
@@ -299,13 +307,10 @@ public class SharedWallController {
     public ResponseEntity<Resource> getWallMedia(@PathVariable("roomId") UUID roomId,
                                                  @PathVariable("filename") String filename,
                                                  Principal principal) {
-        // ... (Твій існуючий код методу getWallMedia залишається 100% таким самим, як був)
-        // Я його не дублюю, щоб зекономити місце, просто залиш його тут.
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        if (!currentUser.getId().equals(roomId)) {
-            boolean isClientVisible = userService.getVisibleUsers(currentUser).stream()
-                    .anyMatch(u -> u.getId().equals(roomId));
-            if (!isClientVisible) throw new SecurityException("Доступ заборонено!");
+        // roomId тут фактично є assignmentId (ID договору)
+        if (!hasAccessToWall(currentUser, roomId)) {
+            throw new SecurityException("Доступ заборонено");
         }
 
         try {

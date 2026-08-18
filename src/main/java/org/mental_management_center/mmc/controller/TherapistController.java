@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.*;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
 import org.mental_management_center.mmc.repository.CommentRepository;
+import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.ArticleForm;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ public class TherapistController {
     private final CommentRepository commentRepository;
     private final ConsultationRequestService consultationRequestService;
     private final TherapyAssignmentService therapyAssignmentService;
+    private final TherapyAssignmentRepository therapyAssignmentRepository;
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
     // Гостя автоматично перекине на /login
@@ -308,18 +310,32 @@ public class TherapistController {
         User therapist = userService.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
 
+        // 1. Захист від відправки сповіщення самому собі
+        if (therapist.getId().equals(recipientId)) {
+            redirectAttributes.addFlashAttribute("error", "Ви не можете надіслати сповіщення самому собі.");
+            return "redirect:/therapist/dashboard";
+        }
+
         User client = userService.findById(recipientId);
         if (client == null) {
             redirectAttributes.addFlashAttribute("error", "Клієнта не знайдено.");
             return "redirect:/therapist/dashboard";
         }
 
+        // 2. Знаходимо конкретний терапевтичний зв'язок (договір) між цим фахівцем і клієнтом
+        TherapyAssignment assignment = therapyAssignmentRepository
+                .findByClientIdAndTherapistId(client.getId(), therapist.getId())
+                .orElseThrow(() -> new RuntimeException("Активний терапевтичний зв'язок не знайдено."));
+
+        // 3. Формуємо коректну адресу кімнати на основі assignment.getId()
+        String roomUrl = "/therapy/room/" + assignment.getId();
+
         // 1. Створюємо сповіщення у Дзвоник для клієнта
         notificationService.createNotification(
                 client,
                 "Повідомлення від терапевта",
                 therapist.getName() + ": " + message.trim(),
-                "/therapy/room/" + client.getId(), // Прямий перехід у терапевтичну кімнату
+                roomUrl,
                 Notification.NotificationType.STANDARD
         );
 
@@ -329,7 +345,7 @@ public class TherapistController {
                     client.getEmail(),
                     "🌿 Нове повідомлення від фахівця | MMC",
                     "Ваш терапевт " + therapist.getName() + " залишив повідомлення:\n\n\"" + message.trim() + "\"\n\nПерейти до кабінету: /therapy/room/" + client.getId(),
-                    "/therapy/room/" + client.getId()
+                    roomUrl
             );
         }
 

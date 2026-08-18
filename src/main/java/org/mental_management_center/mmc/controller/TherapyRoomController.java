@@ -84,23 +84,26 @@ public class TherapyRoomController {
             throw new AccessDeniedException("Ця терапевтична сесія не активна.");
         }
 
-        boolean isAuthorizedProfessional = currentUser.isTherapist();
-        model.addAttribute("isTherapist", isAuthorizedProfessional);
+        // Перевіряємо локальні ролі для КОНКРЕТНОЇ кімнати
+        boolean isTherapistInThisRoom = currentUser.getId().equals(roomTherapist.getId());
+        boolean isClientInThisRoom = currentUser.getId().equals(roomClient.getId());
 
+        model.addAttribute("isTherapistInThisRoom", isTherapistInThisRoom);
+        model.addAttribute("isClientInThisRoom", isClientInThisRoom);
         // 3. ІЗОЛЯЦІЯ РЕСУРСІВ: Унікальна назва прив'язана до ID договору
         String roomName = "therapy-room-" + assignment.getId();
 
         // Передаємо: Клієнт, Терапевт, Автор (той, хто зараз онлайн)
         String lastNote = therapyNoteService.getLastNoteContent(roomClient.getId(), roomTherapist.getId(), currentUser.getId());
-
         String jitsiJwt = generateJitsiJwt(currentUser, roomName);
 
         model.addAttribute("client", roomClient);
+        model.addAttribute("therapist", roomTherapist);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("lastNoteContent", lastNote);
         model.addAttribute("roomName", roomName);
         model.addAttribute("isAdmin", currentUser.isAdmin());
-        model.addAttribute("isTherapist", isAuthorizedProfessional);
+        model.addAttribute("isTherapist", isTherapistInThisRoom);
         model.addAttribute("jitsiJwt", jitsiJwt);
         // Стан кімнати також відстежуємо за assignmentId
         model.addAttribute("isSessionActive", therapyRoomService.isRoomActive(assignment.getId()));
@@ -175,28 +178,27 @@ public class TherapyRoomController {
 
 
 
-    @PostMapping("/notes/save/{clientUuid}")
+    // =========================================================
+    // ОНОВЛЕНІ REST-МЕТОДИ ДЛЯ РОБОТИ ЧЕРЕЗ ASSIGNMENT_ID
+    // =========================================================
+
+    @PostMapping("/notes/save/{assignmentId}")
     @ResponseBody
     public ResponseEntity<Map<String, String>> saveNote(
-            @PathVariable UUID clientUuid,
-            @RequestParam(required = false) UUID noteId, // Отримуємо ID, якщо він уже є у фронтенда
+            @PathVariable UUID assignmentId,
+            @RequestParam(required = false) UUID noteId,
             @RequestBody String content,
             Principal principal) {
-
         try {
             User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-            User client = userService.findById(clientUuid).orElseThrow();
-            // Терапевт — або адмін, або поточний юзер
-            User therapist = client.getTherapist();
-            if (therapist == null) throw new RuntimeException("Терапевт не знайдений");
+            TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
+
+            if (!hasAccessToRoom(currentUser, assignmentId)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
             if (noteId == null) {
-                // Це перше збереження за сесію — створюємо новий запис
-                TherapyNote newNote = therapyNoteService.saveNewNote(therapist, client, currentUser, content);
-                // Повертаємо ID нової нотатки фронтенду
+                TherapyNote newNote = therapyNoteService.saveNewNote(assignment.getTherapist(), assignment.getClient(), currentUser, content);
                 return ResponseEntity.ok(Map.of("noteId", newNote.getId().toString()));
             } else {
-                // У нас вже є ID, значить просто оновлюємо існуючу нотатку
                 therapyNoteService.updateNote(noteId, content);
                 return ResponseEntity.ok().build();
             }
@@ -205,25 +207,27 @@ public class TherapyRoomController {
         }
     }
 
-    @GetMapping("/notes/get-recent/{clientUuid}")
+    @GetMapping("/notes/get-recent/{assignmentId}")
     @ResponseBody
-    public String getRecentNote(@PathVariable UUID clientUuid, Principal principal) {
+    public String getRecentNote(@PathVariable UUID assignmentId, Principal principal) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        User client = userService.findById(clientUuid).orElseThrow();
-        User therapist = client.getTherapist();
-        return therapyNoteService.getLastNoteContent(client.getId(), therapist.getId(), currentUser.getId());
+        TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
+
+        if (!hasAccessToRoom(currentUser, assignmentId)) throw new AccessDeniedException("Доступ заборонено");
+
+        return therapyNoteService.getLastNoteContent(assignment.getClient().getId(), assignment.getTherapist().getId(), currentUser.getId());
     }
 
-    @GetMapping("/notes/history/{clientUuid}")
+    @GetMapping("/notes/history/{assignmentId}")
     @ResponseBody
-    public ResponseEntity<List<Map<String, Object>>> getHistory(@PathVariable UUID clientUuid, Principal principal) {
+    public ResponseEntity<List<Map<String, Object>>> getHistory(@PathVariable UUID assignmentId, Principal principal) {
         try {
             User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+            TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
 
-            // Отримуємо всі нотатки, де автором є поточний користувач, а клієнтом — цей UUID
-            List<TherapyNote> notes = therapyNoteService.getHistoryForClient(clientUuid, currentUser.getId());
+            if (!hasAccessToRoom(currentUser, assignmentId)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-            // Перетворюємо список об'єктів у простий формат для JSON
+            List<TherapyNote> notes = therapyNoteService.getHistoryForClient(assignment.getClient().getId(), currentUser.getId());
             List<Map<String, Object>> response = notes.stream().map(note -> {
                 Map<String, Object> map = new HashMap<>();
                 map.put("content", note.getContent());
@@ -237,104 +241,70 @@ public class TherapyRoomController {
         }
     }
 
-    @PostMapping("/room/{clientUuid}/leave")
+    @PostMapping("/room/{assignmentId}/leave")
     @ResponseBody
-    public ResponseEntity<Void> leaveTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
-        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
+    public ResponseEntity<Void> leaveTherapyRoom(@PathVariable UUID assignmentId, Principal principal) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-
-        if (!hasAccessToRoom(currentUser, clientUuid)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        if (!hasAccessToRoom(currentUser, assignmentId)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         if (currentUser.isTherapist()) {
-            therapyRoomService.deactivateRoom(clientUuid);
+            therapyRoomService.deactivateRoom(assignmentId);
         }
-
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/room/{clientUuid}/activate")
+    @PostMapping("/room/{assignmentId}/activate")
     @ResponseBody
-    public ResponseEntity<Void> activateTherapyRoom(@PathVariable UUID clientUuid, Principal principal) {
-        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
+    public ResponseEntity<Void> activateTherapyRoom(@PathVariable UUID assignmentId, Principal principal) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
 
-        // Перевіряємо доступ через наш "Замок"
-        if (!hasAccessToRoom(currentUser, clientUuid)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        if (!hasAccessToRoom(currentUser, assignmentId)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        // Тільки терапевт може фізично "вмикати світло" в кімнаті
         if (currentUser.isTherapist()) {
-            therapyRoomService.activateRoom(clientUuid);
+            therapyRoomService.activateRoom(assignmentId);
 
-            // --- КРИТИЧНЕ СПОВІЩЕННЯ ДЛЯ КЛІЄНТА ---
-            // О оскільки userService.findById повертає User напряму, прибираємо .orElse(null)
-            User client = userService.findById(clientUuid);
-            if (client != null) {
-                notificationService.createNotification(
-                        client,
-                        "🩺 Запрошення на терапевтичну сесію",
-                        currentUser.getName() + " очікує на вас у терапевтичному кабінеті.",
-                        "/therapy/room/" + clientUuid,
-                        Notification.NotificationType.THERAPY_CALL
-                );
-            }
+            TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
+            notificationService.createNotification(
+                    assignment.getClient(),
+                    "🩺 Запрошення на терапевтичну сесію",
+                    currentUser.getName() + " очікує на вас у терапевтичному кабінеті.",
+                    "/therapy/room/" + assignmentId,
+                    Notification.NotificationType.THERAPY_CALL
+            );
         }
-
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/room/{clientUuid}/status")
+    @GetMapping("/room/{assignmentId}/status")
     @ResponseBody
-    public ResponseEntity<Boolean> getRoomStatus(@PathVariable UUID clientUuid) {
-        return ResponseEntity.ok(therapyRoomService.isRoomActive(clientUuid));
+    public ResponseEntity<Boolean> getRoomStatus(@PathVariable UUID assignmentId) {
+        return ResponseEntity.ok(therapyRoomService.isRoomActive(assignmentId));
     }
 
-    // =========================================================
-    // ЕТИЧНИЙ КОНТРОЛЬ ДОСТУПУ (Ніяких адмінів без дозволу)
-    // =========================================================
-    private boolean hasAccessToRoom(User user, UUID roomClientUuid) {
-        // 1. Клієнт має доступ ТІЛЬКИ до своєї власної кімнати
-        if (user.getId().equals(roomClientUuid)) {
-            return true;
-        }
-
-        // 2. ЕКСТРЕНИЙ ДОСТУП ДЛЯ АДМІНА (Тільки якщо клієнт натиснув SOS)
-        if (user.isAdmin()) {
-            User client = userService.findById(roomClientUuid).orElseThrow();
-            if (client.isSosRequested()) {
-                return true; // Двері відчиняються для адміна
-            }
-        }
-
-        // 3. Терапевт має доступ ТІЛЬКИ якщо є статус ACTIVE з цим клієнтом
-        if (user.isTherapist()) {
-            List<TherapyAssignment> assignments = therapyAssignmentService.getAssignmentsByStatus(user.getId(), "ACTIVE");
-            return assignments.stream().anyMatch(a -> a.getClient().getId().equals(roomClientUuid));
-        }
-
-        // 4. Усім іншим доступу НЕ МАЄ
-        return false;
-    }
-
-    @PostMapping("/room/{clientUuid}/sos")
-    public String triggerSos(@PathVariable UUID clientUuid,
+    @PostMapping("/room/{assignmentId}/sos")
+    public String triggerSos(@PathVariable UUID assignmentId,
                              @RequestParam("reason") String reason,
                              Principal principal) {
-        User currentUser = userService.findByEmail(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
 
-        if (!currentUser.getId().equals(clientUuid)) {
+        if (!currentUser.getId().equals(assignment.getClient().getId())) {
             throw new AccessDeniedException("Тільки власник кабінету може викликати адміністратора.");
         }
 
-        // Викликаємо єдиний метод сервісу
-        userService.triggerSos(clientUuid, reason);
+        userService.triggerSos(assignment.getClient().getId(), reason);
+        return "redirect:/therapy/room/" + assignmentId + "?sos=activated";
+    }
 
-        return "redirect:/therapy/room/" + clientUuid + "?sos=activated";
+    // =========================================================
+    // ЕТИЧНИЙ КОНТРОЛЬ ДОСТУПУ (1:N АРХІТЕКТУРА)
+    // =========================================================
+    private boolean hasAccessToRoom(User user, UUID assignmentId) {
+        if (user.isAdmin()) return true;
+
+        return therapyAssignmentRepository.findById(assignmentId)
+                .map(a -> "ACTIVE".equals(a.getStatus()) &&
+                        (a.getClient().getId().equals(user.getId()) || a.getTherapist().getId().equals(user.getId())))
+                .orElse(false);
     }
 }

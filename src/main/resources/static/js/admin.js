@@ -30,8 +30,15 @@ function copyToClipboard(text) {
 }
 
 function toggleApp(element) {
-    const row = element.closest('tr');
-    const targetId = row.getAttribute('data-target');
+    // Спочатку перевіряємо data-target на самій кнопці
+    let targetId = element.getAttribute('data-target');
+
+    // Якщо на кнопці немає data-target, беремо з батьківського рядка
+    if (!targetId) {
+        const row = element.closest('tr');
+        targetId = row.getAttribute('data-target');
+    }
+
     if (!targetId) return;
 
     const appRow = document.getElementById(targetId);

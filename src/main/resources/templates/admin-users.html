@@ -159,6 +159,7 @@
                             <button th:if="${u.specialistApplication != null}"
                                     type="button"
                                     class="btn-outline btn-sm"
+                                    th:data-target="'app-' + ${u.id}"
                                     onclick="event.stopPropagation(); toggleApp(this)">
                                 <span th:text="${u.pendingSpecialist ? '📄 Заявка' : '🎓 Диплом'}"></span>
                             </button>

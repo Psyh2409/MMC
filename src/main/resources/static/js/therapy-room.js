@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    console.log("=== DEBUG CONFIG ===", window.TherapyConfig);
     const config = window.TherapyConfig;
     if (!config) {
         console.error("Критична помилка: Конфігурація кімнати не завантажена.");
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
-                    let url = `/therapy/notes/save/${config.clientUuid}`;
+                    let url = `/therapy/notes/save/${config.roomId}`;
                     if (currentNoteId) {
                         url += `?noteId=${currentNoteId}`;
                     }
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 historyList.innerHTML = '<span class="status-loading">Синхронізація з архівом...</span>';
 
                 try {
-                    const response = await fetch(`/therapy/notes/history/${config.clientUuid}`);
+                    const response = await fetch(`/therapy/notes/history/${config.roomId}`);
                     if (response.ok) {
                         const notes = await response.json();
                         if (notes.length === 0) {
@@ -178,10 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- БЛОК 4: КЕРУВАННЯ СТАНОМ КІМНАТИ (Для фахівця) ---
-        if (config.isProfessional) {
+        if (config.isTherapistInThisRoom) {
             // 1. Старий запобіжник: якщо фахівець таки закрив вкладку - гасимо кімнату
             window.addEventListener('beforeunload', () => {
-                fetch('/therapy/room/' + config.clientUuid + '/leave', {
+                fetch('/therapy/room/' + config.roomId + '/leave', {
                     method: 'POST',
                     headers: { [config.csrfHeader]: config.csrfToken, 'Content-Type': 'application/json' },
                     keepalive: true
@@ -199,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const isCollapsed = sessionArea.classList.contains('hidden');
                         const endpoint = isCollapsed ? '/leave' : '/activate';
 
-                        fetch('/therapy/room/' + config.clientUuid + endpoint, {
+                        fetch('/therapy/room/' + config.roomId + endpoint, {
                             method: 'POST',
                             headers: {
                                 [config.csrfHeader]: config.csrfToken,
@@ -211,45 +212,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         // --- БЛОК 5: ОЧІ КЛІЄНТА ТА ПРИМУСОВА КАТАПУЛЬТА ---
-            if (!config.isProfessional) {
-                const toggleBtnWrapper = document.querySelector('.session-toggle-wrapper');
+            if (!config.isTherapistInThisRoom) {
+                const toggleBtnWrapper = document.getElementById('session-toggle-wrapper');
                 const sessionArea = document.getElementById('active-session-area');
                 const toggleBtn = document.getElementById('toggle-session-btn');
 
                 if (toggleBtnWrapper && sessionArea) {
                     setInterval(() => {
-                        fetch('/therapy/room/' + config.clientUuid + '/status')
+                        fetch('/therapy/room/' + config.roomId + '/status')
                             .then(response => response.json())
                             .then(isActive => {
                                 if (isActive) {
-                                    // Перевіряємо: якщо кнопка ДО ЦЬОГО була в hidden — значить, сесія ЩОЙНО стартувала
                                     if (toggleBtnWrapper.classList.contains('hidden')) {
                                         toggleBtnWrapper.classList.remove('hidden');
-
-                                        // Вмикаємо плавний ліфт на самий верх сторінки
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                                        console.log("Сесію активовано: клієнта автоматично піднято вгору.");
+
+                                        // ЯСКРАВЕ СПОВІЩЕННЯ ДЛЯ КЛІЄНТА
+                                        triggerLoudNotification();
                                     }
                                 } else {
-                                    // 2. Терапевт вимкнув сесію -> ховаємо кнопку
                                     toggleBtnWrapper.classList.add('hidden');
+                                    closeLoudNotification();
 
-                                    // === ПРИМУСОВА КАТАПУЛЬТА ===
-                                    // Якщо клієнт прямо зараз сидів усередині відео — викидаємо його
                                     if (!sessionArea.classList.contains('hidden')) {
-                                        sessionArea.classList.add('hidden'); // закриваємо екран з відео
-
+                                        sessionArea.classList.add('hidden');
                                         if (toggleBtn) {
                                             toggleBtn.innerHTML = '<span>📹</span> Розгорнути відеосесію';
                                         }
-
-                                        // Жорстко обриваємо потік Jitsi
                                         if (jitsiApi !== null) {
                                             jitsiApi.dispose();
                                             jitsiApi = null;
                                         }
-
-                                        console.log("Сесію завершено фахівцем. Відео-з'єднання розірвано.");
                                     }
                                 }
                             })
@@ -258,24 +251,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-    // === ЛОГІКА ЗАПРОШЕННЯ АДМІНІСТРАТОРА (SOS) ===
-        const initSosBtn = document.getElementById('init-sos-btn');
-        const sosForm = document.getElementById('sos-request-form');
-        const cancelSosBtn = document.getElementById('cancel-sos-btn');
+            // ===============================================
+            // ФУНКЦІЇ ДИНАМІЧНОГО СПОВІЩЕННЯ КЛІЄНТА
+            // ===============================================
+            function triggerLoudNotification() {
+                if (document.getElementById('call-alert-modal')) return;
 
-        if (initSosBtn && sosForm && cancelSosBtn) {
-            // Відкрити форму
-            initSosBtn.addEventListener('click', () => {
-                initSosBtn.classList.add('hidden');
-                sosForm.classList.remove('hidden');
-            });
+                const modalHtml = `
+                    <div id="call-alert-modal" class="modal-overlay is-visible">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">📞 Фахівець очікує!</h3>
+                            </div>
+                            <div class="p-md text-center">
+                                <p class="text-main mb-md">Терапевтичну сесію розпочато. Ваш фахівець уже в відеокабінеті.</p>
+                                <button id="btn-join-now" class="btn-primary w-100">
+                                    🎥 Приєднатися до відеодзвінка
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-            // Скасувати і сховати форму
-            cancelSosBtn.addEventListener('click', () => {
-                sosForm.classList.add('hidden');
-                initSosBtn.classList.remove('hidden');
-                sosForm.reset(); // Очищаємо введений текст, якщо клієнт передумав
-            });
-        }
-        // ===============================================
-});
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                document.getElementById('btn-join-now').addEventListener('click', () => {
+                    const mainToggleBtn = document.getElementById('toggle-session-btn');
+                    if (mainToggleBtn) mainToggleBtn.click();
+                    closeLoudNotification();
+                });
+            }
+
+            function closeLoudNotification() {
+                const modal = document.getElementById('call-alert-modal');
+                if (modal) modal.remove();
+            }
+
+            // === ЛОГІКА ЗАПРОШЕННЯ АДМІНІСТРАТОРА (SOS) — ЗБЕРЕЖЕНО НА МІСЦІ ===
+            const initSosBtn = document.getElementById('init-sos-btn');
+            const sosForm = document.getElementById('sos-request-form');
+            const cancelSosBtn = document.getElementById('cancel-sos-btn');
+
+            if (initSosBtn && sosForm && cancelSosBtn) {
+                initSosBtn.addEventListener('click', () => {
+                    initSosBtn.classList.add('hidden');
+                    sosForm.classList.remove('hidden');
+                });
+
+                cancelSosBtn.addEventListener('click', () => {
+                    sosForm.classList.add('hidden');
+                    initSosBtn.classList.remove('hidden');
+                    sosForm.reset();
+                });
+            }
+            // ===============================================
+        });

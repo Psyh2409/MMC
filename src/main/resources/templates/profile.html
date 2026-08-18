@@ -190,12 +190,12 @@
                                 <span class="text-sm text-muted d-block mb-xs">Терапевт:</span>
                                 <strong class="text-main" th:text="${assignment.therapist.name}">Ім'я Фахівця</strong>
                             </div>
-                            <div class="action-group">
+                            <div class="action-group mt-md center">
                                 <!-- ВАЖЛИВО: посилання веде на ID призначення (договору), а не клієнта -->
-                                <a th:href="@{/therapy/room/{id}(id=${assignment.id})}" class="btn-primary btn-sm">
+                                <a th:href="@{/therapy/room/{id}(id=${assignment.id})}" class="btn-primary mrgn-2rem">
                                     🎥 Увійти в кабінет
                                 </a>
-                                <a th:href="@{/therapist/public/{id}(id=${assignment.therapist.id})}" class="btn-outline btn-sm">
+                                <a th:href="@{/therapist/public/{id}(id=${assignment.therapist.id})}" class="btn-primary mrgn-2rem">
                                     👁️ Профіль фахівця
                                 </a>
                             </div>

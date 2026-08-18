@@ -419,3 +419,11 @@
     gap: var(--space-xs);
     margin-top: var(--space-md);
 }
+
+.room-header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+}

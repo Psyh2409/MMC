@@ -337,3 +337,8 @@
     min-width: 7rem; /* Задає кнопкам однакову ширину, незалежно від довжини слова */
     text-align: center;
 }
+
+.mrgn-2rem {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}

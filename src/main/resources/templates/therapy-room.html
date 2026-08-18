@@ -1,41 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::section}, ~{::page-scripts})}">
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
 <head>
     <title>Сесія | MMC Room</title>
 </head>
 <body>
 
 <section class="standard-container-wide">
-    <div th:if="${currentUser.id.equals(client.id)}" class="mb-md">
 
+    <div class="card-primary mb-sm p-sm">
+        <div class="room-header-grid">
+
+            <!-- Ліва частина: Назва і учасники -->
+            <div class="d-flex align-center gap-sm flex-wrap">
+                <span class="heading-md mb-0 text-main">🌿 Кабінет</span>
+                <span class="text-muted hide-mobile">|</span>
+                <span class="text-sm">Клієнт: <strong class="text-main" th:text="${client.name}"></strong></span>
+                <span class="text-muted">|</span>
+                <span class="text-sm">Фахівець: <strong class="text-main" th:text="${therapist.name}"></strong></span>
+            </div>
+
+            <!-- Права частина: Бейдж ролі -->
+            <div>
+            <span class="badge"
+                  th:classappend="${isTherapistInThisRoom} ? 'badge-therapist' : 'badge-client'"
+                  th:text="${isTherapistInThisRoom} ? 'Ви: Фахівець' : 'Ви: Клієнт'">
+            </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Блок SOS-запиту -->
+    <div th:if="${isClientInThisRoom}" class="mb-md">
         <button type="button" id="init-sos-btn" class="btn-outline">
             🚨 Запросити Адміністратора
         </button>
 
         <form id="sos-request-form"
-              th:action="@{/therapy/room/{id}/sos(id=${client.id})}"
+              th:action="@{/therapy/room/{id}/sos(id=${roomId})}"
               method="post"
               class="request-card-danger hidden">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
             <p class="text-danger mb-sm"><strong>🚨 Запрошення Адміністратора</strong></p>
-
-            <textarea name="reason" rows="3" class="form-input w-100 mb-sm"
-                      placeholder="Опишіть, будь ласка, з якого питання ви хочете запросити адміністратора в кабінет..." required></textarea>
-
+            <textarea name="reason" rows="3" class="form-input w-100 mb-sm" required></textarea>
             <div class="form-actions">
-                <button type="submit" class="btn-primary btn-danger btn-sm">
-                    Надіслати запрошення
-                </button>
-                <button type="button" id="cancel-sos-btn" class="btn-outline btn-sm">
-                    Скасувати
-                </button>
+                <button type="submit" class="btn-primary btn-danger btn-sm">Надіслати запрошення</button>
+                <button type="button" id="cancel-sos-btn" class="btn-outline btn-sm">Скасувати</button>
             </div>
         </form>
     </div>
 
-    <div th:if="${currentUser.isTherapist() or (currentUser.id.equals(client.id) and isSessionActive)}" class="session-toggle-wrapper mb-md">
+    <!-- БЛОК ВІДЕОСЕСІЇ: Використовуємо classappend замість th:if, щоб уникнути багу видалення з DOM -->
+    <div id="session-toggle-wrapper"
+         class="session-toggle-wrapper mb-md"
+         th:classappend="${(isTherapistInThisRoom) or (isClientInThisRoom and isSessionActive)} ? '' : 'hidden'">
         <button id="toggle-session-btn" class="btn-primary">
             <span>📹</span> Розгорнути відеосесію
         </button>
@@ -47,14 +70,14 @@
         </div>
 
 
-    <div class="notes-bottom-panel">
-        <div class="notes-header-row">
-            <h4 class="profile-section-title" th:text="'Нотатки: ' + ${client.name}">Клієнт</h4>
-            <button type="button" id="btn-show-history" class="btn-primary">
-                Історія нотаток
-            </button>
+        <div class="notes-bottom-panel">
+            <div class="notes-header-row">
+                <h4 class="profile-section-title" th:text="'Нотатки: ' + ${client.name}">Клієнт</h4>
+                <button type="button" id="btn-show-history" class="btn-primary">
+                    Історія нотаток
+                </button>
+            </div>
         </div>
-    </div>
         <textarea id="session-notes"
                   class="therapy-textarea"
                   placeholder="Нова сесія. Почніть писати тут..."></textarea>
@@ -91,9 +114,10 @@
         window.TherapyConfig = {
             roomName: /*[[${roomName}]]*/ 'default-room',
             userName: /*[[${currentUser.name}]]*/ 'Користувач',
+            roomId: /*[[${roomId}]]*/ '',
             clientUuid: /*[[${client.id}]]*/ '',
             jitsiJwt: /*[[${jitsiJwt}]]*/ null,
-            isProfessional: /*[[${isAdmin || isTherapist}]]*/ false,
+            isTherapistInThisRoom: /*[[${isTherapistInThisRoom}]]*/ false,
             csrfToken: document.querySelector('meta[name="_csrf"]').content,
             csrfHeader: document.querySelector('meta[name="_csrf_header"]').content
         };
