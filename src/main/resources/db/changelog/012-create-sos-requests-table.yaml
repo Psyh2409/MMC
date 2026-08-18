@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-create-sos-requests-table
+      author: mmc-dev
+      changes:
+        - createTable:
+            tableName: sos_requests
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: assignment_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sos_requests_assignment
+                    referencedTableName: therapy_assignments
+                    referencedColumnNames: id
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sos_requests_client
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: reason
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

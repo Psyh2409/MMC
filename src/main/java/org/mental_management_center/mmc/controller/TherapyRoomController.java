@@ -2,10 +2,8 @@ package org.mental_management_center.mmc.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.mental_management_center.mmc.model.Notification;
-import org.mental_management_center.mmc.model.TherapyAssignment;
-import org.mental_management_center.mmc.model.TherapyNote;
-import org.mental_management_center.mmc.model.User;
+import org.mental_management_center.mmc.model.*;
+import org.mental_management_center.mmc.repository.SosRequestRepository;
 import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +34,7 @@ public class TherapyRoomController {
     private final TherapyAssignmentService therapyAssignmentService;
     private final NotificationService notificationService;
     private final TherapyAssignmentRepository therapyAssignmentRepository;
+    private final SosRequestRepository sosRequestRepository;
 
     @Value("${app.jitsi.app-id}")
     private String appId;
@@ -49,7 +48,9 @@ public class TherapyRoomController {
                                  TherapyRoomService therapyRoomService,
                                  SharedWallService sharedWallService,
                                  TherapyAssignmentService therapyAssignmentService,
-                                 NotificationService notificationService, TherapyAssignmentRepository therapyAssignmentRepository) {
+                                 NotificationService notificationService,
+                                 TherapyAssignmentRepository therapyAssignmentRepository,
+                                 SosRequestRepository sosRequestRepository) {
         this.userService = userService;
         this.therapyNoteService = therapyNoteService;
         this.therapyRoomService = therapyRoomService;
@@ -57,6 +58,7 @@ public class TherapyRoomController {
         this.therapyAssignmentService = therapyAssignmentService;
         this.notificationService = notificationService;
         this.therapyAssignmentRepository = therapyAssignmentRepository;
+        this.sosRequestRepository = sosRequestRepository;
     }
 
     @GetMapping("/room/{assignmentId}")
@@ -76,7 +78,10 @@ public class TherapyRoomController {
         boolean isClient = currentUser.getId().equals(roomClient.getId());
         boolean isTherapist = currentUser.getId().equals(roomTherapist.getId());
 
-        if (!isClient && !isTherapist) {
+        // Перевіряємо, чи є для цього кабінету активний екстрений виклик Адміністратора
+        boolean isAdminSosAccess = currentUser.isAdmin() && sosRequestRepository.existsByAssignmentIdAndStatus(assignmentId, "PENDING");
+
+        if (!isClient && !isTherapist && !isAdminSosAccess) {
             throw new AccessDeniedException("Конфіденційно: Ви не маєте доступу до цього кабінету.");
         }
 
@@ -90,6 +95,7 @@ public class TherapyRoomController {
 
         model.addAttribute("isTherapistInThisRoom", isTherapistInThisRoom);
         model.addAttribute("isClientInThisRoom", isClientInThisRoom);
+        model.addAttribute("isAdminSosAccess", isAdminSosAccess);
         // 3. ІЗОЛЯЦІЯ РЕСУРСІВ: Унікальна назва прив'язана до ID договору
         String roomName = "therapy-room-" + assignment.getId();
 
@@ -286,13 +292,22 @@ public class TherapyRoomController {
                              @RequestParam("reason") String reason,
                              Principal principal) {
         User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
-        TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId).orElseThrow();
+        TherapyAssignment assignment = therapyAssignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new AccessDeniedException("Кабінет не знайдено."));
 
         if (!currentUser.getId().equals(assignment.getClient().getId())) {
-            throw new AccessDeniedException("Тільки власник кабінету може викликати адміністратора.");
+            throw new AccessDeniedException("Тільки клієнт може викликати адміністратора.");
         }
 
-        userService.triggerSos(assignment.getClient().getId(), reason);
+        // Записуємо окремий SOS-запит для ЦЬОГО конкретного договору
+        SosRequest sosRequest = new SosRequest();
+        sosRequest.setAssignment(assignment);
+        sosRequest.setClient(currentUser);
+        sosRequest.setReason(reason.trim());
+        sosRequest.setStatus("PENDING");
+
+        sosRequestRepository.save(sosRequest);
+
         return "redirect:/therapy/room/" + assignmentId + "?sos=activated";
     }
 
@@ -300,7 +315,12 @@ public class TherapyRoomController {
     // ЕТИЧНИЙ КОНТРОЛЬ ДОСТУПУ (1:N АРХІТЕКТУРА)
     // =========================================================
     private boolean hasAccessToRoom(User user, UUID assignmentId) {
-        if (user.isAdmin()) return true;
+        // Адмін має доступ, ТІЛЬКИ якщо для цієї кімнати є активний SOS
+        if (user.isAdmin()) {
+            if (sosRequestRepository.existsByAssignmentIdAndStatus(assignmentId, "PENDING")) {
+                return true;
+            }
+        }
 
         return therapyAssignmentRepository.findById(assignmentId)
                 .map(a -> "ACTIVE".equals(a.getStatus()) &&

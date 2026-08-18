@@ -6,6 +6,7 @@ import org.mental_management_center.mmc.repository.*;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin") // Цей префікс додається до всіх методів нижче
@@ -33,6 +35,7 @@ public class AdminUserController {
     private final ReportRepository reportRepository;
     private final RequestRepository requestRepository;
     private final TherapyAssignmentRepository therapyAssignmentRepository;
+    private final SosRequestRepository sosRequestRepository;
 
     // 1. Сторінка списку користувачів (Переїхала з AuthController)
     @GetMapping("/users")
@@ -51,6 +54,23 @@ public class AdminUserController {
             }
         }
         model.addAttribute("activeTherapistsMap", activeTherapistsMap);
+        // 1. Отримуємо всі активні PENDING-виклики
+        List<SosRequest> pendingSosRequests = sosRequestRepository.findByStatusOrderByCreatedAtDesc("PENDING");
+
+        // 2. Карта активних SOS за ID договору (для виклику з конкретного рядка)
+        Map<UUID, SosRequest> activeSosMap = pendingSosRequests.stream()
+                .collect(Collectors.toMap(r -> r.getAssignment().getId(), r -> r, (existing, replacement) -> existing));
+
+        // 3. Підрахунок кількості викликів для кожного клієнта (для цифрового бейджа "Терапевти")
+        Map<UUID, Long> clientSosCounts = pendingSosRequests.stream()
+                .collect(Collectors.groupingBy(r -> r.getClient().getId(), Collectors.counting()));
+
+        // 4. Загальна кількість SOS-запитів для лічильника в шапці адмінки
+        long totalPendingSosCount = pendingSosRequests.size();
+
+        model.addAttribute("activeSosMap", activeSosMap);
+        model.addAttribute("clientSosCounts", clientSosCounts);
+        model.addAttribute("totalPendingSosCount", totalPendingSosCount);
         // 4. Сортуємо цей список за спаданням дати створення (те, що раніше робив Sort.by)
         visibleUsers.sort(Comparator.comparing(User::getCreatedAt).reversed());
         model.addAttribute("allUsers", visibleUsers);
@@ -169,10 +189,14 @@ public class AdminUserController {
         return "redirect:/admin/users?success";
     }
 
-    @PostMapping("/users/{id}/resolve-sos")
-    public String resolveSos(@PathVariable UUID id) {
-        userService.resolveSos(id);
-        return "redirect:/admin/users";
+    // Оновлений метод: закриває конкретний SOS-запит за його ID
+    @PostMapping("/sos/{sosRequestId}/resolve")
+    @ResponseBody
+    public ResponseEntity<Void> resolveSos(@PathVariable UUID sosRequestId) {
+        SosRequest request = sosRequestRepository.findById(sosRequestId).orElseThrow();
+        request.setStatus("RESOLVED");
+        sosRequestRepository.save(request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/users/{id}/send-message")
@@ -194,4 +218,5 @@ public class AdminUserController {
 
         return "redirect:/admin/users?success";
     }
+
 }

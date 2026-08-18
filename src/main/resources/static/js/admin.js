@@ -93,3 +93,64 @@ function checkAdminAlerts() {
             console.debug('[MMC Admin] Не вдалося завантажити лічильник:', error);
         });
 }
+
+let currentSosRequestId = null;
+
+function openAdminSosModal(btnElement) {
+    const requestId = btnElement.getAttribute('data-id');
+    const reason = btnElement.getAttribute('data-reason');
+    const assignmentId = btnElement.getAttribute('data-assignment');
+
+    currentSosRequestId = requestId;
+
+    const reasonContainer = document.getElementById('sos-modal-reason');
+    const roomLink = document.getElementById('sos-modal-room-link');
+    const modal = document.getElementById('admin-sos-modal');
+
+    if (reasonContainer && roomLink && modal) {
+        reasonContainer.textContent = reason;
+        roomLink.href = '/therapy/room/' + assignmentId;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('is-visible');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('admin-sos-modal');
+    const btnResolve = document.getElementById('btn-resolve-sos');
+    const btnClose = document.getElementById('btn-close-sos-modal');
+
+    // Кнопка "Повернутись назад" (просто закриває модалку, запис залишається активним)
+    if (btnClose && modal) {
+        btnClose.addEventListener('click', () => {
+            modal.classList.remove('is-visible');
+            modal.classList.add('hidden');
+        });
+    }
+
+    // Кнопка "Позначити як вирішено"
+    if (btnResolve) {
+        btnResolve.addEventListener('click', async () => {
+            if (!currentSosRequestId) return;
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+            try {
+                const response = await fetch('/admin/sos/' + currentSosRequestId + '/resolve', {
+                    method: 'POST',
+                    headers: { [csrfHeader]: csrfToken }
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Помилка при закритті SOS-запиту.');
+                }
+            } catch (error) {
+                console.error('Помилка мережі:', error);
+            }
+        });
+    }
+});

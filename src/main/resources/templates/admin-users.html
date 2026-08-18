@@ -92,28 +92,9 @@
 
                     <td>
                         <span th:text="${u.isAdmin() ? 'АДМІН' : (u.isTherapist() ? 'ТЕРАПЕВТ' : (u.isClient() ? 'КЛІЄНТ' : 'ЧИТАЧ'))}"></span>
-                        <th:block th:if="${u.isClient() and u.sosRequested}">
-                            <div class="ag-edebo border-danger mt-sm">
-                                <em th:text="${u.sosReason}"></em>
-
-                                <div class="admin-action-form-inline mt-sm">
-                                    <a th:href="@{/therapy/room/{id}(id=${u.id})}" class="btn-primary btn-sm"
-                                       onclick="event.stopPropagation();">
-                                        Увійти в кабінет
-                                    </a>
-                                    <form th:action="@{/admin/users/{id}/resolve-sos(id=${u.id})}" method="post"
-                                          class="d-inline">
-                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                        <button type="submit" class="btn-outline btn-sm" onclick="event.stopPropagation();">Вирішено (Вимкнути)</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </th:block>
-
                     </td>
 
                     <td th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2024</td>
-
                     <td>
                         <form th:action="@{/admin/update-notes/{id}(id=${u.id})}" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -122,7 +103,8 @@
                                       placeholder="Додайте коментар..."
                                       class="admin-notes"></textarea>
                             <br>
-                            <button type="submit" class="btn-primary" onclick="event.stopPropagation();">Зберегти</button>
+                            <button type="submit" class="btn-primary" onclick="event.stopPropagation();">Зберегти
+                            </button>
                         </form>
                     </td>
 
@@ -163,13 +145,18 @@
                                     onclick="event.stopPropagation(); toggleApp(this)">
                                 <span th:text="${u.pendingSpecialist ? '📄 Заявка' : '🎓 Диплом'}"></span>
                             </button>
-                            <button th:if="${u.isClient()}"
-                                    type="button"
-                                    class="btn-outline btn-sm"
-                                    th:data-target="'therapist-info-' + ${u.id}"
-                                    onclick="event.stopPropagation(); document.getElementById(this.getAttribute('data-target')).classList.toggle('is-hidden')">
-                                👥 Терапевт
-                            </button>
+                            <!-- Кнопка "Терапевти" (ТІЛЬКИ для Клієнтів) -->
+                            <div th:if="${u.isClient()}" class="admin-badge-wrapper" style="display: inline-block; vertical-align: top;">
+                                <button type="button" class="btn-outline btn-sm"
+                                        th:data-target="'therapist-info-' + ${u.id}"
+                                        onclick="event.stopPropagation(); toggleApp(this)">
+                                    👥 Терапевти
+                                </button>
+                                <!-- Бейдж тепер назовні, як у шапці звернень -->
+                                <span th:if="${clientSosCounts != null and clientSosCounts.containsKey(u.id)}"
+                                      class="admin-alert-badge breath-alert"
+                                      th:text="${clientSosCounts.get(u.id)}"></span>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -183,20 +170,34 @@
 
                                 <!-- Перебираємо всі призначення клієнта (Мультитерапія) -->
                                 <th:block th:each="assignment : ${activeTherapistsMap.get(u.id)}">
-                                    <div class="ag-edebo">
-                                        <span class="badge badge-therapist">Фахівець</span>
-                                        <strong th:text="${assignment.therapist.name}" class="ml-xs"></strong>
+                                    <div class="card-secondary p-sm mb-xs row-between align-center flex-wrap">
+                                        <div class="d-flex align-center gap-sm flex-wrap">
+                                            <span class="badge badge-therapist">Фахівець</span>
+                                            <strong th:text="${assignment.therapist.name}" class="text-main"></strong>
+                                            <span class="text-muted hide-mobile">|</span>
+                                            <span class="text-sm text-truncate" th:text="${assignment.therapist.email}"></span>
+                                            <span class="text-muted hide-mobile">|</span>
+                                            <span class="text-sm">Закріплено: <strong th:text="${assignment.updatedAt != null ? #temporals.format(assignment.updatedAt, 'dd.MM.yyyy HH:mm') : 'Невідомо'}"></strong></span>
+                                        </div>
 
-                                        <span th:text="${'   |   ' + assignment.therapist.email}"></span>
-                                        <span class="text-muted">   |   Дата закріплення: </span>
-
-                                        <!-- Форматуємо дату безпосередньо з об'єкта призначення -->
-                                        <strong th:text="${assignment.updatedAt != null ? #temporals.format(assignment.updatedAt, 'dd.MM.yyyy HH:mm') : 'Невідомо'}"></strong>
+                                        <div class="d-flex align-center gap-xs ml-auto">
+                                            <!-- Кнопка SOS ТІЛЬКИ якщо є звернення -->
+                                            <button th:if="${activeSosMap != null and activeSosMap.containsKey(assignment.id)}"
+                                                    type="button"
+                                                    class="btn-primary btn-danger btn-sm d-inline-flex align-center gap-xs"
+                                                    th:data-id="${activeSosMap.get(assignment.id).id}"
+                                                    th:data-reason="${activeSosMap.get(assignment.id).reason}"
+                                                    th:data-assignment="${assignment.id}"
+                                                    onclick="openAdminSosModal(this)">
+                                                🚨 SOS-Запит
+                                            </button>
+                                        </div>
                                     </div>
                                 </th:block>
 
                                 <!-- Заглушка, якщо у клієнта немає активних терапевтів -->
-                                <div th:if="${activeTherapistsMap.get(u.id) == null or activeTherapistsMap.get(u.id).isEmpty()}" class="text-muted">
+                                <div th:if="${activeTherapistsMap.get(u.id) == null or activeTherapistsMap.get(u.id).isEmpty()}"
+                                     class="text-muted">
                                     Немає закріплених фахівців
                                 </div>
 
@@ -223,7 +224,8 @@
                                     <button type="submit" class="btn-primary btn-sm">Підтвердити фахівця
                                     </button>
                                 </form>
-                                <span th:unless="${u.pendingSpecialist}" class="badge badge-therapist">ВЕРИФІКОВАНО</span>
+                                <span th:unless="${u.pendingSpecialist}"
+                                      class="badge badge-therapist">ВЕРИФІКОВАНО</span>
                             </div>
                         </div>
                     </td>
@@ -278,13 +280,45 @@
             <form id="banReasonForm" method="post" class="stack-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="form-group">
-                    <textarea name="reason" class="form-textarea" rows="3" placeholder="Причина бану..." required></textarea>
+                    <textarea name="reason" class="form-textarea" rows="3" placeholder="Причина бану..."
+                              required></textarea>
                 </div>
                 <div class="modal-footer mt-sm">
                     <button type="button" class="btn-outline btn-sm" onclick="closeBanModal()">Скасувати</button>
                     <button type="submit" class="btn-primary btn-sm">Застосувати</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <!-- Компактне модальне вікно перегляду екстреного звернення -->
+    <div id="admin-sos-modal" class="modal-overlay hidden">
+        <!-- Додано клас обмеження ширини (напр. modal-sm або max-w-sm) для компактності -->
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <!-- Використовуємо text-accent та breath-alert для привернення уваги без хардкоду червоного кольору -->
+                <h3 class="modal-title text-accent breath-alert">🚨 Екстрений виклик</h3>
+            </div>
+            <div class="p-sm">
+                <p class="text-muted text-sm mb-xs">Причина звернення клієнта:</p>
+                <!-- Компактний блок для тексту -->
+                <div id="sos-modal-reason" class="card-primary p-sm mb-md text-main text-sm italic-text text-pre-wrap"></div>
+
+                <!-- Кнопки управління рішенням (без btn-danger) -->
+                <div class="d-flex justify-between align-center gap-sm flex-wrap">
+                    <button type="button" id="btn-close-sos-modal" class="btn-outline btn-sm">
+                        ↩️ Назад
+                    </button>
+
+                    <div class="d-flex align-center gap-xs">
+                        <button type="button" id="btn-resolve-sos" class="btn-outline btn-sm">
+                            ✅ Вирішено
+                        </button>
+                        <a id="sos-modal-room-link" href="#" class="btn-primary btn-sm">
+                            🚪 Увійти
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
