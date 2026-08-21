@@ -31,6 +31,11 @@
         <div th:utext="${article.content}">Контент статті з'явиться тут...</div>
     </article>
 
+    <!-- ДОДАТИ: Блок реакцій для самої статті -->
+    <div class="article-reactions mt-md mb-md">
+        <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ARTICLE', targetId=${article.id})}"></th:block>
+    </div>
+
     <!-- Підпис автора внизу статті -->
     <div class="author-signature text-muted mb-md">
         <hr class="article-divider">

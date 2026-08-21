@@ -9,10 +9,8 @@ import org.mental_management_center.mmc.service.OAuth2Principal;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.stereotype.Controller;
 
 import java.util.Collections;
 import java.util.Map;
@@ -22,17 +20,13 @@ import java.util.stream.Collectors;
 public class GlobalModelAttributes {
 
     private final UserService userService;
-
-    // ДОДАНО: Підключаємо наш новий репозиторій словника
     private final CategoryTranslationRepository categoryTranslationRepository;
 
-    // ОНОВЛЕНО: Конструктор тепер приймає CategoryTranslationRepository
     public GlobalModelAttributes(UserService userService, CategoryTranslationRepository categoryTranslationRepository) {
         this.userService = userService;
         this.categoryTranslationRepository = categoryTranslationRepository;
     }
 
-    // ОНОВЛЕНО: Тепер меню будується динамічно з бази даних
     @ModelAttribute("allCategoriesMap")
     public Map<String, String> allCategoriesMap(HttpServletRequest request) {
         if (request.getRequestURI().startsWith("/api/")) {

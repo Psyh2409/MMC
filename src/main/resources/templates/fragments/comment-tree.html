@@ -36,6 +36,20 @@
         </p>
     </div>
 
+    <!-- 🟢 1. БЛОК РЕАКЦІЙ (Динамічний TargetType) -->
+    <div th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}"
+         class="reactions-bar-container mt-xs mb-xs">
+        <th:block th:replace="~{fragments/reaction-icons :: reactionBar(
+            targetType=${comment.article != null ? 'ARTICLE_COMMENT' : 'PUBLIC_WALL_COMMENT'},
+            targetId=${comment.id})}"></th:block>
+    </div>
+
+<!--    &lt;!&ndash; 🟢 1. БЛОК РЕАКЦІЙ (Вставити сюди) &ndash;&gt;-->
+<!--    <div th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}"-->
+<!--         class="reactions-bar-container mt-xs mb-xs">-->
+<!--        <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ARTICLE_COMMENT', targetId=${comment.id})}"></th:block>-->
+<!--    </div>-->
+
     <!-- Блок дій (видимий тільки якщо не видалено жодною з трьох ролей) -->
     <div th:if="${!comment.deletedByAdmin and !comment.deletedByAuthor and !comment.deletedByCommenter}" class="comment-actions">
 

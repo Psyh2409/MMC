@@ -559,6 +559,27 @@ function showMessage(message, targetId, chatType) {
 
         <div class="message-text">${safeContent}</div>
 
+        <!-- Горизонтальна панель реакцій для чату -->
+                <div class="message-reactions-bar mt-xs mb-xs">
+                    <div class="reaction-wrapper d-inline-flex align-center gap-xs">
+                        <button type="button" class="btn-outline btn-sm p-xs reaction-toggle-btn d-inline-flex align-center gap-xs"
+                                data-target-type="CHAT_MESSAGE"
+                                data-target-id="${message.id}"
+                                onclick="toggleReactionDropdown(this)">
+                            <span class="reaction-current-icon">🤍</span>
+                            <span class="reaction-count text-xs fw-bold">${message.supportCount || 0}</span>
+                        </button>
+
+                        <div class="reaction-dropdown is-hidden card-surface p-xs d-inline-flex align-center gap-xs border-radius-sm shadow-sm">
+                            <button type="button" class="btn-icon p-xs" data-reaction="AGREE" onclick="applyReaction(this)" title="Згоден">👍</button>
+                            <button type="button" class="btn-icon p-xs" data-reaction="GRATITUDE" onclick="applyReaction(this)" title="Вдячність">🙏</button>
+                            <button type="button" class="btn-icon p-xs" data-reaction="INSIGHT" onclick="applyReaction(this)" title="Цінно">💡</button>
+                            <button type="button" class="btn-icon p-xs" data-reaction="EMPATHY" onclick="applyReaction(this)" title="Співчуття">💛</button>
+                            <button type="button" class="btn-icon p-xs" data-reaction="SUPPORT" onclick="applyReaction(this)" title="Підтримка">🫂</button>
+                        </div>
+                    </div>
+                </div>
+
         <div class="message-actions">
             ${actionsHtml}
         </div>
@@ -656,6 +677,8 @@ function renderAllMessages(targetId, chatType, messageArray) {
     messageArray.forEach(msg => {
         showMessage(msg, targetId, chatType);
     });
+
+    if (typeof loadReactions === 'function') loadReactions();
 }
 
 // Автоматичне підхоплення медіа-фасадів для чату
@@ -790,3 +813,64 @@ function cancelReply() {
 function cancelEdit() {
     cancelAction();
 }
+
+// Відкрити/сховати панель реакцій
+function toggleReactionDropdown(btn) {
+    // Спочатку ховаємо всі інші відкриті панелі
+    document.querySelectorAll('.reaction-dropdown').forEach(drop => {
+        if (drop !== btn.nextElementSibling) drop.classList.add('is-hidden');
+    });
+
+    const dropdown = btn.nextElementSibling;
+    if (dropdown) {
+        dropdown.classList.toggle('is-hidden');
+    }
+}
+
+// Застосувати обрану реакцію (для чату)
+function applyReaction(btn) {
+    const dropdown = btn.closest('.reaction-dropdown');
+    const wrapper = btn.closest('.reaction-wrapper');
+    const mainBtn = wrapper.querySelector('.reaction-toggle-btn');
+    const countSpan = mainBtn.querySelector('.reaction-count');
+
+    const targetType = mainBtn.getAttribute('data-target-type');
+    const targetId = mainBtn.getAttribute('data-target-id');
+    const reactionType = btn.getAttribute('data-reaction');
+    const newIconHtml = btn.innerHTML;
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+    const headers = { 'Content-Type': 'application/json' };
+    if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+
+    fetch('/api/reactions/toggle', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ targetType, targetId, reactionType })
+    })
+    .then(response => {
+        if (response.ok) {
+            const iconContainer = mainBtn.querySelector('.reaction-current-icon');
+            if (iconContainer) iconContainer.innerHTML = newIconHtml;
+
+            if (!mainBtn.classList.contains('border-accent')) {
+                mainBtn.classList.add('border-accent');
+                let currentCount = parseInt(countSpan.innerText) || 0;
+                countSpan.innerText = currentCount + 1;
+            }
+
+            dropdown.classList.add('is-hidden');
+        }
+    })
+    .catch(error => console.error('Помилка збереження:', error));
+}
+
+// Автоматичне закриття панелі реакцій при кліку поза її межами
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.reaction-wrapper')) {
+        document.querySelectorAll('.reaction-dropdown').forEach(drop => {
+            drop.classList.add('is-hidden');
+        });
+    }
+});

@@ -82,6 +82,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- 🟢 2. БЛОК РЕАКЦІЙ ПОСТА (Вставити сюди) -->
+        <div class="post-reactions-container mt-sm mb-xs">
+            <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='PUBLIC_WALL_POST', targetId=${post.id})}"></th:block>
+        </div>
+
         <!-- Секція коментарів під постом стіни -->
         <div class="post-comments-section mt-md pt-sm border-top">
             <!-- Форма нового коментаря -->

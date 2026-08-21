@@ -62,9 +62,13 @@ public class SecurityConfig {
                                 "/test-email",
                                 "/api/ping",
                                 "/images/**",
+                                "/api/reactions/summaries",
                                 "/sw.js",
                                 "/offline.html")
                         .permitAll()
+                        .requestMatchers(
+                                "/api/reactions/toggle")
+                        .authenticated()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf

@@ -422,9 +422,6 @@ public class SharedWallController {
         return "fragments/shared-wall-form :: commentsFeed";
     }
 
-    // ====================================================================================
-    // ---------------------- ДОДАТИ НОВИЙ МЕТОД ДЛЯ ВИДАЛЕННЯ ----------------------------
-    // ====================================================================================
     @DeleteMapping("/post/{postId}/comments/{commentId}")
     @ResponseBody
     public ResponseEntity<Void> deleteComment(@PathVariable UUID roomId,
@@ -444,4 +441,4 @@ public class SharedWallController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-} // 👈 Кінець класу SharedWallController
+}

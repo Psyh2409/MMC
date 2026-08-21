@@ -117,6 +117,11 @@
 
             <div class="edit-form-container hidden"></div>
 
+            <!-- 🟢 3.1 БЛОК РЕАКЦІЙ ПОСТА СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
+            <div class="post-reactions-container mt-xs mb-xs">
+                <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_POST', targetId=${post.id})}"></th:block>
+            </div>
+
             <!-- 🟢 КНОПКА З ЛІЧИЛЬНИКОМ -->
             <div class="comments-section-wrapper mt-sm pt-xs border-top-subtle">
                 <div class="row-between">
@@ -152,7 +157,7 @@
 <!-- 🟢 ДЕРЕВО КОМЕНТАРІВ (Фрагмент, що підвантажується) -->
 <!-- 🟢 РЕКУРСИВНИЙ ВУЗОЛ ДЕРЕВА КОМЕНТАРІВ -->
 <div th:fragment="commentNode(commentList)" th:remove="tag" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:each="comment : ${commentList}" class="comment-item mb-sm">
+    <div th:each="comment : ${commentList}" class="comment-item mb-sm" th:id="'comment-' + ${comment.id}">
 
         <!-- Картка коментаря (відступ, якщо це відповідь) -->
         <div class="card-surface p-sm border-radius-sm relative" th:classappend="${comment.parentId != null} ? 'ml-md border-left-primary' : ''">
@@ -164,6 +169,11 @@
 
             <!-- Текст із класом parse-media-links для лінків -->
             <div class="comment-body text-sm text-body parse-media-links" th:text="${comment.content}"></div>
+
+            <!-- 🟢 3.2 БЛОК РЕАКЦІЙ КОМЕНТАРЯ СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
+            <div class="comment-reactions-container mt-xs">
+                <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_COMMENT', targetId=${comment.id})}"></th:block>
+            </div>
 
             <!-- Кнопки керування (красиві, як у статтях) -->
             <div class="comment-actions action-group mt-xs pt-xs">

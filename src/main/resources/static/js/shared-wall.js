@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-
+    // 🟢 АВТОМАТИЧНЕ ВІДКРИТТЯ КОМЕНТАРІВ
+        const urlParams = new URLSearchParams(window.location.search);
+        const openPostId = urlParams.get('openPostId');
+        if (openPostId && window.location.hash && window.location.hash.startsWith('#comment-')) {
+                const commentBtn = document.querySelector(`button[data-post-id="${openPostId}"]`);
+                if (commentBtn) {
+                    const roomId = commentBtn.getAttribute('data-room-id');
+                    const container = document.getElementById('comments-container-' + openPostId);
+                    if (container) {
+                        // 1. Відкриваємо контейнер коментарів
+                        container.classList.remove('is-hidden');
+                        // 2. Викликаємо AJAX-завантаження коментарів для цього поста зі скролом
+                        window.fetchCommentsPage(roomId, openPostId, 0, container, true);
+                    }
+                }
+        }
     // 1. Обробка форми додавання запису
     document.addEventListener('submit', async (e) => {
         const form = e.target;
@@ -132,6 +147,7 @@ async function reloadWallFeed(roomId, page, size) {
             if (typeof window.applyMediaFacades === 'function') {
                 window.applyMediaFacades();
             }
+            if (typeof loadReactions === 'function') loadReactions();
         }
     } catch (err) {
         console.error('Помилка завантаження стіни:', err);
@@ -333,7 +349,7 @@ window.loadMoreComments = function(btn) {
 };
 
 // Допоміжна функція запиту фрагмента коментарів
-window.fetchCommentsPage = function(roomId, postId, page, container) {
+window.fetchCommentsPage = function(roomId, postId, page, container, scrollToComment = false) {
     const url = `/api/room/${roomId}/wall/post/${postId}/comments?page=${page}`;
 
     fetch(url, {
@@ -350,6 +366,20 @@ window.fetchCommentsPage = function(roomId, postId, page, container) {
         container.innerHTML = htmlFragment;
         if (typeof window.applyMediaFacades === 'function') {
             window.applyMediaFacades();
+        }
+        if (typeof loadReactions === 'function') loadReactions();
+
+        // Скрол до коментаря, якщо потрібно
+        if (scrollToComment && window.location.hash && window.location.hash.startsWith('#comment-')) {
+            setTimeout(() => {
+                const targetComment = document.querySelector(window.location.hash);
+                if (targetComment) {
+                    targetComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetComment.style.transition = 'background-color 0.4s ease';
+                    targetComment.style.backgroundColor = 'var(--color-accent-subtle, rgba(200, 180, 255, 0.25))';
+                    setTimeout(() => targetComment.style.backgroundColor = '', 2000);
+                }
+            }, 100);
         }
     })
     .catch(error => {
@@ -397,10 +427,10 @@ window.submitComment = function(event) {
                     if (btn) btn.innerHTML = `💬 Коментарі (${newCount})`;
                 }
 
-                // 🟢 ДОДАНО: Викликаємо правильну функцію з media-links.js
                 if (typeof window.applyMediaFacades === 'function') {
                     window.applyMediaFacades();
                 }
+                if (typeof loadReactions === 'function') loadReactions();
             }
     })
     .catch(error => {
@@ -449,28 +479,3 @@ window.deleteComment = function(btn) {
     });
 };
 
-window.loadWallPage = function(btn) {
-    const roomId = btn.getAttribute('data-room');
-    const page = btn.getAttribute('data-page');
-    const container = document.getElementById('sharedWallContainer');
-
-    if (!container) return;
-
-    fetch(`/api/room/${roomId}/wall/fragment?page=${page}`, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Помилка завантаження сторінки стіни');
-        return response.text();
-    })
-    .then(html => {
-        container.innerHTML = html;
-        if (typeof window.applyMediaFacades === 'function') {
-                        window.applyMediaFacades();
-        }
-    })
-    .catch(err => console.error('[MMC Wall Pagination Error]:', err));
-};

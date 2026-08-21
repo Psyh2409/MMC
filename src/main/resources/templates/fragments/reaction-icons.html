@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- КОМПАКТНА ПАНЕЛЬ РЕАКЦІЙ (Вирішує проблему 5 іконок одночасно) -->
+<div th:fragment="reactionBar(targetType, targetId)" class="reaction-wrapper d-inline-flex align-center gap-xs">
+
+    <button type="button" class="btn-outline btn-sm p-xs reaction-toggle-btn d-inline-flex align-center gap-xs"
+            th:data-target-type="${targetType}"
+            th:data-target-id="${targetId}"
+            onclick="toggleReactionDropdown(this)">
+        <span class="reaction-current-icon">🤍</span>
+        <span class="reaction-count text-xs fw-bold">0</span>
+    </button>
+
+    <!-- Прибрано absolute. Додано d-inline-flex. Тепер воно розкривається вправо на тому ж рівні -->
+    <div class="reaction-dropdown is-hidden card-surface p-xs d-inline-flex align-center gap-xs border-radius-sm shadow-sm">
+        <button type="button" class="btn-icon p-xs" data-reaction="AGREE" onclick="applyReaction(this)" title="Згоден">
+            <th:block th:replace="~{fragments/reaction-icons :: icon-agree}"></th:block>
+        </button>
+        <button type="button" class="btn-icon p-xs" data-reaction="GRATITUDE" onclick="applyReaction(this)" title="Вдячність">
+            <th:block th:replace="~{fragments/reaction-icons :: icon-gratitude}"></th:block>
+        </button>
+        <button type="button" class="btn-icon p-xs" data-reaction="INSIGHT" onclick="applyReaction(this)" title="Цінно">
+            <th:block th:replace="~{fragments/reaction-icons :: icon-insight}"></th:block>
+        </button>
+        <button type="button" class="btn-icon p-xs" data-reaction="EMPATHY" onclick="applyReaction(this)" title="Співчуття">
+            <th:block th:replace="~{fragments/reaction-icons :: icon-empathy}"></th:block>
+        </button>
+        <button type="button" class="btn-icon p-xs" data-reaction="SUPPORT" onclick="applyReaction(this)" title="Підтримка">
+            <th:block th:replace="~{fragments/reaction-icons :: icon-support}"></th:block>
+        </button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- БАЗА SVG ІКОНОК -->
+<!-- ========================================== -->
+
+<svg th:fragment="icon-support" class="icon-reaction text-accent" viewBox="0 0 24 24" width="1.25rem" height="1.25rem"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+</svg>
+
+<svg th:fragment="icon-empathy" class="icon-reaction text-accent" viewBox="0 0 24 24" width="1.25rem" height="1.25rem"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+</svg>
+
+<svg th:fragment="icon-insight" class="icon-reaction text-accent" viewBox="0 0 24 24" width="1.25rem" height="1.25rem"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18h6"/>
+    <path d="M10 22h4"/>
+    <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.6 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/>
+</svg>
+
+<svg th:fragment="icon-gratitude" class="icon-reaction text-accent" viewBox="0 0 24 24" width="1.25rem" height="1.25rem"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2v20"/>
+    <path d="M17 11V4a2 2 0 0 0-4 0v7"/>
+    <path d="M7 11V6a2 2 0 0 1 4 0v5"/>
+    <path d="M12 13a5 5 0 0 0 5 5h2a2 2 0 0 0 2-2v-4a9 9 0 0 0-9-9H9a2 2 0 0 0-2 2v10a5 5 0 0 0 5 5z"/>
+</svg>
+
+<svg th:fragment="icon-agree" class="icon-reaction text-accent" viewBox="0 0 24 24" width="1.25rem" height="1.25rem"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+</svg>
+
+</body>
+</html>

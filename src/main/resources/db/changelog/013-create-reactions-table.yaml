@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-create-reactions-table
+      author: mmc-dev
+      changes:
+        - createTable:
+            tableName: reactions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_reactions_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: target_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reaction_type
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        # Унікальний індекс: один користувач — одна реакція на один об'єкт
+        - addUniqueConstraint:
+            tableName: reactions
+            columnNames: user_id, target_type, target_id
+            constraintName: uk_user_target_reaction
