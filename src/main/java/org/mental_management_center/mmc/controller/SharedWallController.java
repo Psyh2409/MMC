@@ -441,4 +441,26 @@ public class SharedWallController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PutMapping("/post/{postId}/comments/{commentId}")
+    @ResponseBody
+    public ResponseEntity<Void> editComment(@PathVariable UUID roomId,
+                                            @PathVariable UUID postId,
+                                            @PathVariable UUID commentId,
+                                            @RequestParam String content,
+                                            Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+
+        try {
+            sharedWallService.editComment(commentId, currentUser, content);
+            return ResponseEntity.ok().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            log.error("Помилка редагування коментаря: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -479,3 +479,61 @@ window.deleteComment = function(btn) {
     });
 };
 
+// 5. Перемикання режиму Inline-редагування коментаря
+window.toggleEditCommentForm = function(btn) {
+    const commentId = btn.getAttribute('data-comment-id');
+    const commentCard = btn.closest('.card-surface');
+    if (!commentCard) return;
+
+    const bodyEl = commentCard.querySelector('.comment-body');
+    const reactionsEl = commentCard.querySelector('.comment-reactions-container');
+    const actionsEl = commentCard.querySelector('.comment-actions');
+    const editForm = commentCard.querySelector('#editCommentForm-' + commentId);
+
+    if (editForm) {
+        const isEditing = editForm.classList.toggle('is-hidden');
+        // Якщо форма відкрита (не має is-hidden) — ховаємо оригінальний текст і кнопки
+        if (bodyEl) bodyEl.classList.toggle('is-hidden', !isEditing);
+        if (reactionsEl) reactionsEl.classList.toggle('is-hidden', !isEditing);
+        if (actionsEl) actionsEl.classList.toggle('is-hidden', !isEditing);
+    }
+};
+
+// 6. Відправка оновленого тексту коментаря (AJAX PUT)
+window.submitEditComment = function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const roomId = formData.get('roomId');
+    const postId = formData.get('postId');
+    const commentId = formData.get('commentId');
+    const content = formData.get('content');
+
+    const container = document.getElementById('comments-container-' + postId);
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || '';
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content') || 'X-CSRF-TOKEN';
+
+    const params = new URLSearchParams();
+    params.append('content', content);
+
+    fetch(`/api/room/${roomId}/wall/post/${postId}/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            [csrfHeader]: csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: params.toString()
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Помилка оновлення коментаря');
+        // Перемальовуємо дерево коментарів з сервера
+        window.fetchCommentsPage(roomId, postId, 0, container);
+    })
+    .catch(error => {
+        console.error('[MMC SharedWall Edit Error]:', error);
+        alert("Не вдалося оновити коментар.");
+    });
+};
+

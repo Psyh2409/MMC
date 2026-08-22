@@ -87,6 +87,12 @@
 
         <div th:each="post : ${posts}" class="journal-post-card card-secondary mb-sm relative">
 
+            <div class="post-header text-sm text-muted mb-xs">
+                <span th:text="${currentUser != null and post.authorId.equals(currentUser.id) ? 'Ви' : post.authorName}">Автор</span>
+                <span class="text-muted">•</span>
+                <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+            </div>
+
             <!-- 🟢 ПОВЕРНУТІ SVG ТА ВИПРАВЛЕНЕ ПОРІВНЯННЯ UUID -->
             <div th:if="${currentUser != null and post.authorId != null and post.authorId.equals(currentUser.id)}" class="post-actions absolute top-0 right-0 p-sm action-group">
                 <button class="btn-icon" th:data-id="${post.id}" th:data-room="${roomId}" onclick="window.prepareEditWallPost(this.getAttribute('data-id'), this.getAttribute('data-room'), this)" title="Редагувати">
@@ -95,11 +101,6 @@
                 <button class="btn-icon delete-icon" th:data-id="${post.id}" th:data-room="${roomId}" onclick="window.deleteWallPost(this)" title="Видалити">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
-            </div>
-
-            <div class="post-header row-between text-sm text-muted mb-xs">
-                <span th:text="${currentUser != null and post.authorId.equals(currentUser.id) ? 'Ви' : post.authorName}">Автор</span>
-                <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
             </div>
 
             <div th:if="${post.content != null and post.content != '[MEDIA_ONLY]'}" class="journal-post-content text-body parse-media-links" th:text="${post.content}">Текст</div>
@@ -117,14 +118,15 @@
 
             <div class="edit-form-container hidden"></div>
 
-            <!-- 🟢 3.1 БЛОК РЕАКЦІЙ ПОСТА СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
-            <div class="post-reactions-container mt-xs mb-xs">
-                <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_POST', targetId=${post.id})}"></th:block>
-            </div>
+
 
             <!-- 🟢 КНОПКА З ЛІЧИЛЬНИКОМ -->
             <div class="comments-section-wrapper mt-sm pt-xs border-top-subtle">
                 <div class="row-between">
+                    <!-- 🟢 3.1 БЛОК РЕАКЦІЙ ПОСТА СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
+                    <div class="post-reactions-container mt-xs mb-xs">
+                        <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_POST', targetId=${post.id})}"></th:block>
+                    </div>
                     <button type="button" class="btn-primary text-sm" th:data-post-id="${post.id}" th:data-room-id="${roomId}" onclick="window.toggleCommentsBlock(this)">
                         💬 Коментарі (<span th:text="${post.commentsCount}">0</span>)
                     </button>
@@ -154,7 +156,6 @@
     </div>
 </div>
 
-<!-- 🟢 ДЕРЕВО КОМЕНТАРІВ (Фрагмент, що підвантажується) -->
 <!-- 🟢 РЕКУРСИВНИЙ ВУЗОЛ ДЕРЕВА КОМЕНТАРІВ -->
 <div th:fragment="commentNode(commentList)" th:remove="tag" xmlns:th="http://www.w3.org/1999/xhtml">
     <div th:each="comment : ${commentList}" class="comment-item mb-sm" th:id="'comment-' + ${comment.id}">
@@ -162,29 +163,63 @@
         <!-- Картка коментаря (відступ, якщо це відповідь) -->
         <div class="card-surface p-sm border-radius-sm relative" th:classappend="${comment.parentId != null} ? 'ml-md border-left-primary' : ''">
 
-            <div class="comment-header row-between text-xs text-muted mb-xs">
-                <strong th:text="${comment.isMine ? 'Ви' : comment.authorName}" class="text-main">Автор</strong>
-                <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+            <!-- 🟢 ШАПКА КОМЕНТАРЯ: Ліворуч (Автор + Дата), Праворуч (Кнопки дій) -->
+            <div class="comment-header row-between w-100 text-xs text-muted mb-xs">
+
+                <!-- Лівий блок: Автор та Дата -->
+                <div class="row-center gap-xs">
+                    <strong th:text="${comment.isMine ? 'Ви' : comment.authorName}" class="text-main">Автор</strong>
+                    <span class="text-muted">•</span>
+                    <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</span>
+                </div>
+
+                <!-- Правий блок: Кнопки дій з ml-auto (виштовхування праворуч) -->
+                <div th:if="${comment.isMine}" class="row-center gap-xs action-group ml-auto">
+                    <button type="button" class="btn-icon"
+                            th:data-comment-id="${comment.id}"
+                            onclick="window.toggleEditCommentForm(this)" title="Редагувати">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button type="button" class="btn-icon delete-icon"
+                            th:data-comment-id="${comment.id}" th:data-post-id="${postId}" th:data-room-id="${roomId}"
+                            onclick="window.deleteComment(this)" title="Видалити">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Текст із класом parse-media-links для лінків -->
             <div class="comment-body text-sm text-body parse-media-links" th:text="${comment.content}"></div>
 
-            <!-- 🟢 3.2 БЛОК РЕАКЦІЙ КОМЕНТАРЯ СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
-            <div class="comment-reactions-container mt-xs">
-                <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_COMMENT', targetId=${comment.id})}"></th:block>
-            </div>
-
             <!-- Кнопки керування (красиві, як у статтях) -->
-            <div class="comment-actions action-group mt-xs pt-xs">
+            <div class="comment-actions action-group mt-xs pt-xs row-between">
+                <!-- 🟢 3.2 БЛОК РЕАКЦІЙ КОМЕНТАРЯ СПІЛЬНОЇ СТІНИ (Вставити сюди) -->
+                <div class="comment-reactions-container mt-xs">
+                    <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='ROOM_WALL_COMMENT', targetId=${comment.id})}"></th:block>
+                </div>
                 <button type="button" class="btn-outline text-xs" th:data-comment-id="${comment.id}" onclick="window.toggleReplyForm(this)">
                     ↳ Відповісти
                 </button>
-                <button th:if="${comment.isMine}" type="button" class="btn-icon delete-icon ml-sm" th:data-comment-id="${comment.id}" th:data-post-id="${postId}" th:data-room-id="${roomId}" onclick="window.deleteComment(this)" title="Видалити">
-                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                </button>
             </div>
 
+            <form th:id="'editCommentForm-' + ${comment.id}" class="edit-comment-form is-hidden mt-sm stack-form" onsubmit="window.submitEditComment(event)">
+                <input type="hidden" name="commentId" th:value="${comment.id}">
+                <input type="hidden" name="postId" th:value="${postId}">
+                <input type="hidden" name="roomId" th:value="${roomId}">
+                <div class="form-field">
+                    <textarea name="content" rows="2" class="form-input text-sm" required th:text="${comment.content}"></textarea>
+                </div>
+                <div class="button-row justify-end mt-xs">
+                    <button type="button" class="btn-outline btn-sm" th:data-comment-id="${comment.id}" onclick="window.toggleEditCommentForm(this)">Скасувати</button>
+                    <button type="submit" class="btn-primary btn-sm ml-xs">Зберегти</button>
+                </div>
+            </form>
             <!-- Форма відповіді (прихована) -->
             <form th:id="'replyForm-' + ${comment.id}" class="reply-form is-hidden mt-sm stack-form" onsubmit="window.submitComment(event)">
                 <input type="hidden" name="postId" th:value="${postId}">

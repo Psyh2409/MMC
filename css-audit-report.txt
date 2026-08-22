@@ -2,10 +2,10 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sat Aug 22 00:31:12 EEST 2026
+Дата: Sat Aug 22 18:17:11 EEST 2026
 ======================================================
 
-❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 148:
+❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 150:
   - Клас [align-center] є в HTML [profile.html, therapy-room.html, admin-users.html, reaction-icons.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta-subtitle] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [article-cta-title] є в HTML [default.html], але В CSS ЙОГО НЕМАЄ!
@@ -50,6 +50,7 @@
   - Клас [d-inline-flex] є в HTML [admin-users.html, reaction-icons.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [d-inline] є в HTML [comment-tree.html, admin-reports.html, profile.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [delete-icon] є в HTML [therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [edit-comment-form] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [flex-wrap] є в HTML [therapy-room.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [font-italic] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-checkbox] є в HTML [profile.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
@@ -81,6 +82,7 @@
   - Клас [journal-media-input] є в HTML [journal-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [journal-post-content] є в HTML [therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [justify-between] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [justify-end] є в HTML [shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [link-cta] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [longread-container] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [longread-content] є в HTML [about.html], але В CSS ЙОГО НЕМАЄ!
@@ -96,7 +98,7 @@
   - Клас [mb-xs] є в HTML [comment-tree.html, therapist-client-notes.html, notifications-tab.html, public-wall-components.html, admin-reports.html, profile.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [ml-auto] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [ml-sm] є в HTML [403.html, public-wall-components.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [ml-xs] є в HTML [admin-reports.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [ml-xs] є в HTML [admin-reports.html, shared-wall-form.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [modal-body] є в HTML [base.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [modal-sm] є в HTML [admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [modal-title] є в HTML [therapy-room.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
@@ -439,8 +441,8 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 615
-  Класи-пустишки в HTML: 148
+  Всього знайдено класів: 617
+  Класи-пустишки в HTML: 150
   Мертві стилі в CSS: 167
   Конфлікти стилів: 57
   Потенційні дублікати: 53

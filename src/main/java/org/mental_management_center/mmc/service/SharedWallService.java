@@ -192,4 +192,25 @@ public class SharedWallService {
 
         commentRepository.delete(comment);
     }
+
+    /**
+     * 4. Редагування коментаря з перевіркою прав та шифруванням
+     */
+    @Transactional
+    public void editComment(UUID commentId, User currentUser, String newContent) {
+        if (newContent == null || newContent.trim().isEmpty()) {
+            throw new IllegalArgumentException("Текст коментаря не може бути порожнім");
+        }
+
+        SharedWallComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Коментар не знайдено"));
+
+        if (!comment.getAuthorId().equals(currentUser.getId())) {
+            throw new SecurityException("Ви не можете редагувати чужий коментар");
+        }
+
+        byte[] encryptedContent = cryptoService.encryptAndCompress(newContent.trim());
+        comment.setEncryptedContent(encryptedContent);
+        commentRepository.save(comment);
+    }
 }
