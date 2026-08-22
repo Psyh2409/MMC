@@ -8,6 +8,7 @@ import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
 import org.mental_management_center.mmc.service.*;
 import org.mental_management_center.mmc.web.form.ArticleForm;
+import org.mental_management_center.mmc.web.form.TherapistPortfolioFormDto;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ public class TherapistController {
     private final ConsultationRequestService consultationRequestService;
     private final TherapyAssignmentService therapyAssignmentService;
     private final TherapyAssignmentRepository therapyAssignmentRepository;
+    private final TherapistPortfolioService portfolioService;
 
     // Доступ ТІЛЬКИ для авторизованих (Читач, Клієнт, Адмін, інший Терапевт)
     // Гостя автоматично перекине на /login
@@ -80,6 +82,9 @@ public class TherapistController {
             postCommentsMap.put(post.getId(), comments);
         }
         model.addAttribute("postCommentsMap", postCommentsMap);
+
+        TherapistPortfolio portfolio = portfolioService.getPortfolioByUserId(therapist.getId()).orElse(null);
+        model.addAttribute("portfolio", portfolio);
 
         return "therapist-public";
     }
@@ -381,5 +386,45 @@ public class TherapistController {
             redirectAttributes.addFlashAttribute("error", "Помилка при завершенні терапії: " + e.getMessage());
         }
         return "redirect:/therapist/dashboard";
+    }
+
+    // ==============================================================================
+    // БЛОК УПРАВЛІННЯ ПОРТФОЛІО (ДОДАТИ В TherapistController.java)
+    // ==============================================================================
+
+    // 1. Відкриває сторінку з формою редагування портфоліо
+    @PreAuthorize("hasRole('THERAPIST')")
+    @GetMapping("/dashboard/portfolio")
+    public String showEditPortfolioForm(Principal principal, Model model) {
+        User therapist = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+
+        // Дістаємо існуючі дані або порожню форму через оновлений Сервіс
+        TherapistPortfolioFormDto formDTO = portfolioService.getFormByUserId(therapist.getId());
+
+        model.addAttribute("portfolioForm", formDTO);
+        return "therapist-portfolio-form"; // Назва HTML файлу сторінки редагування
+    }
+
+    // 2. Зберігає дані, які фахівець ввів у форму
+    @PreAuthorize("hasRole('THERAPIST')")
+    @PostMapping("/dashboard/portfolio")
+    public String updatePortfolio(@Valid @ModelAttribute("portfolioForm") TherapistPortfolioFormDto formDTO,
+                                  BindingResult result,
+                                  Principal principal,
+                                  RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            // Якщо помилка валідації - повертаємо на ту ж сторінку
+            return "therapist-portfolio-form";
+        }
+
+        User therapist = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+
+        // Зберігаємо через Сервіс
+        portfolioService.saveFromForm(therapist, formDTO);
+
+        redirectAttributes.addFlashAttribute("success", "Професійне портфоліо успішно оновлено!");
+        return "redirect:/therapist/public/" + therapist.getId(); // Кидаємо на публічну візитку показати результат
     }
 }

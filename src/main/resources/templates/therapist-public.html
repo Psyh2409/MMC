@@ -76,11 +76,18 @@
             <div class="profile-card">
 
                 <div class="tabs-navigation mb-md">
-                    <button class="tab-button active" onclick="window.switchPublicTab('articles-tab', this)">📝 Статті фахівця</button>
+                    <button class="tab-button active" onclick="window.switchPublicTab('portfolio-tab', this)">🎓 Портфоліо та методи</button>
+                    <button class="tab-button" onclick="window.switchPublicTab('articles-tab', this)">📝 Статті фахівця</button>
                     <button class="tab-button" onclick="window.switchPublicTab('wall-tab', this)">💬 Публічна стіна</button>
                 </div>
 
-                <div id="articles-tab" class="tab-pane active">
+                <!-- 1. Вкладка Портфоліо (Активна за замовчуванням) -->
+                <div id="portfolio-tab" class="tab-pane active">
+                    <div th:replace="~{fragments/portfolio-components :: portfolio-view(portfolio=${portfolio})}"></div>
+                </div>
+
+                <!-- 2. Вкладка Статті фахівця -->
+                <div id="articles-tab" class="tab-pane is-hidden">
                     <div th:if="${#lists.isEmpty(therapistArticles)}" class="profile-empty-state mt-md">
                         <div class="icon">📝</div>
                         <p>Фахівець ще не додав публікацій.</p>
@@ -97,6 +104,7 @@
                     </div>
                 </div>
 
+                <!-- 3. Вкладка Публічна стіна -->
                 <div id="wall-tab" class="tab-pane is-hidden">
                     <h3 class="heading-md mb-sm">Публічна стіна фахівця</h3>
 

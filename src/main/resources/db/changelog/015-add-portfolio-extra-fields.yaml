@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-add-portfolio-extra-fields
+      author: mmc-dev
+      changes:
+        - addColumn:
+            tableName: therapist_portfolios
+            columns:
+              - column:
+                  name: practice_type
+                  type: VARCHAR(50)
+              - column:
+                  name: non_medical_competence_aware
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: about_me
+                  type: VARCHAR(1500)

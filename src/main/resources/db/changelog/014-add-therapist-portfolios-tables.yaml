@@ -1,0 +1,104 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-add-therapist-portfolios-tables
+      author: mmc-dev
+      changes:
+        - createTable:
+            tableName: therapist_portfolios
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+                    foreignKeyName: fk_portfolio_user
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: experience_years
+                  type: INT
+              - column:
+                  name: credo
+                  type: TEXT
+
+        - createTable:
+            tableName: portfolio_approaches
+            columns:
+              - column:
+                  name: portfolio_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_approaches_portfolio
+                    references: therapist_portfolios(id)
+                    deleteCascade: true
+              - column:
+                  name: approach
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: portfolio_target_issues
+            columns:
+              - column:
+                  name: portfolio_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_target_issues_portfolio
+                    references: therapist_portfolios(id)
+                    deleteCascade: true
+              - column:
+                  name: target_issue
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: portfolio_principles
+            columns:
+              - column:
+                  name: portfolio_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_principles_portfolio
+                    references: therapist_portfolios(id)
+                    deleteCascade: true
+              - column:
+                  name: principle
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: portfolio_techniques
+            columns:
+              - column:
+                  name: portfolio_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_techniques_portfolio
+                    references: therapist_portfolios(id)
+                    deleteCascade: true
+              - column:
+                  name: technique
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: portfolio_certificates
+            columns:
+              - column:
+                  name: portfolio_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_certificates_portfolio
+                    references: therapist_portfolios(id)
+                    deleteCascade: true
+              - column:
+                  name: certificate
+                  type: VARCHAR(255)

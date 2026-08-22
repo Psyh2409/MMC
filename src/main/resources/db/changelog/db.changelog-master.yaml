@@ -25,3 +25,7 @@ databaseChangeLog:
       file: db/changelog/012-create-sos-requests-table.yaml
   - include:
       file: db/changelog/013-create-reactions-table.yaml
+  - include:
+      file: db/changelog/014-add-therapist-portfolios-tables.yaml
+  - include:
+      file: db/changelog/015-add-portfolio-extra-fields.yaml

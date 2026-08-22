@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
+<head>
+    <title>Редагування портфоліо | MMC</title>
+</head>
+<body>
+<section class="standard-container">
+    <div class="card-primary mt-md p-lg">
+        <h2 class="heading-md mb-md">🎓 Налаштування професійного портфоліо</h2>
+
+        <form th:action="@{/therapist/dashboard/portfolio}" th:object="${portfolioForm}" method="POST" class="stack-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <!-- Новий блок: Тип практики -->
+            <div class="form-field mb-sm">
+                <label for="practiceType" class="form-label">Тип психотерапевтичної практики <span class="text-error">*</span></label>
+                <select id="practiceType" th:field="*{practiceType}" class="form-input" required>
+                    <option value="" disabled selected>-- Не вибрано --</option>
+                    <option value="NON_MEDICAL">Немедична (гуманістичний / психологічний підхід)</option>
+                    <option value="MEDICAL">Медична (лікар-психотерапевт, психіатр)</option>
+                </select>
+            </div>
+
+            <!-- Прихований блок етики для немедичного фахівця -->
+            <div id="ethicsBlock" class="form-field mb-sm card-surface p-sm border-left-primary is-hidden">
+                <label class="row-center gap-sm cursor-pointer">
+                    <input type="checkbox" id="nonMedicalCompetenceAware" th:field="*{nonMedicalCompetenceAware}" class="checkbox-input">
+                    <span class="text-sm text-body">
+                        ☑️ Я усвідомлюю межі своєї компетенції як немедичного психотерапевта і зобов'язуюсь перенаправляти клієнта або вести супровід спільно з лікарем-психіатром за наявності клінічних показань.
+                    </span>
+                </label>
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="experienceYears" class="form-label">Досвід роботи (у роках):</label>
+                <input type="number" id="experienceYears" th:field="*{experienceYears}" class="form-input" min="0" placeholder="напр. 5">
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="credo" class="form-label">Професійне кредо / Девіз:</label>
+                <textarea id="credo" th:field="*{credo}" class="form-input textarea-input" rows="2" placeholder="Коротке висловлювання про ваш підхід..."></textarea>
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="approaches" class="form-label">Напрямки та методологія (через кому):</label>
+                <input type="text" id="approaches" th:field="*{approaches}" class="form-input" placeholder="Когнітивно-поведінкова терапія, Гештальт-терапія">
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="targetIssues" class="form-label">Запити, з якими працюєте (через кому):</label>
+                <input type="text" id="targetIssues" th:field="*{targetIssues}" class="form-input" placeholder="Тривожність, Депресія, Емоційне вигорання">
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="principles" class="form-label">Принципи та етичні стандарти (через кому або з нового рядка):</label>
+                <textarea id="principles" th:field="*{principles}" class="form-input textarea-input" rows="3" placeholder="Конфіденційність, Повна безоціночність"></textarea>
+            </div>
+
+            <div class="form-field mb-sm">
+                <label for="techniques" class="form-label">Основні техніки та інструменти (через кому):</label>
+                <input type="text" id="techniques" th:field="*{techniques}" class="form-input" placeholder="Арт-терапія, Щоденник думок, Майндфулнес">
+            </div>
+
+            <div class="form-field mb-md">
+                <label for="certificates" class="form-label">Сертифікати та додаткова освіта (кожен з нового рядка):</label>
+                <textarea id="certificates" th:field="*{certificates}" class="form-input textarea-input" rows="4" placeholder="2023 - Сертифікований КПТ-консультант..."></textarea>
+            </div>
+
+            <div class="button-row justify-end">
+                <a th:href="@{/therapist/dashboard}" class="btn-outline">Скасувати</a>
+                <button type="submit" class="btn-primary ml-sm">Зберегти портфоліо</button>
+            </div>
+
+            <!-- Новий блок: Про себе -->
+            <div class="form-field mb-md border-top-subtle pt-sm">
+                <label for="aboutMe" class="form-label">Про себе (до 1500 символів):</label>
+                <textarea id="aboutMe" th:field="*{aboutMe}" class="form-input textarea-input" rows="5" placeholder="Розкажіть про себе як особистість, свій метод роботи, стратегії, мову спілкування..."></textarea>
+            </div>
+        </form>
+    </div>
+</section>
+<th:block th:fragment="page-scripts">
+    <script th:src="@{/js/portfolio-form.js}" defer></script>
+</th:block>
+</body>
+</html>

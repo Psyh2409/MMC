@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- 🟢 ФРАГМЕНТ ПЕРЕГЛЯДУ ПОРТФОЛІО -->
+<div th:fragment="portfolio-view(portfolio)" class="portfolio-display-wrapper">
+
+    <!-- Порожній стан, якщо портфоліо ще не заповнено -->
+    <div th:if="${portfolio == null}" class="profile-empty-state mt-md text-center">
+        <div class="icon">🎓</div>
+        <p class="text-muted">Фахівець ще не заповнив деталізацію портфоліо та методів.</p>
+    </div>
+
+    <!-- Заповнене портфоліо -->
+    <div th:if="${portfolio != null}" class="stack-form">
+
+        <!-- Досвід та Кредо -->
+        <div class="card-primary p-md mb-md">
+            <div class="row-center gap-sm flex-wrap mb-xs">
+                <div th:if="${portfolio.experienceYears != null}" class="badge badge-therapist">
+                    Досвід у професії: <strong th:text="${portfolio.experienceYears + ' років'}"></strong>
+                </div>
+
+                <!-- Відображення типу практики -->
+                <div th:if="${portfolio.practiceType == 'MEDICAL'}" class="badge badge-success">
+                    ⚕️ Медична практика
+                </div>
+                <div th:if="${portfolio.practiceType == 'NON_MEDICAL'}" class="badge badge-outline">
+                    🌱 Немедична практика
+                </div>
+            </div>
+
+            <div th:if="${portfolio.credo != null and !portfolio.credo.isBlank()}" class="mt-sm">
+                <blockquote class="text-body text-italic border-left-primary pl-sm">
+                    «<span th:text="${portfolio.credo}">Професійне кредо...</span>»
+                </blockquote>
+            </div>
+        </div>
+
+        <!-- Напрямки та підходи -->
+        <div th:if="${portfolio.approaches != null and !portfolio.approaches.isEmpty()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">🧠 Напрямки та методологія:</h4>
+            <div class="row-center gap-xs flex-wrap">
+                <span th:each="app : ${portfolio.approaches}" class="badge badge-outline" th:text="${app}">КПТ</span>
+            </div>
+        </div>
+
+        <!-- Запити, з якими працює -->
+        <div th:if="${portfolio.targetIssues != null and !portfolio.targetIssues.isEmpty()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">🎯 Запити, з якими працює фахівець:</h4>
+            <div class="row-center gap-xs flex-wrap">
+                <span th:each="issue : ${portfolio.targetIssues}" class="badge badge-subtle" th:text="${issue}">Тривожність</span>
+            </div>
+        </div>
+
+        <!-- Принципи роботи -->
+        <div th:if="${portfolio.principles != null and !portfolio.principles.isEmpty()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">⚖️ Принципи та етичні стандарти:</h4>
+            <ul class="list-bulleted text-sm text-body">
+                <li th:each="pr : ${portfolio.principles}" th:text="${pr}">Конфіденційність</li>
+            </ul>
+        </div>
+
+        <!-- Техніки та інструменти -->
+        <div th:if="${portfolio.techniques != null and !portfolio.techniques.isEmpty()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">🛠️ Техніки та інструменти:</h4>
+            <div class="row-center gap-xs flex-wrap">
+                <span th:each="tech : ${portfolio.techniques}" class="badge badge-outline" th:text="${tech}">Щоденники самоспостереження</span>
+            </div>
+        </div>
+
+        <!-- Сертифікати та дипломи -->
+        <div th:if="${portfolio.certificates != null and !portfolio.certificates.isEmpty()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">📜 Додаткова освіта та сертифікати:</h4>
+            <ul class="list-bulleted text-sm text-muted">
+                <li th:each="cert : ${portfolio.certificates}" th:text="${cert}">Курс підвищення кваліфікації...</li>
+            </ul>
+        </div>
+
+        <!-- 🟢 Новий блок: Про себе -->
+        <div th:if="${portfolio.aboutMe != null and !portfolio.aboutMe.isBlank()}" class="mb-md">
+            <h4 class="heading-sm mb-xs">👋 Про себе:</h4>
+            <div class="text-body text-sm parse-media-links whitespace-pre-wrap" th:text="${portfolio.aboutMe}"></div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
