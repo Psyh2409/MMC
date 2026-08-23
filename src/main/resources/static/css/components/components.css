@@ -1076,6 +1076,11 @@ margin-top: var(--space-md);
     /* Типографіка та розміри сітки */
     --fc-small-font-size: 0.85rem;
     --fc-page-bg-color: transparent;
+
+    /* Кольори подій */
+    --fc-event-bg-color: var(--shadow-main);
+    --fc-event-border-color: var(--shadow-main);
+    --fc-event-text-color: var(--text-primary);
 }
 
 /* Зменшення загального масштабу календаря */

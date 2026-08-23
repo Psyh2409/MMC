@@ -39,15 +39,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Обробник виділення діапазону часу (для створення сесії)
             select: function(info) {
-                console.log('[MMC Calendar] Select event triggered:', info);
                 openSessionModal(info.startStr);
                 calendar.unselect(); // Скидаємо виділення після відкриття модалки
             },
 
             // Обробник кліку по існуючій події
             eventClick: function(info) {
-                console.log('Клік по події:', info.event);
                 // Тут ми будемо відкривати модалку для редагування/скасування
+            },
+
+            // Додаємо inline стилі для подій при рендерингу
+            eventDidMount: function(info) {
+                const eventEl = info.el;
+                if (eventEl) {
+                    eventEl.style.backgroundColor = 'var(--shadow-main)';
+                    eventEl.style.borderColor = 'var(--shadow-main)';
+                }
             }
         });
 
@@ -57,44 +64,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Керування модальним вікном "на пальцях"
 window.toggleSessionModal = function() {
-    console.log('[MMC Calendar] toggleSessionModal called');
     const modal = document.getElementById('session-modal');
     if (modal) {
-        // Перевіряємо поточний стан
-        const isHidden = modal.classList.contains('is-hidden');
-        console.log('[MMC Calendar] Current is-hidden state:', isHidden);
-
-        if (isHidden) {
-            modal.classList.remove('is-hidden');
-            console.log('[MMC Calendar] Removed is-hidden. New classes:', modal.className);
-        } else {
-            modal.classList.add('is-hidden');
-            console.log('[MMC Calendar] Added is-hidden. New classes:', modal.className);
-        }
-
-        // Перевіряємо computed styles
-        const computedStyle = window.getComputedStyle(modal);
-        console.log('[MMC Calendar] Computed display:', computedStyle.display);
-        console.log('[MMC Calendar] Computed visibility:', computedStyle.visibility);
-    } else {
-        console.error('[MMC Calendar] session-modal element not found!');
+        modal.classList.toggle('is-hidden');
     }
 };
 
 window.openSessionModal = function(dateStr) {
-    console.log('[MMC Calendar] openSessionModal called with dateStr:', dateStr);
-
     // Вставляємо обрану в календарі дату у поле форми
     const startInput = document.getElementById('session-start');
     if (startInput) {
         // Форматуємо дату для <input type="datetime-local">
         // info.dateStr містить зміщення часового поясу, обрізаємо його
         startInput.value = dateStr.substring(0, 16);
-        console.log('[MMC Calendar] Date set to input:', startInput.value);
-    } else {
-        console.error('[MMC Calendar] session-start input not found!');
     }
-
     toggleSessionModal();
 };
 
