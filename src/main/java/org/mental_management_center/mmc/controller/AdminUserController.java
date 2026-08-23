@@ -2,6 +2,7 @@ package org.mental_management_center.mmc.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.*;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.repository.*;
 import org.mental_management_center.mmc.service.*;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

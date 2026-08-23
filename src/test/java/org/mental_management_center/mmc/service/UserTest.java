@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.service;
 
 import org.junit.jupiter.api.Test;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

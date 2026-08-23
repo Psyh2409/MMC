@@ -1,10 +1,8 @@
 package org.mental_management_center.mmc.service;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.RequestStatus;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.RequestRepository;
 import org.mental_management_center.mmc.repository.UserRepository;

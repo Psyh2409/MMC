@@ -2,14 +2,13 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.SiteStats;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.web.form.ForgotPasswordForm;
 import org.mental_management_center.mmc.web.form.RegistrationForm;
 import org.mental_management_center.mmc.web.form.ResetPasswordForm;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.core.env.Environment;

@@ -359,7 +359,7 @@ public class ZombieSessionFilter extends OncePerRequestFilter {
 === FILE: AdminUserController.java ===
 package org.mental_management_center.mmc.controller;
 
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.SiteStats;
 import org.mental_management_center.mmc.model.SpecialistApplication;
 import org.mental_management_center.mmc.model.User;
@@ -711,7 +711,7 @@ package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.SiteStats;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
@@ -924,7 +924,7 @@ package org.mental_management_center.mmc.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.model.ChatMessage;
-import org.mental_management_center.mmc.model.MessageStatus;
+import org.mental_management_center.mmc.model.enums.MessageStatus;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
@@ -1938,7 +1938,7 @@ public class PingController {
 package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.EmailService;
 import org.mental_management_center.mmc.service.RequestService;
@@ -2806,7 +2806,7 @@ package org.mental_management_center.mmc.controller;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.TherapyNote;
 import org.mental_management_center.mmc.model.User;
@@ -4389,7 +4389,7 @@ public interface CategoryTranslationRepository extends JpaRepository<CategoryTra
 package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.ChatMessage;
-import org.mental_management_center.mmc.model.MessageStatus;
+import org.mental_management_center.mmc.model.enums.MessageStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -5649,7 +5649,7 @@ public class DataInitializer implements CommandLineRunner {
 package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ArticleRepository;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
@@ -6392,7 +6392,7 @@ package org.mental_management_center.mmc.service;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.RequestRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
@@ -6635,7 +6635,7 @@ public class SpecialistService {
 === FILE: TherapyAssignmentService.java ===
 package org.mental_management_center.mmc.service;
 
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.TherapyAssignment;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.TherapyAssignmentRepository;
@@ -6818,7 +6818,7 @@ package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.RoleBit; // Наш новий енам
+import org.mental_management_center.mmc.model.enums.RoleBit; // Наш новий енам
 import org.mental_management_center.mmc.model.VerificationToken;
 import org.mental_management_center.mmc.repository.*;
 import org.slf4j.Logger;
@@ -7713,7 +7713,7 @@ class PasswordResetIntegrationTest {
 package org.mental_management_center.mmc.service;
 
 import org.junit.jupiter.api.Test;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sun Aug 23 02:27:05 EEST 2026
+Дата: Sun Aug 23 22:34:57 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 161:
@@ -61,7 +61,7 @@
   - Клас [font-italic] є в HTML [comment-tree.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-checkbox] є в HTML [profile.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-control] є в HTML [report-modal.html, delete-comment-modal.html], але В CSS ЙОГО НЕМАЄ!
-  - Клас [form-input-label] є в HTML [profile.html], але В CSS ЙОГО НЕМАЄ!
+  - Клас [form-input-label] є в HTML [profile.html, therapist-dashboard.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [form-text-muted] є в HTML [contact.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [fw-bold] є в HTML [reaction-icons.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [gap-sm] є в HTML [therapist-client-notes.html, notifications-tab.html, portfolio-components.html, therapist-portfolio-form.html, profile.html, therapy-room.html, admin-users.html], але В CSS ЙОГО НЕМАЄ!
@@ -168,7 +168,7 @@
   - Клас [wall-section] є в HTML [therapy-room.html], але В CSS ЙОГО НЕМАЄ!
   - Клас [whitespace-pre-wrap] є в HTML [portfolio-components.html], але В CSS ЙОГО НЕМАЄ!
 
-⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 167:
+⚠️ МЕРТВІ СТИЛІ В CSS (засмічують пам'ять) - 170:
   - Стиль .02 є в CSS [cards.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .02rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .03rem є в CSS [tables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -181,6 +181,7 @@
   - Стиль .1 є в CSS [layout.css, components.css, forms.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .125rem є в CSS [notifications.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .15 є в CSS [notifications.css, components.css, variables.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .15rem є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1875rem є в CSS [navigation.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1rem є в CSS [navigation.css, components.css, forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .1s є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -264,6 +265,8 @@
   - Стиль .depth-4 є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .drag-over є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .external-link є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .fc є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
+  - Стиль .fc-button є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .filter-group є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .form-delete-account є в CSS [forms.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .has-unread є в CSS [notifications.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
@@ -337,7 +340,7 @@
   - Стиль .youtube-facade є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .youtube-iframe є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
 
-⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 57:
+⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 58:
   - Стиль .02 дублюється у декількох файлах: [cards.css, forms.css]
   - Стиль .0625rem дублюється у декількох файлах: [layout.css, notifications.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .08 дублюється у декількох файлах: [notifications.css, buttons.css]
@@ -387,6 +390,7 @@
   - Стиль .left-actions дублюється у декількох файлах: [forms.css, buttons.css]
   - Стиль .message-header дублюється у декількох файлах: [components.css, buttons.css]
   - Стиль .modal-header дублюється у декількох файлах: [layout.css, cards.css]
+  - Стиль .modal-overlay дублюється у декількох файлах: [layout.css, components.css]
   - Стиль .password-container дублюється у декількох файлах: [components.css, forms.css]
   - Стиль .profile-card дублюється у декількох файлах: [cards.css, buttons.css]
   - Стиль .profile-sidebar дублюється у декількох файлах: [layout.css, components.css]
@@ -421,7 +425,7 @@
   - Клас [form-textarea] використовується в багатьох HTML файлах (7): [therapist-client-notes.html, therapist-requests.html, requests.html, forms.html, contact.html, public-wall-components.html, admin-users.html]
   - Клас [is-hidden] використовується в багатьох HTML файлах (15): [report-modal.html, public-wall-components.html, base.html, profile.html, reaction-icons.html, header.html, therapist-public.html, therapist-requests.html, requests.html, therapist-portfolio-form.html, delete-comment-modal.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-title] використовується в багатьох HTML файлах (8): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, 403.html, closeness-crisis.html, restore-resource.html, dialogue.html]
-  - Клас [heading-md] використовується в багатьох HTML файлах (11): [therapist-public.html, therapist-client-notes.html, therapist-public-wall.html, report-modal.html, therapist-portfolio-form.html, article.html, delete-comment-modal.html, base.html, profile.html, therapy-room.html, admin-users.html]
+  - Клас [heading-md] використовується в багатьох HTML файлах (12): [therapist-public.html, therapist-client-notes.html, therapist-public-wall.html, report-modal.html, therapist-portfolio-form.html, article.html, delete-comment-modal.html, base.html, profile.html, therapist-dashboard.html, therapy-room.html, admin-users.html]
   - Клас [form-group] використовується в багатьох HTML файлах (9): [article-form.html, edebo-form.html, report-modal.html, admin-reports.html, article.html, delete-comment-modal.html, profile.html, login.html, admin-users.html]
   - Клас [text-muted] використовується в багатьох HTML файлах (23): [about.html, comment-tree.html, specialists.html, article-components.html, therapist-client-notes.html, header-footer.html, public-wall-components.html, article.html, profile.html, therapy-room.html, user-requests.html, header.html, therapist-public.html, therapist-requests.html, notifications-tab.html, therapist-public-wall.html, journal-form.html, portfolio-components.html, admin-reports.html, footer.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-cta] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, freedom-choice.html, closeness-crisis.html, restore-resource.html, dialogue.html]
@@ -453,9 +457,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 631
+  Всього знайдено класів: 635
   Класи-пустишки в HTML: 161
-  Мертві стилі в CSS: 167
-  Конфлікти стилів: 57
+  Мертві стилі в CSS: 170
+  Конфлікти стилів: 58
   Потенційні дублікати: 54
 ======================================================

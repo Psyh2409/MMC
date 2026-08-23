@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.mental_management_center.mmc.model.enums.MessageStatus;
 
 
 import java.time.LocalDateTime;

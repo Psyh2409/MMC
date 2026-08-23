@@ -1,13 +1,12 @@
 package org.mental_management_center.mmc.controller;
 
 import org.mental_management_center.mmc.model.Request;
-import org.mental_management_center.mmc.model.RequestStatus;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.service.EmailService;
 import org.mental_management_center.mmc.service.RequestService;
 import org.mental_management_center.mmc.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

@@ -50,14 +50,10 @@
                     <a th:href="@{/therapist/requests}" class="btn-outline text-center">✉️ Мої звернення</a>
                 </nav>
             </div>
-
-            <div class="card-primary mt-md text-center">
-                <span class="text-muted text-sm d-block mb-sm">📅 Календар сесій</span>
-                <p class="text-xs text-muted">Тут буде ваш планувальник та нагадування про найближчі зустрічі.</p>
-            </div>
         </aside>
 
         <main class="profile-main-content min-w-0">
+
             <!-- Блок вхідних заявок на консультування -->
             <div class="card-primary mb-md"
                  th:if="${pendingConsultationRequests != null and !pendingConsultationRequests.isEmpty()}">
@@ -194,14 +190,54 @@
                     </table>
                 </div>
             </div>
+            <div class="card-primary mb-md">
+                <div class="profile-identity mb-sm">
+                    <h3 class="profile-header-title">📅 Календар сесій</h3>
+                </div>
+                <!-- Контейнер, куди FullCalendar відмалює свою сітку -->
+                <div id="calendar-container"></div>
+            </div>
         </main>
+
+        <!-- Модальне вікно для створення/редагування сесії -->
+        <div id="session-modal" class="modal-overlay is-hidden">
+            <div class="card-primary w-100 modal-content-sm">
+                <div class="row-between mb-sm">
+                    <h3 class="heading-md">Запланувати сесію</h3>
+                    <button type="button" class="btn-outline btn-sm" onclick="toggleSessionModal()">Закрити</button>
+                </div>
+                <!-- ... форма ... -->
+                <form id="session-form" class="stack-form">
+                    <input type="hidden" id="session-id">
+
+                    <div class="form-field">
+                        <label class="form-input-label">Клієнт</label>
+                        <select id="session-client-id" name="clientId" class="form-input" required>
+                            <option value="" disabled selected>Оберіть клієнта...</option>
+                            <option th:each="assignment : ${activeAssignments}"
+                                    th:value="${assignment.client.id}"
+                                    th:text="${assignment.client.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-input-label">Дата та час початку</label>
+                        <input type="datetime-local" id="session-start" name="startTime" class="form-input" required>
+                    </div>
+
+                    <div class="text-right mt-sm">
+                        <button type="button" class="btn-primary" onclick="saveSession()">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Чисте підключення зовнішнього скрипта без інлайнового JS -->
 <th:block th:fragment="page-scripts">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js" defer></script>
     <script th:src="@{/js/therapist-dashboard.js}" defer></script>
 </th:block>
-
 </body>
 </html>

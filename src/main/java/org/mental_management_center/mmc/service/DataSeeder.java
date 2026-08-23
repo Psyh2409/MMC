@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ArticleRepository;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository;
@@ -9,7 +9,6 @@ import org.mental_management_center.mmc.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 // Анотація @Profile("dev") гарантує, що цей код НЕ запуститься на сервері (якщо там prod)

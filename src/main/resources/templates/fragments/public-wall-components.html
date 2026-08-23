@@ -88,8 +88,19 @@
             <th:block th:replace="~{fragments/reaction-icons :: reactionBar(targetType='PUBLIC_WALL_POST', targetId=${post.id})}"></th:block>
         </div>
 
-        <!-- Секція коментарів під постом стіни -->
-        <div class="post-comments-section mt-md pt-sm border-top">
+        <!-- 🟢 Кнопка перемикання відображення коментарів -->
+        <div class="mt-sm">
+            <button type="button" class="btn-outline btn-sm" th:data-post-id="${post.id}" onclick="togglePostComments(this.getAttribute('data-post-id'))">
+                💬 Коментарі
+                <!-- Виводимо кількість коментарів, якщо вони є -->
+                <span th:if="${postCommentsMap != null and postCommentsMap.get(post.id) != null}"
+                      th:text="'(' + ${#lists.size(postCommentsMap.get(post.id))} + ')'">
+                </span>
+            </button>
+        </div>
+
+        <!-- 🟢 Секція коментарів (Додано унікальний ID та клас is-hidden) -->
+        <div th:id="'comments-section-' + ${post.id}" class="post-comments-section mt-md pt-sm border-top is-hidden">
             <!-- Форма нового коментаря -->
             <form th:if="${#authorization.expression('isAuthenticated()')}"
                   th:action="@{/public-posts/{postId}/comments(postId=${post.id})}"

@@ -29,3 +29,5 @@ databaseChangeLog:
       file: db/changelog/014-add-therapist-portfolios-tables.yaml
   - include:
       file: db/changelog/015-add-portfolio-extra-fields.yaml
+  - include:
+      file: db/changelog/016-add-therapy-sessions-table.yaml

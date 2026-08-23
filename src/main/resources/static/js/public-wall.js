@@ -55,18 +55,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash;
     if (hash.startsWith('#comment-')) {
 
-        // 1. Шукаємо кнопку/посилання, яка відкриває вкладку Стіни
-        // (Шукаємо по типових селекторах. Якщо у вас інший ID вкладки - він його знайде)
         const wallTabTrigger = document.querySelector('[href="#wall-tab"], [data-target="#wall-tab"], #wall-tab-btn, button[onclick*="wall"]');
 
         if (wallTabTrigger) {
             wallTabTrigger.click(); // Відкриваємо стіну
         }
 
-        // 2. Чекаємо мить (щоб вкладка встигла відкритися) і скролимо до коментаря
         setTimeout(() => {
             const commentEl = document.querySelector(hash);
             if (commentEl) {
+                // 🟢 НОВЕ: Відкриваємо секцію коментарів, якщо вона прихована
+                const parentSection = commentEl.closest('.post-comments-section');
+                if (parentSection && parentSection.classList.contains('is-hidden')) {
+                    parentSection.classList.remove('is-hidden');
+                }
+
                 commentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 // Опціонально: додаємо стиль, щоб підсвітити новий/відредагований коментар
                 commentEl.style.transition = "background-color 1s ease";
@@ -76,3 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
 });
+
+// Перемикач видимості секції коментарів під постом
+function togglePostComments(postId) {
+    const commentsSection = document.getElementById('comments-section-' + postId);
+    if (commentsSection) {
+        commentsSection.classList.toggle('is-hidden');
+    }
+}

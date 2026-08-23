@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.repository;
 
 import org.mental_management_center.mmc.model.ChatMessage;
-import org.mental_management_center.mmc.model.MessageStatus;
+import org.mental_management_center.mmc.model.enums.MessageStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

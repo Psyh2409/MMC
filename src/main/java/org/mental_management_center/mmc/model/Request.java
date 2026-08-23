@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
+import org.mental_management_center.mmc.model.enums.RequestStatus;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
-import org.mental_management_center.mmc.model.RoleBit;
+import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.model.VerificationToken;
 import org.mental_management_center.mmc.repository.*;

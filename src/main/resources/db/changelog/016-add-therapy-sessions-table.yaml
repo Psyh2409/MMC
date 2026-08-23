@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-add-therapy-sessions-table
+      author: MMC
+      changes:
+        - createTable:
+            tableName: therapy_sessions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: therapist_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_session_therapist
+                    references: users(id)
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_session_client
+                    references: users(id)
+              - column:
+                  name: start_time
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT

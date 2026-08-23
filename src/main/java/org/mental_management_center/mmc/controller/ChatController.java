@@ -3,7 +3,7 @@ package org.mental_management_center.mmc.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mental_management_center.mmc.model.ChatMessage;
-import org.mental_management_center.mmc.model.MessageStatus;
+import org.mental_management_center.mmc.model.enums.MessageStatus;
 import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;

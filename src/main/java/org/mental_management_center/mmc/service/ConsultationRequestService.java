@@ -2,7 +2,7 @@ package org.mental_management_center.mmc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.ConsultationRequest;
-import org.mental_management_center.mmc.model.ConsultationRequestStatus;
+import org.mental_management_center.mmc.model.enums.ConsultationRequestStatus;
 import org.mental_management_center.mmc.model.Notification;
 import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ConsultationRequestRepository;

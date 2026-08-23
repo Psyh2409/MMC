@@ -1029,3 +1029,63 @@ margin-top: var(--space-md);
     object-fit: cover;
     display: block;
 }
+
+/* ==========================================================================
+   МОДАЛЬНІ ВІКНА (OVERLAYS)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: var(--bg-overlay);
+    display: none; /* За замовчуванням приховано */
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.modal-overlay:not(.is-hidden) {
+    display: flex; /* Показуємо коли немає класу is-hidden */
+}
+
+.modal-content-sm {
+    max-width: 30rem;
+}
+
+/* ==========================================================================
+   FULLCALENDAR - АДАПТАЦІЯ ПІД MMC HSL THEME
+   ========================================================================== */
+:root {
+    /* Кольори кнопок (навігація, місяць/тиждень) */
+    --fc-button-bg-color: transparent;
+    --fc-button-border-color: var(--border-strong);
+    --fc-button-text-color: var(--text-primary);
+
+    --fc-button-hover-bg-color: var(--accent-muted);
+    --fc-button-hover-border-color: var(--accent-hover);
+
+    --fc-button-active-bg-color: var(--shadow-main);
+    --fc-button-active-border-color: var(--accent-primary);
+
+    /* Кольори сітки та фону */
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: var(--bg-elevated);
+    --fc-border-color: var(--border-soft);
+    --fc-today-bg-color: var(--accent-muted); /* Підсвітка поточного дня */
+
+    /* Типографіка та розміри сітки */
+    --fc-small-font-size: 0.85rem;
+    --fc-page-bg-color: transparent;
+}
+
+/* Зменшення загального масштабу календаря */
+#calendar-container {
+    font-size: 0.85rem; /* Зменшує текст, а за ним і всі відступи сітки */
+    max-height: 60vh;   /* Обмежує максимальну висоту */
+    overflow-y: auto;   /* Додає скрол, якщо сітка не влазить */
+}
+
+/* Прибираємо синій контур фокусу з кнопок календаря */
+.fc .fc-button:focus {
+    box-shadow: 0 0 0 0.15rem var(--accent-muted);
+}
