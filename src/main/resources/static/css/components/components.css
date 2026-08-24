@@ -1031,25 +1031,27 @@ margin-top: var(--space-md);
 }
 
 /* ==========================================================================
-   МОДАЛЬНІ ВІКНА (OVERLAYS)
+   МОДАЛЬНІ ВІКНА (OVERLAYS) - ІЗОЛЬОВАНІ
    ========================================================================== */
-.modal-overlay {
+.calendar-modal-overlay {
     position: fixed;
     inset: 0;
     background-color: var(--bg-overlay);
-    display: none; /* За замовчуванням приховано */
     z-index: 100;
     align-items: center;
     justify-content: center;
     padding: var(--space-md);
+    display: none; /* За замовчуванням приховано */
 }
 
-.modal-overlay:not(.is-hidden) {
-    display: flex; /* Показуємо коли немає класу is-hidden */
+/* Коли JS знімає is-hidden, вікно показується */
+.calendar-modal-overlay:not(.is-hidden) {
+    display: flex;
 }
 
 .modal-content-sm {
     max-width: 30rem;
+    background-color: var(--bg-surface);
 }
 
 /* ==========================================================================
@@ -1084,13 +1086,58 @@ margin-top: var(--space-md);
 }
 
 /* Зменшення загального масштабу календаря */
+/* Зменшення масштабу шрифту календаря */
 #calendar-container {
-    font-size: 0.85rem; /* Зменшує текст, а за ним і всі відступи сітки */
-    max-height: 60vh;   /* Обмежує максимальну висоту */
-    overflow-y: auto;   /* Додає скрол, якщо сітка не влазить */
+    font-size: 0.85rem;
+    height: auto;
 }
 
 /* Прибираємо синій контур фокусу з кнопок календаря */
 .fc .fc-button:focus {
     box-shadow: 0 0 0 0.15rem var(--accent-muted);
 }
+
+/* ==========================================================================
+   FULLCALENDAR - АДАПТАЦІЯ ПОДІЙ (timeGridWeek)
+   ========================================================================== */
+
+/* 1. БАЗОВИЙ СТАН: Максимальна компактність */
+.fc-timegrid-event {
+    /* Зменшуємо шрифт для вміщення більшої кількості тексту */
+    font-size: 0.75rem;
+}
+
+.fc-timegrid-event .fc-event-main {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* 2. АКТИВАЦІЯ HOVER: Б'ємо інлайнові стилі та виводимо на передній план */
+.fc-timegrid-event:hover {
+    z-index: 9999 !important;
+    overflow: visible !important;
+}
+
+/* 3. РОЗГОРТАННЯ КАРТКИ: Спливає поверх усього */
+.fc-timegrid-event:hover .fc-event-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: max-content;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    opacity: 1;
+
+    /* Дозволяємо перенесення */
+    white-space: normal;
+    word-break: break-word;
+    border-radius: var(--radius-xs);
+    border: 0.0625rem solid var(--border-strong);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4);
+    z-index: 10000 !important;
+}
+
+
+

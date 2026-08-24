@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: main-layout(
+      ~{::title},
+      ~{::section},
+      ~{::page-scripts}
+      )}">
+<head>
+    <title>Календар сесій | MMC</title>
+</head>
+<body>
+
+<section class="standard-container standard-container-wide">
+
+    <!-- Шапка з динамічною кнопкою повернення -->
+    <header class="section-header mb-md row-between align-center">
+        <h1 class="page-title-accent">📅 Календар сесій</h1>
+
+        <div class="action-group">
+            <a th:if="${isTherapist}" th:href="@{/therapist/dashboard}" class="btn-outline btn-sm">← До кабінету</a>
+            <a th:unless="${isTherapist}" th:href="@{/profile#therapy-tab}" class="btn-outline btn-sm">← До профілю</a>
+        </div>
+    </header>
+
+    <div class="card-primary">
+        <!-- Атрибут data-is-therapist зчитає наш новий JS файл -->
+        <div id="calendar-container" th:data-is-therapist="${isTherapist}"></div>
+    </div>
+
+    <!-- Модальне вікно рендериться ВИКЛЮЧНО для фахівця -->
+    <div th:if="${isTherapist}" id="session-modal" class="modal-overlay">
+        <div class="card-primary w-100 modal-content-sm">
+            <div class="row-between mb-sm">
+                <h3 class="heading-md">Запланувати сесію</h3>
+                <button type="button" class="btn-outline btn-sm" onclick="toggleSessionModal()">Закрити</button>
+            </div>
+            <form id="session-form" class="stack-form">
+                <input type="hidden" id="session-id">
+
+                <div class="form-field">
+                    <label class="form-input-label">Клієнт</label>
+                    <select id="session-client-id" name="clientId" class="form-input" required>
+                        <option value="" disabled selected>Оберіть клієнта...</option>
+                        <option th:each="assignment : ${activeAssignments}"
+                                th:value="${assignment.client.id}"
+                                th:text="${assignment.client.name}"></option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-input-label">Дата та час початку</label>
+                    <input type="datetime-local" id="session-start" name="startTime" class="form-input" required>
+                </div>
+
+                <div class="text-right mt-sm">
+                    <button type="button" class="btn-primary" onclick="saveSession()">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+
+<!-- Підключаємо скрипти -->
+<th:block th:fragment="page-scripts">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js" defer></script>
+    <script th:src="@{/js/calendar.js}" defer></script>
+</th:block>
+
+</body>
+</html>

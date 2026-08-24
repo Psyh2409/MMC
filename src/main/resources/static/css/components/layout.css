@@ -312,13 +312,15 @@ section.standard-container-narrow.mt-md {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
     background-color: hsla(var(--theme-h), var(--theme-s), 5%, 0.85);
-    display: none;
+    display: none !important;
     justify-content: center;
     align-items: center;
     z-index: var(--z-modal, 2000);
 }
 
-.modal-overlay:not(.is-hidden) { display: flex; }
+.modal-overlay.is-visible {
+    display: flex !important;
+}
 
 .modal-content {
     background-color: var(--bg-surface);

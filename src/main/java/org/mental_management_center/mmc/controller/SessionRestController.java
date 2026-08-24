@@ -8,14 +8,12 @@ import org.mental_management_center.mmc.service.UserService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/sessions")
@@ -41,18 +39,24 @@ public class SessionRestController {
         return ResponseEntity.ok(events);
     }
 
-    @org.springframework.web.bind.annotation.PostMapping
+    @PostMapping
     @PreAuthorize("hasRole('THERAPIST')")
     public ResponseEntity<?> createSession(
-            @RequestParam java.util.UUID clientId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam UUID clientId,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime startTime,
             Principal principal) {
 
-        User therapist = userService.findByEmail(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
+        try {
+            User therapist = userService.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
 
-        sessionService.createSession(therapist, clientId, startTime);
-
-        return ResponseEntity.ok().build();
+            sessionService.createSession(therapist, clientId, startTime);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            // Повертаємо 400 Bad Request із текстом помилки
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

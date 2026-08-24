@@ -342,3 +342,13 @@
     margin-left: 1rem;
     margin-right: 1rem;
 }
+
+.btn-container-prfl {
+    display: grid;
+    grid-template-columns: max-content; /* Вся колонка має ширину найдовшого тексту */
+    gap: 0.75rem;                          /* Відступи між кнопками */
+}
+
+.btn-container-prfl .btn-primary {
+    text-align: center; /* Центрує текст */
+}
