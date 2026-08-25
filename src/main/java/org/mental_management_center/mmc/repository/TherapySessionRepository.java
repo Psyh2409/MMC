@@ -23,9 +23,10 @@ public interface TherapySessionRepository extends JpaRepository<TherapySession, 
                                                            LocalDateTime start,
                                                            LocalDateTime end);
 
-    // Витягуємо всі сесії, де користувач є АБО терапевтом, АБО клієнтом
+    // Витягуємо всі сесії, де користувач є АБО терапевтом, АБО клієнтом, ТА які НЕ скасовані
     @Query("SELECT s FROM TherapySession s WHERE " +
             "(s.therapist.id = :userId OR s.client.id = :userId) " +
+            "AND s.status != 'CANCELLED' " + // 🟢 Головний фікс: відсікаємо скасовані
             "AND s.startTime >= :start AND s.startTime <= :end")
     List<TherapySession> findSessionsForUser(@Param("userId") UUID userId,
                                              @Param("start") LocalDateTime start,

@@ -46,16 +46,48 @@ public class SessionRestController {
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime startTime,
+            @RequestParam(required = false) String description,
+            @RequestParam(defaultValue = "1") int recurringWeeks,
             Principal principal) {
 
         try {
             User therapist = userService.findByEmail(principal.getName())
                     .orElseThrow(() -> new RuntimeException("Фахівця не знайдено"));
 
-            sessionService.createSession(therapist, clientId, startTime);
+            sessionService.createSession(therapist, clientId, startTime, description, recurringWeeks);
             return ResponseEntity.ok().build();
         } catch (IllegalStateException e) {
             // Повертаємо 400 Bad Request із текстом помилки
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{sessionId}/cancel")
+    @PreAuthorize("hasRole('THERAPIST')")
+    public ResponseEntity<?> cancelSession(@PathVariable UUID sessionId,
+                                           @RequestParam(required = false) String reason,
+                                           Principal principal) {
+        try {
+            User therapist = userService.findByEmail(principal.getName()).orElseThrow();
+            sessionService.cancelSession(sessionId, therapist.getId(), reason);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{sessionId}/reschedule")
+    @PreAuthorize("hasRole('THERAPIST')")
+    public ResponseEntity<?> rescheduleSession(
+            @PathVariable UUID sessionId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime newStart,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime newEnd,
+            Principal principal) {
+        try {
+            User therapist = userService.findByEmail(principal.getName()).orElseThrow();
+            sessionService.rescheduleSession(sessionId, therapist.getId(), newStart, newEnd);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

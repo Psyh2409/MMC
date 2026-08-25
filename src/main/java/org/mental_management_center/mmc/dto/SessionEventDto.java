@@ -12,4 +12,6 @@ public class SessionEventDto {
     private String end;
     private String color; // Колір події для візуального відображення статусу
     private String description;
+    private String status;
+    private String cancellationReason;
 }

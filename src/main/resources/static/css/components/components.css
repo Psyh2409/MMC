@@ -1153,3 +1153,21 @@ margin-top: var(--space-md);
     font-weight: 700;
 }
 
+.mmc-tooltip-desc {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 0.0625rem solid var(--border-soft);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Візуальний маркер скасованої події */
+.mmc-event-cancelled {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    pointer-events: none; /* Забороняємо клікати та перетягувати скасовані */
+}
+.mmc-event-cancelled .fc-event-main {
+    text-decoration: line-through;
+}
+

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-add-cancellation-reason
+      author: MMC
+      changes:
+        - addColumn:
+            tableName: therapy_sessions
+            columns:
+              - column:
+                  name: cancellation_reason
+                  type: VARCHAR(500)

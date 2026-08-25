@@ -52,13 +52,62 @@
                     <input type="datetime-local" id="session-start" name="startTime" class="form-input" required>
                 </div>
 
+                <div class="form-field">
+                    <label class="form-input-label">Коментар до сесії (опціонально)</label>
+                    <textarea id="session-description" name="description" class="form-input textarea-input" rows="2" placeholder="Наприклад: обговорення результатів тестування..."></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-input-label">Повторювати щотижня</label>
+                    <select id="session-recurring" name="recurringWeeks" class="form-input">
+                        <option value="1" selected>Тільки ця сесія (1 раз)</option>
+                        <option value="4">4 тижні (1 місяць)</option>
+                        <option value="8">8 тижнів (2 місяці)</option>
+                        <option value="12">12 тижнів (3 місяці)</option>
+                    </select>
+                </div>
+
                 <div class="text-right mt-sm">
                     <button type="button" class="btn-primary" onclick="saveSession()">Зберегти</button>
                 </div>
             </form>
         </div>
     </div>
+    <!-- Модальне вікно перегляду/скасування сесії -->
+    <div th:if="${isTherapist}" id="session-view-modal" class="modal-overlay">
+        <div class="card-primary w-100 modal-content-sm">
+            <div class="row-between mb-sm">
+                <h3 class="heading-md">Деталі сесії</h3>
+                <button type="button" class="btn-outline btn-sm" onclick="toggleSessionViewModal()">Закрити</button>
+            </div>
 
+            <div class="stack-form">
+                <input type="hidden" id="view-session-id">
+
+                <div class="form-field">
+                    <strong class="text-main heading-sm" id="view-session-title">Назва події</strong>
+                </div>
+
+                <div class="form-field">
+                    <span class="text-muted text-sm">📅 Час: </span>
+                    <span id="view-session-time" class="text-main">Час</span>
+                </div>
+
+                <!-- Блок коментаря (буде приховуватись через клас, якщо коментар відсутній) -->
+                <div class="form-field is-hidden" id="view-session-desc-container">
+                    <span class="text-muted text-sm d-block mb-xs">📝 Ваша нотатка:</span>
+                    <p class="text-sm text-wrap-break p-sm bg-elevated border-radius-xs" id="view-session-desc"></p>
+                </div>
+                <div class="form-field mt-sm border-top pt-sm">
+                    <label class="form-input-label text-error">Причина скасування (необов'язково)</label>
+                    <textarea id="cancel-reason" class="form-input textarea-input" rows="2" placeholder="Наприклад: хвороба клієнта..."></textarea>
+                </div>
+                <div class="action-group mt-xs">
+                    <button type="button" class="btn-outline btn-sm text-error" onclick="cancelExistingSession()">🛑 Скасувати сесію</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Підключаємо скрипти -->

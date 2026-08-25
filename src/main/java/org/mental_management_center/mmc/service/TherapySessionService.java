@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,57 +36,84 @@ public class TherapySessionService {
     }
 
     private SessionEventDto mapToEventDto(TherapySession session, User currentUser) {
-        // Перевіряємо, хто зараз дивиться на календар відносно цієї конкретної сесії
         boolean isMyClientSession = session.getClient().getId().equals(currentUser.getId());
+        String title = isMyClientSession ? "🛋 Терапевт: " + session.getTherapist().getName()
+                : "🎙 Клієнт: " + session.getClient().getName();
 
-        String title;
-        String eventColor;
+        // Зберігаємо оригінальні кольори
+        String eventColor = isMyClientSession ? "var(--accent-color)" : "var(--primary-color)";
+        String description = isMyClientSession ? null : session.getDescription();
 
-        if (isMyClientSession) {
-            // Я - клієнт у цій сесії. Бачу, з яким терапевтом працюю.
-            title = "🛋 Терапевт: " + session.getTherapist().getName();
-            eventColor = "var(--accent-color)";
-        } else {
-            // Я - фахівець у цій сесії. Бачу свого клієнта.
-            title = "🎙 Клієнт: " + session.getClient().getName();
-            eventColor = "var(--primary-color)";
-        }
-
-        // Перевизначаємо колір, якщо сесія скасована
-        if (session.getStatus() == SessionStatus.CANCELLED) {
-            eventColor = "var(--text-disabled)";
-        }
-
+        // 🟢 Передаємо статус і причину через extendedProps (додайте ці поля в DTO, якщо їх там немає, або використовуйте Map)
         return SessionEventDto.builder()
                 .id(session.getId().toString())
                 .title(title)
                 .start(session.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .end(session.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .color(eventColor)
-                .description(session.getDescription())
+                .description(description)
+                .status(session.getStatus().name())
+                .cancellationReason(session.getCancellationReason())
                 .build();
     }
 
     @Transactional
-    public TherapySession createSession(User therapist, java.util.UUID clientId, LocalDateTime startTime) {
-        LocalDateTime endTime = startTime.plusHours(1); // Фіксована тривалість - 1 година
-
-        // Захист від накладок
-        long overlaps = sessionRepository.countOverlappingSessions(therapist.getId(), clientId, startTime, endTime);
-        if (overlaps > 0) {
-            throw new IllegalStateException("У вас або у клієнта вже є запланована сесія на цей час.");
-        }
-
+    public void createSession(User therapist, java.util.UUID clientId, LocalDateTime startTime, String description, int recurringWeeks) {
         User client = userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Клієнта не знайдено"));
 
-        TherapySession session = new TherapySession();
-        session.setTherapist(therapist);
-        session.setClient(client);
-        session.setStartTime(startTime);
-        session.setEndTime(endTime);
-        session.setStatus(SessionStatus.SCHEDULED);
+        // Запобіжник, щоб не створили випадково 100 сесій
+        int weeksToSchedule = Math.min(recurringWeeks, 16);
 
-        return sessionRepository.save(session);
+        for (int i = 0; i < weeksToSchedule; i++) {
+            LocalDateTime currentStartTime = startTime.plusWeeks(i);
+            LocalDateTime currentEndTime = currentStartTime.plusHours(1);
+
+            long overlaps = sessionRepository.countOverlappingSessions(therapist.getId(), clientId, currentStartTime, currentEndTime);
+            if (overlaps > 0) {
+                // Якщо є накладка на конкретний тиждень - перериваємо транзакцію.
+                // Можна змінити логіку, щоб ігнорувати лише зайнятий тиждень, але для початку краще fail-fast.
+                throw new IllegalStateException("Виявлено накладку графіків на дату: " + currentStartTime.toLocalDate());
+            }
+
+            TherapySession session = new TherapySession();
+            session.setTherapist(therapist);
+            session.setClient(client);
+            session.setStartTime(currentStartTime);
+            session.setEndTime(currentEndTime);
+            session.setStatus(SessionStatus.SCHEDULED);
+
+            if (description != null && !description.isBlank()) {
+                session.setDescription(description.trim());
+            }
+
+            sessionRepository.save(session);
+        }
+    }
+
+    @Transactional
+    public void cancelSession(UUID sessionId, UUID therapistId, String reason) {
+        TherapySession session = sessionRepository.findById(sessionId).orElseThrow();
+        if (!session.getTherapist().getId().equals(therapistId)) throw new SecurityException("Немає прав");
+
+        session.setStatus(SessionStatus.CANCELLED);
+        if (reason != null && !reason.isBlank()) {
+            session.setCancellationReason(reason.trim());
+        }
+        sessionRepository.save(session);
+    }
+
+    @Transactional
+    public void rescheduleSession(UUID sessionId, UUID therapistId, LocalDateTime newStart, LocalDateTime newEnd) {
+        TherapySession session = sessionRepository.findById(sessionId).orElseThrow();
+        if (!session.getTherapist().getId().equals(therapistId)) throw new SecurityException("Немає прав");
+
+        // Перевірка накладок на новий час
+        long overlaps = sessionRepository.countOverlappingSessions(therapistId, session.getClient().getId(), newStart, newEnd);
+        if (overlaps > 0) throw new IllegalStateException("Цей час вже зайнятий.");
+
+        session.setStartTime(newStart);
+        session.setEndTime(newEnd);
+        sessionRepository.save(session);
     }
 }

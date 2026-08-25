@@ -31,3 +31,5 @@ databaseChangeLog:
       file: db/changelog/015-add-portfolio-extra-fields.yaml
   - include:
       file: db/changelog/016-add-therapy-sessions-table.yaml
+  - include:
+      file: db/changelog/017-add-cancellation-reason.yaml

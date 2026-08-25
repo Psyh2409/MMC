@@ -40,4 +40,7 @@ public class TherapySession {
 
     @Column(name = "description", columnDefinition = "text")
     private String description;
+
+    @Column(name = "cancellation_reason")
+    private String cancellationReason;
 }
