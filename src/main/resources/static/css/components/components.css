@@ -1098,46 +1098,58 @@ margin-top: var(--space-md);
 }
 
 /* ==========================================================================
-   FULLCALENDAR - АДАПТАЦІЯ ПОДІЙ (timeGridWeek)
+   MMC TOOLTIP PORTAL
    ========================================================================== */
-
-/* 1. БАЗОВИЙ СТАН: Максимальна компактність */
-.fc-timegrid-event {
-    /* Зменшуємо шрифт для вміщення більшої кількості тексту */
-    font-size: 0.75rem;
-}
-
-.fc-timegrid-event .fc-event-main {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-/* 2. АКТИВАЦІЯ HOVER: Б'ємо інлайнові стилі та виводимо на передній план */
-.fc-timegrid-event:hover {
-    z-index: 9999 !important;
-    overflow: visible !important;
-}
-
-/* 3. РОЗГОРТАННЯ КАРТКИ: Спливає поверх усього */
-.fc-timegrid-event:hover .fc-event-main {
+.mmc-event-tooltip {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: max-content;
+    /* Координати будуть передаватися динамічно через змінні */
+    top: var(--tooltip-top, 0);
+    left: var(--tooltip-left, 0);
+    z-index: 9999;
+
     background-color: var(--bg-surface);
     color: var(--text-primary);
-    opacity: 1;
-
-    /* Дозволяємо перенесення */
-    white-space: normal;
-    word-break: break-word;
+    padding: 0.5rem;
     border-radius: var(--radius-xs);
     border: 0.0625rem solid var(--border-strong);
     box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4);
-    z-index: 10000 !important;
+
+    opacity: 1; /* Нульова прозорість, згідно із завданням */
+    pointer-events: none; /* Запобігає перехопленню подій миші */
+
+    font-size: 0.85rem;
+    white-space: normal;
+    word-break: break-word;
+    max-width: 15rem;
 }
 
+/* ==========================================================================
+   FULLCALENDAR - ВИПРАВЛЕННЯ ВІДОБРАЖЕННЯ ПОДІЙ
+   ========================================================================== */
 
+/* Гарантуємо читабельність тексту незалежно від інлайнового фону з бекенду */
+.fc-v-event .fc-event-main {
+    color: var(--text-primary) !important;
+    padding: 0.125rem 0.25rem;
+}
+
+/* Якщо ви хочете, щоб бекенд-кольори ігнорувалися, і всі події мали єдиний стиль: */
+.mmc-calendar-event {
+    background-color: var(--shadow-main) !important;
+    border-color: var(--shadow-main) !important;
+    border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   ВНУТРІШНІ ЕЛЕМЕНТИ TOOLTIP
+   ========================================================================== */
+.mmc-tooltip-time {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+}
+
+.mmc-tooltip-title {
+    font-weight: 700;
+}
 

@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const calendarEl = document.getElementById('calendar-container');
 
     if (calendarEl) {
-        // Зчитуємо прапорець, який ми передали з контролера
         const isTherapist = calendarEl.getAttribute('data-is-therapist') === 'true';
+
+        // Зчитуємо базовий розмір шрифту браузера для динамічної конвертації px у rem
+        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
@@ -16,13 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
             slotMinTime: '08:00:00',
             slotMaxTime: '22:00:00',
             allDaySlot: false,
-            contentHeight: 'auto', //🟢 вимикає внутрішню прокрутку FullCalendar
+            contentHeight: 'auto',
             expandRows: true,
-
-            // Якщо фахівець - дозволяємо виділення та кліки. Якщо клієнт - режим читання.
             selectable: isTherapist,
-
             events: '/api/sessions',
+
+            // 🟢 Відмова від eventDidMount з інлайновими стилями на користь класів
+            eventClassNames: function() {
+                return ['mmc-calendar-event'];
+            },
 
             dateClick: function(info) {
                 if (isTherapist) {
@@ -30,16 +34,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
 
-            eventClick: function(info) {
-                console.log('Клік по події:', info.event);
-                // Тут згодом буде логіка перегляду/редагування події
-            },
+            eventMouseEnter: function(info) {
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'mmc-event-tooltip';
 
-            eventDidMount: function(info) {
-                const eventEl = info.el;
-                if (eventEl) {
-                    eventEl.style.backgroundColor = 'var(--shadow-main)';
-                    eventEl.style.borderColor = 'var(--shadow-main)';
+                            // 1. Форматуємо час безпечно через нативний API браузера
+                            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+                            const startTime = info.event.start ? info.event.start.toLocaleTimeString('uk-UA', timeOptions) : '';
+                            const endTime = info.event.end ? info.event.end.toLocaleTimeString('uk-UA', timeOptions) : '';
+                            const timeString = (startTime && endTime) ? `${startTime} - ${endTime}` : startTime;
+
+                            // 2. Формуємо HTML без інлайнових стилів
+                            tooltip.innerHTML = `
+                                <div class="mmc-tooltip-time">🕒 ${timeString}</div>
+                                <div class="mmc-tooltip-title">${info.event.title}</div>
+                            `;
+
+                            document.body.appendChild(tooltip);
+
+                            // 3. Динамічний розрахунок координат у rem (Quantum grid)
+                            const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                            const rect = info.el.getBoundingClientRect();
+
+                            const topInRem = (rect.top + window.scrollY) / rootFontSize;
+                            const leftInRem = (rect.left + window.scrollX) / rootFontSize;
+
+                            tooltip.style.setProperty('--tooltip-top', `${topInRem}rem`);
+                            tooltip.style.setProperty('--tooltip-left', `${leftInRem}rem`);
+
+                            info.el._tooltip = tooltip;
+                        },
+
+            eventMouseLeave: function(info) {
+                // Видаляємо вікно з пам'яті та DOM, коли курсор прибрано
+                if (info.el._tooltip) {
+                    info.el._tooltip.remove();
+                    info.el._tooltip = null;
                 }
             }
         });
