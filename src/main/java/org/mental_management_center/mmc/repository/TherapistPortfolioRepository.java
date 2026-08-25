@@ -3,6 +3,7 @@ package org.mental_management_center.mmc.repository;
 import org.mental_management_center.mmc.model.TherapistPortfolio;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Repository
 public interface TherapistPortfolioRepository extends JpaRepository<TherapistPortfolio, UUID> {
 
+    @EntityGraph(attributePaths = {"approaches", "targetIssues", "principles", "techniques", "certificates"})
     Optional<TherapistPortfolio> findByUserId(UUID userId);
 
     // Пошук фахівців за конкретним підходом

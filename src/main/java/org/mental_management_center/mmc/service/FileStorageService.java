@@ -1,10 +1,14 @@
 package org.mental_management_center.mmc.service;
 
-import jakarta.annotation.PostConstruct;
-import lombok.SneakyThrows;
+
 import lombok.extern.slf4j.Slf4j;
+import org.mental_management_center.mmc.repository.ArticleRepository;
+import org.mental_management_center.mmc.repository.ChatMessageRepository;
+import org.mental_management_center.mmc.repository.CommentRepository;
+import org.mental_management_center.mmc.repository.PublicPostRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,13 +29,21 @@ public class FileStorageService {
     // Оголошуємо два чітких фінальних поля для розділення сховищ
     private final Path publicStorageLocation;
     private final Path privateStorageLocation;
+    private final ArticleRepository articleRepository;
+    private final PublicPostRepository publicPostRepository;
+    private final CommentRepository commentRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     public FileStorageService(
             @Value("${app.upload-dir:./uploads/articles}") String publicDir,
-            @Value("${app.journal-upload-dir:./uploads/journal_private}") String privateDir) {
+            @Value("${app.journal-upload-dir:./uploads/journal_private}") String privateDir, ArticleRepository articleRepository, PublicPostRepository publicPostRepository, CommentRepository commentRepository, ChatMessageRepository chatMessageRepository) {
 
         this.publicStorageLocation = Paths.get(publicDir).toAbsolutePath().normalize();
         this.privateStorageLocation = Paths.get(privateDir).toAbsolutePath().normalize();
+        this.articleRepository = articleRepository;
+        this.publicPostRepository = publicPostRepository;
+        this.commentRepository = commentRepository;
+        this.chatMessageRepository = chatMessageRepository;
 
         try {
             Files.createDirectories(this.publicStorageLocation);
@@ -175,7 +187,7 @@ public class FileStorageService {
     }
 
     // Видаляємо тільки з публічного (для статей)
-    public void deletePublicFile(String fileName) {
+    private void deletePublicFile(String fileName) {
         try {
             Files.deleteIfExists(publicStorageLocation.resolve(fileName));
             log.info("🗑️ Публічний файл видалено: {}", fileName);
@@ -250,5 +262,22 @@ public class FileStorageService {
         }
 
         return new FileSurgeryResult(head, uniqueFileName);
+    }
+
+    @Transactional(readOnly = true)
+    public void deletePublicFileIfUnused(String fileName) {
+        if (fileName == null || fileName.isBlank()) return;
+
+        long articleCount = articleRepository.countArticleUsage(fileName);
+        long postCount = publicPostRepository.countByMediaFileName(fileName);
+
+        long totalUsage = articleCount + postCount;
+
+        if (totalUsage == 0) {
+            deletePublicFile(fileName); // Робочий метод, який фізично видаляє файл з диска
+            log.info("🗑️ Публічний файл {} повністю видалено з диска.", fileName);
+        } else {
+            log.info("ℹ️ Файл {} залишено на диску (знайдено посилань: {})", fileName, totalUsage);
+        }
     }
 }

@@ -40,10 +40,7 @@ public class TherapyNoteService {
     }
 
     public List<TherapyNote> getHistoryForClient(UUID clientUuid, UUID authorId) {
-        // Використовуємо твій наявний репозиторій, але можна додати фільтр за клієнтом
-        return repository.findByAuthorIdOrderByCreatedAtDesc(authorId).stream()
-                .filter(n -> n.getClient().getId().equals(clientUuid))
-                .toList();
+        return repository.findByAuthorIdAndClientIdOrderByCreatedAtDesc(authorId, clientUuid);
     }
 
     public String getLastNoteContent(UUID clientId, UUID therapistId, UUID authorId) {

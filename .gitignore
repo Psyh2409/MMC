@@ -37,6 +37,9 @@ run.ps1
 # Динамічні завантаження користувачів (Media runtime)
 uploads/
 
+#npx repomix
+repomix-output.*
+
 #Get-ChildItem -Path ".\src" -Include *.java, *.css, *.html, *.js -Recurse | ForEach-Object {
 #    $file = $_
 #    $buffer = @()

@@ -20,15 +20,7 @@ public class TherapistPortfolioService {
     // 1. Читання: Ініціалізуємо ліниві колекції, щоб не було LazyInitializationException у Thymeleaf
     @Transactional(readOnly = true)
     public Optional<TherapistPortfolio> getPortfolioByUserId(UUID userId) {
-        Optional<TherapistPortfolio> opt = portfolioRepository.findByUserId(userId);
-        opt.ifPresent(p -> {
-            p.getApproaches().size();
-            p.getTargetIssues().size();
-            p.getPrinciples().size();
-            p.getTechniques().size();
-            p.getCertificates().size();
-        });
-        return opt;
+        return portfolioRepository.findByUserId(userId);
     }
 
     // Оновлений метод мапінгу у DTO

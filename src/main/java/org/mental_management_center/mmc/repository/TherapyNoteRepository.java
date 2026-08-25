@@ -39,4 +39,6 @@ public interface TherapyNoteRepository extends JpaRepository<TherapyNote, UUID> 
 
     @EntityGraph(attributePaths = {"client", "therapist"})
     List<TherapyNote> findByAuthorOrderByCreatedAtDesc(User author);
+
+    List<TherapyNote> findByAuthorIdAndClientIdOrderByCreatedAtDesc(UUID authorId, UUID clientId);
 }

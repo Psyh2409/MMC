@@ -17,4 +17,7 @@ public interface PublicPostRepository extends JpaRepository<PublicPost, UUID> {
     Page<PublicPost> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     List<PublicPost> findByAuthorOrderByCreatedAtDesc(User author);
+
+    // Підрахунок використання файлу серед усіх публічних дописів
+    long countByMediaFileName(String mediaFileName);
 }
