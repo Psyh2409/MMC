@@ -305,7 +305,7 @@ public class TherapistController {
 
     // Обробка відправки швидкого сповіщення клієнту з дашборду фахівця
     @PostMapping("/notify-client")
-    @PreAuthorize("hasAnyRole('THERAPIST', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('THERAPIST')")
     public String notifyClientFromDashboard(
             @RequestParam UUID recipientId,
             @RequestParam String message,

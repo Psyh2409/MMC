@@ -303,7 +303,6 @@ public class UserProfileController {
         return mav;
     }
 
-    @PreAuthorize("!hasRole('TEST')")
     @Transactional
     @PostMapping("/profile/request-deactivation")
     public String requestDeactivation(Principal principal, RedirectAttributes redirectAttributes) {

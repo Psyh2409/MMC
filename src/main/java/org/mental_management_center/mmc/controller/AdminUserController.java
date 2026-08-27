@@ -75,10 +75,10 @@ public class AdminUserController {
         // 4. Сортуємо цей список за спаданням дати створення (те, що раніше робив Sort.by)
         visibleUsers.sort(Comparator.comparing(User::getCreatedAt).reversed());
         model.addAttribute("allUsers", visibleUsers);
-        model.addAttribute("countUsers", userRepository.countByRoleMask(RoleBit.READER.getMask()));
-        model.addAttribute("countClients", userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
-        model.addAttribute("pendingReportsCount", reportRepository.countByStatus(org.mental_management_center.mmc.model.Report.ReportStatus.PENDING));
-        model.addAttribute("newRequestsCount", requestRepository.countUnprocessedAdminRequests());
+        model.addAttribute("countUsers", currentUser.isTest() ? 0 : userRepository.countByRoleMask(RoleBit.READER.getMask()));
+        model.addAttribute("countClients", currentUser.isTest() ? 0 : userRepository.countByRoleMask(RoleBit.CLIENT.getMask()));
+        model.addAttribute("pendingReportsCount", currentUser.isTest() ? 0 : reportRepository.countByStatus(Report.ReportStatus.PENDING));
+        model.addAttribute("newRequestsCount", currentUser.isTest() ? 0 : requestRepository.countUnprocessedAdminRequests());
 
         UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
         SiteStats siteStats = siteStatsRepository.findById(statsId).orElse(new SiteStats());
@@ -182,7 +182,7 @@ public class AdminUserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @PostMapping("/verify-specialist/{id}")
     public String verifySpecialist(@PathVariable UUID id) {
         // Викликаємо єдину точку входу в бізнес-процес
@@ -191,6 +191,7 @@ public class AdminUserController {
     }
 
     // Оновлений метод: закриває конкретний SOS-запит за його ID
+    @PreAuthorize("!hasRole('TEST')")
     @PostMapping("/sos/{sosRequestId}/resolve")
     @ResponseBody
     public ResponseEntity<Void> resolveSos(@PathVariable UUID sosRequestId) {
@@ -200,6 +201,7 @@ public class AdminUserController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("!hasRole('TEST')")
     @PostMapping("/users/{id}/send-message")
     public String sendAdminMessage(@PathVariable UUID id,
                                    @RequestParam("message") String message,

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,14 +22,17 @@ public class SecurityConfig {
     private final CustomOidcUserService customOidcUserService;
     private final Environment environment;
     private final SessionRegistry sessionRegistry;
+    private final TestUserProtectionFilter testUserProtectionFilter;
 
     public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
                           CustomOidcUserService customOidcUserService,
-                          Environment environment, SessionRegistry sessionRegistry) {
+                          Environment environment, SessionRegistry sessionRegistry,
+                          TestUserProtectionFilter testUserProtectionFilter) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customOidcUserService = customOidcUserService;
         this.environment = environment;
         this.sessionRegistry = sessionRegistry;
+        this.testUserProtectionFilter = testUserProtectionFilter;
     }
 
     @Bean
@@ -82,6 +86,9 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
+                .addFilterAfter(
+                        testUserProtectionFilter,
+                        UsernamePasswordAuthenticationFilter.class)
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()

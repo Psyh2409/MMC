@@ -10,6 +10,7 @@ import org.mental_management_center.mmc.service.NotificationService;
 import org.mental_management_center.mmc.service.UserService;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -26,6 +27,7 @@ public class NotificationApiController {
     private final UserService userService;
 
     // Ендпоінт фонового опитування (раз на 10-15 сек)
+    @PreAuthorize("!hasRole('TEST')")
     @GetMapping("/summary")
     public ResponseEntity<NotificationDto.Summary> getSummary(Principal principal) {
         if (principal == null) return ResponseEntity.status(401).build();

@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/reports")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
 @RequiredArgsConstructor
 public class AdminReportController {
 

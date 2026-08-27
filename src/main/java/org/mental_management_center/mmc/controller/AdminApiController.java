@@ -20,7 +20,7 @@ public class AdminApiController {
     private final UserRepository userRepository;
     private final SosRequestRepository sosRequestRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @GetMapping("/alerts-count")
     public ResponseEntity<Long> getAdminAlertsCount() {
         long pendingReports = reportRepository.countByStatus(Report.ReportStatus.PENDING);
