@@ -67,7 +67,7 @@
 }
 
 .site-nav-link:hover {
-    color: var(--text-navigation-hover);
+    color: var(--accent-hover);
 }
 
 /* --- 2. DROPDOWN (Автентична логіка в REM) --- */
