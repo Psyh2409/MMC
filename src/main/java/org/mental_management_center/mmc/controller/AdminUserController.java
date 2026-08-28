@@ -93,7 +93,6 @@ public class AdminUserController {
     }
 
     // 2. Тотальний бан (Сайт)
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/toggle-status/{id}")
     public String toggleUserStatus(@PathVariable UUID id, @RequestParam("reason") String reason) {
         User user = userRepository.findById(id).orElseThrow();
@@ -112,7 +111,6 @@ public class AdminUserController {
     }
 
     // 3. Бан в чаті
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @PostMapping("/toggle-chat/{id}")
     public String toggleChatStatus(@PathVariable UUID id, @RequestParam("reason") String reason) {
         User user = userRepository.findById(id).orElseThrow();
@@ -133,7 +131,6 @@ public class AdminUserController {
     }
 
     // 4. Бан в коментарях
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін
     @PostMapping("/toggle-comments/{id}")
     public String toggleCommentsStatus(@PathVariable UUID id, @RequestParam("reason") String reason) {
         User user = userRepository.findById(id).orElseThrow();
@@ -162,7 +159,6 @@ public class AdminUserController {
     }
 
     // 7. Видалення (Переїхало з AuthController)
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')") // ТІЛЬКИ реальний адмін може видаляти, тестовий - ні
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable UUID id, Principal principal) {
         User user = userRepository.findById(id).orElseThrow();
@@ -182,7 +178,6 @@ public class AdminUserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
     @PostMapping("/verify-specialist/{id}")
     public String verifySpecialist(@PathVariable UUID id) {
         // Викликаємо єдину точку входу в бізнес-процес
@@ -191,7 +186,6 @@ public class AdminUserController {
     }
 
     // Оновлений метод: закриває конкретний SOS-запит за його ID
-    @PreAuthorize("!hasRole('TEST')")
     @PostMapping("/sos/{sosRequestId}/resolve")
     @ResponseBody
     public ResponseEntity<Void> resolveSos(@PathVariable UUID sosRequestId) {
@@ -201,7 +195,6 @@ public class AdminUserController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("!hasRole('TEST')")
     @PostMapping("/users/{id}/send-message")
     public String sendAdminMessage(@PathVariable UUID id,
                                    @RequestParam("message") String message,

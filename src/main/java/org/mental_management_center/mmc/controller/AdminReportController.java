@@ -2,44 +2,61 @@ package org.mental_management_center.mmc.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.mental_management_center.mmc.model.Report;
+import org.mental_management_center.mmc.model.User;
 import org.mental_management_center.mmc.repository.ChatMessageRepository;
 import org.mental_management_center.mmc.repository.CommentRepository;
 import org.mental_management_center.mmc.repository.ReportRepository;
+import org.mental_management_center.mmc.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/reports")
-@PreAuthorize("hasRole('ADMIN') and !hasRole('TEST')")
 @RequiredArgsConstructor
 public class AdminReportController {
 
     private final ReportRepository reportRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final CommentRepository commentRepository;
+    private final UserService userService;
 
     @Transactional(readOnly = true)
     @GetMapping
     public String listReports(
             @RequestParam(defaultValue = "0") int page,
-            Model model) {
+            Model model,
+            Principal principal) { // 2. Додано Principal
+
+        // 3. Визначаємо, хто переглядає сторінку (тестовий чи реальний адмін)
+        User currentUser = userService.findByEmail(principal.getName()).orElseThrow();
+        boolean isTestViewer = currentUser.isTest();
 
         Page<Report> reportsPage = reportRepository.findByStatusOrderByCreatedAtDesc(
                 Report.ReportStatus.PENDING, PageRequest.of(page, 10));
 
+        // 4. Фільтруємо скарги: тестовий адмін бачить лише скарги від тестових користувачів
+        List<Report> filteredReports = reportsPage.getContent().stream()
+                .filter(report -> {
+                    boolean isTestReport = report.getReporter() != null && report.getReporter().isTest();
+                    return isTestViewer ? isTestReport : !isTestReport;
+                })
+                .toList();
+
         Map<UUID, String> targetPreviews = new HashMap<>();
 
-        for (Report report : reportsPage.getContent()) {
+        // 5. Генеруємо прев'ю ТІЛЬКИ для відфільтрованих скарг
+        for (Report report : filteredReports) {
             if (report.getTargetType() == Report.TargetType.CHAT_MESSAGE) {
                 chatMessageRepository.findById(report.getTargetId())
                         .ifPresent(msg -> targetPreviews.put(report.getId(), msg.getContent()));
@@ -49,7 +66,7 @@ public class AdminReportController {
             }
         }
 
-        model.addAttribute("reports", reportsPage.getContent());
+        model.addAttribute("reports", filteredReports);
         model.addAttribute("previews", targetPreviews);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", reportsPage.getTotalPages());
