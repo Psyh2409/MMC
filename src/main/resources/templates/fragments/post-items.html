@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="post-list">
+    <div th:each="post : ${postsSlice.content}" class="card-primary mb-md p-md post-card">
+        <header class="post-header mb-sm">
+            <div class="post-author-layout">
+                <a th:href="@{/therapist/public/{id}(id=${post.author.id})}" class="avatar-link">
+                    <img th:if="${post.author.avatarFileName != null}"
+                         th:src="@{/api/media/{name}(name=${post.author.avatarFileName})}"
+                         alt="Avatar" class="avatar-img-sm">
+                    <span th:unless="${post.author.avatarFileName != null}" class="avatar-placeholder-sm">👤</span>
+                </a>
+                <div class="post-author-details">
+                    <div class="post-author-top">
+                        <a th:href="@{/therapist/public/{id}(id=${post.author.id})}" class="user-menu-name">
+                            <strong th:text="${post.author.name}">Ім'я фахівця</strong>
+                        </a>
+                        <span class="badge badge-therapist">Фахівець</span>
+                    </div>
+                    <time class="text-muted text-xs"
+                          th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026 12:00</time>
+                </div>
+            </div>
+        </header>
+
+        <div class="post-content text-body parse-media-links" th:text="${post.content}">
+            Текст публічного поста...
+        </div>
+
+        <div th:if="${post.mediaFileName != null}" class="post-media-container mt-sm">
+            <div th:if="${#strings.endsWith(post.mediaFileName.toLowerCase(), '.mp4') or #strings.endsWith(post.mediaFileName.toLowerCase(), '.webm') or #strings.endsWith(post.mediaFileName.toLowerCase(), '.ogg')}">
+                <video controls preload="metadata" class="article-illustration">
+                    <source th:src="@{/api/media/{name}(name=${post.mediaFileName})}" type="video/mp4">
+                </video>
+            </div>
+            <div th:unless="${#strings.endsWith(post.mediaFileName.toLowerCase(), '.mp4') or #strings.endsWith(post.mediaFileName.toLowerCase(), '.webm') or #strings.endsWith(post.mediaFileName.toLowerCase(), '.ogg')}">
+                <img th:src="@{/api/media/{name}(name=${post.mediaFileName})}" alt="Media" class="article-illustration">
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

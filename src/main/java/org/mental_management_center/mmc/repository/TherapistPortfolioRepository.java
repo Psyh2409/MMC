@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,4 +34,8 @@ public interface TherapistPortfolioRepository extends JpaRepository<TherapistPor
     Page<TherapistPortfolio> filterTherapists(@Param("approach") String approach,
                                               @Param("issue") String issue,
                                               Pageable pageable);
+
+    // Отримання TOP-3 верифікованих та активних фахівців (звертаємось до поля u.enabled)
+    @Query("SELECT p FROM TherapistPortfolio p JOIN FETCH p.user u WHERE u.enabled = true ORDER BY p.experienceYears DESC")
+    List<TherapistPortfolio> findTop3Specialists(Pageable pageable);
 }

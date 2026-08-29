@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.main-content-shell}, ~{})}">
-<!--      layout:decorate="~{layout}">-->
-
+      th:replace="~{layout/base :: main-layout(~{::title}, ~{::div.main-content-shell}, ~{::page-scripts})}">
 
 <head>
     <title>Шлях до себе — Психологічна допомога та медіація</title>
 </head>
 <body>
 <div class="main-content-shell">
-    <main>
+    <main class="home-board-frame">
+        <!-- Hero Section -->
         <section class="home-hero">
             <h1 class="home-hero-title">Будь-який шлях веде до себе</h1>
-            <p class="home-hero-subtitle">і цей — найкоротший.</p>
+<!--            <p class="home-hero-subtitle">і цей — найкоротший.</p>-->
 
-            <!-- Блок для гостей: дві кнопки поруч (працює ідеально, як на image_2b669b.jpg) -->
-            <div th:if="${userName == null}" class="hero-global-actions">
+            <div sec:authorize="isAnonymous()" class="hero-global-actions">
                 <a th:href="@{/register}" class="btn-primary">Почати свій шлях</a>
                 <a th:href="@{/specialists}" class="btn-outline">Знайти фахівця</a>
             </div>
 
-            <!-- Блок для авторизованих: строго по центру -->
-            <div th:if="${userName != null}" class="center mt-md">
+            <div sec:authorize="isAuthenticated()" class="center mt-md">
                 <p class="home-hero-return mb-sm">Радий твоєму поверненню до роботи над собою.</p>
                 <div class="hero-global-actions center">
                     <a th:href="@{/specialists}" class="btn-outline">Знайти фахівця</a>
@@ -31,56 +27,100 @@
             </div>
         </section>
 
-        <section class="home-services">
-            <div class="home-services-inner">
-                <h2 class="home-section-title">З чим ми працюємо</h2>
+        <!-- Контентна сітка -->
+        <section class="home-grid-layout mt-xl">
 
-                <div class="home-services-grid">
-                    <a href="/issues/inner-calm" class="nav-link">
-                        <div class="home-service-card">
-                            <h3>Тривога та панічні стани</h3>
-                            <p>Повернення внутрішньої опори, робота з панічними атаками та хронічним напруженням.</p>
-                        </div>
-                    </a>
+            <!-- Лівий блок: Стрічка постів у власному скрол-контейнері -->
+            <div class="home-feed-column">
+                <h2 class="heading-lg mb-md">🌱 Думки фахівців платформи</h2>
 
-                    <a href="/issues/restore-resource" class="nav-link">
-                        <div class="home-service-card border-top-main">
-                            <h3>Вигорання та ресурс</h3>
-                            <p>Коли "батарейка" на нулі. Пошук джерел енергії та вихід із емоційного виснаження.</p>
-                        </div>
-                    </a>
-
-                    <a href="/issues/closeness-crisis" class="nav-link">
-                        <div class="home-service-card border-top-accent">
-                            <h3>Кризи близькості</h3>
-                            <p>Стосунки, що зайшли у глухий кут. Робота з самотністю вдвох та відновленням зв'язку.</p>
-                        </div>
-                    </a>
-
-                    <a href="/issues/new-meanings" class="nav-link">
-                        <div class="home-service-card border-top-muted">
-                            <h3>Депресія та сенси</h3>
-                            <p>Там, де зникли барви. Трансформація депресивних станів у нову глибину розуміння себе.</p>
-                        </div>
-                    </a>
-
-                    <a href="/issues/freedom-choice" class="nav-link">
-                        <div class="home-service-card border-top-accent">
-                            <h3>Залежна поведінка</h3>
-                            <p>Робота з механізмами втечі від реальності. Повернення права на вільний вибір.</p>
-                        </div>
-                    </a>
-
-                    <a href="/issues/exit-nearby" class="nav-link">
-                        <div class="home-service-card border-top-muted">
-                            <h3>Коли здається, що виходу нема</h3>
-                            <p>Тупик як початок нового шляху. Пошук дверей там, де раніше бачилася лише стіна.</p>
-                        </div>
-                    </a>
+                <div th:if="${#lists.isEmpty(postsSlice.content)}" class="card-primary p-md text-center">
+                    <p class="text-muted">Наразі публічних дописів немає. Завітайте пізніше!</p>
                 </div>
+
+                <!-- Вікно прокрутки постів -->
+                <div id="postsFeedWindow" class="feed-scroll-container">
+                    <div id="postsContainer">
+                        <th:block th:replace="~{fragments/post-items :: post-list}"></th:block>
+                    </div>
+
+                    <div id="loadMoreTrigger" class="text-center p-sm"
+                         th:data-has-more="${postsSlice.hasNext()}"
+                         th:if="${postsSlice.hasNext()}">
+                        <span class="text-muted text-xs">Завантаження нових дописів...</span>
+                    </div>
+                </div>
+
+                <!-- Кнопка повернення нагору -->
+                <button id="feedBackToTopBtn" class="btn-feed-back-to-top" title="Нагору стрічки">↑</button>
             </div>
+
+            <!-- Правий блок: Бічна панель -->
+            <aside class="home-sidebar-column">
+
+                <!-- TOP-3 Статті -->
+                <div class="sidebar-block mb-xl">
+                    <h3 class="heading-md mb-sm">📚 Свіжі статті</h3>
+
+                    <div th:if="${#lists.isEmpty(topArticles)}" class="text-muted text-sm">
+                        Статті скоро з'являться.
+                    </div>
+
+                    <div th:each="article : ${topArticles}" class="card-surface p-sm mb-sm sidebar-card">
+                        <h4 class="heading-sm mb-xs">
+                            <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}" class="nav-link-accent">
+                                Назва статті
+                            </a>
+                        </h4>
+                        <p class="text-muted text-sm sidebar-card-text" th:text="${article.description}">Короткий опис статті...</p>
+
+                        <div class="text-muted text-xs mt-xs text-right">
+                            Автор: <strong th:text="${article.displayAuthorName}">Ім'я автора</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP-3 Фахівці -->
+                <div class="sidebar-block">
+                    <h3 class="heading-md mb-sm">👥 Наші фахівці</h3>
+
+                    <div th:if="${#lists.isEmpty(topSpecialists)}" class="text-muted text-sm">
+                        Список фахівців оновлюється.
+                    </div>
+
+                    <div th:each="spec : ${topSpecialists}" class="card-surface p-sm mb-sm sidebar-card">
+                        <div class="post-author-layout mb-xs">
+                            <a th:href="@{/therapist/public/{id}(id=${spec.user.id})}" class="avatar-link">
+                                <img th:if="${spec.user.avatarFileName != null}"
+                                     th:src="@{/api/media/{name}(name=${spec.user.avatarFileName})}"
+                                     alt="Avatar" class="avatar-img-sm">
+                                <span th:unless="${spec.user.avatarFileName != null}" class="avatar-placeholder-sm">👤</span>
+                            </a>
+                            <div class="post-author-details">
+                                <a th:href="@{/therapist/public/{id}(id=${spec.user.id})}" class="nav-link-accent">
+                                    <strong th:text="${spec.user.name}">Ім'я фахівця</strong>
+                                </a>
+                                <span class="text-muted text-xs" th:if="${spec.experienceYears != null}"
+                                      th:text="'Досвід: ' + ${spec.experienceYears} + ' років'"></span>
+                            </div>
+                        </div>
+                        <p class="text-italic text-sm mt-xs mb-xs" th:if="${spec.credo != null}" th:text="'«' + ${spec.credo} + '»'">Кредо</p>
+
+                        <div>
+                            <a th:href="@{/therapist/public/{id}(id=${spec.user.id})}" class="text-xs nav-link">Переглянути візитку →</a>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
         </section>
     </main>
+    <button id="backToTopBtn" class="btn-back-to-top" title="Нагору">↑</button>
 </div>
+
+<th:block th:fragment="page-scripts">
+    <script src="/js/media-links.js" defer></script>
+    <script src="/js/home-feed.js" defer></script>
+</th:block>
 </body>
 </html>

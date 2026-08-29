@@ -1,26 +1,23 @@
 package org.mental_management_center.mmc.controller;
 
-import org.mental_management_center.mmc.model.SiteStats;
+import jakarta.validation.Valid;
 import org.mental_management_center.mmc.model.User;
-import org.mental_management_center.mmc.model.enums.RoleBit;
 import org.mental_management_center.mmc.repository.SiteStatsRepository;
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.mental_management_center.mmc.service.UserService;
 import org.mental_management_center.mmc.web.form.ForgotPasswordForm;
 import org.mental_management_center.mmc.web.form.RegistrationForm;
 import org.mental_management_center.mmc.web.form.ResetPasswordForm;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.core.env.Environment;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.Principal;
-import java.util.UUID;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @SuppressWarnings("null")
 @Controller
@@ -166,37 +163,6 @@ public class AuthController {
             model.addAttribute("error", e.getMessage());
             return "reset-password";
         }
-    }
-
-    @GetMapping("/")
-    public String home(Model model, Principal principal) {
-
-        if (principal == null) {
-            UUID statsId = UUID.fromString("00000000-0000-0000-0000-000000000001");
-            SiteStats siteStats = siteStatsRepository.findById(statsId).orElseGet(() -> {
-                return new SiteStats(); // Створюємо новий об'єкт, якщо в базі порожньо
-            });
-            siteStats.setGuestVisits(siteStats.getGuestVisits() + 1);
-            model.addAttribute("guestCount", siteStats.getGuestVisits());
-            siteStatsRepository.save(siteStats);
-        } else {
-            userService.findByEmail(principal.getName()).ifPresent(user -> {
-                model.addAttribute("userName", user.getName());
-
-                // Пріоритетна роль для відображення
-                RoleBit priorityRole = RoleBit.READER;
-                if (user.isAdmin()) {
-                    priorityRole = RoleBit.ADMIN;
-                } else if (user.isTherapist()) { // Виправлено з isColleague
-                    priorityRole = RoleBit.THERAPIST;
-                } else if (user.isClient()) {
-                    priorityRole = RoleBit.CLIENT;
-                }
-                model.addAttribute("userRole", priorityRole.name()); // Передаємо рядок
-            });
-        }
-
-        return "index";
     }
 
     private boolean hasText(String value) {

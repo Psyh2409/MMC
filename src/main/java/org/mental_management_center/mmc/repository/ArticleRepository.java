@@ -23,6 +23,9 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     List<Article> findAllByOrderByPublishedAtDesc();
 
+    // Вибірка TOP-3 останніх опублікованих статей для правого блоку
+    List<Article> findTop3ByOrderByPublishedAtDesc();
+
     // Отримуємо всі унікальні категорії для рубрикатора в хедері
     @Query("SELECT DISTINCT a.category FROM Article a")
     List<String> findAllCategories();

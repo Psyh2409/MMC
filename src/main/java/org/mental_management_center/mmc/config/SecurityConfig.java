@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/articles/**").permitAll()
                         .requestMatchers(
                                 "/",
+                                "/api/public/**",
                                 "/api/media/**",
                                 "/error/403",
                                 "/specialists",

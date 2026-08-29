@@ -427,3 +427,71 @@
     width: 100%;
     gap: 1rem;
 }
+
+/* Посилання на статті у системних токенах теми */
+.nav-link-accent {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-link-accent:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Вирівнювання тексту фрагмента статті по обох боках */
+.sidebar-card-text {
+    text-align: justify;
+    line-height: 1.5;
+    margin-bottom: var(--space-xs);
+}
+
+/* Компактне горизонтальне розміщення автора та аватарки */
+.post-author-layout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.post-author-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(var(--step) * 0.25);
+}
+
+.post-author-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Оптимізовані компактні розміри аватарок */
+.avatar-img-sm,
+.avatar-placeholder-sm {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.avatar-img-sm {
+    object-fit: cover;
+    border: 0.0625rem solid var(--border-soft);
+}
+
+.avatar-placeholder-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-surface);
+    border: 0.0625rem solid var(--border-soft);
+    font-size: 1rem;
+}
+
+.avatar-link {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
