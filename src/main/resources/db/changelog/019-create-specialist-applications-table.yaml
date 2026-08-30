@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 019-create-specialist-applications-table
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: specialist_applications
+      changes:
+        - createTable:
+            tableName: specialist_applications
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+                    foreignKeyName: fk_specialist_app_user
+                    references: users(id)
+              - column:
+                  name: education_level
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialty
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diploma_series
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diploma_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  type: VARCHAR(50)
+              - column:
+                  name: no_middle_name
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011a-create-therapy-assignments-table
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: therapy_assignments
+      changes:
+        - createTable:
+            tableName: therapy_assignments
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_therapy_assignments_client
+                    references: users(id)
+              - column:
+                  name: therapist_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_therapy_assignments_therapist
+                    references: users(id)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: approved_by_therapist_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_therapy_assignments_approved_by
+                    references: users(id)

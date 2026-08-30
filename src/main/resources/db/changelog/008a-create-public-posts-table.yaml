@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008a-create-public-posts-table
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: public_posts
+      changes:
+        - createTable:
+            tableName: public_posts
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_public_posts_author
+                    references: users(id)
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: media_file_name
+                  type: VARCHAR(512)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

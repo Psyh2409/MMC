@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-add-is-pending-specialist-to-users
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: users
+                columnName: is_pending_specialist
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: is_pending_specialist
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

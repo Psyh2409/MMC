@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018-add-recipient-to-request
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: request
+                columnName: recipient_id
+      changes:
+        - addColumn:
+            tableName: request
+            columns:
+              - column:
+                  name: recipient_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_request_recipient
+                    references: users(id)

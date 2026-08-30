@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 021-add-sos-reason-to-users
+      author: mmc
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: users
+                columnName: sos_reason
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: sos_reason
+                  type: VARCHAR(1000)
