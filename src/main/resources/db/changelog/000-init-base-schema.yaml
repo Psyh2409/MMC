@@ -1,0 +1,475 @@
+databaseChangeLog:
+  - changeSet:
+      id: 000-init-base-schema
+      author: mmc-dev
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: users
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: chat_enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comments_enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: roles_mask
+                  type: INT
+                  defaultValueNumeric: 2
+              - column:
+                  name: therapist_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_users_therapist
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: auth_provider
+                  type: VARCHAR(50)
+              - column:
+                  name: provider_id
+                  type: VARCHAR(255)
+              - column:
+                  name: admin_notes
+                  type: TEXT
+              - column:
+                  name: password_reset_token
+                  type: VARCHAR(255)
+              - column:
+                  name: password_reset_token_expiry
+                  type: TIMESTAMP
+              - column:
+                  name: avatar_file_name
+                  type: VARCHAR(512)
+              - column:
+                  name: phone
+                  type: VARCHAR(50)
+              - column:
+                  name: is_pending_specialist
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sos_requested
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sos_reason
+                  type: TEXT
+              - column:
+                  name: is_test
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: articles
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_articles_author
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: content_bytes
+                  type: BYTEA
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_path
+                  type: VARCHAR(512)
+              - column:
+                  name: published_at
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: article_tags
+            columns:
+              - column:
+                  name: article_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_article_tags_article
+                    referencedTableName: articles
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: comments
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: article_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comments_article
+                    referencedTableName: articles
+                    referencedColumnNames: id
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comments_author
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: UUID
+
+        - createTable:
+            tableName: chat_messages
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_chat_sender
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: recipient_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_chat_recipient
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: sender_name
+                  type: VARCHAR(255)
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: SENT
+              - column:
+                  name: sender_avatar
+                  type: VARCHAR(512)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+              - column:
+                  name: parent_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_chat_parent
+                    referencedTableName: chat_messages
+                    referencedColumnNames: id
+
+        - createTable:
+            tableName: request
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_request_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: contact
+                  type: VARCHAR(255)
+              - column:
+                  name: message
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: admin_reply
+                  type: TEXT
+              - column:
+                  name: roles_mask
+                  type: INT
+                  defaultValueNumeric: 0
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: NEW
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: shared_wall_entries
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: room_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: encrypted_content
+                  type: BLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: media_file_name
+                  type: VARCHAR(512)
+              - column:
+                  name: media_file_hash
+                  type: VARCHAR(255)
+              - column:
+                  name: media_file_head
+                  type: BLOB
+              - column:
+                  name: is_read
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: journal_posts
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_journal_posts_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: encrypted_content
+                  type: BLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: media_file_name
+                  type: VARCHAR(512)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: encrypted_media_header
+                  type: BLOB
+
+        - createTable:
+            tableName: therapy_notes
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_therapy_notes_author
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_therapy_notes_client
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: therapist_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_therapy_notes_therapist
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: content
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: verification_tokens
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tokens_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: expiry_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: site_stats
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: guest_visits
+                  type: BIGINT
+                  defaultValueNumeric: 0
+
+        - createTable:
+            tableName: category_translations
+            columns:
+              - column:
+                  name: category_slug
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

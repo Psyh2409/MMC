@@ -48,7 +48,7 @@
         <!-- Запити, з якими працює -->
         <div th:if="${portfolio.targetIssues != null and !portfolio.targetIssues.isEmpty()}" class="mb-md">
             <h4 class="heading-sm mb-xs">🎯 Запити, з якими працює фахівець:</h4>
-            <div class="row-center gap-xs flex-wrap">
+            <div class="row-center gap-xs flex-wrap portfolio-issues">
                 <span th:each="issue : ${portfolio.targetIssues}" class="badge badge-subtle" th:text="${issue}">Тривожність</span>
             </div>
         </div>

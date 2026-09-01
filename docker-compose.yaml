@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mmc-postgres:
+    image: postgres:15-alpine
+    container_name: mmc-postgres
+    environment:
+      POSTGRES_DB: mmc_db_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

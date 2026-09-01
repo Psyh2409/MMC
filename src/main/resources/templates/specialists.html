@@ -23,7 +23,7 @@
             <div class="profile-card card-specialist">
 
                 <div class="card-specialist-avatar">
-                    <div class="avatar-circle avatar-md">
+                    <div class="avatar-circle avatar-md center">
                         <img th:if="${app.user.avatarFileName != null}"
                              th:src="@{/api/media/{name}(name=${app.user.avatarFileName})}"
                              alt="Аватар фахівця">

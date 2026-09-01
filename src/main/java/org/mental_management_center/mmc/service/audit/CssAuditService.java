@@ -199,8 +199,6 @@ public class CssAuditService {
             report.append("\n✅ ІДЕАЛЬНО: Усі класи синхронізовані. Сміття та конфліктів не знайдено.\n");
         }
         report.append("======================================================\n");
-
-        log.warn(report.toString());
     }
 
     /**

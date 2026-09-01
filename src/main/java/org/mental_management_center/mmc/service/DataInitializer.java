@@ -8,6 +8,8 @@ import org.mental_management_center.mmc.repository.ArticleRepository;
 import org.mental_management_center.mmc.repository.CategoryTranslationRepository; // ДОДАНО
 import org.mental_management_center.mmc.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +17,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
-//@Component
+@Component
+@Profile("dev")
+@Order(2)
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
@@ -26,8 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        // 1. Використовуємо реальний email адміністратора
-        String adminEmail = "mental.m.center@gmail.com";
+        String adminEmail = "admin@test.com";
         User admin = userRepository.findByEmail(adminEmail).orElse(null);
 
         if (admin == null) {

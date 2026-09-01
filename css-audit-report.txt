@@ -2,7 +2,7 @@
 ======================================================
            ЗВІТ ПРО РУДИМЕНТИ ТА КОНФЛІКТИ (CSS/HTML)   
 ======================================================
-Дата: Sun Aug 30 21:48:55 EEST 2026
+Дата: Tue Sep 01 23:32:15 EEST 2026
 ======================================================
 
 ❌ КЛАСИ-ПУСТИШКИ В HTML (не мають стилів) - 165:
@@ -363,7 +363,7 @@
   - Стиль .youtube-facade є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
   - Стиль .youtube-iframe є в CSS [components.css], але НІДЕ В HTML НЕ ВИКОРИСТОВУЄТЬСЯ!
 
-⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 58:
+⚡ КОНФЛІКТИ СТИЛІВ (Дублювання або перевизначення) - 59:
   - Стиль .02 дублюється у декількох файлах: [cards.css, forms.css]
   - Стиль .0625rem дублюється у декількох файлах: [layout.css, notifications.css, cards.css, tables.css, navigation.css, utilities.css, components.css, forms.css, typography.css, buttons.css]
   - Стиль .08 дублюється у декількох файлах: [notifications.css, buttons.css]
@@ -405,6 +405,7 @@
   - Стиль .btn-outline дублюється у декількох файлах: [navigation.css, components.css, forms.css, buttons.css]
   - Стиль .btn-primary дублюється у декількох файлах: [navigation.css, components.css, forms.css, buttons.css]
   - Стиль .button-row дублюється у декількох файлах: [layout.css, buttons.css]
+  - Стиль .card-primary дублюється у декількох файлах: [cards.css, components.css]
   - Стиль .content-section дублюється у декількох файлах: [layout.css, typography.css]
   - Стиль .error-description дублюється у декількох файлах: [cards.css, components.css]
   - Стиль .file-name-display дублюється у декількох файлах: [components.css, forms.css]
@@ -471,7 +472,7 @@
   - Клас [mt-xs] використовується в багатьох HTML файлах (11): [calendar.html, about.html, comment-tree.html, index.html, first-steps.html, public-wall-components.html, article.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html, user-requests.html]
   - Клас [mb-md] використовується в багатьох HTML файлах (22): [about.html, article-form.html, therapist-client-notes.html, 403.html, public-wall-components.html, article.html, post-items.html, profile.html, therapy-room.html, user-requests.html, calendar.html, therapist-public.html, therapist-requests.html, index.html, therapist-public-wall.html, portfolio-components.html, therapist-portfolio-form.html, first-steps.html, admin-reports.html, shared-wall-form.html, therapist-dashboard.html, admin-users.html]
   - Клас [issue-text] використовується в багатьох HTML файлах (6): [new-meanings.html, inner-calm.html, exit-nearby.html, freedom-choice.html, closeness-crisis.html, restore-resource.html]
-  - Клас [center] використовується в багатьох HTML файлах (6): [specialists.html, article-components.html, index.html, 403.html, profile.html, shared-wall-form.html]
+  - Клас [center] використовується в багатьох HTML файлах (8): [therapist-public.html, specialists.html, article-components.html, index.html, 403.html, profile.html, shared-wall-form.html, therapist-dashboard.html]
   - Клас [page-title-accent] використовується в багатьох HTML файлах (15): [about.html, article-form.html, specialists.html, therapist-client-notes.html, article.html, calendar.html, therapist-requests.html, requests.html, therapist-public-wall.html, first-steps.html, admin-reports.html, topic-page.html, therapist-dashboard.html, admin-users.html, articles.html]
   - Клас [layout-container] використовується в багатьох HTML файлах (7): [new-meanings.html, chat.html, article.html, closeness-crisis.html, profile.html, default.html, my-format.html]
   - Клас [btn-outline] використовується в багатьох HTML файлах (31): [comment-tree.html, article-components.html, therapist-client-notes.html, header-footer.html, report-modal.html, calendar.html, therapist-requests.html, index.html, therapist-public-wall.html, chat.html, delete-comment-modal.html, footer.html, therapist-dashboard.html, admin-users.html, error.html, article-form.html, 403.html, public-wall-components.html, article.html, base.html, profile.html, therapy-room.html, reaction-icons.html, header.html, requests.html, notifications-tab.html, journal-form.html, therapist-portfolio-form.html, register.html, admin-reports.html, shared-wall-form.html]
@@ -484,9 +485,9 @@
   - Клас [form-actions] використовується в багатьох HTML файлах (6): [article-form.html, therapist-client-notes.html, journal-form.html, public-wall-components.html, shared-wall-form.html, therapy-room.html]
 
 📊 СТАТИСТИКА:
-  Всього знайдено класів: 666
+  Всього знайдено класів: 667
   Класи-пустишки в HTML: 165
   Мертві стилі в CSS: 189
-  Конфлікти стилів: 58
+  Конфлікти стилів: 59
   Потенційні дублікати: 58
 ======================================================

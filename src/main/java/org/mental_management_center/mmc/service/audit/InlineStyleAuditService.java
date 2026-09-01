@@ -170,7 +170,6 @@ public class InlineStyleAuditService {
         // Windsurf: Записуємо звіт у файл
         Files.writeString(reportPath, report.toString(), StandardCharsets.UTF_8);
         log.info("Звіт аудиту інлайн-стилів збережено у файл: " + reportPath.toAbsolutePath());
-        log.warn("Знайдено {} інлайн-стилів у {} файлах", totalInlineStyles, filesWithInlineStyles);
     }
 
     /**

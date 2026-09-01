@@ -19,7 +19,7 @@ public class JournalCryptoService {
 
     // Секретний ключ підтягується з налаштувань додатка.
     // Для тесту впиши 16-символьний рядок за замовчуванням
-    @Value("${app.crypto.secret-key}")
+    @Value("${app.crypto.secret-key:12345678901234567890123456789012}")
     private String secretKey;
 
     // 1. КОНВЕЄР: Стиснення -> Шифрування

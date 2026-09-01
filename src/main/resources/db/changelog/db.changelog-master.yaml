@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
+      file: db/changelog/000-init-base-schema.yaml
+  - include:
       file: db/changelog/001-add-chat-type.yaml
   - include:
       file: db/changelog/002-drop-sender-avatar.yaml
@@ -49,4 +51,5 @@ databaseChangeLog:
       file: db/changelog/022-add-sos-requested-to-users.yaml
   - include:
       file: db/changelog/023-add-therapist-id-to-users.yaml
+
 

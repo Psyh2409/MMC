@@ -540,6 +540,17 @@ margin-top: var(--space-md);
     flex-shrink: 0;
 }
 
+.card-primary .avatar-circle {
+    justify-content: center;
+}
+
+/* Точкове центрування для сайдбару терапіст-дашборду */
+.profile-sidebar .card-primary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Стандарт для зображень всередині будь-якого аватара */
 .avatar-circle img {
     width: 100%;
@@ -1171,3 +1182,7 @@ margin-top: var(--space-md);
     text-decoration: line-through;
 }
 
+.portfolio-issues {
+    display: flex;
+    flex-wrap: wrap;
+}
