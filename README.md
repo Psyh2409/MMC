@@ -27,23 +27,23 @@
 
 ### Високорівнева архітектура системи
 Ця діаграма демонструє шлях запиту від клієнта до бази даних та зовнішніх сервісів, виділяючи ключові компоненти системи:
-
+```
 +-----------------------------------------------------------------------------------+
 |                                 CLIENT TIER                                       |
 |                                                                                   |
 |  [ Web Browser ] <--- WebSocket (Chat/Room) ---> [ Jitsi Iframe (Video) ]         |
 |  (HTML, Vanilla JS, CSS Custom Properties, Thymeleaf Views)                       |
 +----------------------------------------+------------------------------------------+
-| HTTP(S) / WSS
-v
+                                         | HTTP(S) / WSS
+                                         v
 +-----------------------------------------------------------------------------------+
 |                           SECURITY & FILTER LAYER                                 |
 |                                                                                   |
 |  [ OAuth2 / OIDC ]      [ Spring Security ]       [ Custom Filters ]              |
 |  (Google Login)         (Session Config)          (ZombieSession, TestUser)       |
 +----------------------------------------+------------------------------------------+
-|
-v
+                                         |
+                                         v
 +-----------------------------------------------------------------------------------+
 |                                CONTROLLER TIER                                    |
 |  (REST & MVC Endpoints)                                                           |
@@ -52,8 +52,8 @@ v
 |  [ ChatController ]  [ ArticleController ]      [ MediaEndpointController ]       |
 |  ... та інші контролери маршрутизації й обробки запитів                           |
 +----------------------------------------+------------------------------------------+
-|
-v
+                                         |
+                                         v
 +-----------------------------------------------------------------------------------+
 |                                 SERVICE TIER                                      |
 |  (Core Business Logic)                                                            |
@@ -62,8 +62,8 @@ v
 |  [ EmailService ]    [ JournalCryptoService ]   [ FileStorageService ]            |
 |  [ EventListeners (ReactionNotification) ]      [ CustomUserDetailsService ]      |
 +----------------------------------------+------------------------------------------+
-|
-v
+                                         |
+                                         v
 +-----------------------------------------------------------------------------------+
 |                                REPOSITORY TIER                                    |
 |  (Spring Data JPA Interfaces)                                                     |
@@ -71,8 +71,8 @@ v
 |  [ UserRepository ]  [ JournalPostRepository ]  [ TherapySessionRepository ]      |
 |  [ ChatRepository ]  [ ArticleRepository ]      [ SharedWallRepository ]          |
 +-------+--------------------------------+--------------------------------+---------+
-|                                |                                |
-v                                v                                v
+        |                                |                                |
+        v                                v                                v
 +---------------+               +-----------------+             +-------------------+
 |   DATABASE    |               |  FILE STORAGE   |             | EXTERNAL SERVICES |
 |               |               |                 |             |                   |
@@ -80,10 +80,11 @@ v                                v                                v
 | (Liquibase)   |               | - /private      |             | - SMTP Server     |
 |               |               |   (AES-256)     |             |                   |
 +---------------+               +-----------------+             +-------------------+
+```
 
 ### Структура монорепозиторію
 Код організовано з чітким розділенням інфраструктури, конфігурацій та бізнес-логіки:
-
+```
 mental_management_center (Root)
 │
 ├── infra/                      # Інфраструктура (Docker, бекап-скрипти, cron)
@@ -113,7 +114,7 @@ mental_management_center (Root)
 │   ├── issues/         # Сторінки проблематик
 │   └── layout/         # Базові макети (Base Layout)
 └── application.yaml    # Головний файл конфігурації Spring Boot
-
+```
 **Ключові архітектурні рішення:**
 * **Client Tier:** Фронтенд побудований на серверному рендерингу (Thymeleaf) з використанням Vanilla JS. Інтеграція відеозв'язку реалізована через Jitsi.
 * **Security Layer:** Захист забезпечується Spring Security (OAuth2/OIDC) та кастомними фільтрами (`TestUserProtectionFilter`, `ZombieSessionFilter`).
